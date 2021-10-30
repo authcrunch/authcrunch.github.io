@@ -15,6 +15,7 @@ const config = {
   favicon: 'img/favicon.ico',
   organizationName: 'authp',
   projectName: 'authp.github.io',
+  trailingSlash: false,
 
   presets: [
     [
