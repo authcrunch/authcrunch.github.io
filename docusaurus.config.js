@@ -24,12 +24,12 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/authp/authp.github.io/edit/main/docs/',
+          editUrl: 'https://github.com/authp/authp.github.io/edit/main/',
         },
         blog: {
           showReadingTime: true,
           editUrl:
-            'https://github.com/authp/authp.github.io/edit/main/blog/',
+            'https://github.com/authp/authp.github.io/edit/main/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -42,7 +42,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'Auth Portal and Authorize Plugins for Caddy v2',
+        title: 'Auth with Caddy',
         logo: {
           alt: 'Auth Portal Logo',
           src: 'img/logo.svg',
@@ -52,12 +52,17 @@ const config = {
             type: 'doc',
             docId: 'intro',
             position: 'left',
-            label: 'Tutorial',
+            label: 'Docs',
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
-            href: 'https://github.com/authp/authp.github.io',
-            label: 'GitHub',
+            href: 'https://github.com/greenpau/caddy-auth-portal',
+            label: 'caddy-auth-portal',
+            position: 'right',
+          },
+          {
+            href: 'https://github.com/greenpau/caddy-authorize',
+            label: 'caddy-authorize',
             position: 'right',
           },
         ],
