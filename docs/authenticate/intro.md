@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Authentication
+# Plugin Overview
 
 `caddy-auth-portal` is Authentication Plugin for Caddy v2 implementing
 Form-Based, Basic, Local, LDAP, OpenID Connect, OAuth 2.0, SAML

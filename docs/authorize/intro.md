@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Authorization
+# Plugin Overview
 
 `caddy-authorize` is Authorization Plugin for Caddy v2 **authorizes** users and
 grants access to resources upon the discovery of valid JWT or PASETO
