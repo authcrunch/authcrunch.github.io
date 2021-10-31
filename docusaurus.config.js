@@ -50,9 +50,15 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'intro',
+            docId: 'authenticate/intro',
             position: 'left',
-            label: 'Docs',
+            label: 'Authenticate',
+          },
+          {
+            type: 'doc',
+            docId: 'authorize/intro',
+            position: 'left',
+            label: 'Authorize',
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
@@ -71,11 +77,15 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Docs',
+            title: 'Documentation',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro',
+                label: 'Authenticate',
+                to: 'docs/authenticate/intro',
+              },
+              {
+                label: 'Authorize',
+                to: 'docs/authorize/intro',
               },
             ],
           },
@@ -83,16 +93,12 @@ const config = {
             title: 'Community',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
+                label: 'Caddy Community',
+                href: 'https://caddy.community',
               },
               {
                 label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                href: 'https://twitter.com/GreenbergTech',
               },
             ],
           },

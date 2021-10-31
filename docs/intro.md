@@ -2,34 +2,20 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+`caddy-auth-portal` and `caddy-authorize` are **authentication**
+and **authorization** plugins for Caddy v2.
 
-## Getting Started
+Please show your appreciation for this work and :star: :star: :star:
 
-Get started by **creating a new site**.
+Please ask questions via Github Issues or reach out directly via
+[LinkedIn](https://www.linkedin.com/in/greenpau/).
+I am happy to help you! [@greenpau](https://github.com/greenpau)
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+Here is the list of Caddy v2 plugins I maintain:
 
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**:
-
-```shell
-npm init docusaurus@latest my-website classic
-```
-
-## Start your site
-
-Run the development server:
-
-```shell
-cd my-website
-
-npx docusaurus start
-```
-
-Your site starts at `http://localhost:3000`.
-
-Open `docs/intro.md` and edit some lines: the site **reloads automatically** and display your changes.
+* [caddy-auth-portal](https://github.com/greenpau/caddy-auth-portal)
+* [caddy-authorize](https://github.com/greenpau/caddy-authorize)
+* [caddy-trace](https://github.com/greenpau/caddy-trace)
+* [caddy-systemd](https://github.com/greenpau/caddy-systemd)
