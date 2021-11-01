@@ -122,6 +122,9 @@ const config = {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
       },
+      googleAnalytics: {
+        trackingID: 'G-MVS6492XVX',
+      },
     }),
 };
 
