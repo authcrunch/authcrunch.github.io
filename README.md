@@ -28,6 +28,12 @@ npx docusaurus start --port 4200 --host 0.0.0.0
 
 ## Deployment
 
+Run build to create search index:
+
+```bash
+yarn build
+```
+
 Deploy to `gh-pages` branch:
 
 ```bash
