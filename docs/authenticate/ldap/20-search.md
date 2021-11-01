@@ -1,4 +1,4 @@
-# Authentication Architecture
+# LDAP Authentication Architecture
 
 The plugin does not keep connections open to LDAP servers. The plugin
 tears a connection down each time it finishes authenticating a request

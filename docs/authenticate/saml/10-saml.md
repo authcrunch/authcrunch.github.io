@@ -1,4 +1,4 @@
-# Overview
+# SAML Overview
 
 The plugin supports the following SAML identity providers (IdP):
 

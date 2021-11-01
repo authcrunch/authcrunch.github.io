@@ -1,4 +1,4 @@
-# Configuration
+# LDAP Configuration
 
 It is recommended reading the documentation for Local backend, because
 it outlines important principles of operation of all backends.

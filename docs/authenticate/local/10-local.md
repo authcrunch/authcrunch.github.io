@@ -1,4 +1,4 @@
-# Configuration
+# Local Configuration
 
 Please refer to the `assets/conf/local/config.json` configuration file when
 configurin the plugin backend. In the example, the route refers to `local` backend in
