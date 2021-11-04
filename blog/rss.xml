@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>Auth with Caddy Blog</title>
+        <link>https://authp.github.io/blog</link>
+        <description>Auth with Caddy Blog</description>
+        <lastBuildDate>Sun, 31 Oct 2021 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <item>
+            <title><![CDATA[Welcome]]></title>
+            <link>https://authp.github.io/blog/welcome</link>
+            <guid>welcome</guid>
+            <pubDate>Sun, 31 Oct 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[Please share your stories about Caddy and auth plugins!]]></description>
+            <content:encoded><![CDATA[<p>Please share your stories about Caddy and auth plugins!</p><p>Simply add Markdown files (or folders) to the
+<a href="https://github.com/authp/authp.github.io/new/main/blog/"><code>blog/</code></a>
+directory.</p><p>Additionally, add yourself to blog authors via
+<a href="https://github.com/authp/authp.github.io/edit/main/blog/authors.yml"><code>authors.yml</code></a>.</p><p>If your blog post has images, then create a folder for the post
+and co-locate images with the post itself.</p><ul><li><code>2021-10-31-mypost/index.md</code></li><li><code>2021-10-31-mypost/image1.jpeg</code></li></ul><p>Include the image in the <code>.md</code> file with the following snippet:</p><pre><code>![Image for my post](./image1.jpeg)
+</code></pre><p>The blog post date can be extracted from filenames, such as:</p><ul><li><code>2021-10-31-welcome.md</code></li><li><code>2021-10-31-welcome/index.md</code></li></ul>]]></content:encoded>
+        </item>
+    </channel>
+</rss>

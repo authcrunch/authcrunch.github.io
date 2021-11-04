@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://authp.github.io/blog</id>
+    <title>Auth with Caddy Blog</title>
+    <updated>2021-10-31T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://authp.github.io/blog"/>
+    <subtitle>Auth with Caddy Blog</subtitle>
+    <icon>https://authp.github.io/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Welcome]]></title>
+        <id>welcome</id>
+        <link href="https://authp.github.io/blog/welcome"/>
+        <updated>2021-10-31T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Please share your stories about Caddy and auth plugins!]]></summary>
+        <content type="html"><![CDATA[<p>Please share your stories about Caddy and auth plugins!</p><p>Simply add Markdown files (or folders) to the
+<a href="https://github.com/authp/authp.github.io/new/main/blog/"><code>blog/</code></a>
+directory.</p><p>Additionally, add yourself to blog authors via
+<a href="https://github.com/authp/authp.github.io/edit/main/blog/authors.yml"><code>authors.yml</code></a>.</p><p>If your blog post has images, then create a folder for the post
+and co-locate images with the post itself.</p><ul><li><code>2021-10-31-mypost/index.md</code></li><li><code>2021-10-31-mypost/image1.jpeg</code></li></ul><p>Include the image in the <code>.md</code> file with the following snippet:</p><pre><code>![Image for my post](./image1.jpeg)
+</code></pre><p>The blog post date can be extracted from filenames, such as:</p><ul><li><code>2021-10-31-welcome.md</code></li><li><code>2021-10-31-welcome/index.md</code></li></ul>]]></content>
+        <author>
+            <name>Paul Greenberg</name>
+            <uri>https://github.com/greenpau</uri>
+        </author>
+    </entry>
+</feed>
