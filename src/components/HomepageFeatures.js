@@ -5,7 +5,7 @@ import styles from './HomepageFeatures.module.css';
 const FeatureList = [
   {
     title: 'Authenticate',
-    Svg: require('../../static/img/undraw_docusaurus_mountain.svg').default,
+    Svg: require('../../static/img/authenticate_screen.svg').default,
     description: (
       <>
         Implements Form-Based, Basic, Local, LDAP, OpenID Connect,
@@ -15,7 +15,7 @@ const FeatureList = [
   },
   {
     title: 'Authorize',
-    Svg: require('../../static/img/undraw_docusaurus_tree.svg').default,
+    Svg: require('../../static/img/authorize_shield.svg').default,
     description: (
       <>
         Authorizes users and grants access to resources upon the discovery of
@@ -24,8 +24,47 @@ const FeatureList = [
     ),
   },
   {
+    title: 'Multi-Factor Authentication',
+    Svg: require('../../static/img/golang_logo.svg').default,
+    description: (
+      <>
+        Take advantage of multi-factor authentication with software tokens
+        in the form of mobile apps (e.g. Google Authenticator) and hardware
+        tokens in the form of USB keys (e.g. Yubikey).
+      </>
+    ),
+  },
+  /*
+  {
+    title: 'User Interface (UI) Theming and Customization',
+    Svg: require('../../static/img/golang_logo.svg').default,
+    description: (
+      <>
+        TBD
+      </>
+    ),
+  },
+  {
+    title: 'User Portal',
+    Svg: require('../../static/img/golang_logo.svg').default,
+    description: (
+      <>
+        TBD
+      </>
+    ),
+  },
+  {
+    title: 'Connected Public Services',
+    Svg: require('../../static/img/golang_logo.svg').default,
+    description: (
+      <>
+        TBD
+      </>
+    ),
+  },
+  {
     title: 'Powered by Caddy',
-    Svg: require('../../static/img/undraw_docusaurus_react.svg').default,
+    Svg: require('../../static/img/golang_logo.svg').default,
     description: (
       <>
         Integrates with a powerful, enterprise-ready, open source web
@@ -33,6 +72,7 @@ const FeatureList = [
       </>
     ),
   },
+  */
 ];
 
 function Feature({Svg, title, description}) {

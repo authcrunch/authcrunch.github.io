@@ -17,7 +17,13 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/intro">
-            Get Started
+            🌅  Get Started
+          </Link>
+          <div className="hsep"></div>
+          <Link
+            className="button button--secondary button--lg"
+            to="https://github.com/greenpau/caddy-auth-portal/issues/new/choose">
+            💡  Ask Questions
           </Link>
         </div>
       </div>
@@ -30,7 +36,7 @@ export default function Home() {
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      description={`${siteConfig.tagline}`}>
       <HomepageHeader />
       <main>
         <HomepageFeatures />

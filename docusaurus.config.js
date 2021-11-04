@@ -6,8 +6,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Auth Portal and Authorize Plugins for Caddy v2',
-  tagline: 'Simply Safe',
+  title: 'Auth with Caddy',
+  tagline: 'Auth Portal and Authorize Plugins for Caddy v2',
   url: 'https://authp.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -64,16 +64,11 @@ const config = {
             position: 'left',
             label: 'Authorize',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
           {
-            href: 'https://github.com/greenpau/caddy-auth-portal',
-            label: 'caddy-auth-portal',
+            href: 'https://github.com/greenpau/caddy-auth-portal/issues/new/choose',
+            label: '💡  Ask Questions',
             position: 'right',
-          },
-          {
-            href: 'https://github.com/greenpau/caddy-authorize',
-            label: 'caddy-authorize',
-            position: 'right',
+            className: 'button button--secondary',
           },
         ],
       },
