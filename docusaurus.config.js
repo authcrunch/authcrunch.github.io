@@ -34,12 +34,17 @@ const config = {
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
+        sitemap: {
+          changefreq: 'weekly',
+          priority: 0.5,
+        },
       }),
     ],
   ],
 
   plugins: [
     require.resolve('@cmfcmf/docusaurus-search-local'),
+    /*
     [
       '@docusaurus/plugin-sitemap',
       {
@@ -48,6 +53,7 @@ const config = {
         trailingSlash: false,
       },
     ],
+    */
   ],
 
   themeConfig:
