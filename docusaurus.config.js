@@ -39,7 +39,15 @@ const config = {
   ],
 
   plugins: [
-    require.resolve('@cmfcmf/docusaurus-search-local')
+    require.resolve('@cmfcmf/docusaurus-search-local'),
+    [
+      '@docusaurus/plugin-sitemap',
+      {
+        changefreq: 'weekly',
+        priority: 0.5,
+        trailingSlash: false,
+      },
+    ],
   ],
 
   themeConfig:
