@@ -75,3 +75,32 @@ email address of `jsmith@contoso.com` to get `authp/admin` role.
         action add role authp/user
       }
 ```
+
+
+## Configuring oath for HA deployments of caddy
+
+If you use the default mode, caddy-auth-portal will save in memory the temporary state used to authenticate the user
+with the oauth provider and this is a problem when you have more than one instance of caddy serving under the same
+address. To avoid this from happening, you can use a distributed caching service, so far onl memcache is supported.
+
+Here is an example if you are using the google oauth backend:
+
+```
+  google_oauth2_backend {
+    method oauth2
+    realm google
+    provider google
+    client_id {$GOOGLE_CLIENT_ID}
+    client_secret {$GOOGLE_CLIENT_SECRET}
+    scopes openid email profile
+
+    storage_backend memcached
+    memcached_server memcached-0.m.memcached.svc.cluster.local:11211
+    memcached_server memcached-1.m.memcached.svc.cluster.local:11211
+    memcached_server memcached-2.m.memcached.svc.cluster.local:11211
+  }
+```
+
+`storage_backend` is where you choose the backend you want for that backend, it can be either memory or memcached.
+`memcached_server` can be used many times and if you have more than one, it will distribute the states between the
+servers.
