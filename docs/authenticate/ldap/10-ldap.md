@@ -7,7 +7,8 @@ Additionally, the LDAP backend works in conjunction with Local backend.
 As you will see later, the two can be used together by introducing a
 dropdown in UI interface to choose local versus LDAP domain authentication.
 
-The reference configuration for the backend is `assets/conf/ldap/config.json`.
+The reference configuration for the backend is in
+[`assets/conf/ldap/Caddyfile`](https://github.com/greenpau/caddy-auth-portal/blob/main/assets/conf/ldap/Caddyfile).
 
 The following Caddy endpoint at `/auth` authentications users
 from `contoso.com` domain.
@@ -15,7 +16,14 @@ from `contoso.com` domain.
 There is a single LDAP server associated with the domain: `ldaps://ldaps.contoso.com`.
 
 The plugin DOES NOT ignore certificate errors when connecting to the servers.
-However, one may ignore the errors by setting `ignore_cert_errors` to `true`.
+However, one may ignore the errors by appending `ignore_cert_errors` to the
+ldap server address.
+
+```
+          servers {
+            ldaps://ldaps.contoso.com ignore_cert_errors
+          }
+```
 
 As a better alternative to ignoring certificate errors, the plugin allows
 adding trusted certificate authorities via `trusted_authority` Caddyfile directive:
@@ -27,6 +35,19 @@ adding trusted certificate authorities via `trusted_authority` Caddyfile directi
           trusted_authority /etc/gatekeeper/tls/trusted_authority/contoso_com_root1_ca_cert.pem
           trusted_authority /etc/gatekeeper/tls/trusted_authority/contoso_com_root2_ca_cert.pem
           trusted_authority /etc/gatekeeper/tls/trusted_authority/contoso_com_root3_ca_cert.pem
+```
+
+The following commands allow you connecting LDAPS server, e.g. `ldaps.localhost.local:636` and
+collecting certificates for the `trusted_authority` directive.
+
+```bash
+mkdir -p certs && cd certs
+openssl s_client -showcerts -verify 5 -connect ldaps.localhost.local:636 < /dev/null | \
+    awk '/BEGIN/,/END/{ if(/BEGIN/){a++}; out="cert"a".crt"; print >out}' && \
+    for cert in *.crt; do \
+        newname=$(openssl x509 -noout -subject -in $cert | sed -n 's/^.*CN=\(.*\)$/\1/; s/[ ,.*]/_/g; s/__/_/g; s/^_//g;p').pem;
+        mv $cert $newname;
+    done
 ```
 
 The LDAP attribute mapping to JWT fields is as follows.
