@@ -43,17 +43,6 @@ const config = {
   ],
 
   plugins: [
-    require.resolve('@cmfcmf/docusaurus-search-local'),
-    /*
-    [
-      '@docusaurus/plugin-sitemap',
-      {
-        changefreq: 'weekly',
-        priority: 0.5,
-        trailingSlash: false,
-      },
-    ],
-    */
   ],
 
   themeConfig:
@@ -137,6 +126,11 @@ const config = {
       },
       googleAnalytics: {
         trackingID: 'G-MVS6492XVX',
+      },
+      algolia: {
+        appId: 'BH4D9OD16A',
+        apiKey: '1245fb17ae1ec196b3cbd810e20cf9f0',
+        indexName: 'authp',
       },
     }),
 };
