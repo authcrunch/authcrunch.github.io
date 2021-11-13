@@ -22,30 +22,38 @@ Additionally, click "generate a private key" to sign access token requests.
 
 ![Settings - Developer settings - GitHub Apps - My Gatekeeper - Private Keys](../images/oauth2_github_sign_keys.png)
 
-
-Caddyfile configuration:
-
-```
-        github_oauth2_backend {
-          method oauth2
-          realm github
-          provider github
-          client_id CLIENT_ID
-          client_secret CLIENT_SECRET
-          scopes user
-        }
-```
-
-The `github` provider does not have mail claim, i.e. email address. Therefore,
-if there is a need to assign a role to a user, one could user `user` directive
-to match on `sub`, i.e. subject claim. The `sub` claim is in the format of
-`github.com/<GITHUB_HANDLE>`.
+The Caddyfile follows:
 
 ```
-        github_oauth2_backend {
-          ...
-          user github.com/greenpau add role superuser
-        }
+app.contoso.com {
+  route /auth* {
+    authp {
+      backend github CLIENT_ID CLIENT_SECRET
+      transform user {
+        match origin github
+        action add role authp/user
+        ui link "My Website" / icon "las la-star"
+        ui link "My Identity" "/auth/whoami" icon "las la-star"
+      }
+      transform user {
+        match origin github
+        match email greenpau@contoso.com
+        action add role authp/admin
+      }
+    }
+  }
+
+  route {
+    authorize {
+      primary yes
+      allow roles authp/admin authp/user
+      validate bearer header
+      set auth url /auth/oauth2/github
+      inject headers with claims
+    }
+    respond * "my app" 200
+  }
+}
 ```
 
 The users authenticating via Github would have to accept the terms:
