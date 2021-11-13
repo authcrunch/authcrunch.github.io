@@ -1,19 +1,25 @@
 # Local Configuration
 
-Please refer to the `assets/conf/local/config.json` configuration file when
-configurin the plugin backend. In the example, the route refers to `local` backend in
-the file `assets/backends/local/users.json`. Specify the path to the file
-where you want your database to reside. Do not create a file, but rather
-create leading directories.
+The following directive instructs the plugin to use the local
+`/home/greenpau/.local/caddy/users.json` file for authentication.
 
-For example, create `/etc/caddy/auth/local` directory and specify the
-`path` value as:
-
-```json
-"path": "/etc/caddy/auth/local/users.json",
+```
+app.contoso.com {
+  route {
+    authp {
+      backend local /home/greenpau/.local/caddy/users.json local
 ```
 
-Next, start the server, and find the following following log entries:
+Please browse the following configuration files for examples:
+
+* [Local auth only](https://github.com/greenpau/caddy-auth-portal/blob/main/assets/conf/local/multihost/Caddyfile)
+* [Local auth with registration](https://github.com/greenpau/caddy-auth-portal/blob/main/assets/conf/local/Caddyfile)
+
+The plugin creates local authentication file (i.e. `users.json`) if it does
+not exist already.
+
+After starting the server, and find the following following log entries with
+`user_name` and `user_secret`.
 
 ```json
 {"level":"info","ts":1588704471.5784082,"logger":"http.authentication.providers.portal","msg":"created new user","user_id":"cd5f647a-cc04-4ae2-9d0a-2d5e9b95cf98","user_name":"webadmin","user_email":"webadmin@localdomain.local","user_claims":{"roles":"superadmin"}}
