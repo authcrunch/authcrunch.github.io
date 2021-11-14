@@ -1,20 +1,58 @@
-# User Interface Features
+# Customize UI
 
-## Auto-Redirect URL
+## Theming
 
-Consider the following configuration snippet. When the JWT plugin detects
-unauthenticated user, it forwards the user to `https://auth.example.com`.
-The `redirect_url` in URL query creates `AUTH_PORTAL_REDIRECT_URL` cookie
-in the users session. Upon successful authentication, the portal
-clears the cookie and redirects the user to the path specified in
-`AUTH_PORTAL_REDIRECT_URL` cookie.
+The theming of the portal works as follows.
+
+It starts with a concept of `theme`. By default, the portal uses `basic` theme.
+There is no need to defind it in Caddyfile.
 
 ```
-https://chat.example.com {
-  authorize {
-    set auth url https://auth.example.com/auth?redirect_url=https://chat.example.com
-  }
-}
+localhost {
+  route /auth* {
+    authp {
+      ui {
+        theme basic
+      }
+```
+
+Each theme must have a set of default pages:
+
+* `generic`
+* `login`
+* `portal`
+* `register`
+* `whoami`
+* `settings`
+* `sandbox`
+
+The plain text templates are being stored in `assets/templates/<THEME>/<PAGE>.template`.
+
+```
+assets/templates/basic/generic.template
+assets/templates/basic/login.template
+assets/templates/basic/portal.template
+assets/templates/basic/register.template
+assets/templates/basic/whoami.template
+assets/templates/basic/settings.template
+assets/templates/basic/sandbox.template
+```
+
+These templates are the parts of `pkg/ui/pages.go`. They are compiled in the
+portal's binary. That is, there is no need to store them on the disk.
+
+Next, if a user wants to use a different template, then it could be passed via
+Caddyfile directives. Specifically, use `template <PAGE_NAME>` directive to point
+to a file on disk.
+
+```
+localhost {
+  route /auth* {
+    authp {
+      ui {
+        theme basic
+        template login "/etc/gatekeeper/ui/login.template"
+      }
 ```
 
 ## Custom CSS Styles
@@ -25,7 +63,7 @@ plugin's pages. The stylesheet is available under `auth/assets/css/custom.css`
 ```
       ui {
         ...
-        custom_css_path path/to/styles.css
+        custom css path path/to/styles.css
         ...
       }
 ```
@@ -38,7 +76,7 @@ plugin's pages. The script is available under `auth/assets/js/custom.js`
 ```
       ui {
         ...
-        custom_js_path path/to/script.js
+        custom js path path/to/script.js
         ...
       }
 ```
@@ -93,7 +131,7 @@ to `<head>` section of the portal's pages:
 ```bash
       ui {
         ...
-        custom_html_header_path path/to/head.html
+        custom html header path path/to/head.html
         ...
       }
 ```

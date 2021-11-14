@@ -57,3 +57,19 @@ backend github <client_id> <client_secret>
 backend facebook <client_id> <client_secret>
 ```
 
+## Auto-Redirect URL
+
+Consider the following configuration snippet. When the JWT plugin detects
+unauthenticated user, it forwards the user to `https://auth.example.com`.
+The `redirect_url` in URL query creates `AUTH_PORTAL_REDIRECT_URL` cookie
+in the users session. Upon successful authentication, the portal
+clears the cookie and redirects the user to the path specified in
+`AUTH_PORTAL_REDIRECT_URL` cookie.
+
+```
+https://chat.example.com {
+  authorize {
+    set auth url https://auth.example.com/auth?redirect_url=https://chat.example.com
+  }
+}
+```
