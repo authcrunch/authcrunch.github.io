@@ -7,11 +7,19 @@ Additionally, the LDAP backend works in conjunction with Local backend.
 As you will see later, the two can be used together by introducing a
 dropdown in UI interface to choose local versus LDAP domain authentication.
 
-The reference configuration for the backend is in
-[`assets/conf/ldap/Caddyfile`](https://github.com/greenpau/caddy-auth-portal/blob/main/assets/conf/ldap/Caddyfile).
+## Configuration Examples
+
+The reference configuration for the backend is in the following files:
+
+* [`assets/conf/ldap/Caddyfile`](https://github.com/greenpau/caddy-auth-portal/blob/main/assets/conf/ldap/Caddyfile):
+  Microsoft AD LDAP integration
+* [`assets/conf/ldap/posix/Caddyfile`](https://github.com/greenpau/caddy-auth-portal/blob/main/assets/conf/ldap/posix/Caddyfile):
+  LDAP integration with POSIX groups
 
 The following Caddy endpoint at `/auth` authentications users
 from `contoso.com` domain.
+
+## Microsoft AD Integration
 
 There is a single LDAP server associated with the domain: `ldaps://ldaps.contoso.com`.
 
@@ -50,7 +58,7 @@ openssl s_client -showcerts -verify 5 -connect ldaps.localhost.local:636 < /dev/
     done
 ```
 
-The LDAP attribute mapping to JWT fields is as follows.
+The LDAP attribute mapping to JWT fields is as follows. This is a typical Microsoft AD mapping.
 
 | **JWT Token Field** | **LDAP Attribute** |
 | --- | --- |
@@ -193,3 +201,67 @@ using local and LDAP credentials.
   }
 }
 ```
+
+## POSIX Groups Integration
+
+The configuration in [`assets/conf/ldap/posix/Caddyfile`](https://github.com/greenpau/caddy-auth-portal/blob/main/assets/conf/ldap/posix/Caddyfile)
+is for the integration with [Online LDAP Test Server](https://www.forumsys.com/tutorials/integration-how-to/ldap/online-ldap-test-server/).
+
+The key differences of the configuration follow:
+
+First, the `posix_groups` directive at the LDAP server level instructs the
+plugin to make a secondary LDAP call to discover user memberships in groups.
+
+The search similar to the command below:
+
+```
+ldapsearch -x -h ldap.forumsys.com -D "cn=read-only-admin,dc=example,dc=com" -w password -b "dc=example,dc=com" \
+ "(&(uniqueMember=uid=riemann,dc=example,dc=com)(objectClass=groupOfUniqueNames))"
+```
+
+Second, the `search_group_filter` directive allows the modification of the
+default `(&(uniqueMember=uid=` + USER_DN + `)(objectClass=groupOfUniqueNames))`
+group search string.
+
+Third, there are a number of attributes that would require modification.
+
+The user object follows:
+
+```
+# riemann, example.com
+dn: uid=riemann,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Bernhard Riemann
+sn: Riemann
+uid: riemann
+mail: riemann@ldap.forumsys.com
+```
+
+The comments in the below snippet explain the changes.
+
+```
+attributes {
+    # The name us mapped to cn attribute, i.e. Bernhard Riemann
+    name cn
+    # Although surname is being kept in sn attribute, there is no
+    # attribute for given name. Thus, it is useless in isolation.
+    # Therefore, changeing surname value to non-existing attribute foo.
+    surname foo
+    # The username is mapped to uid attribute, i.e. riemann
+    username uid
+    # The member_of is not being used.
+    member_of uniqueMember
+    email mail
+}
+```
+
+The screenshots from the login, portal, and whoami pages follow.
+
+![LDAP Sign In](./images/ldap_demo_signin.png)
+
+![LDAP Portal](./images/ldap_demo_portal.png)
+
+![LDAP Whoami](./images/ldap_demo_whoami.png)
