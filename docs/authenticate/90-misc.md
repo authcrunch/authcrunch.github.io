@@ -73,3 +73,82 @@ https://chat.example.com {
   }
 }
 ```
+
+## Basic Authentication
+
+The `/basic/login/<realm>` endpoint provides a way to trigger Basic HTTP authentication.
+
+
+```bash
+curl -v --user 'webadmin:asd3kldkjld23HJh33jDnx!@1' https://auth.myfiosgateway.com:8443/basic/login/local
+```
+
+The output follows. The token is in the `authorization` header and `access_token` cookie.
+
+```
+< HTTP/2 303
+< authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mzg3Mzc2NDUsImp0aSI6IktzRXFpdTRqVXFQajJxUHJRZjhuWlEwSlFSell1R015MmlqU1oiLCJpYXQiOjE2Mzg3MzQwNDUsImlzcyI6Imh0dHBzOi8vYXV0aC5teWZpb3NnYXRld2F5LmNvbTo4NDQzL2Jhc2ljL2xvZ2luL2xvY2FsIiwibmJmIjoxNjM4NzMzOTg1MDAwLCJzdWIiOiJ3ZWJhZG1pbiIsImVtYWlsIjoid2ViYWRtaW5AbG9jYWxkb21haW4ubG9jYWwiLCJyb2xlcyI6WyJhdXRocC9hZG1pbiJdLCJvcmlnaW4iOiJsb2NhbCIsImFkZHIiOiIxMC4wLjIuMiJ9.gJXu5Dzj1VsI-QAWOv1kOcfMI8v5luiri4hmIOI1fL1XVnscaCOUyixpZLGRbqXCMhd8v4XBsdJUCVeMJ3RMFw
+< cache-control: no-store
+< content-type: text/plain
+< location: https://auth.myfiosgateway.com:8443/portal
+< pragma: no-cache
+< server: Caddy
+< set-cookie: access_token=eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mzg3Mzc2NDUsImp0aSI6IktzRXFpdTRqVXFQajJxUHJRZjhuWlEwSlFSell1R015MmlqU1oiLCJpYXQiOjE2Mzg3MzQwNDUsImlzcyI6Imh0dHBzOi8vYXV0aC5teWZpb3NnYXRld2F5LmNvbTo4NDQzL2Jhc2ljL2xvZ2luL2xvY2FsIiwibmJmIjoxNjM4NzMzOTg1MDAwLCJzdWIiOiJ3ZWJhZG1pbiIsImVtYWlsIjoid2ViYWRtaW5AbG9jYWxkb21haW4ubG9jYWwiLCJyb2xlcyI6WyJhdXRocC9hZG1pbiJdLCJvcmlnaW4iOiJsb2NhbCIsImFkZHIiOiIxMC4wLjIuMiJ9.gJXu5Dzj1VsI-QAWOv1kOcfMI8v5luiri4hmIOI1fL1XVnscaCOUyixpZLGRbqXCMhd8v4XBsdJUCVeMJ3RMFw; Domain=myfiosgateway.com; Path=/; Secure; HttpOnly;
+< set-cookie: AUTHP_SANDBOX_ID=delete; Domain=myfiosgateway.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;
+< content-length: 0
+< date: Sun, 05 Dec 2021 19:54:05 GMT
+<
+* Connection #0 to host auth.myfiosgateway.com left intact
+```
+
+## JSON API
+
+### Authenticate
+
+The following command provides a programmatic way to authenticate to `/login` endpoint:
+
+```bash
+curl -X POST https://auth.myfiosgateway.com:8443/login \
+   -H 'Accept: application/json' \
+   -H 'Content-Type: application/json' \
+   -d '{"username":"webadmin","password":"asd3kldkjld23HJh33jDnx!@1","realm":"local"}'
+```
+
+The output follows.
+
+```
+{"token":"eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mzg3MzgyMjEsImp0aSI6IlN6d2JiOXI5eG5NeVlHUE5IbGZHeklQVlc5VHVLY1VlcndMbmNHR1BtIiwiaWF0IjoxNjM4NzM0NjIxLCJpc3MiOiJodHRwczovL2F1dGgubXlmaW9zZ2F0ZXdheS5jb206ODQ0My9sb2dpbiIsIm5iZiI6MTYzODczNDU2MTAwMCwic3ViIjoid2ViYWRtaW4iLCJlbWFpbCI6IndlYmFkbWluQGxvY2FsZG9tYWluLmxvY2FsIiwicm9sZXMiOlsiYXV0aHAvYWRtaW4iLCJhdXRocC91c2VyIl0sIm9yaWdpbiI6ImxvY2FsIiwiYWRkciI6IjEwLjAuMi4yIn0.QuSld2zKYtQX5gPIUlg7glRb7GXuieXm7ALxBTRd2dxCK4T-cZN-2KiK376Z1sxSFf3P3PA-ycrcazjdU5XETQ","token_name":"access_token"}
+```
+
+### User Identity
+
+The following command provides a programmatic way to get information from `/whoami`
+endpoint using the previously acquired JWT token. This works well for the
+creation of user badge.
+
+```
+curl -X GET https://auth.myfiosgateway.com:8443/whoami \
+   -H 'Accept: application/json' \
+   -H 'Content-Type: application/json' \
+   -H 'Authorization: Bearer: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mzg3MzgyMjEsImp0aSI6IlN6d2JiOXI5eG5NeVlHUE5IbGZHeklQVlc5VHVLY1VlcndMbmNHR1BtIiwiaWF0IjoxNjM4NzM0NjIxLCJpc3MiOiJodHRwczovL2F1dGgubXlmaW9zZ2F0ZXdheS5jb206ODQ0My9sb2dpbiIsIm5iZiI6MTYzODczNDU2MTAwMCwic3ViIjoid2ViYWRtaW4iLCJlbWFpbCI6IndlYmFkbWluQGxvY2FsZG9tYWluLmxvY2FsIiwicm9sZXMiOlsiYXV0aHAvYWRtaW4iLCJhdXRocC91c2VyIl0sIm9yaWdpbiI6ImxvY2FsIiwiYWRkciI6IjEwLjAuMi4yIn0.QuSld2zKYtQX5gPIUlg7glRb7GXuieXm7ALxBTRd2dxCK4T-cZN-2KiK376Z1sxSFf3P3PA-ycrcazjdU5XETQ'
+```
+
+The output contains basic user information:
+
+```json
+{
+  "exp": 1638738221,
+  "jti": "Szwbb9r9xnMyYGPNHlfGzIPVW9TuKcUerwLncGGPm",
+  "iat": 1638734621,
+  "iss": "https://auth.myfiosgateway.com:8443/login",
+  "nbf": 1638734561000,
+  "sub": "webadmin",
+  "email": "webadmin@localdomain.local",
+  "roles": [
+    "authp/admin",
+    "authp/user"
+  ],
+  "origin": "local",
+  "addr": "10.0.2.2"
+}
+```
