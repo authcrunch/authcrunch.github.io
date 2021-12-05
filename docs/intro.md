@@ -19,3 +19,7 @@ Here is the list of Caddy v2 plugins I maintain:
 * [caddy-authorize](https://github.com/greenpau/caddy-authorize)
 * [caddy-trace](https://github.com/greenpau/caddy-trace)
 * [caddy-systemd](https://github.com/greenpau/caddy-systemd)
+
+[Authentication preview](https://www.youtube.com/watch?v=poOkq_jb1B0]) follows.
+
+<iframe src="https://www.youtube.com/embed/poOkq_jb1B0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="allowfullscreen"></iframe>
