@@ -1,5 +1,8 @@
 # Jumpcloud SAML Integration
 
+This [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/saml/jumpcloud/Caddyfile)
+contains the configuration for the SAML integration.
+
 First, browse to "User Authentication | SSO" and create a new application.
 
 Select "Custom SAML App".
