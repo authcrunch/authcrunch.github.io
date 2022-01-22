@@ -175,7 +175,6 @@ Additionally, there could be a directory with public PEM keys.
 {
   security {
     authorization policy mypolicy {
-      primary yes
       crypto key e5ZaB46bF27d verify from directory /etc/gatekeeper/auth/jwt
       crypto key 3bc4be49abf6 verify from env VERIFY_KEY_DIR as directory
     }
