@@ -16,26 +16,38 @@ search to a specific sources is using the following `Caddyfile` directive.
 Limits the search of JWT tokens in cookies only.
 
 ```
-    authorize {
+{
+  security {
+    authorization policy mypolicy {
       set token sources cookie
     }
+  }
+}
 ```
 
 Limits the search of JWT tokens cookies and query parameters.
 
 ```
-    authorize {
+{
+  security {
+    authorization policy mypolicy {
       set token sources cookie query
     }
+  }
+}
 ```
 
 Reorders the default priority of the search of JWT tokens from "cookie",
 "header", "query" to "header", "query", and "cookie".
 
 ```
-    authorize {
+{
+  security {
+    authorization policy mypolicy {
       set token sources header query cookie
     }
+  }
+}
 ```
 
 Further, the following `Caddyfile` directive instructs the plugin to
@@ -43,9 +55,13 @@ search for `Authorization: Bearer <JWT_TOKEN>` header and authorize
 the found token:
 
 ```
-    authorize {
+{
+  security {
+    authorization policy mypolicy {
       validate bearer header
     }
+  }
+}
 ```
 
 Test it with the following `curl` command:

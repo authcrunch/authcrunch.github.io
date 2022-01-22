@@ -25,13 +25,20 @@ It also sets a custom token name. The plugin would search for tokens with
 the `app_token` name.
 
 ```
-  route /prometheus* {
-    authorize {
-      primary yes
+{
+  security {
+    authorization policy mypolicy {
       crypto key verify 383aca9a-1c39-4d7a-b4d8-67ba4718dd3f
       crypto key token name app_token
     }
   }
+}
+
+assetq.myfiosgateway.com {
+  authorize with mypolicy
+  root * {env.HOME}/www
+  file_server
+}
 ```
 
 The syntax is:
@@ -46,13 +53,20 @@ Alternatively, the key could be set via environment variables. The
 `APP_TOKEN` environment variable.
 
 ```
-  route /prometheus* {
-    authorize {
-      primary yes
+{
+  security {
+    authorization policy mypolicy {
       crypto key verify from env APP_TOKEN
       crypto key token name app_token
     }
   }
+}
+
+assetq.myfiosgateway.com {
+  authorize with mypolicy
+  root * {env.HOME}/www
+  file_server
+}
 ```
 
 The syntax is:
@@ -66,15 +80,22 @@ Additionally, the key may have a key ID. It is otherwise known as `kid`.
 It could be passed via right after the `crypto key` keywords.
 
 ```
-  route /prometheus* {
-    authorize {
-      primary yes
+{
+  security {
+    authorization policy mypolicy {
       crypto key e5ZaB46bF27d verify 383aca9a-1c39-4d7a-b4d8-67ba4718dd3f
       crypto key e5ZaB46bF27d token name app_token
       crypto key 3bc4be49abf6 verify from env SECRET_TOKEN
       crypto key 3bc4be49abf6 token name secret_token
     }
   }
+}
+
+assetq.myfiosgateway.com {
+  authorize with mypolicy
+  root * {env.HOME}/www
+  file_server
+}
 ```
 
 The syntax is:
@@ -130,27 +151,43 @@ keys.
    environment variable `VERIFY_KEY_DIR`.
 
 ```
-  route /prometheus* {
-    authorize {
-      primary yes
+{
+  security {
+    authorization policy mypolicy {
       crypto key verify from file /etc/gatekeeper/auth/jwt/verify_key1.pem
       crypto key e5ZaB46bF27d verify from file /etc/gatekeeper/auth/jwt/verify_key2.pem
       crypto key 3bc4be49abf6 verify from env VERIFY_KEY_FILE as file
       crypto key pik3mfhsXR1B verify from env VERIFY_KEY_DIR as directory
     }
   }
+}
+
+assetq.myfiosgateway.com {
+  authorize with mypolicy
+  root * {env.HOME}/www
+  file_server
+}
 ```
 
 Additionally, there could be a directory with public PEM keys.
 
 ```
-  route /prometheus* {
-    authorize {
+{
+  security {
+    authorization policy mypolicy {
       primary yes
       crypto key e5ZaB46bF27d verify from directory /etc/gatekeeper/auth/jwt
       crypto key 3bc4be49abf6 verify from env VERIFY_KEY_DIR as directory
     }
   }
+}
+
+assetq.myfiosgateway.com {
+  authorize with mypolicy
+  root * {env.HOME}/www
+  file_server
+}
+
 ```
 
 The syntax is:

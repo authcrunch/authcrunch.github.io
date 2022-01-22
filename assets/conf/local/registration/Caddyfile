@@ -30,13 +30,13 @@
 				match sub github.com/greenpau
 				action add role authp/user
 			}
-            registration {
-                dropbox {env.HOME}/.local/caddy/registrations.json
-                title "User Registration"
-                code "NY2020"
-                require accept terms
-                require domain mx
-            }
+			registration {
+				dropbox {env.HOME}/.local/caddy/registrations.json
+				title "User Registration"
+				code "NY2020"
+				require accept terms
+				require domain mx
+			}
 		}
 
 		authorization policy guests_policy {

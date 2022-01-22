@@ -48,19 +48,20 @@
 			inject headers with claims
 		}
 	}
+}
 
-	(tls_config) {
-		tls /home/greenpau/.local/tls/myfiosgateway/server.crt /home/greenpau/.local/tls/myfiosgateway/server.key
-	}
+(tls_config) {
+	tls /home/greenpau/.local/tls/myfiosgateway/server.crt /home/greenpau/.local/tls/myfiosgateway/server.key
+}
 
-	auth.myfiosgateway.com {
-		import tls_config
-		authenticate with myportal
-	}
+auth.myfiosgateway.com {
+	import tls_config
+	authenticate with myportal
+}
 
-	assetq.myfiosgateway.com {
-		import tls_config
-		authorize with mypolicy
-		root * {env.HOME}/www
-		file_server
-	}
+assetq.myfiosgateway.com {
+	import tls_config
+	authorize with mypolicy
+	root * {env.HOME}/www
+	file_server
+}

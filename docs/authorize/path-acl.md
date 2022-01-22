@@ -35,8 +35,12 @@ of the paths in JWT token claims, use the following Caddyfile
 directive:
 
 ```
-authorize {
-   validate path acl
+{
+  security {
+    authorization policy mypolicy {
+      validate path acl
+    }
+  }
 }
 ```
 

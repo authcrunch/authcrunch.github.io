@@ -221,8 +221,12 @@ If `authorize` configuration contains the following directive, then the "catch-a
 action is `allow`.
 
 ```
-authorize {
-  acl default allow
+{
+  security {
+    authorization policy mypolicy {
+      acl default allow
+    }
+  }
 }
 ```
 
@@ -239,7 +243,12 @@ However, one could use the `set forbidden url` Caddyfile directive to redirect
 users to a custom 403 page.
 
 ```
-authorize {
-  set forbidden url /custom_403.html
+{
+  security {
+    authorization policy mypolicy {
+      set forbidden url /custom_403.html
+    }
+  }
 }
 ```
+

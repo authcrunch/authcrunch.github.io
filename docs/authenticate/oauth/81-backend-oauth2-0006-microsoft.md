@@ -25,9 +25,8 @@ section at the top.
 
 ![Azure Active Directory - App registrations - My Application](../images/oauth2_azure_application_id.png)
 
-Finally, you need to generate a client secret to authenticate
-`caddy-auth-portal`. In the sidebar, navigate to `Certificates and
-secrets` and click on `New client secret`.
+Finally, you need to generate a client secret to authenticate. In the sidebar,
+navigate to `Certificates and secrets` and click on `New client secret`.
 
 ![Azure Active Directory - App registrations - My Application - Certificates and secrets](../images/oauth2_azure_secrets.png)
 

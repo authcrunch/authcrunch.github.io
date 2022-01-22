@@ -4,14 +4,13 @@ sidebar_position: 1
 
 # Auth Portal Plugin Overview
 
-`caddy-auth-portal` is Authentication Plugin for Caddy v2 implementing
+The Authentication Plugin for Caddy v2 implementing
 Form-Based, Basic, Local, LDAP, OpenID Connect, OAuth 2.0, SAML
 Authentication.
 
 The purpose of this plugin is providing **authentication** only. The plugin
 issue JWT tokens upon successful authentication. In turn, the **authorization**
-of the tokens is being handled by
-[`caddy-authorize`](https://github.com/greenpau/caddy-authorize).
+of the tokens is being handled by the Authorization plugin.
 
 The plugin supports the following **authentication** backends:
 

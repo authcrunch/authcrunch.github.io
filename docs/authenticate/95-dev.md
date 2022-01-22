@@ -31,8 +31,8 @@ If the user passes these challenges, the user gets authenticated and granted
 access.
 
 References:
-* `NewCheckpoint` function in [`caddy-authorize/pkg/user/user.go`](https://github.com/greenpau/caddy-authorize/blob/main/pkg/user/user.go)
-* `Transform` function in [caddy-auth-portal/pkg/transformer/transformer.go](https://github.com/greenpau/caddy-auth-portal/blob/main/pkg/transformer/transformer.go)
+* `NewCheckpoint` function in [`aaasf/pkg/user/user.go`](https://github.com/greenpau/aaasf/blob/main/pkg/user/user.go)
+* `Transform` function in [`aaasf/pkg/authn/transformer/transformer.go](https://github.com/greenpau/aaasf/blob/main/pkg/authn/transformer/transformer.go)
 
 ## Sandbox Views
 

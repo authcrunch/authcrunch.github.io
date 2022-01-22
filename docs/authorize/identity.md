@@ -11,12 +11,15 @@ By default, the identity passed to Caddy is email address. However,
 it could be changed with `set user identity` Caddyfile directive.
 
 ```
-    authorize {
+{
+  security {
+    authorization policy mypolicy {
       set user identity id
       set user identity subject
       set user identity email
-      ...
     }
+  }
+}
 ```
 
 If `email` is being set, but a JWT token does not contain an email address,

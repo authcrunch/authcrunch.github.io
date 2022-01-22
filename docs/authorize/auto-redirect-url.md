@@ -10,9 +10,11 @@ Consider the following configuration snippet. When the JWT plugin detects
 unauthenticated user, it forwards the user to `https://auth.example.com`.
 
 ```
-https://chat.example.com {
-  authorize {
-    set auth url https://auth.example.com/auth
+{
+  security {
+    authorization policy mypolicy {
+      set auth url https://auth.example.com/auth
+    }
   }
 }
 ```
@@ -26,10 +28,12 @@ If you would like to disable the addition of `redirect_url`, please
 add `disable auth redirect query`:
 
 ```
-https://chat.example.com {
-  authorize {
-    set auth url https://auth.example.com/auth
-    disable auth redirect query
+{
+  security {
+    authorization policy mypolicy {
+      set auth url https://auth.example.com/auth
+      disable auth redirect query
+    }
   }
 }
 ```
@@ -38,9 +42,11 @@ If you would like to change the parameter name, e.g. from `redirect_url`
 to `referer_url`, use the `set redirect query parameter` Caddyfile directive.
 
 ```
-https://chat.example.com {
-  authorize {
-    set redirect query parameter referer_url
+{
+  security {
+    authorization policy mypolicy {
+      set redirect query parameter referer_url
+    }
   }
 }
 ```
@@ -49,9 +55,11 @@ The following Caddyfile directive changes the status code (default: `302`) for
 the redirects.
 
 ```
-https://chat.example.com {
-  authorize {
-    set redirect status 307
+{
+  security {
+    authorization policy mypolicy {
+      set redirect status 307
+    }
   }
 }
 ```
@@ -60,8 +68,12 @@ If `authorize` configuration contains the following directive, then the redirect
 is disabled and the request is refused with a HTTP `401 Unauthorized` error.
 
 ```
-authorize {
-  disable auth redirect
+{
+  security {
+    authorization policy mypolicy {
+      disable auth redirect
+    }
+  }
 }
 ```
 
@@ -76,7 +88,11 @@ The following directive enables Javascript-based redirect. This is useful when
 the URI path contains pound (`#`) sign.
 
 ```
-authorize {
-  enable js redirect
+{
+  security {
+    authorization policy mypolicy {
+      enable js redirect
+    }
+  }
 }
 ```

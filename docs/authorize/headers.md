@@ -12,10 +12,12 @@ To pass JWT token claims in auto-generated HTTP headers to downstream
 plugins, use the following Caddyfile directive:
 
 ```
-authorize {
-   ...
-   inject headers with claims
-   ...
+{
+  security {
+    authorization policy mypolicy {
+      inject headers with claims
+    }
+  }
 }
 ```
 
@@ -41,9 +43,13 @@ For example, add the injection of `X-Picture` header with the value from `pictur
 of JWT token:
 
 ```
-route /guest* {
-  inject headers with claims
-  inject header "X-Picture" from picture
+{
+  security {
+    authorization policy mypolicy {
+      inject headers with claims
+      inject header "X-Picture" from picture
+    }
+  }
 }
 ```
 
@@ -65,10 +71,12 @@ The following directive instructs the plugin to remove the found
 token from a request.
 
 ```
-authorize {
-   ...
-   enable strip token
-   ...
+{
+  security {
+    authorization policy mypolicy {
+      enable strip token
+    }
+  }
 }
 ```
 
