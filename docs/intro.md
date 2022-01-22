@@ -15,8 +15,8 @@ Security App and Plugin for [Caddy v2](https://github.com/caddyserver/caddy). It
 
 Please show your appreciation for this work:
 
-1. **Promote the project** on social media (Twitter, LinkedIn, HN)
-2. [**Star the project**] :star: :star: :star:
+1. **Promote caddy-security project** on social media (Twitter, LinkedIn, HN)
+2. [**Star caddy-security**](https://github.com/greenpau/caddy-security) :star: :star: :star:
 3. [**Sponsor** @greenpau](https://github.com/sponsors/greenpau)
 
 Please ask questions via Github Issues or reach out directly via
