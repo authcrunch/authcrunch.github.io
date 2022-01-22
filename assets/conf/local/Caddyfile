@@ -1,0 +1,117 @@
+{
+	http_port 8080
+	https_port 8443
+	# debug
+
+	security {
+		authentication portal myportal {
+			crypto default token lifetime 3600
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			backend local {env.HOME}/.local/caddy/users.json local
+			backend github {env.GITHUB_CLIENT_ID} {env.GITHUB_CLIENT_SECRET}
+			cookie domain myfiosgateway.com
+			ui {
+				links {
+					"My Website" https://assetq.myfiosgateway.com:8443/ icon "las la-star"
+					"Guests" https://assetq.myfiosgateway.com:8443/guests icon "las la-star"
+					"Users" https://assetq.myfiosgateway.com:8443/users icon "las la-star"
+					"Admins" https://assetq.myfiosgateway.com:8443/admins icon "las la-star"
+					"My Identity" "/whoami" icon "las la-user"
+				}
+				password_recovery_enabled yes
+			}
+			transform user {
+				match origin local
+				action add role authp/user
+				ui link "Portal Settings" /settings icon "las la-cog"
+			}
+			transform user {
+				match realm github
+				match sub github.com/greenpau
+				action add role authp/user
+			}
+		}
+
+		authorization policy guests_policy {
+			# disable auth redirect
+			set auth url https://auth.myfiosgateway.com:8443/
+			allow roles authp/admin authp/user
+			crypto key verify {env.JWT_SHARED_KEY}
+			acl rule {
+				comment allow guests only
+				match role guest authp/guest
+				allow stop log info
+			}
+			acl rule {
+				comment default deny
+				always match iss any
+				deny log warn
+			}
+		}
+
+		authorization policy users_policy {
+			set auth url https://auth.myfiosgateway.com:8443/
+			allow roles authp/admin authp/user
+			crypto key verify {env.JWT_SHARED_KEY}
+			acl rule {
+				comment allow users
+				match role authp/user
+				allow stop log info
+			}
+			acl rule {
+				comment default deny
+				always match role any
+				deny log warn
+			}
+		}
+
+		authorization policy admins_policy {
+			set auth url https://auth.myfiosgateway.com:8443/
+			allow roles authp/admin authp/user
+			crypto key verify {env.JWT_SHARED_KEY}
+			acl rule {
+				comment allow users
+				match role authp/user
+				allow stop log info
+			}
+			acl rule {
+				comment default deny
+				always match role any
+				deny log warn
+			}
+		}
+	}
+}
+
+(tls_config) {
+	tls /home/greenpau/.local/tls/myfiosgateway/server.crt /home/greenpau/.local/tls/myfiosgateway/server.key
+}
+
+auth.myfiosgateway.com {
+	import tls_config
+	route {
+		authenticate with myportal
+	}
+}
+
+assetq.myfiosgateway.com {
+	import tls_config
+	route /guests* {
+		authorize with guests_policy
+		respond * "assetq - guests only" 200
+	}
+
+	route /users* {
+		authorize with users_policy
+		respond * "assetq - users" 200
+	}
+
+	route /admins* {
+		authorize with admins_policy
+		respond * "assetq - admins" 200
+	}
+
+	route {
+		respond "assetq is running"
+	}
+}

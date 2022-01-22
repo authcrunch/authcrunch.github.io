@@ -1,19 +1,28 @@
 # Local Configuration
 
 The following directive instructs the plugin to use the local
-`/home/greenpau/.local/caddy/users.json` file for authentication.
+`$HOME/.local/caddy/users.json` file for authentication.
 
 ```
+{
+  security {
+    authentication portal myportal {
+      backend local {env.HOME}/.local/caddy/users.json local
+    }
+  }
+}
+
 app.contoso.com {
   route {
-    authp {
-      backend local /home/greenpau/.local/caddy/users.json local
+    authenticate with myportal
+  }
+}
 ```
 
 Please browse the following configuration files for examples:
 
-* [Local auth only](https://github.com/greenpau/caddy-auth-portal/blob/main/assets/conf/local/multihost/Caddyfile)
-* [Local auth with registration](https://github.com/greenpau/caddy-auth-portal/blob/main/assets/conf/local/Caddyfile)
+* [Local auth only](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/local/Caddyfile)
+* [Local auth with registration](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/local/registration/Caddyfile)
 
 The plugin creates local authentication file (i.e. `users.json`) if it does
 not exist already.
