@@ -65,16 +65,20 @@ with shared key `428f41ab-67ec-47d1-8633-bcade9dcc7ed` and add key id of
 of 900 seconds (15 minutes). The name of the token is `access_token`.
 
 ```
-authp {
+authentication portal myportal {
   crypto key a2f19072b6d6 sign-verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
+}
+
+authorization policy mypolicy {
+  crypto key a2f19072b6d6 verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
 }
 ```
 
 The corresponding `authorize` plugin config is:
 
 ```
-authorize {
-  crypto key a2f19072b6d6 verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
+route {
+  authorize with mypolicy
 }
 ```
 
@@ -85,18 +89,22 @@ of 1800 seconds (900 minutes). The name of the token is `JWT_TOKEN`.
 
 
 ```
-authp {
+authentication portal myportal {
   crypto default token name JWT_TOKEN
   crypto default token lifetime 1800
   crypto key a2f19072b6d6 sign-verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
 }
+
+authorization policy mypolicy {
+  crypto key a2f19072b6d6 verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
+}
 ```
 
 The corresponding `authorize` plugin config is:
 
 ```
-authorize {
-  crypto key a2f19072b6d6 verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
+route {
+  authorize with mypolicy
 }
 ```
 
@@ -107,16 +115,20 @@ of 1800 seconds (900 minutes). The name of the token is `JWT_TOKEN`.
 
 
 ```
-authp {
+authentication portal myportal {
   crypto key sign-verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
+}
+
+authorization policy mypolicy {
+  crypto key verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
 }
 ```
 
 The corresponding `authorize` plugin config is:
 
 ```
-authorize {
-  crypto key verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
+route {
+  authorize with mypolicy
 }
 ```
 

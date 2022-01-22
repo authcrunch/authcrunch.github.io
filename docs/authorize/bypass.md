@@ -15,16 +15,27 @@ For example, the following configuration allows bypassing authorization for
 URI `/app/bypassed` and `/app/another/bypass`.
 
 ```
-route /app* {
-  authorize {
-    bypass uri prefix /app/bypassed
-    bypass uri prefix /app/another/bypass
-    acl rule {
-      match role user admin authp/admin authp/user
-      allow stop log debug
+{
+  debug
+
+  security {
+    authorization policy defaultPolicy {
+      bypass uri prefix /app/bypassed
+      bypass uri prefix /app/another/bypass
+      acl rule {
+        match role user admin authp/admin authp/user
+        allow stop log debug
+      }
+      acl default deny
     }
-    acl default deny
   }
-  respond * "my app - standard users and admins" 200
+}
+
+app.myfiosgateway.com {
+  route {
+    authorize with defaultPolicy
+    respond * "authorized user or accesses bypassed URLs" 200
+  }
 }
 ```
+
