@@ -68,7 +68,7 @@ const config = {
             label: 'Authorize',
           },
           {
-            href: 'https://github.com/greenpau/caddy-auth-portal/issues/new/choose',
+            href: 'https://github.com/greenpau/caddy-security/issues/new/choose',
             label: '💡  Ask Questions',
             position: 'right',
             className: 'button button--secondary',

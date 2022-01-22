@@ -22,7 +22,7 @@ function HomepageHeader() {
           <div className="hsep"></div>
           <Link
             className="button button--secondary button--lg"
-            to="https://github.com/greenpau/caddy-auth-portal/issues/new/choose">
+            to="https://github.com/greenpau/caddy-security/issues/new/choose">
             💡  Ask Questions
           </Link>
         </div>
