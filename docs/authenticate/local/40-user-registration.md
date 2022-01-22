@@ -3,17 +3,23 @@
 The following Caddy configuration enables user registration.
 
 ```
-app.contoso.com {
-  route {
-    authp {
+{
+  security {
+    authentication portal myportal {
       registration {
-        dropbox /home/greenpau/.local/caddy/registrations.json
+        dropbox {env.HOME}/.local/caddy/registrations.json
         title "User Registration"
         code "NY2020"
         require accept terms
         require domain mx
       }
-    ...
+    }
+  }
+}
+
+auth.myfiosgateway.com {
+  route {
+    authenticate with myportal
   }
 }
 ```

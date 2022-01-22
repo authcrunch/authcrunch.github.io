@@ -20,12 +20,25 @@ The `enable source ip tracking` Caddyfile directive instructs
 the plugin to record the source IP address when issuing claims.
 
 ```
-localhost {
-  route /auth* {
-    authp {
-      ...
+{
+  security {
+    authentication portal myportal {
       enable source ip tracking
-      ...
+    }
+
+    authorization policy mypolicy {
+      validate source address
+    }
+  }
+}
+
+auth.myfiosgateway.com {
+  authenticate with myportal
+}
+
+app.myfiosgateway.com {
+  authorize with mypolicy
+}
 ```
 
 This could be useful to force re-authentication when the client IP
@@ -51,26 +64,48 @@ The following Caddyfile shortcuts could be used to configure local, OAuth 2.0
 backends:
 
 ```
-backend local <path> <realm>
-backend google <client_id> <client_secret>
-backend github <client_id> <client_secret>
-backend facebook <client_id> <client_secret>
+{
+  security {
+    authentication portal myportal {
+      backend local <path> <realm>
+      backend google <client_id> <client_secret>
+      backend github <client_id> <client_secret>
+      backend facebook <client_id> <client_secret>
+    }
+  }
+}
+
+auth.myfiosgateway.com {
+  authenticate with myportal
+}
 ```
 
 ## Auto-Redirect URL
 
 Consider the following configuration snippet. When the JWT plugin detects
-unauthenticated user, it forwards the user to `https://auth.example.com`.
+unauthenticated user, it forwards the user to `https://auth.myfiosgateway.com`.
 The `redirect_url` in URL query creates `AUTH_PORTAL_REDIRECT_URL` cookie
 in the users session. Upon successful authentication, the portal
 clears the cookie and redirects the user to the path specified in
 `AUTH_PORTAL_REDIRECT_URL` cookie.
 
 ```
-https://chat.example.com {
-  authorize {
-    set auth url https://auth.example.com/auth?redirect_url=https://chat.example.com
+{
+  security {
+    authentication portal myportal
+
+    authorization policy mypolicy {
+      set auth url https://auth.myfiosgateway.com/login?redirect_url=https://app.myfiosgateway.com
+    }
   }
+}
+
+auth.myfiosgateway.com {
+  authenticate with myportal
+}
+
+app.myfiosgateway.com {
+  authorize with mypolicy
 }
 ```
 

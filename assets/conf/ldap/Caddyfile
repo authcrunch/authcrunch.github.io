@@ -1,0 +1,124 @@
+{
+	http_port 8080
+	https_port 8443
+	# debug
+
+	security {
+		authentication portal myportal {
+			crypto default token lifetime 3600
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			backend local {env.HOME}/.local/caddy/users.json local
+			backend github {env.GITHUB_CLIENT_ID} {env.GITHUB_CLIENT_SECRET}
+			cookie domain myfiosgateway.com
+
+			backends {
+				ldap_backend {
+					method ldap
+					realm contoso.com
+					servers {
+						ldaps://ldaps.contoso.com ignore_cert_errors
+					}
+					attributes {
+						name givenName
+						surname sn
+						username sAMAccountName
+						member_of memberOf
+						email mail
+					}
+					username "CN=authzsvc,OU=Service Accounts,OU=Administrative Accounts,DC=CONTOSO,DC=COM"
+					password "P@ssW0rd123"
+					search_base_dn "DC=CONTOSO,DC=COM"
+					search_filter "(&(|(sAMAccountName=%s)(mail=%s))(objectclass=user))"
+					groups {
+						"CN=Admins,OU=Security,OU=Groups,DC=CONTOSO,DC=COM" admin
+						"CN=Editors,OU=Security,OU=Groups,DC=CONTOSO,DC=COM" editor
+						"CN=Viewers,OU=Security,OU=Groups,DC=CONTOSO,DC=COM" viewer
+					}
+				}
+			}
+			ui {
+				logo url "https://caddyserver.com/resources/images/caddy-circle-lock.svg"
+				logo description "Caddy"
+				links {
+					"Prometheus" https://assetq.myfiosgateway.com:8443/prometheus/
+					"Alertmanager" https://assetq.myfiosgateway.com:8443/alertmanager/
+					"Elasticsearch" https://assetq.myfiosgateway.com:8443/elk/
+					"My App" https://assetq.myfiosgateway.com:8443/myapp/
+					"My Identity" "/whoami" icon "las la-user"
+				}
+			}
+			password_recovery_enabled yes
+		}
+		transform user {
+			match origin local
+			action add role authp/user
+			ui link "Portal Settings" /settings icon "las la-cog"
+		}
+		transform user {
+			match realm github
+			match sub github.com/greenpau
+			action add role authp/user
+		}
+		registration {
+			dropbox {env.HOME}/.local/caddy/registrations.json
+			title "User Registration"
+			code "NY2020"
+			require accept terms
+			require domain mx
+		}
+	}
+
+	authorization policy mypolicy {
+		# disable auth redirect
+		set auth url https://auth.myfiosgateway.com:8443/
+		allow roles authp/admin authp/user
+		crypto key verify {env.JWT_SHARED_KEY}
+		allow roles anonymous guest admin
+		allow roles authp/admin authp/guest
+		allow roles admin editor viewer
+		allow roles AzureAD_Administrator AzureAD_Editor AzureAD_Viewer
+		allow roles everyone Everyone
+	}
+}
+
+(tls_config) {
+	tls /home/greenpau/.local/tls/myfiosgateway/server.crt /home/greenpau/.local/tls/myfiosgateway/server.key
+}
+
+auth.myfiosgateway.com {
+	import tls_config
+	route {
+		authenticate with myportal
+	}
+}
+
+assetq.myfiosgateway.com {
+	import tls_config
+
+	route /prometheus/* {
+		authorize with mypolicy
+		uri strip_prefix /prometheus
+		reverse_proxy http://127.0.0.1:9080
+	}
+
+	route /alertmanager/* {
+		authorize with mypolicy
+		uri strip_prefix /alertmanager
+		reverse_proxy http://127.0.0.1:9083
+	}
+
+	route /elk/* {
+		authorize with mypolicy
+		uri strip_prefix /elk
+		reverse_proxy 127.0.0.1:5601
+	}
+
+	route /myapp* {
+		authorize with mypolicy
+		respond * "myapp" 200
+	}
+
+	route {
+		respond "assetq is running"
+	}
+}

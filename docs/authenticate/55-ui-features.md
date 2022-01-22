@@ -8,12 +8,21 @@ It starts with a concept of `theme`. By default, the portal uses `basic` theme.
 There is no need to defind it in Caddyfile.
 
 ```
-localhost {
-  route /auth* {
-    authp {
+{
+  security {
+    authentication portal myportal {
       ui {
         theme basic
       }
+    }
+  }
+}
+
+auth.myfiosgateway.com {
+  route {
+    authenticate with myportal
+  }
+}
 ```
 
 Each theme must have a set of default pages:
@@ -46,13 +55,22 @@ Caddyfile directives. Specifically, use `template <PAGE_NAME>` directive to poin
 to a file on disk.
 
 ```
-localhost {
-  route /auth* {
-    authp {
+{
+  security {
+    authentication portal myportal {
       ui {
         theme basic
-        template login "/etc/gatekeeper/ui/login.template"
+        template login {env.HOME}/.local/caddy/ui/login.template
       }
+    }
+  }
+}
+
+auth.myfiosgateway.com {
+  route {
+    authenticate with myportal
+  }
+}
 ```
 
 ## Custom CSS Styles
@@ -61,11 +79,21 @@ The following Caddyfile directive adds a custom CSS stylesheet to the
 plugin's pages. The stylesheet is available under `auth/assets/css/custom.css`
 
 ```
+{
+  security {
+    authentication portal myportal {
       ui {
-        ...
-        custom css path path/to/styles.css
-        ...
+        custom css path {env.HOME}/.local/caddy/ui/custom/styles.css
       }
+    }
+  }
+}
+
+auth.myfiosgateway.com {
+  route {
+    authenticate with myportal
+  }
+}
 ```
 
 ## Custom Javascript
@@ -74,11 +102,21 @@ The following Caddyfile directive adds a custom javascript file to the
 plugin's pages. The script is available under `auth/assets/js/custom.js`
 
 ```
+{
+  security {
+    authentication portal myportal {
       ui {
-        ...
-        custom js path path/to/script.js
-        ...
+        custom js path {env.HOME}/.local/caddy/ui/custom/script.js
       }
+    }
+  }
+}
+
+auth.myfiosgateway.com {
+  route {
+    authenticate with myportal
+  }
+}
 ```
 
 This directive is usefule for adding Google Analytics or other
@@ -90,15 +128,25 @@ The following Caddyfile directive sets links that a user would see
 upon a successful login:
 
 ```bash
+{
+  security {
+    authentication portal myportal {
       ui {
-        ...
         links {
           "Prometheus" /prometheus
           "Alertmanager" /alertmanager
           "My App" /myapp
         }
-        ...
       }
+    }
+  }
+}
+
+auth.myfiosgateway.com {
+  route {
+    authenticate with myportal
+  }
+}
 ```
 
 The link can be opened in a new tab or window via `target_blank` argument:
@@ -129,11 +177,21 @@ The following Caddyfile directive injects the code found in `path/to/head.html`
 to `<head>` section of the portal's pages:
 
 ```bash
+{
+  security {
+    authentication portal myportal {
       ui {
-        ...
-        custom html header path path/to/head.html
-        ...
+        custom html header path {env.HOME}/.local/caddy/ui/custom/head.html
       }
+    }
+  }
+}
+
+auth.myfiosgateway.com {
+  route {
+    authenticate with myportal
+  }
+}
 ```
 
 

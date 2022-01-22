@@ -11,9 +11,9 @@ dropdown in UI interface to choose local versus LDAP domain authentication.
 
 The reference configuration for the backend is in the following files:
 
-* [`assets/conf/ldap/Caddyfile`](https://github.com/greenpau/caddy-auth-portal/blob/main/assets/conf/ldap/Caddyfile):
+* [`assets/conf/ldap/Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/ldap/Caddyfile):
   Microsoft AD LDAP integration
-* [`assets/conf/ldap/posix/Caddyfile`](https://github.com/greenpau/caddy-auth-portal/blob/main/assets/conf/ldap/posix/Caddyfile):
+* [`assets/conf/ldap/posix/Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/ldap/posix/Caddyfile):
   LDAP integration with POSIX groups
 
 The following Caddy endpoint at `/auth` authentications users
@@ -107,104 +107,12 @@ The security of the `password` could be improved by the following techniques:
 * store the password in a file and pass the file inside the `password`
   field with `file:` prefix, e.g. `file:/path/to/password`.
 
-The following `Caddyfile` secures Prometheus/Alertmanager services. Users may access
-using local and LDAP credentials.
-
-```
-{
-  http_port     8080
-  https_port    8443
-  debug
-}
-
-127.0.0.1:8443 {
-  route /auth* {
-    authp {
-      backends {
-        crypto key sign-verify 0e2fdcf8-6868-41a7-884b-7308795fc286
-        local_backend {
-          method local
-          path assets/conf/local/auth/user_db.json
-          realm local
-        }
-        ldap_backend {
-          method ldap
-          realm contoso.com
-          servers {
-            ldaps://ldaps.contoso.com
-          }
-          trusted_authority /etc/gatekeeper/tls/trusted_authority/contoso_com_root1_ca_cert.pem
-          trusted_authority /etc/gatekeeper/tls/trusted_authority/contoso_com_root2_ca_cert.pem
-          trusted_authority /etc/gatekeeper/tls/trusted_authority/contoso_com_root3_ca_cert.pem
-          attributes {
-            name givenName
-            surname sn
-            username sAMAccountName
-            member_of memberOf
-            email mail
-          }
-          username "CN=authzsvc,OU=Service Accounts,OU=Administrative Accounts,DC=CONTOSO,DC=COM"
-          # password "P@ssW0rd123"
-          password "file:/etc/gatekeeper/auth/ldap.secret"
-          search_base_dn "DC=CONTOSO,DC=COM"
-          search_filter "(&(|(sAMAccountName=%s)(mail=%s))(objectclass=user))"
-          groups {
-            "CN=Admins,OU=Security,OU=Groups,DC=CONTOSO,DC=COM" admin
-            "CN=Editors,OU=Security,OU=Groups,DC=CONTOSO,DC=COM" editor
-            "CN=Viewers,OU=Security,OU=Groups,DC=CONTOSO,DC=COM" viewer
-          }
-        }
-      }
-      ui {
-        logo url "https://caddyserver.com/resources/images/caddy-circle-lock.svg"
-        logo description "Caddy"
-        links {
-          "Prometheus" /prometheus
-          "Alertmanager" /alertmanager
-          "My App" /myapp
-        }
-      }
-    }
-  }
-
-  route /prometheus* {
-    authorize {
-      primary yes
-      crypto key verify 0e2fdcf8-6868-41a7-884b-7308795fc286
-      set auth url /auth
-      allow roles authp/admin authp/user authp/guest
-      allow roles superadmin
-      allow roles admin editor viewer
-      allow roles AzureAD_Administrator AzureAD_Editor AzureAD_Viewer
-    }
-    uri strip_prefix /prometheus
-    reverse_proxy http://127.0.0.1:9080
-  }
-
-  route /alertmanager* {
-    authorize
-    uri strip_prefix /alertmanager
-    reverse_proxy http://127.0.0.1:9083
-  }
-
-  route /myapp* {
-    authorize
-    respond * "myapp" 200
-  }
-
-  route /version* {
-    respond * "1.0.0" 200
-  }
-
-  route {
-    redir https://{hostport}/auth 302
-  }
-}
-```
+This [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/ldap/Caddyfile)
+secures Prometheus/Alertmanager services. Users may access using local and LDAP credentials.
 
 ## POSIX Groups Integration
 
-The configuration in [`assets/conf/ldap/posix/Caddyfile`](https://github.com/greenpau/caddy-auth-portal/blob/main/assets/conf/ldap/posix/Caddyfile)
+The configuration in [`assets/conf/ldap/posix/Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/ldap/posix/Caddyfile)
 is for the integration with [Online LDAP Test Server](https://www.forumsys.com/tutorials/integration-how-to/ldap/online-ldap-test-server/).
 
 The key differences of the configuration follow:

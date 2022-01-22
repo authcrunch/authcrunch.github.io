@@ -43,21 +43,8 @@ Additionally, add the URL in "Redirect URI Validator":
 
 * `https://localhost:8443/auth/oauth2/facebook/authorization-code-callback`
 
-The Caddyfile config is as follows:
-
-```
-127.0.0.1, localhost {
-  route /auth* {
-    authp {
-      backends {
-        facebook_oauth2_backend {
-          method oauth2
-          realm facebook
-          provider facebook
-          client_id 38409328409
-          client_secret 11899bfcd5745a8ed20235c65638f311
-        }
-```
+The following [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/oauth/facebook/Caddyfile)
+allows Facebook-based authentication.
 
 When a user get redirected to Facebook Login, the screen looks as follows:
 

@@ -10,13 +10,23 @@ sidebar_position: 11
 MFA can be enabled by adding `require mfa` directive inside `transform user` directive:
 
 ```
-    authp {
-      backend local /etc/gatekeeper/auth/local/users_db.json local
+{
+  security {
+    authentication portal myportal {
+      backend local {env.HOME}/.local/caddy/users.json local
       transform user {
         match origin local
         require mfa
       }
     }
+  }
+}
+
+auth.myfiosgateway.com {
+  route {
+    authenticate with myportal
+  }
+}
 ```
 
 Currently, the MFA requirement can be applied only to `local` backend type.

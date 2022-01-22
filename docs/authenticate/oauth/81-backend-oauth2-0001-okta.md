@@ -82,41 +82,8 @@ Fill out the "Add Claim" form:
 
 Next, review [Okta OpenID Connect and OAuth 2.0 API - Get Started](https://developer.okta.com/docs/reference/api/oidc/#get-started).
 
-The Caddyfile snipper for Okta OAuth 2.0 backend is as follows.
-
-Based on the below configuration, Okta endpoint is `/auth/oauth2/okta`. If a user
-browses to the endpoint, the user will be redirected to Okta.
-
-```
-127.0.0.1, localhost {
-  route /auth* {
-    authp {
-      backends {
-        okta_oauth2_backend {
-          method oauth2
-          realm okta
-          provider okta
-          domain_name dev-680653.okta.com
-          client_id 0oa121qw81PJW0Tj34x7
-          client_secret b3aJC5E59hU18YKC7Yca3994F4qFhWiAo_ZojanF
-          server_id default
-          scopes openid email profile groups
-        }
-```
-
-Next, protect a route, e.g. `/sso/oauth2/okta*`. When a user accesses the page, the
-the user will be redirected to `/auth/oauth2/okta` and, then, to Okta. Once authenticated,
-the user will be redirected back to `/sso/oauth2/okta...`, i.e. back to the path the user
-came from.
-
-```
-  route /sso/oauth2/okta* {
-    authorize {
-      set auth url /auth/oauth2/okta
-    }
-    respond * "okta oauth2 sso" 200
-  }
-```
+The following [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/oauth/okta/Caddyfile)
+allows Okta-based authentication.
 
 Provided the Okta domain is `dev-680653.okta.com`, the authorization server is
 `default`, and Client ID is `0oa121qw81PJW0Tj34x7`, check OpenID configuration:

@@ -22,39 +22,8 @@ Additionally, click "generate a private key" to sign access token requests.
 
 ![Settings - Developer settings - GitHub Apps - My Gatekeeper - Private Keys](../images/oauth2_github_sign_keys.png)
 
-The Caddyfile follows:
-
-```
-app.contoso.com {
-  route /auth* {
-    authp {
-      backend github CLIENT_ID CLIENT_SECRET
-      transform user {
-        match origin github
-        action add role authp/user
-        ui link "My Website" / icon "las la-star"
-        ui link "My Identity" "/auth/whoami" icon "las la-star"
-      }
-      transform user {
-        match origin github
-        match email greenpau@contoso.com
-        action add role authp/admin
-      }
-    }
-  }
-
-  route {
-    authorize {
-      primary yes
-      allow roles authp/admin authp/user
-      validate bearer header
-      set auth url /auth/oauth2/github
-      inject headers with claims
-    }
-    respond * "my app" 200
-  }
-}
-```
+This [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/oauth/github/Caddyfile)
+allows Github-based authentication.
 
 The users authenticating via Github would have to accept the terms:
 

@@ -6,46 +6,8 @@ References:
 
 The Caddyfile snippet for Google OAuth 2.0 OpenID backend is as follows.
 
-Based on the below configuration, Google endpoint is `/auth/oauth2/google`. If a user
-browses to the endpoint, the user will be redirected to Google.
-
-```
-127.0.0.1, localhost {
-  route /auth* {
-    authp {
-      backends {
-        google_oauth2_backend {
-          method oauth2
-          realm google
-          provider google
-          client_id XXX.apps.googleusercontent.com
-          client_secret YYY
-          scopes openid email profile
-        }
-```
-
-Alternatively, use [Shortcuts](#shortcuts") to accomplish the same:
-
-```
-127.0.0.1, localhost {
-  route /auth* {
-    authp {
-      backend google XXX YYY
-```
-
-Next, protect a route, e.g. `/sso/oauth2/google*`. When a user accesses the page, the
-the user will be redirected to `/auth/oauth2/google` and, then, to Google. Once authenticated,
-the user will be redirected back to `/sso/oauth2/google...`, i.e. back to the path the user
-came from.
-
-```
-  route /sso/oauth2/google* {
-    authorize {
-      set auth url /auth/oauth2/google
-    }
-    respond * "google oauth2 sso" 200
-  }
-```
+The following [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/oauth/google/Caddyfile)
+allows Google-based authentication.
 
 First, create new application, e.g. "My Gatekeeper".
 

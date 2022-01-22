@@ -1,0 +1,65 @@
+{
+	http_port 8080
+	https_port 8443
+	# debug
+
+	security {
+		authentication portal myportal {
+			crypto default token lifetime 3600
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			backends {
+				generic_oauth2_backend {
+					method oauth2
+					realm generic
+					provider generic
+					client_id {env.GENERIC_CLIENT_ID}
+					client_secret {env.GENERIC_CLIENT_SECRET}
+					scopes openid email profile
+					base_auth_url https://keycloak.myfiosgateway.com/
+					metadata_url https://keycloak.myfiosgateway.com/.well-known/openid-configuration
+				}
+			}
+			cookie domain myfiosgateway.com
+			ui {
+				links {
+					"My Identity" "/whoami" icon "las la-user"
+				}
+			}
+
+			transform user {
+				match realm generic
+				action add role authp/user
+				ui link "File Server" https://assetq.myfiosgateway.com:8443/ icon "las la-star"
+			}
+
+			transform user {
+				match realm generic
+				match email greenpau@contoso.com
+				action add role authp/admin
+			}
+		}
+
+		authorization policy mypolicy {
+			set auth url https://auth.myfiosgateway.com:8443/oauth2/generic
+			crypto key verify {env.JWT_SHARED_KEY}
+			allow roles authp/admin authp/user
+			validate bearer header
+			inject headers with claims
+		}
+	}
+
+	(tls_config) {
+		tls /home/greenpau/.local/tls/myfiosgateway/server.crt /home/greenpau/.local/tls/myfiosgateway/server.key
+	}
+
+	auth.myfiosgateway.com {
+		import tls_config
+		authenticate with myportal
+	}
+
+	assetq.myfiosgateway.com {
+		import tls_config
+		authorize with mypolicy
+		root * {env.HOME}/www
+		file_server
+	}
