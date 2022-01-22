@@ -1,0 +1,56 @@
+{
+	debug
+
+	security {
+		authentication portal myportal {
+			crypto default token lifetime 3600
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			backends {
+				jumpcloud_saml_backend {
+					method saml
+					realm jumpcloud
+					provider generic
+					idp_metadata_location {env.HOME}/.local/caddy/cloudjump/JumpCloud-saml2-metadata.xml
+					idp_sign_cert_location {env.HOME}/.local/caddy/cloudjump/certificate.pem
+					idp_login_url https://sso.jumpcloud.com/saml2/{env.JUMPCLOUD_ENDPOINT}
+					application_name "MyFIOS Auth Portal"
+					entity_id "urn:{env.JUMPCLOUD_ENTITY_ID}"
+					acs_url https://auth.myfiosgateway.com/saml/jumpcloud
+				}
+			}
+			cookie domain myfiosgateway.com
+			ui {
+				links {
+					"File Server" https://assetq.myfiosgateway.com/ icon "las la-star"
+					"My Identity" "/whoami" icon "las la-user"
+				}
+			}
+			transform user {
+				match realm jumpcloud
+				action add role authp/user
+			}
+		}
+
+		authorization policy mypolicy {
+			set auth url https://auth.myfiosgateway.com/
+			allow roles authp/admin authp/user
+			crypto key verify {env.JWT_SHARED_KEY}
+		}
+	}
+}
+
+(tls_config) {
+	tls {env.HOME}/.local/caddy/server.crt {env.HOME}/.local/caddy/server.key
+}
+
+auth.myfiosgateway.com {
+	import tls_config
+	authenticate with myportal
+}
+
+assetq.myfiosgateway.com {
+	import tls_config
+	authorize with mypolicy
+	root * {env.HOME}/www
+	file_server
+}

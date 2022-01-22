@@ -51,7 +51,7 @@
 }
 
 (tls_config) {
-	tls /home/greenpau/.local/tls/myfiosgateway/server.crt /home/greenpau/.local/tls/myfiosgateway/server.key
+    tls {env.HOME}/.local/caddy/server.crt {env.HOME}/.local/caddy/server.key
 }
 
 auth.myfiosgateway.com {
