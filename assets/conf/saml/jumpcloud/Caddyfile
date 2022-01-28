@@ -1,6 +1,9 @@
 {
 	debug
 
+	order authenticate before respond
+	order authorize before basicauth
+
 	security {
 		authentication portal myportal {
 			crypto default token lifetime 3600

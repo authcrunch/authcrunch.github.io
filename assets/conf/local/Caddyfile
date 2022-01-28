@@ -3,6 +3,9 @@
 	https_port 8443
 	# debug
 
+	order authenticate before respond
+	order authorize before basicauth
+
 	security {
 		authentication portal myportal {
 			crypto default token lifetime 3600
@@ -44,7 +47,7 @@
 			}
 			acl rule {
 				comment default deny
-				always match iss any
+				match any
 				deny log warn
 			}
 		}
@@ -60,7 +63,7 @@
 			}
 			acl rule {
 				comment default deny
-				always match role any
+				match any
 				deny log warn
 			}
 		}
@@ -76,7 +79,7 @@
 			}
 			acl rule {
 				comment default deny
-				always match role any
+				match any
 				deny log warn
 			}
 		}
@@ -84,7 +87,7 @@
 }
 
 (tls_config) {
-    tls {env.HOME}/.local/caddy/server.crt {env.HOME}/.local/caddy/server.key
+	tls {env.HOME}/.local/caddy/server.crt {env.HOME}/.local/caddy/server.key
 }
 
 auth.myfiosgateway.com {

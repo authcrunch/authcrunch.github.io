@@ -3,6 +3,9 @@
 	https_port 8443
 	# debug
 
+	order authenticate before respond
+	order authorize before basicauth
+
 	security {
 		authentication portal myportal {
 			crypto default token lifetime 3600
@@ -82,7 +85,7 @@
 }
 
 (tls_config) {
-    tls {env.HOME}/.local/caddy/server.crt {env.HOME}/.local/caddy/server.key
+	tls {env.HOME}/.local/caddy/server.crt {env.HOME}/.local/caddy/server.key
 }
 
 auth.myfiosgateway.com {

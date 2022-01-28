@@ -113,7 +113,9 @@ The section is a single statement.
 The conditions section consists of one or more statements matching the fields
 of a token.
 
-There are the types of conditions:
+#### Match Conditions
+
+There are the following types of `match` conditions:
 
 1. match the value of a particular token field, e.g. `roles`
 2. match the HTTP method, e.g. GET, POST, etc.
@@ -122,18 +124,9 @@ There are the types of conditions:
 The condition syntax follows:
 
 ```
-[exact|partial|prefix|suffix|regex|always] match <field> <value> ... <valueN>
-[exact|partial|prefix|suffix|regex|always] match method <http_method_name>
-[exact|partial|prefix|suffix|regex|always] match path <http_path_uri>
-```
-
-The special use case is the value of `any` with `always` keyword. If provided,
-it matches any value in a token field. It is synonymous to the field being
-present. For example, the following condition match when a token has `org`
-field. The value of the field is not being checked
-
-```
-always match org any
+[no] [exact|partial|prefix|suffix|regex] match <field> <value> ... <valueN>
+[no] [exact|partial|prefix|suffix|regex] match method <http_method_name>
+[no] [exact|partial|prefix|suffix|regex] match path <http_path_uri>
 ```
 
 The following conditions match when a token has `roles` field with the values
@@ -151,6 +144,25 @@ of either `viewer` or `editor` and `org` field begins with `ny`.
 match roles viewer editor
 prefix match org ny
 ```
+
+#### Field Exists Conditions
+
+The field existance in a token conditions follow this syntax.
+
+```
+field <name> [not] exists
+```
+
+For example the following condition checks for the presense
+of `sub` field in a token:
+
+```
+field sub exists
+```
+
+#### Match Any Condition
+
+The `match` any condition is a shortcut for `field exp exists`.
 
 ### Actions
 

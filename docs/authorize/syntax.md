@@ -37,13 +37,15 @@ sidebar_position: 4
       allow <field> <value...> with <get|post|put|patch|delete> to <uri>
       allow <field> <value...> with <get|post|put|patch|delete>
       allow <field> <value...> to <uri>
+      default <allow|deny>
 
       acl rule {
         comment <value>
-        [exact|partial|prefix|suffix|regex|always] match <field> <value> ... <valueN>
-        [exact|partial|prefix|suffix|regex|always] match method <http_method_name>
-        [exact|partial|prefix|suffix|regex|always] match path <http_path_uri>
+        [no] [exact|partial|prefix|suffix|regex] match <field> <value> ... <valueN>
+        [no] [exact|partial|prefix|suffix|regex] match method <http_method_name>
+        [no] [exact|partial|prefix|suffix|regex] match path <http_path_uri>
         <allow|deny> [stop] [counter] [log <error|warn|info|debug>]
+        field <field> [not] exists
       }
 
       validate path acl
