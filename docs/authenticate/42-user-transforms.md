@@ -64,8 +64,8 @@ from getting authenticated:
   }
 ```
 
-The following transform adds role `contoso_users` to the users with emai
-address from contoso.com domain:
+The following transform adds the role `contoso_users` to users with an email
+address from the contoso.com domain:
 
 ```
   transform user {
