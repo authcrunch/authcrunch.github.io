@@ -1,0 +1,35 @@
+{
+	order authenticate before respond
+	order authorize before basicauth
+
+	security {
+		authentication portal authz_proxy_portal {
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			backend github {env.GITHUB_CLIENT_ID} {env.GITHUB_CLIENT_SECRET}
+			transform user {
+				match realm github
+				action add role authp/user
+				ui link "My Website" / icon "las la-star"
+			}
+		}
+
+		authorization policy default_authz_policy {
+            # disable auth redirect
+			set auth url /authzproxy/oauth2/github/
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			allow roles authp/user authp/admin
+		}
+	}
+}
+
+myapp.myfiosgateway.com {
+
+	route /authzproxy* {
+		authenticate with authz_proxy_portal
+	}
+
+	route {
+		authorize with default_authz_policy
+		respond "myapp is running"
+	}
+}
