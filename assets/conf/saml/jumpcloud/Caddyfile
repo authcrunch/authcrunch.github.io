@@ -43,7 +43,7 @@
 }
 
 (tls_config) {
-	tls {env.HOME}/.local/caddy/server.crt {env.HOME}/.local/caddy/server.key
+	tls {$HOME}/.local/caddy/server.crt {$HOME}/.local/caddy/server.key
 }
 
 auth.myfiosgateway.com {
