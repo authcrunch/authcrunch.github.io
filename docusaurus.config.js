@@ -6,7 +6,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Auth with Caddy',
+  title: 'Caddy Security',
   tagline: 'Auth Portal and Authorize Plugins for Caddy v2',
   url: 'https://authp.github.io',
   baseUrl: '/',
@@ -49,7 +49,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'Auth with Caddy',
+        title: 'Caddy Security',
         logo: {
           alt: 'Auth Portal Logo',
           src: 'img/logo.svg',
@@ -66,6 +66,18 @@ const config = {
             docId: 'authorize/intro',
             position: 'left',
             label: 'Authorize',
+          },
+          {
+            type: 'doc',
+            docId: 'credentials/intro',
+            position: 'left',
+            label: 'Credentials',
+          },
+          {
+            type: 'doc',
+            docId: 'messaging/intro',
+            position: 'left',
+            label: 'Messaging',
           },
           {
             href: 'https://github.com/greenpau/caddy-security/issues/new/choose',
