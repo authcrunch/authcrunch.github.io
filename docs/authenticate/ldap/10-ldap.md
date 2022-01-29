@@ -15,6 +15,8 @@ The reference configuration for the backend is in the following files:
   Microsoft AD LDAP integration
 * [`assets/conf/ldap/posix/Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/ldap/posix/Caddyfile):
   LDAP integration with POSIX groups
+* [`assets/conf/ldap/glauth/Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/ldap/glauth/Caddyfile):
+  LDAP integration with GLAuth
 
 The following Caddy endpoint at `/auth` authentications users
 from `contoso.com` domain.

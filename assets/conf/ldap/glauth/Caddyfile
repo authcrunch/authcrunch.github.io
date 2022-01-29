@@ -1,0 +1,143 @@
+{
+	http_port 8080
+	https_port 8443
+	debug
+
+	order authenticate before respond
+	order authorize before basicauth
+
+	security {
+		authentication portal myportal {
+			crypto default token lifetime 3600
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			#backend local {env.HOME}/.local/caddy/users.json local
+			backends {
+				ldap_backend {
+					method ldap
+					realm glauth.com
+					servers {
+						ldap://127.0.0.1:3893
+					}
+					attributes {
+						name givenname
+						surname sn
+						username uid
+						member_of memberOf
+						email mail
+					}
+					username "cn=serviceuser,ou=svcaccts,dc=glauth,dc=com"
+					password "mysecret"
+					search_base_dn "DC=GLAUTH,DC=COM"
+					search_filter "(&(|(uid=%s)(mail=%s))(objectClass=posixAccount))"
+					groups {
+						"ou=superheros,ou=groups,dc=glauth,dc=com" authp/admin
+						"ou=vpn,ou=groups,dc=glauth,dc=com" authp/user
+					}
+				}
+			}
+			cookie domain myfiosgateway.com
+			ui {
+				links {
+					"My Website" https://assetq.myfiosgateway.com:8443/ icon "las la-star"
+					"Guests" https://assetq.myfiosgateway.com:8443/guests icon "las la-star"
+					"Users" https://assetq.myfiosgateway.com:8443/users icon "las la-star"
+					"Admins" https://assetq.myfiosgateway.com:8443/admins icon "las la-star"
+					"My Identity" "/whoami" icon "las la-user"
+				}
+				password_recovery_enabled yes
+			}
+			transform user {
+				match origin local
+				action add role authp/user
+				ui link "Portal Settings" /settings icon "las la-cog"
+			}
+			transform user {
+				suffix match email localdomain.local
+				action add role authp/fooobar
+			}
+		}
+
+		authorization policy guests_policy {
+			# disable auth redirect
+			set auth url https://auth.myfiosgateway.com:8443/
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			acl rule {
+				comment block when roles field is not present
+				field role not exists
+				deny stop log warn
+			}
+			acl rule {
+				comment allow guests only
+				match role guest authp/guest
+				allow stop log info
+			}
+			acl rule {
+				comment default deny
+				match any
+				deny stop log warn
+			}
+		}
+
+		authorization policy users_policy {
+			set auth url https://auth.myfiosgateway.com:8443/
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			acl rule {
+				comment allow users
+				match role authp/user
+				allow stop log info
+			}
+			acl rule {
+				comment default deny
+				match any
+				deny stop log warn
+			}
+		}
+
+		authorization policy admins_policy {
+			set auth url https://auth.myfiosgateway.com:8443/
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			acl rule {
+				comment allow users
+				match role authp/user
+				allow stop log info
+			}
+			acl rule {
+				comment default deny
+				match any
+				deny stop log warn
+			}
+		}
+	}
+}
+
+(tlsConfig) {
+	tls {$HOME}/.local/tls/myfiosgateway/server.crt {$HOME}/.local/tls/myfiosgateway/server.key
+}
+
+auth.myfiosgateway.com {
+	import tlsConfig
+	authenticate with myportal
+}
+
+assetq.myfiosgateway.com {
+	import tlsConfig
+
+	route /guests* {
+		authorize with guests_policy
+		respond * "assetq - guests only" 200
+	}
+
+	route /users* {
+		authorize with users_policy
+		respond * "assetq - users" 200
+	}
+
+	route /admins* {
+		authorize with admins_policy
+		respond * "assetq - admins" 200
+	}
+
+	route {
+		respond "assetq is running"
+	}
+}
