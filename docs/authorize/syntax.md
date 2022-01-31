@@ -54,6 +54,9 @@ sidebar_position: 4
 
       enable js redirect
       enable strip token
+      
+      enable login hint
+      enable login hint with <email|phone|alphanumeric>
 
       inject headers with claims
     }
