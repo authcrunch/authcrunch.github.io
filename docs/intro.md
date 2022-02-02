@@ -36,3 +36,4 @@ Watch the following Youtube videos:
   and [Config Gist](https://gist.github.com/greenpau/dbfadd3c9fee21dbb0a0d3902a8d0ec0)
 * **Login with App Authenticator and Yubico U2F**: [Video](https://youtu.be/poOkq_jb1B0)
 * **Customizing Caddy Auth Portal UI**: [Video](https://www.youtube.com/watch?v=20XOn-RBIX0&t=0s)
+* **Caddy Authorize: Authorizing HTTP Requests**: [Video](https://www.youtube.com/watch?v=Mxbjfv47YiQ&t=1s&vq=hd1080)
