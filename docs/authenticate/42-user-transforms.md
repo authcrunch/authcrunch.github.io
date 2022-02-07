@@ -133,3 +133,14 @@ The outcome follows:
   "foo": "bar"
 }
 ```
+
+Alternatively, one can add `name` and `picture` (avatar) claims:
+
+```
+  transform user {
+    match realm local
+    match email webadmin@localdomain.local
+    action add name "Paul Greenberg"
+    action add picture "https://avatars.githubusercontent.com/u/3826416?v=4" as string
+  }
+```
