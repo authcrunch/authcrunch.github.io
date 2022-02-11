@@ -12,6 +12,7 @@ The following Caddy configuration enables user registration.
         code "NY2020"
         require accept terms
         require domain mx
+        admin email barbaz@bar.baz foobar@foo.bar
       }
     }
   }
@@ -38,6 +39,8 @@ The parameters are:
 * `disabled on`: disables user registration
 * `title`: changes the title of the registration page
 * `require domain mx`: forces the check of domain MX record
+* `admin email`: defines the email recipients after a registrant clicked
+  email confirmation link and provided valid code
 
 This screenshot is the registration screen with default options:
 
