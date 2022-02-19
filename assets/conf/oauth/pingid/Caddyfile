@@ -1,0 +1,62 @@
+{
+	http_port 8080
+	https_port 8443
+	debug
+
+	order authenticate before respond
+	order authorize before basicauth
+
+	security {
+		authentication portal myportal {
+			crypto default token lifetime 3600
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			backends {
+				pingid_oauth_backend {
+					method oauth2
+					realm pingid
+					provider generic
+					client_id {env.PINGID_CLIENT_ID}
+					client_secret {env.PINGID_CLIENT_SECRET}
+					scopes openid profile email
+					response_type token id_token
+					# response_type code
+					enable js callback
+					base_auth_url https://auth.pingone.com/{env.PINGID_APP_ID}/as/authorize
+					metadata_url https://auth.pingone.com/{env.PINGID_APP_ID}/as/.well-known/openid-configuration
+				}
+			}
+			cookie domain myfiosgateway.com
+			ui {
+				links {
+					"My Website" https://assetq.myfiosgateway.com:8443/ icon "las la-star"
+					"My Identity" "/whoami" icon "las la-user"
+				}
+			}
+			transform user {
+				match origin pingid
+				action add role authp/user
+			}
+		}
+
+		authorization policy mypolicy {
+			set auth url https://auth.myfiosgateway.com:8443/
+			allow roles authp/admin authp/user
+			crypto key verify {env.JWT_SHARED_KEY}
+		}
+	}
+}
+
+(tls_config) {
+	tls {$HOME}/.local/tls/myfiosgateway/server.crt {$HOME}/.local/tls/myfiosgateway/server.key
+}
+
+auth.myfiosgateway.com {
+	import tls_config
+	authenticate with myportal
+}
+
+assetq.myfiosgateway.com {
+	import tls_config
+	authorize with mypolicy
+	respond "assetq is running"
+}
