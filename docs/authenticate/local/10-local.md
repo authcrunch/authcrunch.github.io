@@ -6,16 +6,19 @@ The following directive instructs the plugin to use the local
 ```
 {
   security {
+    local identity store localdb {
+      realm local
+      path {$HOME}/.local/caddy/users.json
+    }
+
     authentication portal myportal {
-      backend local {env.HOME}/.local/caddy/users.json local
+      enable identity store localdb
     }
   }
 }
 
 app.contoso.com {
-  route {
-    authenticate with myportal
-  }
+  authenticate with myportal
 }
 ```
 

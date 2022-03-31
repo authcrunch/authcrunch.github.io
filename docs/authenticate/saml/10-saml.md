@@ -20,15 +20,13 @@ authentications.
 
 ## Configuration
 
-The following configuration is common across variations of SAML backend:
+The following configuration is common across variations of SAML identity provider:
 
 ```
-      backends {
-        azure_saml_backend {
-          method saml
-          realm azure
-          provider azure
-        }
+      saml identity provider azure {
+        method saml
+        realm azure
+        driver azure
       }
 ```
 

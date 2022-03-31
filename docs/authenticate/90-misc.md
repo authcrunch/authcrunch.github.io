@@ -51,7 +51,7 @@ from upstream providers or generates its own `jti` values.
 
 The plugin stores the mappings between `jti` value and associated
 data in a cache. The associated data contains claims and the
-metadata from the backend which authenticated a particular session.
+metadata from the identity stores/providers which authenticated a particular session.
 
 This cache is used to assess whether a claim holder is able using
 certain portal's capabilities, e.g. add public SSH/GPG key, configure
@@ -61,16 +61,15 @@ MFA tokens, change password, etc.
 ## Shortcuts
 
 The following Caddyfile shortcuts could be used to configure local, OAuth 2.0
-backends:
+identity stores and providers:
 
 ```
 {
   security {
-    authentication portal myportal {
-      backend local <path> <realm>
-      backend google <client_id> <client_secret>
-      backend github <client_id> <client_secret>
-      backend facebook <client_id> <client_secret>
+    local identity store local <path>
+    oauth identity provider google <client_id> <client_secret>
+    oauth identity provider github <client_id> <client_secret>
+    oauth identity provider facebook <client_id> <client_secret>
     }
   }
 }

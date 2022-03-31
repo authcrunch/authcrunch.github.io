@@ -106,7 +106,7 @@ used by a user (e.g. to pre-fill fields in the login form).
 
 The `enable login hint` command can be used to forward a login hint to the auth URL by passing it to a protected
 route as a query parameter. In case the auth URL belongs to a portal defined in the `authenticate` configuration,
-it will be automatically forwarded to the backend.
+it will be automatically forwarded to the identity provider.
 
 By default, the `enable login hint` accepts email addresses, phone numbers and alphanumeric characters. Using the
 `with` keyword in combination with one or more of the validator names `email`, `phone` and `alphanumeric`, they can be

@@ -1,15 +1,15 @@
 # LDAP Configuration
 
-It is recommended reading the documentation for Local backend, because
-it outlines important principles of operation of all backends.
+It is recommended reading the documentation for Local identity store, because
+it outlines important principles of operation of all identity stores.
 
-Additionally, the LDAP backend works in conjunction with Local backend.
+Additionally, the LDAP identity store works in conjunction with Local identity store.
 As you will see later, the two can be used together by introducing a
 dropdown in UI interface to choose local versus LDAP domain authentication.
 
 ## Configuration Examples
 
-The reference configuration for the backend is in the following files:
+The reference configuration for the identity store is in the following files:
 
 * [`assets/conf/ldap/Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/ldap/Caddyfile):
   Microsoft AD LDAP integration

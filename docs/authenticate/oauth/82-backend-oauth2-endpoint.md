@@ -6,9 +6,7 @@ The following configuration allows delaying getting key material of upstream
 OAuth 2.0 server.
 
 ```
-      backends {
-        google_oauth2_backend {
-          method oauth2
+      oauth identity provider google {
           ...
           delay_start 5
 ```
@@ -22,9 +20,7 @@ The following configuration permits for retries when getting key material of
 upstream OAuth 2.0 server.
 
 ```
-      backends {
-        google_oauth2_backend {
-          method oauth2
+      oauth identity provider google {
           ...
           retry_attempts 3
           retry_interval 10

@@ -12,10 +12,15 @@ MFA can be enabled by adding `require mfa` directive inside `transform user` dir
 ```
 {
   security {
+    local identity store localdb {
+      realm local
+      path {$HOME}/.local/caddy/users.json
+    }
+
     authentication portal myportal {
-      backend local {env.HOME}/.local/caddy/users.json local
+      enable identity store localdb
       transform user {
-        match origin local
+        match realm local
         require mfa
       }
     }
@@ -23,13 +28,11 @@ MFA can be enabled by adding `require mfa` directive inside `transform user` dir
 }
 
 auth.myfiosgateway.com {
-  route {
-    authenticate with myportal
-  }
+  authenticate with myportal
 }
 ```
 
-Currently, the MFA requirement can be applied only to `local` backend type.
+Currently, the MFA requirement can be applied only to `local` identity store type.
 
 ## Add MFA Authenticator Application
 

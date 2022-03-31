@@ -4,7 +4,7 @@ References:
 * [Google Identity Platform - Using OAuth 2.0 for Web Server Applications](https://developers.google.com/identity/protocols/oauth2/web-server#httprest_2)
 * [Google Identity Platform - Identity Platform - OpenID Connect](https://developers.google.com/identity/protocols/oauth2/openid-connect)
 
-The Caddyfile snippet for Google OAuth 2.0 OpenID backend is as follows.
+The Caddyfile snippet for Google OAuth 2.0 OpenID identity provider is as follows.
 
 The following [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/oauth/google/Caddyfile)
 allows Google-based authentication.

@@ -35,14 +35,13 @@ be able to retrieve it again!).
 
 ![Azure Active Directory - App registrations - My Application - Client secret](../images/oauth2_azure_client_secret.png)
 
-You now have all the necessary information to use the backend in your
+You now have all the necessary information to use the identity provider in your
 `Caddyfile`:
 
 ```
-        azure_oauth2_backend {
-          method oauth2
+        oauth identity provider azure {
           realm azure
-          provider azure
+          driver azure
           client_id 840e455a-69af-47bb-b033-b3a316f1aff0
           client_secret MnE~D8G5Dh_gWRq_jc3uJ8Q8wjBqBv.N3r
           scopes openid email profile
