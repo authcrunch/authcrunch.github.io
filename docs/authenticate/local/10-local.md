@@ -37,3 +37,9 @@ After starting the server, and find the following following log entries with
 {"level":"info","ts":1588704471.5784082,"logger":"http.authentication.providers.portal","msg":"created new user","user_id":"cd5f647a-cc04-4ae2-9d0a-2d5e9b95cf98","user_name":"webadmin","user_email":"webadmin@localdomain.local","user_claims":{"roles":"superadmin"}}
 {"level":"info","ts":1588704471.5784378,"logger":"http.authentication.providers.portal","msg":"created default superadmin user for the database","user_name":"webadmin","user_secret":"d87e7749-0dd8-482b-91a2-ada370263293"}
 ```
+
+Alternatively, use the following environment variables to instruct the plugin which username, email and password to use.
+
+* `AUTHP_ADMIN_USER`
+* `AUTHP_ADMIN_EMAIL`
+* `AUTHP_ADMIN_SECRET`
