@@ -3,9 +3,11 @@
 	order authorize before basicauth
 
 	security {
+		oauth identity provider github {env.GITHUB_CLIENT_ID} {env.GITHUB_CLIENT_SECRET}
+
 		authentication portal authz_proxy_portal {
 			crypto key sign-verify {env.JWT_SHARED_KEY}
-			backend github {env.GITHUB_CLIENT_ID} {env.GITHUB_CLIENT_SECRET}
+			enable identity provider github
 			transform user {
 				match realm github
 				action add role authp/user

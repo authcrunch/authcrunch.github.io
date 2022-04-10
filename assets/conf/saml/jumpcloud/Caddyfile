@@ -5,22 +5,21 @@
 	order authorize before basicauth
 
 	security {
+		saml identity provider jumpcloud {
+			realm jumpcloud
+			driver generic
+			idp_metadata_location {env.HOME}/.local/caddy/cloudjump/JumpCloud-saml2-metadata.xml
+			idp_sign_cert_location {env.HOME}/.local/caddy/cloudjump/certificate.pem
+			idp_login_url https://sso.jumpcloud.com/saml2/{env.JUMPCLOUD_ENDPOINT}
+			application_name "MyFIOS Auth Portal"
+			entity_id "urn:{env.JUMPCLOUD_ENTITY_ID}"
+			acs_url https://auth.myfiosgateway.com/saml/jumpcloud
+		}
+
 		authentication portal myportal {
 			crypto default token lifetime 3600
 			crypto key sign-verify {env.JWT_SHARED_KEY}
-			backends {
-				jumpcloud_saml_backend {
-					method saml
-					realm jumpcloud
-					provider generic
-					idp_metadata_location {env.HOME}/.local/caddy/cloudjump/JumpCloud-saml2-metadata.xml
-					idp_sign_cert_location {env.HOME}/.local/caddy/cloudjump/certificate.pem
-					idp_login_url https://sso.jumpcloud.com/saml2/{env.JUMPCLOUD_ENDPOINT}
-					application_name "MyFIOS Auth Portal"
-					entity_id "urn:{env.JUMPCLOUD_ENTITY_ID}"
-					acs_url https://auth.myfiosgateway.com/saml/jumpcloud
-				}
-			}
+			enable identity provider jumpcloud
 			cookie domain myfiosgateway.com
 			ui {
 				links {

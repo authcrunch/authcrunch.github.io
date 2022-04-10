@@ -7,18 +7,17 @@
 	order authorize before basicauth
 
 	security {
+		oauth identity provider facebook {
+			realm facebook
+			driver facebook
+			client_id 38409328409
+			client_secret 11899bfcd5745a8ed20235c65638f311
+		}
+
 		authentication portal myportal {
 			crypto default token lifetime 3600
 			crypto key sign-verify {env.JWT_SHARED_KEY}
-			backends {
-				facebook_oauth2_backend {
-					method oauth2
-					realm facebook
-					provider facebook
-					client_id 38409328409
-					client_secret 11899bfcd5745a8ed20235c65638f311
-				}
-			}
+			enable identity provider facebook
 			cookie domain myfiosgateway.com
 			ui {
 				links {

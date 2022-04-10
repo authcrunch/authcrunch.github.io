@@ -7,11 +7,18 @@
 	order authorize before basicauth
 
 	security {
+		local identity store localdb {
+			realm local
+			path {$HOME}/.local/caddy/users.json
+		}
+
+		oauth identity provider github {env.GITHUB_CLIENT_ID} {env.GITHUB_CLIENT_SECRET}
+
 		authentication portal myportal {
 			crypto default token lifetime 3600
 			crypto key sign-verify {env.JWT_SHARED_KEY}
-			backend local {env.HOME}/.local/caddy/users.json local
-			backend github {env.GITHUB_CLIENT_ID} {env.GITHUB_CLIENT_SECRET}
+			enable identity store localdb
+			enable identity provider github
 			cookie domain myfiosgateway.com
 			ui {
 				links {

@@ -7,34 +7,32 @@
 	order authorize before basicauth
 
 	security {
+		ldap identity store glauth.com {
+			realm glauth.com
+			servers {
+				ldap://127.0.0.1:3893
+			}
+			attributes {
+				name givenname
+				surname sn
+				username uid
+				member_of memberOf
+				email mail
+			}
+			username "cn=serviceuser,ou=svcaccts,dc=glauth,dc=com"
+			password "mysecret"
+			search_base_dn "DC=GLAUTH,DC=COM"
+			search_filter "(&(|(uid=%s)(mail=%s))(objectClass=posixAccount))"
+			groups {
+				"ou=superheros,ou=groups,dc=glauth,dc=com" authp/admin
+				"ou=vpn,ou=groups,dc=glauth,dc=com" authp/user
+			}
+		}
+
 		authentication portal myportal {
 			crypto default token lifetime 3600
 			crypto key sign-verify {env.JWT_SHARED_KEY}
-			#backend local {env.HOME}/.local/caddy/users.json local
-			backends {
-				ldap_backend {
-					method ldap
-					realm glauth.com
-					servers {
-						ldap://127.0.0.1:3893
-					}
-					attributes {
-						name givenname
-						surname sn
-						username uid
-						member_of memberOf
-						email mail
-					}
-					username "cn=serviceuser,ou=svcaccts,dc=glauth,dc=com"
-					password "mysecret"
-					search_base_dn "DC=GLAUTH,DC=COM"
-					search_filter "(&(|(uid=%s)(mail=%s))(objectClass=posixAccount))"
-					groups {
-						"ou=superheros,ou=groups,dc=glauth,dc=com" authp/admin
-						"ou=vpn,ou=groups,dc=glauth,dc=com" authp/user
-					}
-				}
-			}
+			enable identity store glauth.com
 			cookie domain myfiosgateway.com
 			ui {
 				links {

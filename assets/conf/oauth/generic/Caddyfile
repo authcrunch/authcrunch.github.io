@@ -7,21 +7,20 @@
 	order authorize before basicauth
 
 	security {
+		oauth identity provider generic {
+			realm generic
+			driver generic
+			client_id {env.GENERIC_CLIENT_ID}
+			client_secret {env.GENERIC_CLIENT_SECRET}
+			scopes openid email profile
+			base_auth_url https://keycloak.myfiosgateway.com/
+			metadata_url https://keycloak.myfiosgateway.com/.well-known/openid-configuration
+		}
+
 		authentication portal myportal {
 			crypto default token lifetime 3600
 			crypto key sign-verify {env.JWT_SHARED_KEY}
-			backends {
-				generic_oauth2_backend {
-					method oauth2
-					realm generic
-					provider generic
-					client_id {env.GENERIC_CLIENT_ID}
-					client_secret {env.GENERIC_CLIENT_SECRET}
-					scopes openid email profile
-					base_auth_url https://keycloak.myfiosgateway.com/
-					metadata_url https://keycloak.myfiosgateway.com/.well-known/openid-configuration
-				}
-			}
+			enable identity provider generic
 			cookie domain myfiosgateway.com
 			ui {
 				links {
