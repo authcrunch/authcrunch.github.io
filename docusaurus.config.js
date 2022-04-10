@@ -22,6 +22,12 @@ const config = {
       '@docusaurus/preset-classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
+        googleAnalytics: {
+          trackingID: 'G-MVS6492XVX',
+        },
+        gtag: {
+          trackingID: 'G-MVS6492XVX',
+        },
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/authp/authp.github.io/edit/main/',
@@ -135,9 +141,6 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
-      },
-      googleAnalytics: {
-        trackingID: 'G-MVS6492XVX',
       },
       algolia: {
         appId: 'BH4D9OD16A',
