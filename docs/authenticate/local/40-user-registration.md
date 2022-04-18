@@ -1,29 +1,7 @@
 # User Registration
 
-The following Caddy configuration enables user registration.
-
-```
-{
-  security {
-    authentication portal myportal {
-      registration {
-        dropbox {env.HOME}/.local/caddy/registrations.json
-        title "User Registration"
-        code "NY2020"
-        require accept terms
-        require domain mx
-        admin email barbaz@bar.baz foobar@foo.bar
-      }
-    }
-  }
-}
-
-auth.myfiosgateway.com {
-  route {
-    authenticate with myportal
-  }
-}
-```
+The following [`Caddyfile`](https://github.com/authp/authp.github.io/blob/main/assets/conf/local/registration/Caddyfile)
+contains configuration with email-based registration.
 
 The newly registered users will appear in the `registrations.json` file.
 An administrator must manually move entries from `registrations.json`

@@ -90,7 +90,7 @@ The syntax:
 
 ```
 action add <claim_name> <claim_value> as <string|list>
-action add nests [arg1 ... argN] with [arg1 ... argN] as <string|list>
+action add nested [arg1 ... argN] with [arg1 ... argN] as <string|list>
 ```
 
 Here, if a user is authentication in `local` realm and has email address

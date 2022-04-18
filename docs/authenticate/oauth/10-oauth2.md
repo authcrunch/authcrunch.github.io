@@ -75,3 +75,18 @@ email address of `jsmith@contoso.com` to get `authp/admin` role.
         action add role authp/user
       }
 ```
+
+## Icon Name, Text, and Color
+
+The following directive sets name, text, and color of the icon
+for this identity provider:
+
+```
+oauth identity provider generic {
+  icon "Gitlab" "gitlab" "yellow darken-4"
+}
+```
+
+The `gitlab` refers to the name of the [Line Awesome](https://icons8.com/line-awesome) icon.
+
+The `yellow darken-4` refers to the colors of [Materialize](https://materializecss.com/color.html) colors.

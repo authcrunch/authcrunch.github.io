@@ -65,6 +65,47 @@ headers injected by `inject headers with claims`:
 }
 ```
 
+#### Nested Data Source
+
+Additionally, one could inject data from a nested data structure.
+
+The partical list of token claims follows:
+
+```
+{
+  "userinfo": {
+    "custom_groups": [
+      "authp/admin",
+      "authp/user"
+    ],
+    "name": "Paul Greenberg",
+    "zoneinfo": "America/Los_Angeles"
+  }
+}
+```
+
+Apply the following configuration snippet:
+
+```
+{
+  security {
+    authorization policy mypolicy {
+      inject header "X-User-Custom-Groups" from "userinfo|custom_groups"
+      inject header "X-User-Timezone" from "userinfo|zoneinfo"
+      inject header "X-User-Name" from "userinfo|name"
+    }
+  }
+}
+```
+
+Based on the above configuration, the plugin sends the following headers:
+
+```
+    "X-User-Custom-Groups": "authp/admin, authp/user",
+    "X-User-Name": "Paul Greenberg",
+    "X-User-Timezone": "America/Los_Angeles"
+```
+
 ## Strip JWT Token from HTTP Request
 
 The following directive instructs the plugin to remove the found
