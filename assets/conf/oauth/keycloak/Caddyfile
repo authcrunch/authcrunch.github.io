@@ -1,0 +1,57 @@
+{
+	http_port 8080
+	https_port 8443
+	debug
+
+	order authenticate before respond
+	order authorize before basicauth
+
+	security {
+        oauth identity provider keycloak {
+            driver generic
+            realm keycloak
+            client_id {env.KEYCLOAK_CLIENT_ID}
+            client_secret {env.KEYCLOAK_CLIENT_SECRET}
+            scopes openid email profile
+            metadata_url https://keycloak/auth/realms/master/.well-known/openid-configuration
+        }
+
+		authentication portal myportal {
+			crypto default token lifetime 3600
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			enable identity provider keycloak
+			cookie domain myfiosgateway.com
+			ui {
+				links {
+					"My Website" https://assetq.myfiosgateway.com:8443/ icon "las la-star"
+					"My Identity" "/whoami" icon "las la-user"
+				}
+			}
+			transform user {
+				match origin keycloak
+				action add role authp/user
+			}
+		}
+
+		authorization policy mypolicy {
+			set auth url https://auth.myfiosgateway.com:8443/
+			allow roles authp/admin authp/user
+			crypto key verify {env.JWT_SHARED_KEY}
+		}
+	}
+}
+
+(tls_config) {
+	tls {$HOME}/.local/tls/myfiosgateway/server.crt {$HOME}/.local/tls/myfiosgateway/server.key
+}
+
+auth.myfiosgateway.com {
+	import tls_config
+	authenticate with myportal
+}
+
+assetq.myfiosgateway.com {
+	import tls_config
+	authorize with mypolicy
+	respond "assetq is running"
+}
