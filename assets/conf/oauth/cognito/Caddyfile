@@ -7,19 +7,20 @@
 	order authorize before basicauth
 
 	security {
-		oauth identity provider keycloak {
-			driver generic
-			realm keycloak
-			client_id {env.KEYCLOAK_CLIENT_ID}
-			client_secret {env.KEYCLOAK_CLIENT_SECRET}
-			scopes openid email profile
-			metadata_url https://keycloak/auth/realms/master/.well-known/openid-configuration
+		oauth identity provider cognito-us-east-1 {
+			driver cognito
+			realm cognito-us-east-1
+			client_id {env.COGNITO_US_EAST_1_CLIENT_ID}
+			client_secret {env.COGNITO_US_EAST_1_CLIENT_SECRET}
+			user_pool_id {env.COGNITO_US_EAST_1_POOL_ID}
+			region us-east-1
+			icon "AWS Cognito US" "aws"
 		}
 
 		authentication portal myportal {
 			crypto default token lifetime 3600
 			crypto key sign-verify {env.JWT_SHARED_KEY}
-			enable identity provider keycloak
+			enable identity provider cognito-us-east-1
 			cookie domain myfiosgateway.com
 			ui {
 				links {
