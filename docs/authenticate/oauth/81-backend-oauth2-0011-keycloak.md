@@ -4,9 +4,9 @@ Find Keycloak integration example in the following [`Caddyfile`](https://github.
 
 ## User and Group
 
-First, create "Admin", "Editors", and "Viewer" groups under "Manager", "Groups".
+First, create "Admin", "Editors", and "Viewer" groups under "Manage", "Groups".
 
-Next, create a new user under "Manager", "Users". As part of the process assign
+Next, create a new user under "Manage", "Users". As part of the process assign
 the newly created groups to the user.
 
 ![Keycloak](./images/keycloak/keycloak_new_user.png)
