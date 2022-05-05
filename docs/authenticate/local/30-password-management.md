@@ -10,6 +10,11 @@ First, download `bcrypt-cli`:
 go get -u github.com/bitnami/bcrypt-cli
 ```
 
+If you are using a newer version of Go use the following command to download `bcrypt-cli`:
+```bash
+go install github.com/bitnami/bcrypt-cli@v1.0.2
+```
+
 Then, use it to generate a new password:
 
 ```bash
