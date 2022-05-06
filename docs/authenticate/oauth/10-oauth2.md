@@ -72,7 +72,7 @@ email address of `jsmith@contoso.com` to get `authp/admin` role.
       transform user {
         match origin google
         match email jsmith@contoso.com
-        action add role authp/user
+        action add role authp/admin
       }
 ```
 
