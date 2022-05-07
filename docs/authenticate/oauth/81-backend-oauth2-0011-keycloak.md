@@ -2,9 +2,67 @@
 
 Find Keycloak integration example in the following [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/oauth/keycloak/Caddyfile).
 
-## User and Group
+## Realm Roles
 
-First, create "Admin", "Editors", and "Viewer" groups under "Manage", "Groups".
+Create a set of roles that will be later mapped to group memberships.
+
+* `authp/admin`
+* `authp/user`
+* `authp/guest`
+
+![Keycloak](./images/keycloak/keycloak_new_role_1a.png)
+
+![Keycloak](./images/keycloak/keycloak_new_role_1b.png)
+
+![Keycloak](./images/keycloak/keycloak_new_role_2a.png)
+
+![Keycloak](./images/keycloak/keycloak_new_role_2b.png)
+
+![Keycloak](./images/keycloak/keycloak_new_role_3a.png)
+
+![Keycloak](./images/keycloak/keycloak_new_role_3b.png)
+
+![Keycloak](./images/keycloak/keycloak_new_role_4.png)
+
+## Groups
+
+First, create "Admins", "Editors", and "Viewer" groups under "Manage", "Groups".
+
+Create "Admins" group:
+
+![Keycloak](./images/keycloak/keycloak_new_group_1a.png)
+
+![Keycloak](./images/keycloak/keycloak_new_group_1b.png)
+
+Assign the previously created `authp/admin` role to "Admins" group:
+
+![Keycloak](./images/keycloak/keycloak_new_group_1c.png)
+
+Create "Editors" group:
+
+![Keycloak](./images/keycloak/keycloak_new_group_2a.png)
+
+![Keycloak](./images/keycloak/keycloak_new_group_2b.png)
+
+Assign the previously created `authp/user` role to "Editors" group:
+
+![Keycloak](./images/keycloak/keycloak_new_group_2c.png)
+
+Create "Viewers" group:
+
+![Keycloak](./images/keycloak/keycloak_new_group_3a.png)
+
+![Keycloak](./images/keycloak/keycloak_new_group_3b.png)
+
+Assign the previously created `authp/guest` role to "Viewers" group:
+
+![Keycloak](./images/keycloak/keycloak_new_group_3c.png)
+
+The list of realm roles follows.
+
+![Keycloak](./images/keycloak/keycloak_new_group_4.png)
+
+## Users
 
 Next, create a new user under "Manage", "Users". As part of the process assign
 the newly created groups to the user.
@@ -18,6 +76,10 @@ Then, click "View all users" and click on the ID of the newly created user:
 Browse to "Credentials" tab and set user password.
 
 ![Keycloak](./images/keycloak/keycloak_new_user_2.png)
+
+Browser to "Role Mappings" tab and see that the "Effective Roles".
+
+![Keycloak](./images/keycloak/keycloak_user_effective_roles.png)
 
 Test the login by the user. The URL is `https://keycloak/auth/realms/master/account/`.
 
@@ -77,12 +139,26 @@ Confirm the configuration.
 
 ![Keycloak](./images/keycloak/keycloak_client_config_3.png)
 
+Browse to "Mappers" tab of the client config.
+
+Click "Create" and add `email` property.
+
+![Keycloak](./images/keycloak/keycloak_client_create_mapper.png)
+
+Next, click "Add Builtin" and add "groups" property.
+
+![Keycloak](./images/keycloak/keycloak_client_add_builtin_mapper.png)
+
+Review the created mappers.
+
+![Keycloak](./images/keycloak/keycloak_client_mappers.png)
+
 ## User Login
 
 The user's profile now has the new application.
 
 ![Keycloak](./images/keycloak/keycloak_user_profile.png)
 
-The login to authentication portal will succeed.
+The login to authentication portal will succeed and `/whoami` will reflect the assigned groups.
 
-![Keycloak](./images/keycloak/keycloak_authenticated.png)
+![Keycloak](./images/keycloak/keycloak_assigned_roles.png)
