@@ -141,3 +141,49 @@ following URL:
 ```
 https://auth.example.com/auth?login_hint=myusername&redirect_url=https://myapp.com/protected
 ```
+
+## Additional scopes
+
+Sometimes it is required to have a basic authorization block configure with the ability to inject scopes, into the OAUTH identity provider, that comes from the client. This would be useful to ask the user different scopes depending on your business logic.
+
+This will indicate to the authenticator that will fetch from the request a query parameter `additional_scopes`, and merge the conetnt into the OAUTH identity provider block.
+
+If this is enable, the client can make a call like:
+
+```
+myapp.com?additional_scopes=scopeA scope_B
+```
+
+The previous example will then merge `scopeA scope_B` into the current scopes configure in the OAUTH block.
+
+### Configuration Example
+
+The syntax to enable client scopes to be injected into the identity provider follows:
+
+```
+{
+  security {
+    oauth identity provider customer {
+      realm customerRealm
+      driver generic
+      client_id <THE CLIENT ID>
+      client_secret <THE CLIENT SECRET>
+      base_auth_url <THE BASE AUTHENTICATION URL>
+      scopes openid profile
+    }
+
+    authorization policy mypolicy {
+      set auth url /auth/oauth2/customerRealm
+      enable additional scopes
+    }
+  }
+}
+
+myapp.com {
+        route /protected* {
+                authorize with mypolicy
+                respond "myapp is running"
+        }
+}
+```
+
