@@ -1,11 +1,16 @@
-# Customize UI
+# Customizing the User Interface (UI)
 
-## Theming
+The user interface (UI) can be setup the use custom templates or
+the UI can be customized and altered with custom Cascading Style
+Sheets (CSS), JavaScripts and other assets.
 
-The theming of the portal works as follows.
+## Templates
 
-It starts with a concept of `theme`. By default, the portal uses `basic` theme.
-There is no need to defind it in Caddyfile.
+### Defining another theme
+
+A custom HTML theme can be defined in the **global options block** of the `Caddyfile`.
+The theme name is set in the **ui** block that is nested in the
+**authentication portal** of the **security** block as shown below.
 
 ```
 {
@@ -17,42 +22,35 @@ There is no need to defind it in Caddyfile.
     }
   }
 }
-
-auth.myfiosgateway.com {
-  route {
-    authenticate with myportal
-  }
-}
 ```
 
-Each theme must have a set of default pages:
+Defining a theme is optional, by default the `basic` theme is used.
 
-* `generic`
-* `login`
-* `portal`
-* `register`
-* `whoami`
-* `settings`
-* `sandbox`
+### Creating a new theme
+Every template has its own folder in the `assets` folder. The folder name
+should equal the name of the theme. For example the basic template files
+are located in the folder `assets/templates/basic/`. For reference and as 
+an example the basic template files can be found here https://github.com/greenpau/go-authcrunch/tree/main/assets/portal/templates/basic.
 
-The plain text templates are being stored in `assets/templates/<THEME>/<PAGE>.template`.
+Every template folder should include at least the following files:
 
 ```
-assets/templates/basic/generic.template
-assets/templates/basic/login.template
-assets/templates/basic/portal.template
-assets/templates/basic/register.template
-assets/templates/basic/whoami.template
-assets/templates/basic/settings.template
-assets/templates/basic/sandbox.template
+generic.template
+login.template
+portal.template
+register.template
+whoami.template
+settings.template
+sandbox.template
 ```
 
-These templates are the parts of `pkg/ui/pages.go`. They are compiled in the
-portal's binary. That is, there is no need to store them on the disk.
+These template engine used is based on the Go library `pkg/ui/pages.go`. 
+The files template files are compiled in the portal's binary.
 
-Next, if a user wants to use a different template, then it could be passed via
-Caddyfile directives. Specifically, use `template <PAGE_NAME>` directive to point
-to a file on disk.
+### Overriding a specific page template
+When using the a theme you can also override one specific page template
+as well. The example for that is shown below where the usage is: 
+`template <PAGE_NAME> <FILEPATH>`.
 
 ```
 {
@@ -65,64 +63,11 @@ to a file on disk.
     }
   }
 }
-
-auth.myfiosgateway.com {
-  route {
-    authenticate with myportal
-  }
-}
 ```
 
-## Custom CSS Styles
+## Other customization
 
-The following Caddyfile directive adds a custom CSS stylesheet to the
-plugin's pages. The stylesheet is available under `auth/assets/css/custom.css`
-
-```
-{
-  security {
-    authentication portal myportal {
-      ui {
-        custom css path {env.HOME}/.local/caddy/ui/custom/styles.css
-      }
-    }
-  }
-}
-
-auth.myfiosgateway.com {
-  route {
-    authenticate with myportal
-  }
-}
-```
-
-## Custom Javascript
-
-The following Caddyfile directive adds a custom javascript file to the
-plugin's pages. The script is available under `auth/assets/js/custom.js`
-
-```
-{
-  security {
-    authentication portal myportal {
-      ui {
-        custom js path {env.HOME}/.local/caddy/ui/custom/script.js
-      }
-    }
-  }
-}
-
-auth.myfiosgateway.com {
-  route {
-    authenticate with myportal
-  }
-}
-```
-
-This directive is usefule for adding Google Analytics or other
-minor javascript code.
-
-## Portal Links
+### Portal Links
 
 The following Caddyfile directive sets links that a user would see
 upon a successful login:
@@ -142,11 +87,6 @@ upon a successful login:
   }
 }
 
-auth.myfiosgateway.com {
-  route {
-    authenticate with myportal
-  }
-}
 ```
 
 The link can be opened in a new tab or window via `target_blank` argument:
@@ -171,7 +111,44 @@ The icon is the reference to [Line Awesome](https://icons8.com/line-awesome) by 
 
 ![Portal - UI - Icons](./images/portal_ui_icons.png)
 
-## Custom Header
+### Cascading Style Sheets (CSS)
+
+The following Caddyfile directive adds a custom CSS stylesheet to the
+plugin's pages. The stylesheet is available under `auth/assets/css/custom.css`
+
+```
+{
+  security {
+    authentication portal myportal {
+      ui {
+        custom css path {env.HOME}/.local/caddy/ui/custom/styles.css
+      }
+    }
+  }
+}
+```
+
+### JavaScript
+
+Adding custom JavaScript can for example be useful for adding 
+Analytics tools or other JavaScript.
+
+The following Caddyfile directive adds a custom JavaScript to the
+plugin's pages. The script is available under `auth/assets/js/custom.js`
+
+```
+{
+  security {
+    authentication portal myportal {
+      ui {
+        custom js path {env.HOME}/.local/caddy/ui/custom/script.js
+      }
+    }
+  }
+}
+```
+
+### Custom HTML Template Header
 
 The following Caddyfile directive injects the code found in `path/to/head.html`
 to `<head>` section of the portal's pages:
@@ -186,28 +163,19 @@ to `<head>` section of the portal's pages:
     }
   }
 }
-
-auth.myfiosgateway.com {
-  route {
-    authenticate with myportal
-  }
-}
 ```
 
+### Other Static Assets
 
-## Static Assets of Any Type
-
-The following Caddyfile directive is capable of loading and serving any type of static
-asset, e.g. `js`, `css`, etc.
+The following Caddyfile directive loads any other asset for 
+static file serving such as jpg, png et cetera.
 
 ```bash
       ui {
-        ...
         static_asset "assets/css/app.css" "text/css" /path/to/app/styles.css
-        ...
       }
 ```
 
 The above configuration would cause the plugin to read `/path/to/app/styles.css`
-and begin serving it with content type of `text/css`  at
-`AUTH_PORTAL/assets/css/app.css`, e.g. `https://localhost:8443/auth/assets/css/app.css`.
+and begin serving it with content type of `text/css` at
+`AUTH_PORTAL/assets/css/app.css`, e.g. `https://localhost/auth/assets/css/app.css`.
