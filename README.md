@@ -31,11 +31,11 @@ npx docusaurus start --port 4200 --host 0.0.0.0
 Run build to create search index:
 
 ```bash
-yarn build
+npm run build
 ```
 
 Deploy to `gh-pages` branch:
 
 ```bash
-GIT_USER=greenpau DEPLOYMENT_BRANCH=gh-pages USE_SSH=true yarn deploy
+GIT_USER=greenpau DEPLOYMENT_BRANCH=gh-pages USE_SSH=true npm run deploy
 ```

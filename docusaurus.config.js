@@ -86,8 +86,20 @@ const config = {
             label: 'Messaging',
           },
           {
+            type: 'doc',
+            docId: 'apps/intro',
+            position: 'left',
+            label: 'Apps',
+          },
+          {
             href: 'https://github.com/greenpau/caddy-security/issues/new/choose',
-            label: '💡  Ask Questions',
+            label: '💡 Ask Questions',
+            position: 'right',
+            className: 'button button--secondary',
+          },
+          {
+            href: 'https://github.com/greenpau/caddy-security/issues/14#issue-1111599735',
+            label: '🚀 Show Support',
             position: 'right',
             className: 'button button--secondary',
           },
