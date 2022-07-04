@@ -1,6 +1,6 @@
 # Github
 
-Follow the instructions at `https://github.com/settings/apps/new`.
+Follow the instructions at `https://github.com/settings/apps/new` (or `https://github.com/organizations/<your_org>/settings/applications/new` for orgs).
 
 GitHub App name: "My Gatekeeper"
 
