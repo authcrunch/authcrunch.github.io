@@ -40,7 +40,7 @@ describes how to create an IAM role for use with SAML federation.
 
 The steps necessary to enable AWS SSO in the plugin follow:
 
-1. Generate Self-Signed ceritficate and private key
+1. Generate a self-signed ceritficate (for `metadata.xml`) and private key (for creating assertions)
 2. Add Caddyfile directives enabling AWS SSO
 3. Add Caddyfile user transforms with AWS SSO roles
 4. Download metadata file
@@ -53,4 +53,19 @@ openssl req -x509 -nodes -sha256 -days 1095 -newkey rsa:4096 \
   -subj "/C=US/ST=New York/L=New York/O=AuthPortal/OU=AuthPortalSAMLIdP/CN=AuthPortalSAMLUser"
 ```
 
-TBD.
+Second, create `Caddyfile` config. Please see an example [here](https://github.com/authp/authp.github.io/blob/main/assets/conf/apps/sso/aws/Caddyfile).
+
+The name of the SSO provider is significant. Access SSO console via `/apps/sso/<provider_name>` endpoint, e.g. `/apps/sso/aws`.
+If you want to fetch `metadata.xml`, then the URL is `/apps/sso/aws/metadata.xml`.
+
+```
+sso provider aws {
+  entity_id caddy-authp-idp
+  driver aws
+  private key {$HOME}/tmp/authp/awssso/authp_saml.key
+  cert {$HOME} ${HOME}/tmp/authp/awssso/authp_saml.crt
+  location https://auth.myfiosgateway.com:8443/apps/sso/aws
+}
+```
+
+TBC.
