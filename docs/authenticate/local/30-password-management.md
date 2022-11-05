@@ -22,7 +22,7 @@ $ echo -n "password123" | bcrypt-cli -c 10
 $2a$10$OVnOaHDkcOXfbUZPFh5qt.yJqUt6pl9uJaqEMxxM.vS5fY/cZNmsq
 ```
 
-Finally, replace the newly generated password is user database file.
+Finally, replace the newly generated password in the user database file.
 
 ## Settings Page
 
@@ -37,6 +37,6 @@ Next, browse to "Settings" page.
 
 ![](./images/local_password_change_2.png)
 
-Finally, navigate to "Password" and chage it.
+Finally, navigate to "Password" and change it.
 
 ![](./images/local_password_change_3.png)
