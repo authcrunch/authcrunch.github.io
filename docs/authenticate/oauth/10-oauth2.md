@@ -98,6 +98,7 @@ The `priority 100` specified the order in which the icon will be shown.
 Other examples:
 
 ```
+icon "Discord" "lab la-discord la-2x" "white" "#5865f2" priority 100
 icon "Discord" "lab la-discord la-2x" "white" "#7289da" priority 100
 icon "Discord" "lab la-discord la-2x" "white" "#404eed" priority 100
 ```
