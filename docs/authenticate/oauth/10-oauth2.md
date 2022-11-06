@@ -83,10 +83,21 @@ for this identity provider:
 
 ```
 oauth identity provider generic {
-  icon "Gitlab" "gitlab" "yellow darken-4"
+  icon "Gitlab" "lab la-gitlab la-2x" "white" "#fc6d26" priority 100
 }
 ```
 
-The `gitlab` refers to the name of the [Line Awesome](https://icons8.com/line-awesome) icon.
+The `lab la-gitlab la-2x` refers to the name of the [Line Awesome](https://icons8.com/line-awesome) icon.
 
-The `yellow darken-4` refers to the colors of [Materialize](https://materializecss.com/color.html) colors.
+The `white` refers to the icon color.
+
+The `#fc6d26` refers to the background color.
+
+The `priority 100` specified the order in which the icon will be shown.
+
+Other examples:
+
+```
+icon "Discord" "lab la-discord la-2x" "white" "#7289da" priority 100
+icon "Discord" "lab la-discord la-2x" "white" "#404eed" priority 100
+```
