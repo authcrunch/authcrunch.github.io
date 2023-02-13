@@ -8,7 +8,7 @@ Description: "Caddy v2 Authentication Portal"
 
 Homepage URL: `https://localhost:8443/`
 
-User authorization callback URL: `https://localhost:8443/auth/oauth2/github/authorization-code-callback`
+User authorization callback URL: `https://localhost:8443/oauth2/github/authorization-code-callback`
 
 Check "Expire user authorization tokens".
 
