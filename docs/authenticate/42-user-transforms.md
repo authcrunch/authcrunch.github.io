@@ -4,7 +4,7 @@ sidebar_position: 42
 
 # User Transforms
 
-A user transform allows to perform the following one a user passed
+A user transform allows performing the following once a user has passed
 authentication:
 
 * add/remove user roles
