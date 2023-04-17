@@ -85,7 +85,7 @@ route {
 The following configuration instructs the plugin to sign/verify token
 with shared key `428f41ab-67ec-47d1-8633-bcade9dcc7ed` and add key id of
 `a2f19072b6d6` to the token's header. It uses the default token lifetime
-of 1800 seconds (900 minutes). The name of the token is `JWT_TOKEN`.
+of 1800 seconds (30 minutes). The name of the token is `JWT_TOKEN`.
 
 
 ```
@@ -111,7 +111,7 @@ route {
 The following configuration instructs the plugin to sign/verify token
 with shared key `428f41ab-67ec-47d1-8633-bcade9dcc7ed` and add key id of
 `a2f19072b6d6` to the token's header. It uses the default token lifetime
-of 1800 seconds (900 minutes). The name of the token is `JWT_TOKEN`.
+of 1800 seconds (30 minutes). The name of the token is `JWT_TOKEN`.
 
 
 ```
