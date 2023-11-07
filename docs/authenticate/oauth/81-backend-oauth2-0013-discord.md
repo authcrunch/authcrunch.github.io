@@ -27,7 +27,7 @@ oauth identity provider discord {
   driver discord
   client_id {$CLIENT_ID}
   client_secret {$CLIENT_SECRET}
-  scopes identify email guilds guilds.members.read # Note: `email`, `guilds`, and `guilds.members.read` are optional, see notes below
+  scopes identify email guilds guilds.members.read # Optional, `email`, `guilds`, and `guilds.members.read` are optional, see notes below
   user_group_filters {$DISCORD_GUILD_ID} {$OTHER_GUILD_ID} # Optional, effective only if scope guilds is specified
 }
 ```
@@ -84,8 +84,8 @@ transform user {
 
 To find the Role IDs for a server:
 1. Enable developer mode by going to Settings->\[App Settings\]->Advanced->Enable Developer Mode
-2. Go to the Server Settings for the each guild you want to filter by
-3. Go to Roles, and right click on the Role row you want, you should see an option "Copy Role ID"
+2. Go to the Server Settings for the guild you want to filter by
+3. Go to Roles, and right click on the Role in the list of roles that you want, you should see an option "Copy Role ID"
 
 ### Filtering by guild role
 
@@ -103,7 +103,7 @@ transform user { # Give a role `authp/rolename` for the specified Role ID in a s
     action add role authp/rolename
 }
 
-transform user { # Give the role `authp/user` for all members of the guild
+transform user { # Give the role `authp/user` for all members of the guild regardless of their role in the guild
     match role discord.com/{$DISCORD_GUILD_ID}/members
     action add role authp/user
 }
