@@ -1,0 +1,57 @@
+{
+	http_port 8080
+	https_port 8443
+	# debug
+
+	order authenticate before respond
+	order authorize before basicauth
+
+        security {
+                oauth identity provider discord {
+                        realm discord
+                        driver discord
+                        client_id {$CLIENT_ID}
+                        client_secret {$CLIENT_SECRET}
+                        scopes identify guilds guilds.members.read
+                        user_group_filters {$GUILD_ID}
+                }
+                authentication portal discordportal {
+                        crypto default token lifetime 3600
+                        crypto key sign-verify {env.JWT_SHARED_KEY}
+                        enable identity provider discord
+                        cookie domain myfiosgateway.com
+
+                        transform user {
+                                match role discord.com/{$GUILD_ID}/role/{$ADMIN_ROLE_ID}
+                                action add role authp/admin
+                        }
+                        transform user {
+                                match role discord.com/{$MYGUILDID}/members
+                                action add role authp/user
+                        }
+                }
+                authorization policy mypolicy {
+                        set auth url https://myfiosgateway.com/auth/
+                        crypto key verify {env.JWT_SHARED_KEY}
+                        allow roles authp/admin authp/user
+                        validate bearer header
+                        inject headers with claims
+                }
+
+        }
+}
+
+(tls_config) {
+	tls {$HOME}/.local/caddy/server.crt {$HOME}/.local/caddy/server.key
+}
+
+https://myfiosgateway.com {
+        import tls_config
+        route /auth/* {
+                authenticate with discordportal
+        }
+        route {
+                authorize with mypolicy
+                respond "Hello World"
+        }
+}

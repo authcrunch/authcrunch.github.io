@@ -4,6 +4,8 @@ Discord OAuth2 integration allows you to use discord as an identity provider.
 
 It also allows you to add roles to the users based on which "discord servers" they are members of.
 
+The following [`Caddyfile`](https://github.com/authp/authp.github.io/blob/main/assets/conf/oauth/discord/Caddyfile) allows Discord-based authentication
+
 ### Registering a discord application
 
 In order to use this plugin with caddy-security you'll need a to register an application in the [Discord Developer Portal](https://discord.com/developers/applications).
@@ -25,7 +27,7 @@ oauth identity provider discord {
   driver discord
   client_id {$CLIENT_ID}
   client_secret {$CLIENT_SECRET}
-  scopes identify email guilds # Optional, see notes below
+  scopes identify email guilds guilds.members.read # Optional, `email`, `guilds`, and `guilds.members.read` are optional, see notes below
   user_group_filters {$DISCORD_GUILD_ID} {$OTHER_GUILD_ID} # Optional, effective only if scope guilds is specified
 }
 ```
@@ -52,7 +54,7 @@ To get a discord ID for a particular user using the discord desktop app:
 
 **Note**: "Guild" is the discord terminology for a "discord server"
 
-**Note**: In order to disciminate users based on which guild they belong to you have to enable the guild scope in the discord oauth configuratio above (`scopes identity guild`)
+**Note**: In order to discriminate users based on which guild they belong to you have to enable the `guilds` scope in the discord oauth configuration above (`scopes identify guilds`)
 
 After the user is authenticated another query is made to the discord api requesting a list of guild IDs the user is part of. By default the result is ignored, which means no new roles will be added to the user object based on guild membership.
 
@@ -75,6 +77,33 @@ transform user {
 }
 
 transform user {
+    match role discord.com/{$DISCORD_GUILD_ID}/members
+    action add role authp/user
+}
+```
+
+To find the Role IDs for a server:
+1. Enable developer mode by going to Settings->\[App Settings\]->Advanced->Enable Developer Mode
+2. Go to the Server Settings for the guild you want to filter by
+3. Go to Roles, and right click on the Role in the list of roles that you want, you should see an option "Copy Role ID"
+
+### Filtering by guild role
+
+**Note**: To enable discriminating users based on their role in a specific guild you must enable both the `guilds` AND `guilds.members.read` scopes. (`scopes identify guilds guilds.members.read`) [Read more here](https://discord.com/developers/docs/resources/user#get-current-user-guild-member)
+
+Filtering by role in a guild can be combined with `Filtering by guild` above. Members of a guild will still receive the `discord.com/{$DISCORD_GUILD_ID}/members` and `discord.com/{$DISCORD_GUILD_ID}/admins` roles above.
+
+Users will also receive `discord.com/{$DISCORD_GUILD_ID}/role/{$DISCORD_ROLE_ID}` for each role the user has in each of the guilds specified in `user_group_filters`
+
+Just as in the section above `Filter by guild`, after the user authenticates another query is made to the discord api to fetch their guild IDs, this list of guild IDs is filtered by `user_group_filters`. If the `guilds.members.read` scope is specified then for each specified guild, a query to fetch the user's member data will be made. Only the role ids from this response are saved and they can be used as demonstrated below.
+
+```caddyfile
+transform user { # Give a role `authp/rolename` for the specified Role ID in a specific guild
+    match role discord.com/{$DISCORD_GUILD_ID}/role/{$DISCORD_ROLE_ID}
+    action add role authp/rolename
+}
+
+transform user { # Give the role `authp/user` for all members of the guild regardless of their role in the guild
     match role discord.com/{$DISCORD_GUILD_ID}/members
     action add role authp/user
 }
