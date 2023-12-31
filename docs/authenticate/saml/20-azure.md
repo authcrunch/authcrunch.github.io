@@ -53,7 +53,7 @@ In Azure AD, you will have an application, e.g. "My Gatekeeper".
 
 The application is a Caddy web server running on port 3443 on
 `localhost`. This example meant to emphasize that the authorization
-is asynchronious. That is when a user clicks on "My Gatekeeper" icon
+is asynchronous. That is when a user clicks on "My Gatekeeper" icon
 in Office 365, the browser takes the user to a sign in page
 at URL `https://localhost:3443/saml`.
 
