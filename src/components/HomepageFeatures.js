@@ -30,7 +30,7 @@ const FeatureList = [
       <>
         Take advantage of multi-factor authentication with software tokens
         in the form of mobile apps (e.g. Google Authenticator) and hardware
-        tokens in the form of USB keys (e.g. Yubikey).
+        tokens in the form of USB keys (e.g. YubiKey).
       </>
     ),
   },
