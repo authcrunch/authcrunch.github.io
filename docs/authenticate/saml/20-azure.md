@@ -69,7 +69,7 @@ The "Branding" page configures "Home Page URL".
 
 ![Azure AD App Registration - Branding](../images/azure_app_registration_branding.png)
 
-For demostration purposes, we will create the following "Roles" in the application:
+For demonstration purposes, we will create the following "Roles" in the application:
 
 | **Azure Role Name** | **Role Name in SAML Assertion** |
 | --- | --- |
