@@ -19,7 +19,7 @@ Please show your appreciation for this work:
 2. [**Star caddy-security**](https://github.com/greenpau/caddy-security) :star: :star: :star:
 3. [**Sponsor** @greenpau](https://github.com/sponsors/greenpau)
 
-Please ask questions via Github Issues or reach out directly via
+Please ask questions via GitHub Issues or reach out directly via
 [LinkedIn](https://www.linkedin.com/in/greenpau/).
 I am happy to help you! [@greenpau](https://github.com/greenpau)
 

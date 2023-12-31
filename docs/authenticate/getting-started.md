@@ -12,4 +12,4 @@ the [conf](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/)
 Additionally, please see issues tagged [config example](https://github.com/greenpau/caddy-security/issues?q=label%3A%22config+example%22+).
 
 Further, [search](https://github.com/search?l=Dockerfile&q=greenpau%2Fcaddy-security&type=Code)
-Github for the Dockerfile files referencing `caddy-security`. Then, see how others use it.
+GitHub for the Dockerfile files referencing `caddy-security`. Then, see how others use it.
