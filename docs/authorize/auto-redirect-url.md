@@ -146,7 +146,7 @@ https://auth.example.com/auth?login_hint=myusername&redirect_url=https://myapp.c
 
 Sometimes it is required to have a basic authorization block configure with the ability to inject scopes, into the OAUTH identity provider, that comes from the client. This would be useful to ask the user different scopes depending on your business logic.
 
-This will indicate to the authenticator that will fetch from the request a query parameter `additional_scopes`, and merge the conetnt into the OAUTH identity provider block.
+This will indicate to the authenticator that will fetch from the request a query parameter `additional_scopes`, and merge the content into the OAUTH identity provider block.
 
 If this is enable, the client can make a call like:
 
