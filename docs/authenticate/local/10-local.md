@@ -30,7 +30,7 @@ Please browse the following configuration files for examples:
 The plugin creates local authentication file (i.e. `users.json`) if it does
 not exist already.
 
-After starting the server, and find the following following log entries with
+After starting the server, and find the following log entries with
 `user_name` and `user_secret`.
 
 ```json
