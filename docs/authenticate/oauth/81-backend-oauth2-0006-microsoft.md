@@ -11,7 +11,7 @@ In summary, you open the `Azure Active Directory` section on
 ![Azure Active Directory - App registrations](../images/oauth2_azure_new_app.png)
 
 There you select `New registration` and enter your application's name,
-your choice of supported account types and the the redirect URI
+your choice of supported account types and the redirect URI
 
 ```
 https://localhost:8443/auth/oauth2/azure/authorization-code-callback
