@@ -83,7 +83,7 @@ for this identity provider:
 
 ```
 oauth identity provider generic {
-  icon "Gitlab" "lab la-gitlab la-2x" "white" "#fc6d26" priority 100
+  icon "GitLab" "lab la-gitlab la-2x" "white" "#fc6d26" priority 100
 }
 ```
 
