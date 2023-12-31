@@ -147,7 +147,7 @@ prefix match org ny
 
 #### Field Exists Conditions
 
-The field existance in a token conditions follow this syntax.
+The field existence in a token conditions follow this syntax.
 
 ```
 field <name> [not] exists
