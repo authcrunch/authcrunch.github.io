@@ -82,9 +82,9 @@ token's issuer value. Then, it checks whether the value starts with `http`.
 If it is, then the `set auth url` will be overwritten with the issuer's
 web address.
 
-## Javascript Redirect
+## JavaScript Redirect
 
-The following directive enables Javascript-based redirect. This is useful when
+The following directive enables JavaScript-based redirect. This is useful when
 the URI path contains pound (`#`) sign.
 
 ```

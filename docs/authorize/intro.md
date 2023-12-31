@@ -13,7 +13,7 @@ The features of the plugin are:
 * Token discovery
 * IP address filtering
 * Auto-redirection to auth portal
-* Optional Javascript redirects
+* Optional JavaScript redirects
 * Access Lists and Role-Based Access Control (RBAC)
 * Path-Based ACLs
 * Pass token data via HTTP Request Headers to downstream apps
