@@ -30,7 +30,7 @@ Here is the list of Caddy v2 plugins I maintain:
 * [caddy-systemd](https://github.com/greenpau/caddy-systemd)
 * [caddy-git](https://github.com/greenpau/caddy-git)
 
-Watch the following Youtube videos:
+Watch the following YouTube videos:
 
 * **Setting Up Local Authentication**: [Video](https://www.youtube.com/watch?v=k8tbbffMGZk)
   and [Config Gist](https://gist.github.com/greenpau/dbfadd3c9fee21dbb0a0d3902a8d0ec0)
