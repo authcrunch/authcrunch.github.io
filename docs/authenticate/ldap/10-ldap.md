@@ -158,7 +158,7 @@ attributes {
     name cn
     # Although surname is being kept in sn attribute, there is no
     # attribute for given name. Thus, it is useless in isolation.
-    # Therefore, changeing surname value to non-existing attribute foo.
+    # Therefore, changing surname value to non-existing attribute foo.
     surname foo
     # The username is mapped to uid attribute, i.e. riemann
     username uid
