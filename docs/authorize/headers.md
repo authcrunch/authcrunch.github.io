@@ -69,7 +69,7 @@ headers injected by `inject headers with claims`:
 
 Additionally, one could inject data from a nested data structure.
 
-The partical list of token claims follows:
+The practical list of token claims follows:
 
 ```
 {
