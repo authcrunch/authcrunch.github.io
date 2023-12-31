@@ -40,7 +40,7 @@ describes how to create an IAM role for use with SAML federation.
 
 The steps necessary to enable AWS SSO in the plugin follow:
 
-1. Generate a self-signed ceritficate (for `metadata.xml`) and private key (for creating assertions)
+1. Generate a self-signed certificate (for `metadata.xml`) and private key (for creating assertions)
 2. Add Caddyfile directives enabling AWS SSO
 3. Add Caddyfile user transforms with AWS SSO roles
 4. Download metadata file
