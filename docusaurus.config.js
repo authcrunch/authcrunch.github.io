@@ -8,13 +8,13 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Caddy Security',
   tagline: 'Auth Portal and Authorize Plugins for Caddy v2',
-  url: 'https://authp.github.io',
+  url: 'https://docs.authcrunch.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'authp',
-  projectName: 'authp.github.io',
+  organizationName: 'authcrunch',
+  projectName: 'authcrunch.github.io',
   trailingSlash: false,
 
   presets: [
@@ -30,12 +30,12 @@ const config = {
         },
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/authp/authp.github.io/edit/main/',
+          editUrl: 'https://github.com/authcrunch/authcrunch.github.io/edit/main/',
         },
         blog: {
           showReadingTime: true,
           editUrl:
-            'https://github.com/authp/authp.github.io/edit/main/',
+            'https://github.com/authcrunch/authcrunch.github.io/edit/main/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -143,7 +143,7 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/authp/authp.github.io',
+                href: 'https://github.com/authcrunch/authcrunch.github.io',
               },
             ],
           },
@@ -157,7 +157,7 @@ const config = {
       algolia: {
         appId: 'BH4D9OD16A',
         apiKey: '1245fb17ae1ec196b3cbd810e20cf9f0',
-        indexName: 'authp',
+        indexName: 'authcrunch',
       },
     }),
 };

@@ -1,6 +1,6 @@
 # User Registration
 
-The following [`Caddyfile`](https://github.com/authp/authp.github.io/blob/main/assets/conf/local/registration/Caddyfile)
+The following [`Caddyfile`](https://github.com/authcrunch/authcrunch.github.io/blob/main/assets/conf/local/registration/Caddyfile)
 contains configuration with email-based registration.
 
 The newly registered users will appear in the `registrations.json` file.

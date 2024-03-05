@@ -8,11 +8,11 @@ tags: [blog]
 Please share your stories about Caddy and auth plugins!
 
 Simply add Markdown files (or folders) to the
-[`blog/`](https://github.com/authp/authp.github.io/new/main/blog/)
+[`blog/`](https://github.com/authcrunch/authcrunch.github.io/new/main/blog/)
 directory.
 
 Additionally, add yourself to blog authors via
-[`authors.yml`](https://github.com/authp/authp.github.io/edit/main/blog/authors.yml).
+[`authors.yml`](https://github.com/authcrunch/authcrunch.github.io/edit/main/blog/authors.yml).
 
 If your blog post has images, then create a folder for the post
 and co-locate images with the post itself.

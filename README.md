@@ -2,7 +2,7 @@
 
 Documentation for Caddy v2 Auth Portal and Authorize Plugins.
 
-Documentation Website: https://authp.github.io/
+Documentation Website: https://docs.authcrunch.com/
 
 <!-- begin-markdown-toc -->
 ## Table of Contents

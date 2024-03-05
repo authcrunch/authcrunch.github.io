@@ -4,7 +4,7 @@ Discord OAuth2 integration allows you to use discord as an identity provider.
 
 It also allows you to add roles to the users based on which "discord servers" they are members of.
 
-The following [`Caddyfile`](https://github.com/authp/authp.github.io/blob/main/assets/conf/oauth/discord/Caddyfile) allows Discord-based authentication
+The following [`Caddyfile`](https://github.com/authcrunch/authcrunch.github.io/blob/main/assets/conf/oauth/discord/Caddyfile) allows Discord-based authentication
 
 ### Registering a discord application
 

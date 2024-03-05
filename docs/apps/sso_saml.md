@@ -53,7 +53,7 @@ openssl req -x509 -nodes -sha256 -days 1095 -newkey rsa:4096 \
   -subj "/C=US/ST=New York/L=New York/O=AuthPortal/OU=AuthPortalSAMLIdP/CN=AuthPortalSAMLUser"
 ```
 
-Second, create `Caddyfile` config. Please see an example [here](https://github.com/authp/authp.github.io/blob/main/assets/conf/apps/sso/aws/Caddyfile).
+Second, create `Caddyfile` config. Please see an example [here](https://github.com/authcrunch/authcrunch.github.io/blob/main/assets/conf/apps/sso/aws/Caddyfile).
 
 The name of the SSO provider is significant. Access SSO console via `/apps/sso/<provider_name>` endpoint, e.g. `/apps/sso/aws`.
 If you want to fetch `metadata.xml`, then the URL is `/apps/sso/aws/metadata.xml`.
