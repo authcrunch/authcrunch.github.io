@@ -4,8 +4,8 @@
   <ShortName>Caddy Security</ShortName>
   <Description>Search Caddy Security</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/x-icon">https://authp.github.io/img/favicon.ico</Image>
-  <Url type="text/html" method="get" template="https://authp.github.io/search?q={searchTerms}"/>
-  <Url type="application/opensearchdescription+xml" rel="self" template="https://authp.github.io/opensearch.xml" />
-  <moz:SearchForm>https://authp.github.io/</moz:SearchForm>
+  <Image width="16" height="16" type="image/x-icon">https://docs.authcrunch.com/img/favicon.ico</Image>
+  <Url type="text/html" method="get" template="https://docs.authcrunch.com/search?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://docs.authcrunch.com/opensearch.xml" />
+  <moz:SearchForm>https://docs.authcrunch.com/</moz:SearchForm>
 </OpenSearchDescription>
