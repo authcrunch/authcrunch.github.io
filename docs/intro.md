@@ -4,31 +4,15 @@ sidebar_position: 1
 
 # Introduction
 
+First, go to <a href="https://caddyserver.com/download?package=github.com%2Fgreenpau%2Fcaddy-security" target="_blank">Caddy Downloads</a> 
+enable `github.com/greenpau/caddy-security` plugin, and download `caddy` binary.
 
-Security App and Plugin for [Caddy v2](https://github.com/caddyserver/caddy). It includes:
+Review `Caddyfile` configuration samples <a href="https://github.com/authcrunch/authcrunch.github.io/tree/main/assets/conf" target="_blank">here</a>,
+determine the features you need, and craft your own `Caddyfile`.
 
-* Authentication Plugin for implementing Form-Based, Basic, Local, LDAP, OpenID
-  Connect, OAuth 2.0, SAML Authentication (formerly `caddy-auth-portal`)
-* Authorization Plugin for HTTP request authorization based on JWT/PASETO
-  tokens (formerly `caddy-authorize`, `caddy-auth-jwt`)
-* Credentials Plugin for managing credentials for various integrations
-
-Please show your appreciation for this work:
-
-1. **Promote caddy-security project** on social media (Twitter, LinkedIn, HN)
-2. [**Star caddy-security**](https://github.com/greenpau/caddy-security) :star: :star: :star:
-3. [**Sponsor** @greenpau](https://github.com/sponsors/greenpau)
-
-Please ask questions via Github Issues or reach out directly via
-[LinkedIn](https://www.linkedin.com/in/greenpau/).
-I am happy to help you! [@greenpau](https://github.com/greenpau)
-
-Here is the list of Caddy v2 plugins I maintain:
-
-* [caddy-security](https://github.com/greenpau/caddy-security)
-* [caddy-trace](https://github.com/greenpau/caddy-trace)
-* [caddy-systemd](https://github.com/greenpau/caddy-systemd)
-* [caddy-git](https://github.com/greenpau/caddy-git)
+It is highly likely the documentation might not cover everything just yet.
+Please do not hesitate asking questions <a href="https://github.com/greenpau/caddy-security/issues/new/choose" target="_blank">here</a>
+or reach me directly via email or <a href="https://www.linkedin.com/in/greenpau/" target="_blank">LinkedIn</a>.
 
 Watch the following Youtube videos:
 

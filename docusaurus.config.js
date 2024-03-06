@@ -8,7 +8,7 @@ const darkTheme = themes.dracula;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Caddy Security",
+  title: "Caddy Security Documentation",
   tagline: "Security App for Caddy v2",
   url: "https://docs.authcrunch.com",
   baseUrl: "/",
@@ -16,7 +16,7 @@ const config = {
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
   organizationName: "authcrunch",
-  projectName: "authcrunch.github.io",
+  projectName: "docs.authcrunch.com",
   trailingSlash: false,
 
   presets: [
@@ -56,6 +56,14 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      announcementBar: {
+        id: 'support_project_20240306',
+        content:
+          '<p class="text-lg mt-4">Help Needed! <a target="_blank" rel="noopener noreferrer" href="/help-needed">Please Read</a>.</p>',
+        backgroundColor: '#b91c1c',
+        textColor: '#ffffff',
+        isCloseable: false,
+      },
       navbar: {
         title: "Caddy Security",
         logo: {
@@ -96,12 +104,6 @@ const config = {
           {
             href: "https://github.com/greenpau/caddy-security/issues/new/choose",
             label: "💡 Ask Questions",
-            position: "right",
-            className: "button button--secondary",
-          },
-          {
-            href: "https://github.com/greenpau/caddy-security/issues/14#issue-1111599735",
-            label: "🚀 Show Support",
             position: "right",
             className: "button button--secondary",
           },
