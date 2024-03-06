@@ -1,6 +1,6 @@
-# caddy-auth-docs
+# caddy-security-docs
 
-Documentation for Caddy v2 Auth Portal and Authorize Plugins.
+Documentation for Caddy v2 Security Plugin.
 
 Documentation Website: https://docs.authcrunch.com/
 

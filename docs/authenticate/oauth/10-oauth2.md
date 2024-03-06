@@ -50,7 +50,7 @@ role, unless the following applies.
 The Caddyfile `transform user` directive allows adding roles based on the
 information provided by OAuth 2.0 provider.
 
-See [User Transforms](#user-transforms) section for explanation about
+See [User Transforms](/docs/authenticate/user-transforms) section for explanation about
 the `transform user` directive.
 
 For example, the following transform matches any user authenticated
