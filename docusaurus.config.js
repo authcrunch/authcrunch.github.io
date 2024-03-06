@@ -24,10 +24,10 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         googleAnalytics: {
-          trackingID: 'G-MVS6492XVX',
+          trackingID: 'G-Q4KYV782E8',
         },
         gtag: {
-          trackingID: 'G-MVS6492XVX',
+          trackingID: 'G-Q4KYV782E8',
         },
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
