@@ -47,7 +47,7 @@ function HomepageHeader() {
             {siteConfig.title}
           </p>
           <p className="mt-6 text-base leading-7 text-gray-300">
-            The knowledge base for the security foundation for Caddy v2, including authentication
+            The knowledge base for the security foundation of Caddy v2, including authentication
             portal and authorization policies
           </p>
           <div className="mt-10 flex items-center gap-x-6 lg:mt-0 lg:flex-shrink-0">

@@ -16,7 +16,7 @@ const config = {
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
   organizationName: "authcrunch",
-  projectName: "docs.authcrunch.com",
+  projectName: "authcrunch.github.io",
   trailingSlash: false,
 
   presets: [
@@ -59,7 +59,7 @@ const config = {
       announcementBar: {
         id: 'support_project_20240306',
         content:
-          '<p class="text-lg mt-4">Help Needed! <a target="_blank" rel="noopener noreferrer" href="/help-needed">Please Read</a>.</p>',
+          '<p class="text-lg mt-4">Help Needed! <a target="_blank" rel="noopener noreferrer" href="/help-needed">Please Click Here and Read</a>.</p>',
         backgroundColor: '#b91c1c',
         textColor: '#ffffff',
         isCloseable: false,

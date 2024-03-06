@@ -80,7 +80,7 @@ export default function HelpNeeded() {
 
                       <div key="action-refer" className="relative pl-9">
                         <div className="inline font-semibold text-gray-900">
-                          <StarIcon
+                          <ShareIcon
                             className="absolute left-1 top-1 h-5 w-5 text-blue-600"
                             aria-hidden="true"
                           />
