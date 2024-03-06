@@ -156,9 +156,9 @@ const config = {
         darkTheme: darkTheme,
       },
       algolia: {
-        appId: 'BH4D9OD16A',
-        apiKey: '1245fb17ae1ec196b3cbd810e20cf9f0',
-        indexName: 'authcrunch',
+        appId: 'S074F3F45X',
+        apiKey: 'f65f8a1b016375fdf6f6cc20fba8ff49',
+        indexName: 'authp',
       },
     }),
 };
