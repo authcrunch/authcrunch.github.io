@@ -8,7 +8,7 @@ const darkTheme = themes.dracula;
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Caddy Security',
-  tagline: 'Auth Portal and Authorize Plugins for Caddy v2',
+  tagline: 'Security App for Caddy v2',
   url: 'https://docs.authcrunch.com',
   baseUrl: '/',
   onBrokenLinks: 'throw',
