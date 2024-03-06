@@ -34,45 +34,6 @@ const FeatureList = [
       </>
     ),
   },
-  /*
-  {
-    title: 'User Interface (UI) Theming and Customization',
-    Svg: require('../../static/img/golang_logo.svg').default,
-    description: (
-      <>
-        TBD
-      </>
-    ),
-  },
-  {
-    title: 'User Portal',
-    Svg: require('../../static/img/golang_logo.svg').default,
-    description: (
-      <>
-        TBD
-      </>
-    ),
-  },
-  {
-    title: 'Connected Public Services',
-    Svg: require('../../static/img/golang_logo.svg').default,
-    description: (
-      <>
-        TBD
-      </>
-    ),
-  },
-  {
-    title: 'Powered by Caddy',
-    Svg: require('../../static/img/golang_logo.svg').default,
-    description: (
-      <>
-        Integrates with a powerful, enterprise-ready, open source web
-        server with automatic HTTPS written in Go.
-      </>
-    ),
-  },
-  */
 ];
 
 function Feature({Svg, title, description}) {
