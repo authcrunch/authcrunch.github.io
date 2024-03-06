@@ -14,6 +14,18 @@ Documentation Website: https://docs.authcrunch.com/
 
 ## Local Testing
 
+If necessary, upgrade packages:
+
+```bash
+npm run upgrade
+```
+
+Check Markdown files:
+
+```bash
+npx docusaurus-mdx-checker
+```
+
 Run a build:
 
 ```bash
