@@ -56,6 +56,7 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      image: 'img/authcrunch.jpg',
       announcementBar: {
         id: 'support_project_20240306',
         content:

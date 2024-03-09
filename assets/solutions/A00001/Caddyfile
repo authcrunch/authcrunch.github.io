@@ -1,0 +1,99 @@
+{
+	http_port 8080
+	https_port 8443
+	debug
+
+	order authenticate before respond
+	order authorize before basicauth
+
+	security {
+		local identity store localdb {
+			realm local
+			path {$HOME}/.local/caddy/solutions/A00001/users.json
+            user a00001 {
+                name Webmaster
+                email a00001@localhost.localdomain
+                # password: Td45@4d269b7ec2f5ffd31ee5
+				# echo -n 'Td45@4d269b7ec2f5ffd31ee5' | bcrypt-cli -c 10
+                password "$2a$10$VLCDIncXaRFshFTGcz2aP.q.gR0O6y1i6mVDks/7WmE3JKLjPD.wu" overwrite
+                roles authp/admin authp/user
+            }
+            user jsmith {
+                name John Smith
+                email jsmith@localhost.localdomain
+                password "My@Password123"
+                roles "Domain Users" "Domain Admins" "authp/admin"
+            }
+		}
+
+		authentication portal myportal {
+			crypto default token lifetime 3600
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			cookie domain myfiosgateway.com
+			ui {
+				links {
+					"My Identity" "/whoami" icon "las la-user"
+				}
+			}
+			transform user {
+				match origin local
+				action add role authp/user
+				ui link "Portal Settings" /settings icon "las la-cog"
+				ui link "AssetQ" https://assetq.myfiosgateway.com:8443/ icon "las la-cloud"
+			}
+			transform user {
+				regex match role "\s"
+				# action drop matched role
+				action add role authp/bar
+			}
+			enable identity store localdb
+		}
+
+		authorization policy assetq_policy {
+			set auth url https://auth.myfiosgateway.com:8443/
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			acl rule {
+				comment allow admins
+				match role authp/admin
+				allow stop log info
+			}
+			acl rule {
+				comment default deny
+				match any
+				deny stop log warn
+			}
+			with api key auth portal myportal realm local
+			with basic auth portal myportal realm local
+			inject headers with claims
+		}
+	}
+}
+
+auth.myfiosgateway.com {
+	tls {$HOME}/.local/tls/myfiosgateway/server.crt {$HOME}/.local/tls/myfiosgateway/server.key
+
+	route /version* {
+		respond "auth 1.0"
+	}
+
+	route {
+		authenticate with myportal
+	}
+}
+
+assetq.myfiosgateway.com {
+	tls {$HOME}/.local/tls/myfiosgateway/server.crt {$HOME}/.local/tls/myfiosgateway/server.key
+
+	route /version* {
+		respond "auth 1.0"
+	}
+
+	route {
+		authorize with assetq_policy
+		trace tag="tshoot"
+		respond "{http.request.host}
+		time: {time.now.common_log}
+		id: {http.auth.user.id}
+		roles: {http.auth.user.roles}"
+	}
+}
