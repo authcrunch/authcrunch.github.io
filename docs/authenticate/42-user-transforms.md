@@ -144,3 +144,31 @@ Alternatively, one can add `name` and `picture` (avatar) claims:
     action add picture "https://avatars.githubusercontent.com/u/3826416?v=4" as string
   }
 ```
+
+## Drop Matched Roles
+
+This feature is available starting `v1.1.24`.
+
+The following transform removes any role with whitespaces from the
+token issued to a user.
+
+```
+transform user {
+  regex match role "\s"
+  action drop matched role
+}
+```
+
+The following transform removes any role that does not match `authp/admin` or `authp/user`
+from the token issued to a user.
+
+```
+transform user {
+  no regex match any role "^authp/(admin|user)$"
+  action drop matched role
+}
+```
+
+References:
+
+* [Solution Brief A00001 `Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/solutions/A00001/Caddyfile)

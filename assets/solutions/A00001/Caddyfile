@@ -10,20 +10,20 @@
 		local identity store localdb {
 			realm local
 			path {$HOME}/.local/caddy/solutions/A00001/users.json
-            user a00001 {
-                name Webmaster
-                email a00001@localhost.localdomain
-                # password: Td45@4d269b7ec2f5ffd31ee5
+			user a00001 {
+				name Webmaster
+				email a00001@localhost.localdomain
+				# password: Td45@4d269b7ec2f5ffd31ee5
 				# echo -n 'Td45@4d269b7ec2f5ffd31ee5' | bcrypt-cli -c 10
-                password "$2a$10$VLCDIncXaRFshFTGcz2aP.q.gR0O6y1i6mVDks/7WmE3JKLjPD.wu" overwrite
-                roles authp/admin authp/user
-            }
-            user jsmith {
-                name John Smith
-                email jsmith@localhost.localdomain
-                password "My@Password123"
-                roles "Domain Users" "Domain Admins" "authp/admin"
-            }
+				password "$2a$10$VLCDIncXaRFshFTGcz2aP.q.gR0O6y1i6mVDks/7WmE3JKLjPD.wu" overwrite
+				roles authp/admin authp/user
+			}
+			user jsmith {
+				name John Smith
+				email jsmith@localhost.localdomain
+				password "My@Password123"
+				roles "Domain Users" "Domain Admins" "authp/admin"
+			}
 		}
 
 		authentication portal myportal {
@@ -43,8 +43,11 @@
 			}
 			transform user {
 				regex match role "\s"
-				# action drop matched role
-				action add role authp/bar
+				action drop matched role
+			}
+			transform user {
+				no regex match any role "^authp/(admin|user)$"
+				action drop matched role
 			}
 			enable identity store localdb
 		}

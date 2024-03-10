@@ -9,6 +9,7 @@ Documentation Website: https://docs.authcrunch.com/
 
 * [Local Testing](#local-testing)
 * [Deployment](#deployment)
+* [Miscellaneous](#miscellaneous)
 
 <!-- end-markdown-toc -->
 
@@ -50,4 +51,12 @@ Deploy to `gh-pages` branch:
 
 ```bash
 GIT_USER=greenpau DEPLOYMENT_BRANCH=gh-pages USE_SSH=true npm run deploy
+```
+
+## Miscellaneous 
+
+Reformat `Caddyfile` configs:
+
+```bash
+for f in `find ./assets -type f -name 'Caddyfile'`; do ../../greenpau/caddy-security/bin/caddy fmt --overwrite $f; done
 ```
