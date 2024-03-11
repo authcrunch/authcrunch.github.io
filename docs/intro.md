@@ -14,7 +14,9 @@ It is highly likely the documentation might not cover everything just yet.
 Please do not hesitate asking questions <a href="https://github.com/greenpau/caddy-security/issues/new/choose" target="_blank">here</a>
 or reach me directly via email or <a href="https://www.linkedin.com/in/greenpau/" target="_blank">LinkedIn</a>.
 
-Watch the following Youtube videos:
+Subscribe to our [Video](https://www.youtube.com/@AuthCrunch) channel and watch videos there.
+
+Older videos are available on my personal channel:
 
 * **Setting Up Local Authentication**: [Video](https://www.youtube.com/watch?v=k8tbbffMGZk)
   and [Config Gist](https://gist.github.com/greenpau/dbfadd3c9fee21dbb0a0d3902a8d0ec0)
