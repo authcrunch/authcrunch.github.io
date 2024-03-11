@@ -28,3 +28,18 @@ upstream OAuth 2.0 server.
 
 If unsuccessful at reaching a remote OAuth 2.0 server, the plugin would
 try connecting 2 more times at 10 second intervals.
+
+## OAuth 2.0 Logout
+
+The `enable logout` directive instructs the plugin to redirect a user to OAuth provider's
+logout URL. When, the plugin fetches identity provider metadata, it discovers logout URL
+via `end_session_endpoint`.
+
+Note: At the moment, this feature only works with Cognito. If you have a need for this,
+please reach out.
+
+```
+      oauth identity provider cognito-us-east-1 {
+          ...
+          enable logout
+```
