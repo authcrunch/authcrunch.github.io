@@ -14,7 +14,7 @@ It is highly likely the documentation might not cover everything just yet.
 Please do not hesitate asking questions <a href="https://github.com/greenpau/caddy-security/issues/new/choose" target="_blank">here</a>
 or reach me directly via email or <a href="https://www.linkedin.com/in/greenpau/" target="_blank">LinkedIn</a>.
 
-Subscribe to our [Video](https://www.youtube.com/@AuthCrunch) channel and watch videos there.
+Subscribe to our <a href="https://www.youtube.com/@AuthCrunch" target="_blank">Youtube Channel</a> and watch videos there.
 
 Older videos are available on my personal channel:
 

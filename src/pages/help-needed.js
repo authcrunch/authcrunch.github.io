@@ -90,7 +90,7 @@ export default function HelpNeeded() {
                           />
                           Start the project on{" "}
                           <a
-                            href="https://github.com/caddy-security"
+                            href="https://github.com/greenpau/caddy-security"
                             target="_blank"
                           >
                             Github
