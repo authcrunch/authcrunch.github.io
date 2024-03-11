@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://docs.authcrunch.com/blog</id>
-    <title>Caddy Security Documentation Blog</title>
+    <title>AuthCrunch aka Caddy Security Documentation Blog</title>
     <updated>2021-10-31T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://docs.authcrunch.com/blog"/>
-    <subtitle>Caddy Security Documentation Blog</subtitle>
+    <subtitle>AuthCrunch aka Caddy Security Documentation Blog</subtitle>
     <icon>https://docs.authcrunch.com/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Welcome]]></title>
