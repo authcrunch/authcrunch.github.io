@@ -60,7 +60,7 @@ const config = {
       announcementBar: {
         id: 'support_project_20240306',
         content:
-          '<p class="text-lg mt-4">Project Needs Your Help! <a target="_blank" rel="noopener noreferrer" href="/help-needed">Please Click Here and Read</a>.</p>',
+          '<p class="text-lg mt-4 pb-0 mb-0">Project Needs Your Help <a target="_blank" rel="noopener noreferrer" href="/help-needed">Here</a>!</p>',
         backgroundColor: '#b91c1c',
         textColor: '#ffffff',
         isCloseable: false,

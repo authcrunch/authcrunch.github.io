@@ -1,6 +1,6 @@
 import React from "react";
 import Layout from "@theme/Layout";
-import { ShareIcon, StarIcon, SparklesIcon } from "@heroicons/react/20/solid";
+import { ShareIcon, StarIcon, SparklesIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
 import CodeBlock from "@theme/CodeBlock";
 
 export default function HelpNeeded() {
@@ -31,20 +31,13 @@ export default function HelpNeeded() {
                     </p>
 
                     <div className="mt-10 max-w-xl space-y-8 text-lg leading-7 text-gray-600 lg:max-w-none">
-                      <div key="action-linkedin" className="relative pl-9">
+                    <div key="action-youtube" className="relative pl-9">
                         <div className="inline font-semibold text-gray-900">
-                          <ShareIcon
+                          <PencilSquareIcon
                             className="absolute left-1 top-1 h-5 w-5 text-blue-600"
                             aria-hidden="true"
                           />
-                          Subscribe to the{" "}
-                          <a
-                            href="https://www.youtube.com/@AuthCrunch"
-                            target="_blank"
-                          >
-                            YouTube
-                          </a>{" "}
-                          channel and like the videos
+                          Write Testimonial
                         </div>
                         <div className="text-gray-600 pt-2">
                           Write a testimonial and send it to{" "}
@@ -59,6 +52,23 @@ export default function HelpNeeded() {
                             authcrunch.com
                           </a>
                           . Please see the guide below.
+                        </div>
+                      </div>
+
+                      <div key="action-youtube" className="relative pl-9">
+                        <div className="inline font-semibold text-gray-900">
+                          <ShareIcon
+                            className="absolute left-1 top-1 h-5 w-5 text-blue-600"
+                            aria-hidden="true"
+                          />
+                          Subscribe to the{" "}
+                          <a
+                            href="https://www.youtube.com/@AuthCrunch"
+                            target="_blank"
+                          >
+                            YouTube
+                          </a>{" "}
+                          channel and like the videos
                         </div>
                       </div>
 
@@ -88,7 +98,7 @@ export default function HelpNeeded() {
                             className="absolute left-1 top-1 h-5 w-5 text-blue-600"
                             aria-hidden="true"
                           />
-                          Start the project on{" "}
+                          Star the project on{" "}
                           <a
                             href="https://github.com/greenpau/caddy-security"
                             target="_blank"
