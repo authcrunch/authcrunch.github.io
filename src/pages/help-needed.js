@@ -1,6 +1,7 @@
 import React from "react";
 import Layout from "@theme/Layout";
 import { ShareIcon, StarIcon, SparklesIcon } from "@heroicons/react/20/solid";
+import CodeBlock from "@theme/CodeBlock";
 
 export default function HelpNeeded() {
   return (
@@ -14,11 +15,6 @@ export default function HelpNeeded() {
             <p className="mx-auto mt-6 text-lg leading-8 text-gray-700">
               Many of you have been with me on this journey for a while, and I{" "}
               <strong>appreciate your continued support</strong>. <br />{" "}
-              Recently, I have some unexpected changes in my life. I{" "}
-              <strong>lost my job</strong> and being a husband and a father of
-              three young children makes things quite challenging. While this
-              has presented challenges, it's also an opportunity for me to
-              refocus on my work on this plugin.
             </p>
           </div>
           <div className="overflow-hidden bg-white py-12">
@@ -30,31 +26,39 @@ export default function HelpNeeded() {
                       I do have a number of favors to ask of you
                     </h2>
                     <p className="mt-4 text-3xl font-bold tracking-tight sm:leading-[3rem] text-gray-900 sm:text-4xl bg-gradient-to-r from-blue-600 via-red-500 to-blue-700 text-transparent bg-clip-text">
-                      Please take time and help me by doing what you can
+                      Please take time and help the project by doing what you
+                      can
                     </p>
 
-                    <div className="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
+                    <div className="mt-10 max-w-xl space-y-8 text-lg leading-7 text-gray-600 lg:max-w-none">
                       <div key="action-linkedin" className="relative pl-9">
                         <div className="inline font-semibold text-gray-900">
-                          <StarIcon
+                          <ShareIcon
                             className="absolute left-1 top-1 h-5 w-5 text-blue-600"
                             aria-hidden="true"
                           />
-                          Connect with me on{" "}
+                          Subscribe to the{" "}
                           <a
-                            href="https://www.linkedin.com/in/greenpau/"
+                            href="https://www.youtube.com/@AuthCrunch"
                             target="_blank"
                           >
-                            LinkedIn
+                            YouTube
+                          </a>{" "}
+                          channel and like the videos
+                        </div>
+                        <div className="text-gray-600 pt-2">
+                          Write a testimonial and send it to{" "}
+                          <a
+                            href="mailto:greenpau@outlook.com?subject=AuthCrunch%20Testimonial"
+                            target="_blank"
+                          >
+                            greenpau@outlook.com
                           </a>
-                        </div>
-                        <div className="text-gray-600 pt-2">
-                          - Endorse my skills, e.g. Go, Application Development,
-                          AI, ML, etc.
-                        </div>
-                        <div className="text-gray-600 pt-2">
-                          - Write a recommendation about your usage of Caddy
-                          Security
+                          . I will publish it at{" "}
+                          <a href="https://authcrunch.com" target="_blank">
+                            authcrunch.com
+                          </a>
+                          . Please see the guide below.
                         </div>
                       </div>
 
@@ -68,7 +72,7 @@ export default function HelpNeeded() {
                         </div>
                         <div className="text-gray-600 pt-2">
                           {" "}
-                          - It can be done via{" "}
+                          It can be done via{" "}
                           <a
                             href="https://opencollective.com/caddy-security"
                             target="_blank"
@@ -78,30 +82,22 @@ export default function HelpNeeded() {
                         </div>
                       </div>
 
-                      <div key="action-refer" className="relative pl-9">
+                      <div key="action-employer" className="relative pl-9">
                         <div className="inline font-semibold text-gray-900">
-                          <ShareIcon
+                          <StarIcon
                             className="absolute left-1 top-1 h-5 w-5 text-blue-600"
                             aria-hidden="true"
                           />
-                          Check with your network for AI/ML consulting
-                          opportunities
-                        </div>
-                        <div className="text-gray-600 pt-2">
-                          - I do everything from MLOps to traditional ML models
-                          and LLMs. If you see one, please refer them to me
+                          Start the project on{" "}
+                          <a
+                            href="https://github.com/caddy-security"
+                            target="_blank"
+                          >
+                            Github
+                          </a>
                         </div>
                       </div>
                     </div>
-
-                    <blockquote className="mt-10 text-lg font-semibold leading-8 tracking-tight text-gray-900 sm:leading-9">
-                      <p>
-                        "For example, n8n.io generously supported me through
-                        OpenCollective. When I lost my job, I didn't have a PC
-                        to work on. Their contribution helped me purchase the
-                        very computer I am using to write this message."
-                      </p>
-                    </blockquote>
 
                     <p className="mt-6 text-lg leading-8 text-gray-600">
                       Yours Truly,
@@ -110,12 +106,73 @@ export default function HelpNeeded() {
                     </p>
                   </div>
                 </div>
-                <img
-                  src="/img/help_needed.png"
-                  alt="Help Needed"
-                  className="w-[40rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[40rem] md:-ml-4 lg:-ml-0"
-                />
+                <div className="flex flex-col border-t border-gray-900/10 pt-10 sm:pt-16 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0 xl:pl-20">
+                  <img
+                    className="h-12 self-start"
+                    src="https://www.jff.org/wp-content/themes/jff/dist/img/6a027e85cf1eb9449694.png"
+                    alt=""
+                  />
+                  <figure className="mt-10 flex flex-auto flex-col justify-between">
+                    <blockquote className="text-lg leading-8 text-gray-900">
+                      <p>
+                        "Caddy Security has greatly reduced our time to
+                        deployment while helping us unify both internal and
+                        external authentication under AWS Cognito. It integrates
+                        seamlessly with our development environments, tool
+                        deployments, and private APIs through a simple and
+                        common caddy configuration. Paul went above and beyond,
+                        working with me to ensure group and role permissions
+                        from Cognito were fully supported. A+ software."
+                      </p>
+                    </blockquote>
+                    <figcaption className="mt-2 flex items-center gap-x-6">
+                      <div className="text-lg">
+                        <div className="font-semibold text-gray-900">
+                          Matthew Sahagian
+                        </div>
+                        <div className="mt-1 text-gray-500">
+                          Technical Architect, Product Incubation
+                        </div>
+                      </div>
+                    </figcaption>
+                  </figure>
+                </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-sky-200">
+        <div className="mx-auto max-w-2xl px-6">
+          <div className="lg:pr-4">
+            <div className="lg:max-w-2xl mt-10 mb-10">
+              <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                GPT Prompts
+              </h1>
+              <p className="mt-6 text-xl leading-8 text-gray-800">
+                Browse to{" "}
+                <a href="https://gemini.google.com/" target="_blank">
+                  Google Gemini
+                </a>{". "}
+                Then, copy, end, and try the following prompt.{" "}
+              </p>
+              <div>
+                <CodeBlock
+                  language="markdown"
+                  title="Sample Prompt"
+                  className="bg-sky-800"
+                >
+                  {`Write me a testimonial for the following:\n\n` +
+                    `I use Caddy Security app for Caddy web server for my ` +
+                    `internal web servers. It does good job at integrating my` +
+                    `LDAP users and internal web apps.\n\n` +
+                    `Limit the output to 200 words.`}
+                </CodeBlock>
+              </div>
+              <p className="mt-6 text-xl leading-8 text-gray-800">
+                Next, edit the generated text to match the reality of your usage
+                of this project.
+              </p>
             </div>
           </div>
         </div>

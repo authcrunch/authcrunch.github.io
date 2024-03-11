@@ -8,7 +8,7 @@ const darkTheme = themes.dracula;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "Caddy Security Documentation",
+  title: "AuthCrunch aka Caddy Security Documentation",
   tagline: "Security App for Caddy v2",
   url: "https://docs.authcrunch.com",
   baseUrl: "/",
@@ -60,15 +60,15 @@ const config = {
       announcementBar: {
         id: 'support_project_20240306',
         content:
-          '<p class="text-lg mt-4">Help Needed! <a target="_blank" rel="noopener noreferrer" href="/help-needed">Please Click Here and Read</a>.</p>',
+          '<p class="text-lg mt-4">Project Needs Your Help! <a target="_blank" rel="noopener noreferrer" href="/help-needed">Please Click Here and Read</a>.</p>',
         backgroundColor: '#b91c1c',
         textColor: '#ffffff',
         isCloseable: false,
       },
       navbar: {
-        title: "Caddy Security",
+        title: "AuthCrunch aka Caddy Security",
         logo: {
-          alt: "Auth Portal Logo",
+          alt: "AuthCrunch Logo",
           src: "img/logo.svg",
         },
         items: [

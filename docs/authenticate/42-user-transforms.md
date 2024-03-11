@@ -159,6 +159,10 @@ transform user {
 }
 ```
 
+Note: The dropping of the roles with spaces might be needed when using `inject headers with claims`
+or `inject header x-header from role`, because the delimiter in X headers is hard-coded
+as space.
+
 The following transform removes any role that does not match `authp/admin` or `authp/user`
 from the token issued to a user.
 
