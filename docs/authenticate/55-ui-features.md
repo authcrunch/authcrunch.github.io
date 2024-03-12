@@ -148,6 +148,13 @@ plugin's pages. The script is available under `auth/assets/js/custom.js`
 }
 ```
 
+The injected code will be a part of all portal pages.
+
+Please see these references for usage patterns:
+
+* Solution Brief A00002 [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/solutions/A00002/Caddyfile)
+  and [`custom.js`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/solutions/A00002/custom.js)
+
 ### Custom HTML Template Header
 
 The following Caddyfile directive injects the code found in `path/to/head.html`

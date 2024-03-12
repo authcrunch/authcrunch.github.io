@@ -10,12 +10,10 @@
 	security {
 		local identity store localdb {
 			realm local
-			path {$HOME}/.local/caddy/solutions/A00001/users.json
-			user a00001 {
+			path {$HOME}/.local/caddy/solutions/A00002/users.json
+			user webadmin {
 				name Webmaster
-				email a00001@localhost.localdomain
-				# password: Td45@4d269b7ec2f5ffd31ee5
-				# echo -n 'Td45@4d269b7ec2f5ffd31ee5' | bcrypt-cli -c 10
+				email webadmin@localhost.localdomain
 				password "$2a$10$VLCDIncXaRFshFTGcz2aP.q.gR0O6y1i6mVDks/7WmE3JKLjPD.wu" overwrite
 				roles authp/admin authp/user
 			}
@@ -23,7 +21,13 @@
 				name John Smith
 				email jsmith@localhost.localdomain
 				password "My@Password123"
-				roles "Domain Users" "Domain Admins" "authp/admin"
+				roles "authp/user" "dash"
+			}
+			user mstone {
+				name Mia Stone
+				email mstone@localhost.localdomain
+				password "My@Password123"
+				roles "authp/user" "dash"
 			}
 		}
 
@@ -35,20 +39,13 @@
 				links {
 					"My Identity" "/whoami" icon "las la-user"
 				}
+				custom js path assets/solutions/A00002/custom.js
 			}
 			transform user {
 				match origin local
 				action add role authp/user
 				ui link "Portal Settings" /settings icon "las la-cog"
 				ui link "AssetQ" https://assetq.myfiosgateway.com:8443/ icon "las la-cloud"
-			}
-			transform user {
-				regex match role "\s"
-				action drop matched role
-			}
-			transform user {
-				no regex match any role "^authp/(admin|user)$"
-				action drop matched role
 			}
 			enable identity store localdb
 		}
@@ -59,6 +56,11 @@
 			acl rule {
 				comment allow admins
 				match role authp/admin
+				allow stop log info
+			}
+			acl rule {
+				comment allow users
+				match role authp/user
 				allow stop log info
 			}
 			acl rule {
@@ -92,12 +94,21 @@ assetq.myfiosgateway.com {
 		respond "assetq 1.0"
 	}
 
+	route /dash/jsmith* {
+		authorize with assetq_policy
+		trace tag="tshoot-jsmith"
+		respond "jsmith dashboard"
+	}
+
+	route /dash/mstone* {
+		authorize with assetq_policy
+		trace tag="tshoot-mstone"
+		respond "mstone dashboard"
+	}
+
 	route {
 		authorize with assetq_policy
 		trace tag="tshoot"
-		respond "{http.request.host}
-		time: {time.now.common_log}
-		id: {http.auth.user.id}
-		roles: {http.auth.user.roles}"
+		respond "default route: {http.request.host}, time: {time.now.common_log}, id: {http.auth.user.id}"
 	}
 }
