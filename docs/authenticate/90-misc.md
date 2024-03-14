@@ -186,3 +186,42 @@ The output contains basic user information:
   "addr": "10.0.2.2"
 }
 ```
+
+## Logout
+
+All authentication endpoints have a dedicated logout path, typically accessed through `/logout`.
+
+Upon reaching this path, users are usually redirected to the login page (`/login`),
+with some exceptions as detailed below.
+
+### Logout with Redirect URL Query Parameter
+
+If a `redirect_uri` parameter is included in the query string, the portal will redirect
+the user to the specified link, but only if the URI is trusted.
+
+Here, the `redirect_uri` is present and points to `https://google.com/`
+
+```
+https://localhost:8443/auth/logout?redirect_uri=https://google.com/
+```
+
+The trust is being established via `trust logout redirect uri` directive.
+If there is a match of `domain` and `path`, then the redirect occurs.
+Otherwise, there is no redirect.
+
+The syntax follows:
+
+```
+authentication portal <name> {
+  trust logout redirect uri domain [exact|partial|prefix|suffix|regex] <domain_name> path [exact|partial|prefix|suffix|regex] <path>
+}
+```
+
+Examples follow:
+
+```
+authentication portal my portal {
+  trust logout redirect uri domain authcrunch.com path /foo/bar
+  trust logout redirect uri domain exact google.com path suffix /foo
+}
+```
