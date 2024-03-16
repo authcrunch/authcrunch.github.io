@@ -25,3 +25,20 @@ Next, browse to "Products" tab and enabled "Sign In with LinkedIn":
 References:
 * [LinkedIn - LinkedIn API Documentation - Authentication - Authorization Code Flow](https://docs.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow)
 * [LinkedIn - Consumer Solutions Platform - Integrations - Sign In with LinkedIn](https://docs.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin)
+
+`Caddyfile` configuration:
+
+```
+		oauth identity provider linkedin {
+			realm linkedin
+			driver linkedin
+			client_id {env.LINKEDIN_APP_CLIENT_ID}
+			client_secret {env.LINKEDIN_APP_CLIENT_SECRET}
+		}
+
+		authentication portal myportal {
+
+			enable identity provider linkedin
+
+		}
+```

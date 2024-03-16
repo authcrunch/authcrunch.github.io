@@ -1,0 +1,120 @@
+{
+	http_port 8080
+	https_port 8443
+	admin off
+	debug
+
+	order authenticate before respond
+	order authorize before basicauth
+
+	security {
+		local identity store localdb {
+			realm local
+			path {$HOME}/.local/caddy/solutions/A00003/users.json
+			user webadmin {
+				name Webmaster
+				email webadmin@localhost.localdomain
+				password "$2a$10$VLCDIncXaRFshFTGcz2aP.q.gR0O6y1i6mVDks/7WmE3JKLjPD.wu" overwrite
+				roles authp/admin authp/user
+			}
+			user jsmith {
+				name John Smith
+				email jsmith@localhost.localdomain
+				password "My@Password123"
+				roles "authp/user" "authp/admin"
+			}
+		}
+
+		oauth identity provider linkedin {
+			realm linkedin
+			driver linkedin
+			client_id {env.LINKEDIN_APP_CLIENT_ID}
+			client_secret {env.LINKEDIN_APP_CLIENT_SECRET}
+		}
+
+		authentication portal myportal {
+			crypto default token lifetime 3600
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			cookie domain myfiosgateway.com
+			ui {
+				links {
+					"My Identity" "/whoami" icon "las la-user"
+				}
+			}
+			transform user {
+				match origin local
+				action add role authp/user
+				ui link "Portal Settings" /settings icon "las la-cog"
+				ui link "AssetQ" https://assetq.myfiosgateway.com:8443/ icon "las la-cloud"
+			}
+			transform user {
+				match origin linkedin
+				action add role authp/user
+				ui link "AssetQ" https://assetq.myfiosgateway.com:8443/ icon "las la-cloud"
+			}
+			enable identity store localdb
+			enable identity provider linkedin
+
+			trust logout redirect uri domain exact google.com path prefix /
+		}
+
+		authorization policy assetq_policy {
+			set auth url https://auth.myfiosgateway.com:8443/
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			acl rule {
+				comment allow admins
+				match role authp/admin
+				allow stop log info
+			}
+			acl rule {
+				comment allow users
+				match role authp/user
+				allow stop log info
+			}
+			acl rule {
+				comment default deny
+				match any
+				deny stop log warn
+			}
+			with api key auth portal myportal realm local
+			with basic auth portal myportal realm local
+			inject headers with claims
+		}
+	}
+}
+
+auth.myfiosgateway.com {
+	tls {$HOME}/.local/tls/myfiosgateway/server.crt {$HOME}/.local/tls/myfiosgateway/server.key
+
+	route /version* {
+		respond "auth 1.0"
+	}
+
+	route {
+		authenticate with myportal
+	}
+}
+
+assetq.myfiosgateway.com {
+	tls {$HOME}/.local/tls/myfiosgateway/server.crt {$HOME}/.local/tls/myfiosgateway/server.key
+
+	route /version* {
+		respond "assetq 1.0"
+	}
+
+	route {
+		authorize with assetq_policy
+		trace tag="tshoot"
+		header Content-Type text/html
+		respond <<EOF
+		<html>
+		<body>
+			<p>Host: <code>{http.request.host}</code></p>
+			<p>Time: <code>{time.now.common_log}</code></p>
+			<p>ID: <code>{http.auth.user.id}</code></p>
+			<p><a href="https://auth.myfiosgateway.com:8443/auth/logout?redirect_uri=https://google.com/">Local Auth Logout</a></p>
+		</body>
+		</html>
+		EOF 200
+	}
+}

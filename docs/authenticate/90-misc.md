@@ -225,3 +225,14 @@ authentication portal my portal {
   trust logout redirect uri domain exact google.com path suffix /foo
 }
 ```
+
+### External Endpoint Logout
+
+The external endpoint logout applies to OAuth 2.0 and SAML authentication.
+
+Here, the same login applies as with "Logout with Redirect URL Query Parameter" above.
+
+However, there is an additional way to cause external endpoint logout
+with `enable logout` directive.
+
+At the moment this directive works only with Cognito OAuth 2.0 identity provider.
