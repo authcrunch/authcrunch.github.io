@@ -195,6 +195,28 @@ az container create --resource-group "${ACI_RG_NAME}" \
   --command-line "caddy run --config /app/data/caddy/app-auth-ci-001/config/Caddyfile"
 ```
 
+## Accessing Container
+
+The first time your access your container, you get that the site is unreachable.
+
+![image](https://github.com/authcrunch/authcrunch.github.io/assets/3826416/b243c468-9399-4676-a848-be961c6e5d2f)
+
+If you refresh after 10-15 seconds, you will get the connection is not private. It is expected. Trust the cert and proceed
+
+![image](https://github.com/authcrunch/authcrunch.github.io/assets/3826416/2a0337f9-8090-4712-a6f0-dd8b7b920888)
+
+After that, log in with username `jsmith` and password `App@2f4cb79053be`.
+
+![image](https://github.com/authcrunch/authcrunch.github.io/assets/3826416/a7b70a8b-fc4c-4c90-90c3-0bccd751c0e1)
+
+Click "File Server" to get redirected to Caddy file server browser:
+
+![image](https://github.com/authcrunch/authcrunch.github.io/assets/3826416/c525674d-c54d-457f-a5d6-bef5c96f9d99)
+
+You should be able to browse the contents of `/app/data` directory.
+
+![image](https://github.com/authcrunch/authcrunch.github.io/assets/3826416/b9cf61c7-ca34-419e-a058-0c619339b9aa)
+
 ## Troubleshooting
 
 List containers:
