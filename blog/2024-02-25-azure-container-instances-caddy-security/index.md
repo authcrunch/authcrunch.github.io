@@ -181,6 +181,36 @@ echo $ACI_ST_ACCOUNT_KEY
 
 Next, deploy the container:
 
+```bash
+az container create --resource-group "${ACI_RG_NAME}" \
+  --name "app-auth-ci-001" \
+  --image "ghcr.io/authcrunch/authcrunch:latest" \
+  --dns-name-label "app-auth-ci-001" \
+  --ports 80 443 \
+  --azure-file-volume-account-name "${ACI_ST_ACCOUNT_NAME}" \
+  --azure-file-volume-account-key "${ACI_ST_ACCOUNT_KEY}" \
+  --azure-file-volume-share-name "${ACI_ST_SHARE_NAME}" \
+  --environment-variables LOCAL_DATA_PATH="/app/data/" JWT_SHARED_KEY="d24ae7de-ca54-4334-94ba-301fc414d5de" XDG_DATA_HOME="/app/data/caddy/app-auth-ci-001/data" XDG_CONFIG_HOME="/app/data/caddy/app-auth-ci-001/config" \
+  --azure-file-volume-mount-path /app/data/ \
+  --command-line "caddy run --config /app/data/caddy/app-auth-ci-001/config/Caddyfile"
 ```
-TBD
+
+## Troubleshooting
+
+List containers:
+
+```bash
+az container list --resource-group "${ACI_RG_NAME}"
 ```
+
+Check logs:
+
+```bash
+az container logs --resource-group "${ACI_RG_NAME}" --name "app-auth-ci-001"
+az container show --resource-group "${ACI_RG_NAME}" --name "app-auth-ci-001"
+```
+
+## Conclusion
+
+There are some gaps in my explanation. Please engage, ask questions [here](https://github.com/authcrunch/authcrunch.github.io/issues) 
+or submit edits [here](https://github.com/authcrunch/authcrunch.github.io/edit/main/blog/2024-02-25-azure-container-instances-caddy-security/index.md).
