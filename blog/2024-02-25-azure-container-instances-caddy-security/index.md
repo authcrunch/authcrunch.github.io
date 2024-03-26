@@ -197,6 +197,8 @@ az container create --resource-group "${ACI_RG_NAME}" \
 
 ## Accessing Container
 
+Browse to container URL: `https://app-auth-ci-001.eastus.azurecontainer.io/`
+
 The first time your access your container, you get that the site is unreachable.
 
 ![image](https://github.com/authcrunch/authcrunch.github.io/assets/3826416/b243c468-9399-4676-a848-be961c6e5d2f)
