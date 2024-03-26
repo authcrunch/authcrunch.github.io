@@ -8,6 +8,19 @@ tags: [blog]
 This tutorial walks you through deploying applications protected by caddy security app,
 hosted by Caddy web server via Azure Container Instances (ACI) service.
 
+<!-- begin-markdown-toc -->
+## Table of Contents
+
+* [Azure Configuration](#azure-configuration)
+  * [Add Azure File Share](#add-azure-file-share)
+  * [Copy Files to Azure File Share](#copy-files-to-azure-file-share)
+  * [Container Deployment](#container-deployment)
+* [Accessing Container](#accessing-container)
+* [Troubleshooting](#troubleshooting)
+* [Conclusion](#conclusion)
+
+<!-- end-markdown-toc -->
+
 ## Azure Configuration
 
 Define environment variables. Change `app` to something else, e.g. `xyz`.
@@ -56,7 +69,7 @@ az storage share create --name "${ACI_ST_SHARE_NAME}" --account-name "${ACI_ST_A
 ```
 
 
-## Copy Files to Azure File Share
+### Copy Files to Azure File Share
 
 Navigate to Resource Group, then browse to Storage Share associated with it.
 
@@ -170,7 +183,7 @@ Next, browse to `caddy/app-auth-ci-001/config` and upload `Caddyfile` with the f
 }
 ```
 
-## Container Deployment
+### Container Deployment
 
 Get Storage Account Key:
 
