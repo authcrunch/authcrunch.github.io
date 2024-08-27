@@ -173,6 +173,16 @@ transform user {
 }
 ```
 
+**Be aware** that braces (`{`, `}`) used in your regular expression will be interpreted as
+[Caddy placeholders](https://caddyserver.com/docs/conventions#placeholders); if you want to
+use these to indicate regex pattern repetition, you will need to escape the brace: `\\{`.
+Accordingly, to match a literal brace character, it needs to be escaped as `\\\\{`.
+Consider the following directive, used to match GUIDs:
+
+```
+regex match role "[0-9a-f]\\{8\\}-[0-9a-f]\\{4\\}-[0-9a-f]\\{4\\}-[0-9a-f]\\{4\\}-[0-9a-f]\\{12\\}"
+```
+
 References:
 
 * [Solution Brief A00001 `Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/solutions/A00001/Caddyfile)
