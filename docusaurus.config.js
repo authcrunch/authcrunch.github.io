@@ -103,6 +103,12 @@ const config = {
             label: "Apps",
           },
           {
+            type: "doc",
+            docId: "examples/intro",
+            position: "left",
+            label: "Examples",
+          },
+          {
             href: "https://github.com/greenpau/caddy-security/issues/new/choose",
             label: "💡 Ask Questions",
             position: "right",
