@@ -31,7 +31,7 @@
 			}
 		}
 		authorization policy mypolicy {
-			set auth url https://myfiosgateway.com/auth/
+			set auth url https://myfiosgateway.com/auth/oauth2/discord
 			crypto key verify {env.JWT_SHARED_KEY}
 			allow roles authp/admin authp/user
 			validate bearer header
