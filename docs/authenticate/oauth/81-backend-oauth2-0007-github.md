@@ -1,6 +1,6 @@
 # Github
 
-Follow the instructions at `https://github.com/settings/apps/new` (or `https://github.com/organizations/<your_org>/settings/applications/new` for orgs).
+Follow the instructions at `https://github.com/settings/apps/new` (or `https://github.com/organizations/<your_org>/settings/apps/new` for orgs).
 
 GitHub App name: "My Gatekeeper"
 
@@ -28,4 +28,3 @@ allows Github-based authentication.
 The users authenticating via Github would have to accept the terms:
 
 ![Settings - Developer settings - GitHub Apps - My Gatekeeper - Accept Terms Screen](../images/oauth2_github_accept_screen.png)
-
