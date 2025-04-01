@@ -4,22 +4,12 @@
 
 An administrator may change the password directly in `users.json` file.
 
-First, download `bcrypt-cli`:
+First, download `bcrypt-tool` from https://github.com/shoenig/bcrypt-tool/releases
+
+Extract it to the directory of your choice. Usage is:
 
 ```bash
-go get -u github.com/bitnami/bcrypt-cli
-```
-
-If you are using a newer version of Go use the following command to download `bcrypt-cli`:
-```bash
-go install github.com/bitnami/bcrypt-cli@v1.0.2
-```
-
-Then, use it to generate a new password:
-
-```bash
-$ echo -n "password123" | bcrypt-cli -c 10
-$2a$10$OVnOaHDkcOXfbUZPFh5qt.yJqUt6pl9uJaqEMxxM.vS5fY/cZNmsq
+./bcrypt-tool hash SomeFunkyPassword 10
 ```
 
 Finally, replace the newly generated password in the user database file.
