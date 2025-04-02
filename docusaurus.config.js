@@ -57,14 +57,14 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       image: 'img/authcrunch.jpg',
-      announcementBar: {
-        id: 'support_project_20240306',
-        content:
-          '<p class="text-lg mt-4 pb-0 mb-0">Project Needs Your Help <a target="_blank" rel="noopener noreferrer" href="/help-needed">Here</a>!</p>',
-        backgroundColor: '#b91c1c',
-        textColor: '#ffffff',
-        isCloseable: false,
-      },
+      // announcementBar: {
+      //   id: 'support_project_20240306',
+      //   content:
+      //     '<p class="text-lg mt-4 pb-0 mb-0">Project Needs Your Help <a target="_blank" rel="noopener noreferrer" href="/help-needed">Here</a>!</p>',
+      //   backgroundColor: '#b91c1c',
+      //   textColor: '#ffffff',
+      //   isCloseable: false,
+      // },
       navbar: {
         title: "AuthCrunch aka Caddy Security",
         logo: {

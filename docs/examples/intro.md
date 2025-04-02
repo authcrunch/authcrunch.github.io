@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Examples
+# General
 
 Below are examples from users showing how to implement various aspects of AuthCrunch.
 

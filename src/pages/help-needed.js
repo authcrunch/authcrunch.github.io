@@ -1,12 +1,17 @@
 import React from "react";
 import Layout from "@theme/Layout";
-import { ShareIcon, StarIcon, SparklesIcon, PencilSquareIcon } from "@heroicons/react/20/solid";
+import {
+  ShareIcon,
+  StarIcon,
+  SparklesIcon,
+  PencilSquareIcon,
+} from "@heroicons/react/20/solid";
 import CodeBlock from "@theme/CodeBlock";
 
 export default function HelpNeeded() {
   return (
     <Layout title="Help Needed" description="Help Needed">
-      <div className="bg-white">
+      <div className="bg-white mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
         <div className="px-6 py-24 sm:px-6 sm:py-8 lg:px-8">
           <div className="mx-auto max-w-7xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900">
@@ -31,10 +36,11 @@ export default function HelpNeeded() {
                     </p>
 
                     <div className="mt-10 max-w-xl space-y-8 text-lg leading-7 text-gray-600 lg:max-w-none">
-                    <div key="action-youtube" className="relative pl-9">
+                      <div key="action-youtube" className="relative pl-9">
                         <div className="inline font-semibold text-gray-900">
                           <PencilSquareIcon
-                            className="absolute left-1 top-1 h-5 w-5 text-blue-600"
+                            width={"2em"}
+                            className="absolute left-1 top-1 text-blue-600"
                             aria-hidden="true"
                           />
                           Write Testimonial
@@ -58,6 +64,7 @@ export default function HelpNeeded() {
                       <div key="action-youtube" className="relative pl-9">
                         <div className="inline font-semibold text-gray-900">
                           <ShareIcon
+                            width={"2em"}
                             className="absolute left-1 top-1 h-5 w-5 text-blue-600"
                             aria-hidden="true"
                           />
@@ -75,6 +82,7 @@ export default function HelpNeeded() {
                       <div key="action-employer" className="relative pl-9">
                         <div className="inline font-semibold text-gray-900">
                           <SparklesIcon
+                            width={"2em"}
                             className="absolute left-1 top-1 h-5 w-5 text-blue-600"
                             aria-hidden="true"
                           />
@@ -95,6 +103,7 @@ export default function HelpNeeded() {
                       <div key="action-employer" className="relative pl-9">
                         <div className="inline font-semibold text-gray-900">
                           <StarIcon
+                            width={"2em"}
                             className="absolute left-1 top-1 h-5 w-5 text-blue-600"
                             aria-hidden="true"
                           />
@@ -163,7 +172,8 @@ export default function HelpNeeded() {
                 Browse to{" "}
                 <a href="https://gemini.google.com/" target="_blank">
                   Google Gemini
-                </a>{". "}
+                </a>
+                {". "}
                 Then, copy, end, and try the following prompt.{" "}
               </p>
               <div>

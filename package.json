@@ -15,18 +15,18 @@
     "upgrade": "ncu --upgrade; rm -rf node_modules/ package-lock.json build coverage; npm i"
   },
   "dependencies": {
-    "@docusaurus/core": "^3.1.1",
-    "@docusaurus/plugin-google-analytics": "^3.1.1",
-    "@docusaurus/preset-classic": "^3.1.1",
-    "@docusaurus/theme-search-algolia": "^3.1.1",
-    "@heroicons/react": "^2.1.1",
-    "@mdx-js/react": "^3.0.1",
+    "@docusaurus/core": "^3.7.0",
+    "@docusaurus/plugin-google-analytics": "^3.7.0",
+    "@docusaurus/preset-classic": "^3.7.0",
+    "@docusaurus/theme-search-algolia": "^3.7.0",
+    "@heroicons/react": "^2.2.0",
+    "@mdx-js/react": "^3.1.0",
     "@svgr/webpack": "^8.1.0",
-    "clsx": "^2.1.0",
+    "clsx": "^2.1.1",
     "file-loader": "^6.2.0",
-    "prism-react-renderer": "^2.3.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "url-loader": "^4.1.1"
   },
   "browserslist": {
@@ -42,9 +42,9 @@
     ]
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.18",
-    "npm-check-updates": "^16.14.15",
-    "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1"
+    "autoprefixer": "^10.4.21",
+    "npm-check-updates": "^17.1.16",
+    "@tailwindcss/postcss": "^4.1.0",
+    "tailwindcss": "^4.1.0"
   }
 }
