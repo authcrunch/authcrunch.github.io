@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwebsite=self.webpackChunkwebsite||[]).push([[1328],{6600:e=>{e.exports=JSON.parse('{"authors":[{"name":"Paul Greenberg","title":"Maintainer","url":"https://github.com/greenpau","imageURL":"https://github.com/greenpau.png","key":"greenpau","page":null,"count":2}]}')}}]);
