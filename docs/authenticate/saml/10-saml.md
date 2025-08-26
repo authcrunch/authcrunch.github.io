@@ -2,7 +2,8 @@
 
 The plugin supports the following SAML identity providers (IdP):
 
-* Azure Active Directory (Office 365) Applications
+* [Azure Active Directory](20-azure.md) (Office 365) Applications.
+* [JumpCloud](30-jumpcloud.md).
 
 If you would like to see the support for the following identity providers,
 please reach out:
