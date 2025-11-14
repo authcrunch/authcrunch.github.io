@@ -1,4 +1,4 @@
-# Jumpcloud SAML Integration
+# JumpCloud SAML Integration
 
 This [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/saml/jumpcloud/Caddyfile)
 contains the configuration for the SAML integration.
