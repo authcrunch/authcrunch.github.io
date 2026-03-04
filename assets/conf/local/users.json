@@ -1,0 +1,211 @@
+{
+  "version": "1.1.13",
+  "policy": {
+    "password": {
+      "keep_versions": 10,
+      "min_length": 8,
+      "max_length": 128,
+      "require_uppercase": false,
+      "require_lowercase": false,
+      "require_number": false,
+      "require_non_alpha_numeric": false,
+      "block_reuse": false,
+      "block_password_change": false
+    },
+    "user": {
+      "min_length": 3,
+      "max_length": 50,
+      "allow_non_alpha_numeric": false,
+      "allow_uppercase": false
+    }
+  },
+  "revision": 75,
+  "last_modified": "2026-03-04T20:17:21.359612Z",
+  "loaded_at": "2026-03-04T20:17:21.359218Z",
+  "users": [
+    {
+      "id": "e2d8d6ec-c3a5-409a-aeca-24d9f7966c14",
+      "username": "webadmin",
+      "name": {
+        "last": "Webmaster",
+        "alias": true
+      },
+      "names": [
+        {
+          "last": "Webmaster",
+          "alias": true
+        }
+      ],
+      "email_address": {
+        "address": "webadmin@localhost.localdomain",
+        "domain": "localhost.localdomain"
+      },
+      "email_addresses": [
+        {
+          "address": "webadmin@localhost.localdomain",
+          "domain": "localhost.localdomain"
+        }
+      ],
+      "passwords": [
+        {
+          "purpose": "generic",
+          "algorithm": "bcrypt",
+          "hash": "$2a$10$r3mhN5ZzrmufA2rjcn4iCuaAXN9.3OCDxiPYheSuU8Pq1xWiiDBhG",
+          "cost": 10,
+          "expired_at": "0001-01-01T00:00:00Z",
+          "created_at": "2026-03-04T20:17:21.359612Z",
+          "disabled_at": "0001-01-01T00:00:00Z"
+        },
+        {
+          "purpose": "generic",
+          "algorithm": "bcrypt",
+          "hash": "$2a$10$WiU7BR1vqCNnzP5rZltJ5Ow5RspiIgnenCCFGSeMPrFFUhHRpkIhe",
+          "cost": 10,
+          "expired": true,
+          "expired_at": "2026-03-04T20:17:21.359612Z",
+          "created_at": "2026-03-04T20:06:48.690261Z",
+          "disabled": true,
+          "disabled_at": "2026-03-04T20:17:21.359612Z"
+        },
+        {
+          "purpose": "generic",
+          "algorithm": "bcrypt",
+          "hash": "$2a$10$yEUvkWCIXQcNO2k/SKxDlulvrLuRH5arEvVSCZagYc/oq1u9xC2De",
+          "cost": 10,
+          "expired": true,
+          "expired_at": "2026-03-04T20:06:48.690261Z",
+          "created_at": "2026-02-28T16:22:09.732704Z",
+          "disabled": true,
+          "disabled_at": "2026-03-04T20:06:48.690261Z"
+        },
+        {
+          "purpose": "generic",
+          "algorithm": "bcrypt",
+          "hash": "$2a$10$WUFwF4YNb2mHG5yjFT6y7esJRZMV7iv6ie2CduUb6bSJO8S4JUQrm",
+          "cost": 10,
+          "expired": true,
+          "expired_at": "2026-02-28T16:22:09.79025Z",
+          "created_at": "2026-02-28T16:21:19.414391Z",
+          "disabled": true,
+          "disabled_at": "2026-02-28T16:22:09.79025Z"
+        },
+        {
+          "purpose": "generic",
+          "algorithm": "bcrypt",
+          "hash": "$2a$10$r3mhN5ZzrmufA2rjcn4iCuaAXN9.3OCDxiPYheSuU8Pq1xWiiDBhG",
+          "cost": 10,
+          "expired": true,
+          "expired_at": "2026-02-28T16:21:19.472639Z",
+          "created_at": "2026-02-28T16:20:05.129676Z",
+          "disabled": true,
+          "disabled_at": "2026-02-28T16:21:19.472639Z"
+        }
+      ],
+      "created": "2026-02-28T16:20:05.129675Z",
+      "last_modified": "2026-03-04T20:17:21.359612Z",
+      "revision": 10,
+      "roles": [
+        {
+          "name": "admin",
+          "organization": "authp"
+        },
+        {
+          "name": "user",
+          "organization": "authp"
+        }
+      ]
+    },
+    {
+      "id": "40244493-f15b-4c59-8baa-1cdeb54e9cf0",
+      "username": "jsmith",
+      "name": {
+        "first": "John",
+        "last": "Smith"
+      },
+      "names": [
+        {
+          "first": "John",
+          "last": "Smith"
+        }
+      ],
+      "email_address": {
+        "address": "jsmith@localhost.localdomain",
+        "domain": "localhost.localdomain"
+      },
+      "email_addresses": [
+        {
+          "address": "jsmith@localhost.localdomain",
+          "domain": "localhost.localdomain"
+        }
+      ],
+      "passwords": [
+        {
+          "purpose": "generic",
+          "algorithm": "bcrypt",
+          "hash": "$2a$10$AVaIYtQ.18aWFtW2I3bug./ievuxXJU1zsVqga4VxqeXxWgD39gBe",
+          "cost": 10,
+          "expired_at": "0001-01-01T00:00:00Z",
+          "created_at": "2026-02-28T16:20:05.188852Z",
+          "disabled_at": "0001-01-01T00:00:00Z"
+        }
+      ],
+      "created": "2026-02-28T16:20:05.188852Z",
+      "last_modified": "2026-02-28T16:20:05.248115Z",
+      "roles": [
+        {
+          "name": "user",
+          "organization": "authp"
+        },
+        {
+          "name": "dash"
+        }
+      ]
+    },
+    {
+      "id": "e66c792d-edf2-49c2-80aa-8eb4cddc4f50",
+      "username": "mstone",
+      "name": {
+        "first": "Mia",
+        "last": "Stone"
+      },
+      "names": [
+        {
+          "first": "Mia",
+          "last": "Stone"
+        }
+      ],
+      "email_address": {
+        "address": "mstone@localhost.localdomain",
+        "domain": "localhost.localdomain"
+      },
+      "email_addresses": [
+        {
+          "address": "mstone@localhost.localdomain",
+          "domain": "localhost.localdomain"
+        }
+      ],
+      "passwords": [
+        {
+          "purpose": "generic",
+          "algorithm": "bcrypt",
+          "hash": "$2a$10$IWFg8h2wsktJy2GZbwdgWOD0egPAngv1ocDqm8Yr//OFoEPorJEkG",
+          "cost": 10,
+          "expired_at": "0001-01-01T00:00:00Z",
+          "created_at": "2026-02-28T16:20:05.248263Z",
+          "disabled_at": "0001-01-01T00:00:00Z"
+        }
+      ],
+      "created": "2026-02-28T16:20:05.248263Z",
+      "last_modified": "2026-02-28T16:20:05.306761Z",
+      "roles": [
+        {
+          "name": "user",
+          "organization": "authp"
+        },
+        {
+          "name": "dash"
+        }
+      ]
+    }
+  ]
+}

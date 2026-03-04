@@ -25,18 +25,43 @@ local identity store localdb {
 The `overwrite` directive instructs the plugin to overwrite the password
 currently configured in the identity store.
 
-## Bcrypt Password Generation
+## Password Generation
 
-First, download `bcrypt-tool` from https://github.com/shoenig/bcrypt-tool/releases
+First, download `go-authcrunch` files from [releases](https://github.com/greenpau/go-authcrunch/releases).
+When you unpack, there will be `authdbctl` utility in `bin/` directory.
 
-Extract it to the directory of your choice. Usage is:
+Alternatively, you can install it with `go`:
 
 ```bash
-./bcrypt-tool hash SomeFunkyPassword 10
+go install github.com/greenpau/go-authcrunch/cmd/authdbctl@latest
 ```
 
+Usage:
 
-Update a user's password in `Caddyfile`:
+```text
+$ authdbctl generate password hash --help
+NAME:
+   authdbctl generate password hash - generate password hash
+
+USAGE:
+   authdbctl generate password hash [command options]
+
+OPTIONS:
+   --password value  The password to hash (insecure, use prompt instead)
+   --cost value      The hashing cost factor (default: 10)
+   --db-path PATH    Sets PATH to the database file
+   --help, -h        show help
+```
+
+Generate:
+
+```bash
+authdbctl generate password hash
+authdbctl generate password hash --cost 10 --password SomeFunkyPassword
+authdbctl generate password hash --db-path assets/conf/local/users.json
+```
+
+Once generated, update a user's password in `Caddyfile`:
 
 ```
 password "bcrypt:10:<new password here>" overwrite
