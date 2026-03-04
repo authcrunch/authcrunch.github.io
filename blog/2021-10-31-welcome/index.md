@@ -14,6 +14,8 @@ directory.
 Additionally, add yourself to blog authors via
 [`authors.yml`](https://github.com/authcrunch/authcrunch.github.io/edit/main/blog/authors.yml).
 
+<!-- truncate -->
+
 If your blog post has images, then create a folder for the post
 and co-locate images with the post itself.
 

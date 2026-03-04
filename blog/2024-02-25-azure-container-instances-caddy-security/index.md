@@ -8,6 +8,8 @@ tags: [blog]
 This tutorial walks you through deploying applications protected by caddy security app,
 hosted by Caddy web server via Azure Container Instances (ACI) service.
 
+<!-- truncate -->
+
 <!-- begin-markdown-toc -->
 ## Table of Contents
 
