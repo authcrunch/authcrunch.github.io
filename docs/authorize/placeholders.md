@@ -12,14 +12,17 @@ within your `Caddyfile` for logging, headers, or further routing logic.
 
 The following table breaks down the standard placeholders available during the authorization lifecycle:
 
-| Placeholder                 | Description                                                             | Example Value                    |
-| --------------------------- | ----------------------------------------------------------------------- | -------------------------------- |
-| `{http.auth.user.claim_id}` | The internal unique identifier for the specific claim set.              | `c7f3b2...`                      |
-| `{http.auth.user.sub}`      | The **Subject** claim; the unique ID provided by the OIDC/OAuth issuer. | `user_9921`                      |
-| `{http.auth.user.email}`    | The email address associated with the authenticated user.               | `admin@example.com`              |
-| `{http.auth.user.name}`     | The full display name of the user.                                      | `John Doe`                       |
-| `{http.auth.user.issuer}`   | The URL of the identity provider (IdP) that issued the identity.        | `https://auth.myfiosgateway.com` |
-| `{http.auth.user.origin}`   | The specific authentication source or backend used.                     | `google` or `local`              |
+| Placeholder                 | Description                                                                    | Example Value                    |
+| --------------------------- | ------------------------------------------------------------------------------ | -------------------------------- |
+| `{http.auth.user.claim_id}` | The internal unique identifier for the specific claim set.                     | `c7f3b2...`                      |
+| `{http.auth.user.sub}`      | The **Subject** claim; the unique ID provided by the OIDC/OAuth issuer.        | `user_9921`                      |
+| `{http.auth.user.email}`    | The email address associated with the authenticated user.                      | `admin@example.com`              |
+| `{http.auth.user.name}`     | The full display name of the user.                                             | `John Doe`                       |
+| `{http.auth.user.issuer}`   | The URL of the identity provider (IdP) that issued the identity.               | `https://auth.myfiosgateway.com` |
+| `{http.auth.user.origin}`   | The specific authentication source or backend used.                            | `google` or `local`              |
+| `{http.auth.user.realm}`    | The specific authentication realm used.                                        | `google` or `local`              |
+| `{http.auth.user.username}` | The shorthand login name, typically derived from `userinfo.preferred_username` | `jsmith`                         |
+
 
 ## Passing User Info to an Upstream App
 
