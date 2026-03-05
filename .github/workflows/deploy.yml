@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -29,11 +30,9 @@ jobs:
       - name: Build and Deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GIT_USER: "github-actions[bot]"
-          DEPLOYMENT_BRANCH: gh-pages
-          USE_SSH: false
+          GIT_USER: ${{ github.actor }}
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git config --global url."https://x-access-token:${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
-          DEPLOYMENT_BRANCH=gh-pages npm run deploy
+          USE_SSH=false DEPLOYMENT_BRANCH=gh-pages npm run deploy
