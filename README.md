@@ -41,16 +41,10 @@ npx docusaurus start --port 4200 --host 0.0.0.0
 
 ## Deployment
 
-Run build to create search index:
+Run the following command to deploy the changes:
 
 ```bash
-npm run build
-```
-
-Deploy to `gh-pages` branch:
-
-```bash
-GIT_USER=greenpau DEPLOYMENT_BRANCH=gh-pages USE_SSH=true npm run deploy
+make release
 ```
 
 ## Miscellaneous 

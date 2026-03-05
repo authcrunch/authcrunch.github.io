@@ -28,3 +28,23 @@ allows Github-based authentication.
 The users authenticating via Github would have to accept the terms:
 
 ![Settings - Developer settings - GitHub Apps - My Gatekeeper - Accept Terms Screen](../images/oauth2_github_accept_screen.png)
+
+## Email Claims
+
+To allow the extraction of email addresses from Github, you would need to configure permissions to allow it.
+
+The path is Account permissions -> Email addresses, Access: Read Only.
+
+![](./images/github/github_app_permissions_01.png)
+
+![](./images/github/github_app_permissions_02.png)
+
+Then, then users will be prompted to accept.
+
+![](./images/github/github_app_consent.png)
+
+The email claims will be visible in the `/whoami`.
+
+![](./images/github/github_app_whoami.png)
+
+
