@@ -29,10 +29,22 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Cache Docusaurus
+        uses: actions/cache@v4
+        with:
+          path: |
+            .docusaurus
+            node_modules/.cache
+          key: docusaurus-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            docusaurus-${{ runner.os }}-
+
       - name: Install
         run: npm ci
 
       - name: Build site
+        env:
+          GENERATE_SOURCEMAP: false
         run: npm run build
 
       - name: Upload Pages artifact
@@ -43,11 +55,13 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Deploy to Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v4
