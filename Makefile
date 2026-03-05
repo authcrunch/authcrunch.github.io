@@ -12,6 +12,7 @@ all: info build
 
 .PHONY: info
 info:
+	@versioned --sync package.json
 	@echo "DEBUG: $(PROJECT_NAME) Version: $(PROJECT_VERSION), Branch: $(GIT_BRANCH), Revision: $(GIT_COMMIT)"
 	@echo "DEBUG: Build on $(BUILD_DATE) by $(BUILD_USER)"
 
