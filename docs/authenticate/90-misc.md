@@ -235,4 +235,39 @@ Here, the same login applies as with "Logout with Redirect URL Query Parameter" 
 However, there is an additional way to cause external endpoint logout
 with `enable logout` directive.
 
-At the moment this directive works only with Cognito OAuth 2.0 identity provider.
+When `enable logout` is set, the portal will redirect the user to the provider's
+logout endpoint upon signing out, ensuring that the user's session is fully
+invalidated at the identity provider level (not just locally).
+
+The following table summarizes how each supported OAuth 2.0 provider handles
+the logout redirect:
+
+| Provider   | Redirect Parameter            | Example Logout URL                                                                                         |
+|------------|-------------------------------|------------------------------------------------------------------------------------------------------------|
+| **Google**   | `?continue=<redirect_url>`    | `https://accounts.google.com/logout?continue=https://auth.example.com/logout`                             |
+| **Azure**    | `?post_logout_redirect_uri=<redirect_url>` | `https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=https://auth.example.com/logout` |
+| **GitLab**   | `?post_logout_redirect_uri=<redirect_url>` | `https://gitlab.com/oauth/logout?post_logout_redirect_uri=https://auth.example.com/logout`               |
+| **Okta**     | `?post_logout_redirect_uri=<redirect_url>` | `https://okta.example.com/oauth2/v1/logout?post_logout_redirect_uri=https://auth.example.com/logout`     |
+| **Cognito**  | `&logout_uri=<redirect_url>`  | `https://auth.example.com/logout?client_id=foo&logout_uri=https://auth.example.com/logout`                |
+| **GitHub**   | *(no redirect parameter)*     | `https://github.com/logout` — GitHub OAuth does not support a standard server-side logout redirect via URL parameters. |
+| **Generic**  | *(no modification)*           | The configured logout URL is used as-is without appending any redirect parameters.                         |
+
+All redirect URIs are automatically URL-encoded by the portal.
+
+To enable external logout for a provider, use the `enable logout` directive
+in the identity provider configuration:
+
+```
+authentication portal myportal {
+  enable identity provider google {
+    ...
+    enable logout
+  }
+}
+```
+
+:::note
+Without the `enable logout` directive, the portal will only clear local session
+cookies and redirect to the login page. The user's session at the identity
+provider (e.g., Google, Azure) will remain active.
+:::
