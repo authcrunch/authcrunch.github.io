@@ -239,8 +239,29 @@ When `enable logout` is set, the portal will redirect the user to the provider's
 logout endpoint upon signing out, ensuring that the user's session is fully
 invalidated at the identity provider level (not just locally).
 
+### Manual Logout URL
+
+You can manually specify a logout URL using the `logout_url` parameter. When this
+parameter is set:
+
+1.  **Logout is auto-enabled**: There is no need to explicitly set `enable logout`.
+2.  **Override**: The portal will redirect the user to this specific URL, bypassing
+    any provider-specific discovery or parameter-appending logic.
+
+This is particularly useful for providers with non-standard logout flows or when
+you want to use a specific landing page after logout.
+
+```
+authentication portal myportal {
+  enable identity provider google {
+    ...
+    logout_url https://accounts.google.com/logout
+  }
+}
+```
+
 The following table summarizes how each supported OAuth 2.0 provider handles
-the logout redirect:
+the logout redirect when `enable logout` is used without a manual `logout_url`:
 
 | Provider   | Redirect Parameter            | Example Logout URL                                                                                         |
 |------------|-------------------------------|------------------------------------------------------------------------------------------------------------|
