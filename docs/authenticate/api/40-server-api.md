@@ -1,6 +1,6 @@
 # Server API
 
-The Servicer API allows for programmatic control over the portal’s runtime state and user
+The Service API allows for programmatic control over the portal’s runtime state and user
 data. All requests are sent as JSON and require an active, authorized session with the `admin` role.
 
 These endpoints are designed for system administrators to audit and manage the portal's
