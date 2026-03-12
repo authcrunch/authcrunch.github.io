@@ -92,7 +92,7 @@ To change the `X-Api-Key` header to something else, use the following directive:
 security {
   authorization policy mypolicy {
     with api key auth portal myportal realm local
-    api key header name X-Secret
+    with api key header name X-Secret
   }
 }
 ```
