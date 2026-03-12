@@ -71,7 +71,7 @@ The server responds with:
 api access granted to webadmin@localhost.localdomain in local
 ```
 
-If the api key is malformed:
+If the API key is malformed:
 
 ```
 ```bash
@@ -82,6 +82,28 @@ The server responds with:
 
 ```
 401 Unauthorized
+```
+
+If the API header is not the one configured (e.g. different api key header name set), you will get `302` redirect.
+
+```text
+> GET /api/foo HTTP/2
+> Host: go.myfiosgateway.com:8443
+> User-Agent: curl/8.7.1
+> Accept: */*
+> X-Api-Key: r7lQbaotIG4303j2to2sS5cOYBEyRAAgDGlbhfgFBxPM889501VDbk8ZmGHAevr8Buv6YRqG
+> 
+* Request completely sent off
+< HTTP/2 302 
+< alt-svc: h3=":8443"; ma=2592000
+< location: /auth?redirect_url=https%3A%2F%2Fgo.myfiosgateway.com%3A8443%2Fapi%2Ffoo
+< server: Caddy
+< content-type: text/plain; charset=utf-8
+< content-length: 5
+< date: Thu, 12 Mar 2026 19:29:32 GMT
+< 
+* Connection #0 to host go.myfiosgateway.com left intact
+Found
 ```
 
 ## Changing API Key Header Name
