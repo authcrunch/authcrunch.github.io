@@ -191,3 +191,28 @@ user will receive a final notification via email once the decision is made.
 
 > There is no email message to an administrator. Rather, there should be some process
 > that watches the changes to `registrations.json` file.
+
+## Testing with Mock Email Server
+
+The following command installs `smtp-debug-server`
+
+```bash
+go install github.com/emersion/go-smtp/cmd/smtp-debug-server@latest
+```
+
+```text
+$ ls -alh ~/dev/bin/smtp-debug-server
+-rwxr-xr-x@ 1 greenpau  staff   7.0M Mar  9 09:00 /Users/greenpau/dev/bin/smtp-debug-server
+```
+
+Start the server:
+
+```text
+$ smtp-debug-server
+2026/03/09 09:02:31 Starting SMTP server at 127.0.0.1:1025
+```
+
+Once the mock email server is running, you can test the registration workflow without
+needing a live mail provider. When you submit the registration form, the system connects
+to the server at `127.0.0.1:1025` and transmits the message. The `smtp-debug-server` will
+then output the raw email content directly to your terminal.
