@@ -121,6 +121,18 @@ security {
 
 Please see: https://github.com/greenpau/caddy-security/issues/466
 
+## Changing Authentication Realm Header Name
+
+To change the `X-Auth-Realm` header to something else, use the following directive:
+
+```
+security {
+  authorization policy mypolicy {
+    with auth realm header name X-Secret-Realm
+  }
+}
+```
+
 ## Generating API Key
 
 Please see https://github.com/greenpau/go-authcrunch/blob/main/cmd/authdbctl/README.md#generating-api-key to
