@@ -139,6 +139,25 @@ legitimate email providers can reach the verification stage.
 
 If there are no `allow` statements, then the registration system applies **default allow**.
 
+### Mixture of Allow and Deny Domains
+
+In the case where there are mixture of `allow` and `deny` statements, the default action
+will be the opposite of the last action in the list.
+
+For example, the following configuration results in **default deny**.
+
+```text
+deny domain foo.com
+allow domain bar.com
+```
+
+Contrast with the following configuration where it results in **default allow**.
+
+```text
+allow domain bar.com
+deny domain foo.com
+```
+
 ## Registration Worflow
 
 ### Accessing the Registration Page
@@ -189,8 +208,54 @@ user will receive a final notification via email once the decision is made.
 
 ![](./images/user_registration_passcode_complete.png)
 
-> There is no email message to an administrator. Rather, there should be some process
-> that watches the changes to `registrations.json` file.
+The `admin email` should get the following message:
+
+```text
+RCPT TO:<admin@localhost>
+250 2.0.0 I'll make sure <admin@localhost> gets this
+DATA
+354 Go ahead. End your data with <CR><LF>.<CR><LF>
+MIME-Version: 1.0
+Date: Sat, 14 Mar 2026 19:42:18 -0400
+From: "My Auth Portal" <root@localhost>
+Subject: Review User Registration
+Thread-Topic: Account Registration.
+Message-ID: <oXFribHzRN3N0dX9fnWXMORQLDugOtg8OcVfSVXmdBKrPf27zhmKdyKnFDgYcVFe.root@localhost>
+To: admin@localhost
+Bcc: greenpau@localhost
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset="utf-8"
+
+<html>
+  <body>
+    <p>
+      The following user successfully registered with the portal.
+      Please use management interface to approve or decline the registratio=
+n.
+    </p>
+
+    <p>The registation metadata follows:</p>
+    <ul style=3D"list-style-type: disc">
+      <li>Registration ID: 9J4bpbKo7O6JjM4pWBskM9eXlyit2tftAjbylBB7pJY66geH=
+qJ0dQOemckU3jXvuAS7MN0g5xZG</li>
+      <li>Registration URL: <code>https://auth.myfiosgateway.com:8443/auth/=
+register</code></li>
+      <li>Realm Name: <code>userpool1.localdomain</code></li>
+      <li>Session ID: 4Mi1FZTfRZyUhvcoeC2BkpICfgU007ntltCehlBFR</li>
+      <li>Request ID: e404cf81-51d9-4177-992e-7eee858d0165</li>
+      <li>Username: <code>greenpau</code></li>
+      <li>Email: <code>greenpau@outlook.com</code></li>
+      <li>IP Address: <code>192.168.99.182</code></li>
+      <li>Timestamp: Sat Mar 14 23:42:18 UTC 2026</li>
+    </ul>
+  </body>
+</html>
+```
+
+At the moment, there is no approval workflow. The admin should manually transfer data
+from `registrations.json` file.
+
+> TODO: Add "Admin UI" (similar to Profile UI) to allow approvals via management interface.
 
 ## Testing with Mock Email Server
 
@@ -216,3 +281,41 @@ Once the mock email server is running, you can test the registration workflow wi
 needing a live mail provider. When you submit the registration form, the system connects
 to the server at `127.0.0.1:1025` and transmits the message. The `smtp-debug-server` will
 then output the raw email content directly to your terminal.
+
+## Multiple Realms
+
+Each identity store can support its own distinct registration workflow, provided that they are configured
+with unique `dropbox` paths and identity stores. This isolation ensures that registration data
+and final user credentials remain separate for different authentication domains or user groups within
+the same security configuration.
+
+```Caddyfile
+		user registration localdbRegistry {
+			dropbox assets/config/registrations_local.json
+			title "User Registration"
+			code "NY2020"
+			require accept terms
+			require domain mx
+			email provider localhost-smtp-server
+			admin email admin@localhost
+			identity store localdb
+		}
+
+		user registration userpool1dbRegistry {
+			dropbox assets/config/registrations_userpool1.json
+			title "User Registration"
+			code "NY2020"
+			require accept terms
+			require domain mx
+			email provider localhost-smtp-server
+			admin email admin@localhost
+			identity store userpool1
+		}
+```
+
+In this configuration, the registration endpoints will have identity store realm name in its path:
+
+```text
+/auth/register/local
+/auth/register/userpool1.localdomain
+```
