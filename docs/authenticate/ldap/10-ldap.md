@@ -227,3 +227,62 @@ The screenshots from the login, portal, and whoami pages follow.
 ![Portal Screen](./images/ldap_demo_04.png)
 
 ![Whoami Screen](./images/ldap_demo_05.png)
+
+## Case Insensitive Matching of LDAP Groups
+
+In complex environments, such as a **virtual federated directory**, attribute names and Distinguished Name (DN)
+values are often unpredictable. Because data may be aggregated from multiple sources, the casing of group paths
+and names can vary significantly even for the same logical entity.
+
+When performing group membership lookups or authorization checks, exact string matching often fails due to
+inconsistent casing. For example, a portal might encounter any of the following variations for what should
+be considered the same group:
+
+* `cn=MyGroup1,ou=groups,dc=example,dc=com`
+* `CN=myGroup1,ou=Groups,dc=example,dc=com`
+* `cn=MYGROUP1,OU=Groups,DC=example,DC=com`
+
+According to standard LDAP administrative practices, client software is generally expected to treat DNs and attribute
+types as **case-insensitive**. This requirement is reinforced by the behavior of major Java-based LDAP libraries, including:
+
+* JLDAP
+* UnboundID LDAP SDK
+* JNDI (Java Naming and Directory Interface)
+
+The project implements **case-insensitive** by default.
+
+## Dynamic Role Mapping from LDAP Groups
+
+In environments where LDAP group structures are well-organized, manual mapping of every individual
+group to a role can become an administrative burden. To streamline this, the portal supports dynamic
+mapping modes that automatically translate LDAP Group Distinguished Names (DNs) into application roles.
+
+If your directory structure uses the first attribute of the DN (typically the Common Name
+or Organizational Unit) as the functional role name, you can use
+the `enable short automatic group mapping` configuration.
+
+```Caddyfile
+		ldap identity store example.com {
+			enable short automatic group mapping
+		}
+```
+
+If enabled, the portal extracts the value of the first Relative Distinguished Name (RDN). Technically, it
+captures the string located between the first `=` and the first `,`.
+
+Additionally, the the portal applies a mandatory lowercase normalization to the resulting role string.
+
+| Original LDAP Group DN | Resulting Role |
+| --- | --- |
+| `cn=Admin,ou=Groups,dc=example,dc=com` | `admin` |
+| `ou=mathematicians,dc=example,dc=com` | `mathematicians` |
+| `cn=Editor,ou=Groups,dc=corp` | `editor` |
+
+Additionally, you can use the `enable full automatic group mapping` configuration. In that
+case the following transformation will apply.
+
+| Original LDAP Group DN | Resulting Role |
+| --- | --- |
+| `cn=Admin,ou=Groups,dc=example,dc=com` | `cn=admin,ou=groups,dc=example,dc=com` |
+| `ou=mathematicians,dc=example,dc=com` | `ou=mathematicians,dc=example,dc=com` |
+| `cn=Editor,ou=Groups,dc=corp` | `cn=editor,ou=groups,dc=corp` |
