@@ -168,10 +168,62 @@ attributes {
 }
 ```
 
+The relevant parts of the configuration follow:
+
+```Caddyfile
+		ldap identity store example.com {
+			realm example.com
+			servers {
+				ldap://ldap.forumsys.com posix_groups
+			}
+			attributes {
+				name cn
+				surname foo
+				username uid
+				member_of uniqueMember
+				email mail
+			}
+			username "cn=read-only-admin,dc=example,dc=com"
+			password "password"
+			search_base_dn "DC=EXAMPLE,DC=COM"
+			search_filter "(&(|(uid=%s)(mail=%s))(objectClass=inetOrgPerson))"
+			groups {
+				"ou=mathematicians,dc=example,dc=com" authp/admin
+				"ou=scientists,dc=example,dc=com" authp/user
+			}
+		}
+
+...
+
+		authentication portal myportal {
+		  ...
+			enable identity store example.com
+		}
+```
+
+The configuration is for the [Online LDAP Test Server](https://www.forumsys.com/2022/05/10/online-ldap-test-server/).
+
+All of the following usernames have password value of `password`.
+
+```
+riemann
+gauss
+euler
+euclid
+einstein
+newton
+galieleo
+tesla
+```
+
 The screenshots from the login, portal, and whoami pages follow.
 
-![LDAP Sign In](./images/ldap_demo_signin.png)
+![Sign In](./images/ldap_demo_01.png)
 
-![LDAP Portal](./images/ldap_demo_portal.png)
+![Username Prompt](./images/ldap_demo_02.png)
 
-![LDAP Whoami](./images/ldap_demo_whoami.png)
+![Password Prompt](./images/ldap_demo_03.png)
+
+![Portal Screen](./images/ldap_demo_04.png)
+
+![Whoami Screen](./images/ldap_demo_05.png)
