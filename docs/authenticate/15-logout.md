@@ -37,6 +37,25 @@ authentication portal my portal {
 }
 ```
 
+
+If you are serving the website your are redirecting to on non-default HTTP/HTTPS ports, the `domain_name` may include
+a port value, e.g. `8080`, `8443`, etc.
+
+As such, you will need to match in the following way:
+
+```
+trust logout redirect uri domain regex ^site1.example.com(:[0-9]+)?$ path prefix /
+```
+
+The above `regex` will match:
+
+```
+site1.example.com
+site1.example.com:443
+site1.example.com:8443
+site1.example.com:18443
+```
+
 ## External Endpoint Logout
 
 The external endpoint logout applies to OAuth 2.0 and SAML authentication.
