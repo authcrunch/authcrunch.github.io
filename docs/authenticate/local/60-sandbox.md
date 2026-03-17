@@ -49,6 +49,13 @@ The MFA checkpoint behavior depends on what tokens the user has registered:
 
 Registration counts as passing the checkpoint.
 
+Failed MFA attempts are tracked on the user record across sandbox
+sessions. After 10 consecutive failures the MFA checkpoint is locked
+for 15 minutes. During lockout, MFA authentication is rejected without
+validating the code. The lockout expires automatically and the counter
+resets on successful MFA validation. Both authenticator app and hardware token failures
+contribute to the same counter.
+
 For adding MFA tokens outside the login flow, see
 [Multi-Factor Authentication](../11-mfa.md).
 
