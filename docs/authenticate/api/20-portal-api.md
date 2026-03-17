@@ -473,3 +473,5 @@ provider will be in the response.
 
 ![](./images/user_login_linkedin_03.png)
 
+Profile UI uses `/auth/whoami?format=json&id_token=true` endpoint.
+
