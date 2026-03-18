@@ -62,6 +62,28 @@ to match the changed value.
 		}
 ```
 
+If you changed default access_token cookie name, then you must also update you authorization policy
+to match the changed value.
+
+```Caddyfile
+		authorization policy mypolicy {
+			set access_token cookie name CONTOSO_ACCESS_TOKEN
+		}
+```
+
+> It is not necessary to add `set access_token cookie` if authorization policy and authentication portal
+> are on the same Caddy instance. It is being auto-discovered.
+>
+> It applies to the use case where `authenticate` and `authorize` are on separate Caddy instances.
+
+You can provide more than one cookie name.
+
+```Caddyfile
+		authorization policy mypolicy {
+			set access_token cookie name CONTOSO_ACCESS_TOKEN CONTOSO_JWT_TOKEN CONTOSO_JWT_ACCESS_TOKEN
+		}
+```
+
 ## JWT Tokens
 
 The plugin issues JWT tokens to authenticated users. The tokens
