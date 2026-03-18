@@ -432,7 +432,7 @@ Suppose you have successfully authenticated using the LinkedIn OAuth provider.
 
 ![](./images/user_login_linkedin_01.png)
 
-The provider's configuration has `enable id token cookie id_token`:
+The provider's configuration has `enable id token cookie`:
 
 ```Caddyfile
 oauth identity provider linkedin {
@@ -441,11 +441,11 @@ oauth identity provider linkedin {
     client_id {env.LINKEDIN_APP_CLIENT_ID}
     client_secret {env.LINKEDIN_APP_CLIENT_SECRET}
     icon linkedin priority 200
-    enable id token cookie id_token
+    enable id token cookie id_token AUTHP_ID_TOKEN
 }
 ```
 
-There will be `id_token` cookie injected by the portal.
+The `id_token` from the original exchange will be injected in `AUTHP_ID_TOKEN` cookie by the portal.
 
 ![](./images/user_login_linkedin_02.png)
 
