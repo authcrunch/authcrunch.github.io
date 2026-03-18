@@ -23,6 +23,45 @@ for more information.
 * `cookie insecure <on|off>`: Allows sending cookies over HTTP. By default,
   it is disabled.
 
+The `cookie guess domain` directive, when enabled, would automatically try to discover the domain
+for intra-domain cookie purposes.
+
+## Changing Default Cookie Names
+
+These are the default cookies used by the authentication portal and authorization gateway:
+
+| Caddyfile directive | Cookie Name | Purpose |
+| :--- | :--- | :--- |
+| `set session_id cookie name <NAME>` | `AUTHP_SESSION_ID` | Session tracking |
+| `set redirect_url cookie name <NAME>` | `AUTHP_REDIRECT_URL` | Redirection logic |
+| `set sandbox_id cookie name <NAME>` | `AUTHP_SANDBOX_ID` | Sandbox identification |
+| `set id_token cookie name <NAME>` | `AUTHP_ID_TOKEN` | Original identity storage |
+| `set access_token cookie name <NAME>` | `AUTHP_ACCESS_TOKEN` | Access token storage |
+| `set refresh_token cookie name <NAME>` | `AUTHP_REFRESH_TOKEN` | Refresh token storage |
+
+For example, to change the default session ID cookie name, configure the following:
+
+```Caddyfile
+		authentication portal myportal {
+			set session_id cookie name CONTOSO_SESSION_ID
+		}
+```
+
+The syntax:
+
+```text
+set <session_id|redirect_url|sandbox_id|id_token|access_token|refresh_token> cookie name <name>
+```
+
+Importantly, if you changed default session ID cookie name, then you must also update you authorization policy
+to match the changed value.
+
+```Caddyfile
+		authorization policy mypolicy {
+			set session_id cookie name CONTOSO_SESSION_ID
+		}
+```
+
 ## JWT Tokens
 
 The plugin issues JWT tokens to authenticated users. The tokens
