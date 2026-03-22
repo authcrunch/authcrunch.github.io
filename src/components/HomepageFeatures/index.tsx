@@ -32,7 +32,7 @@ const FeatureList: FeatureItem[] = [
     image: DevicePhoneMobileIcon,
     description: (
       <>
-        Bolster security with support for app-based authentication and YubiKeys
+        Bolster security with support for app-based authentication, hardware tokens, e.g. YubiKeys, and passkeys.
       </>
     ),
   },
