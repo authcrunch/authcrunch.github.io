@@ -3,6 +3,8 @@
  * bundles Infima by default. Infima is a CSS framework designed to
  * work well for content-centric websites.
  */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
 
 :root {
   --ifm-color-primary: #4285f4;
@@ -14,6 +16,8 @@
   --ifm-color-primary-lightest: #9abef9;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-font-family-base: 'Inter', ui-sans-serif, system-ui;
+  --ifm-font-family-monospace: 'Fira Code', ui-monospace, monospace;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -26,4 +30,18 @@
   --ifm-color-primary-lighter: #d3e3fc;
   --ifm-color-primary-lightest: #ffffff;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-font-family-base: 'Inter', ui-sans-serif, system-ui;
+  --ifm-font-family-monospace: 'Fira Code', ui-monospace, monospace;
 }
+
+@import "tailwindcss/theme.css" layer(theme);
+
+@layer base {
+  #tw-scope {
+    @import "tailwindcss/preflight.css" layer(base);
+  }
+}
+
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@custom-variant dark (&:is([data-theme="dark"] *));

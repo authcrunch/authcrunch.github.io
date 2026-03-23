@@ -29,7 +29,10 @@
     "@docusaurus/module-type-aliases": "^3.9.2",
     "@docusaurus/tsconfig": "^3.9.2",
     "@docusaurus/types": "^3.9.2",
+    "@tailwindcss/postcss": "^4.2.2",
     "npm-check-updates": "^19.6.3",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2",
     "typescript": "~5.9.3"
   },
   "browserslist": {

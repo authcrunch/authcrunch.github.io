@@ -91,97 +91,97 @@ Next, browse to `caddy/app-auth-ci-001/config` and upload `Caddyfile` with the f
 
 ```
 {
-	http_port 80
-	https_port 443
-	admin off
-	debug
+    http_port 80
+    https_port 443
+    admin off
+    debug
 
-	order authenticate before respond
-	order authorize before basicauth
+    order authenticate before respond
+    order authorize before basicauth
 
-	security {
-		local identity store localdb {
-			realm local
-			path {env.LOCAL_DATA_PATH}caddy/app-auth-ci-001/userdb/users.json
-			user webadmin {
-				name Webmaster
-				email webadmin@localhost.localdomain
-				# echo -n "App@2f4cb79053be" | bcrypt-cli -c 10
-				password "$2a$10$JqJEf2pra4hIkw4CSDePoOfIoXVUFwSn6pJie6m02MUP7YGQVPQAi" overwrite
-				roles "authp/admin" "authp/user"
-			}
-			user jsmith {
-				name John Smith
-				email jsmith@localhost.localdomain
-				# password {env.USER_JSMITH_SECRET}
-				password "App@2f4cb79053be"
-				roles "authp/admin" "authp/user"
-			}
-		}
+    security {
+        local identity store localdb {
+            realm local
+            path {env.LOCAL_DATA_PATH}caddy/app-auth-ci-001/userdb/users.json
+            user webadmin {
+                name Webmaster
+                email webadmin@localhost.localdomain
+                # echo -n "App@2f4cb79053be" | bcrypt-cli -c 10
+                password "$2a$10$JqJEf2pra4hIkw4CSDePoOfIoXVUFwSn6pJie6m02MUP7YGQVPQAi" overwrite
+                roles "authp/admin" "authp/user"
+            }
+            user jsmith {
+                name John Smith
+                email jsmith@localhost.localdomain
+                # password {env.USER_JSMITH_SECRET}
+                password "App@2f4cb79053be"
+                roles "authp/admin" "authp/user"
+            }
+        }
 
-		authentication portal myportal {
-			crypto default token lifetime 7200
-			crypto key sign-verify {env.JWT_SHARED_KEY}
-			cookie domain app-auth-ci-001.eastus.azurecontainer.io
-			ui {
-				links {
-					"My Identity" "/auth/whoami" icon "las la-user"
-					"File Server" "/" icon "las la-cloud"
-				}
-			}
-			transform user {
-				match origin local
-				action add role authp/user
-			}
-			enable identity store localdb
-		}
+        authentication portal myportal {
+            crypto default token lifetime 7200
+            crypto key sign-verify {env.JWT_SHARED_KEY}
+            cookie domain app-auth-ci-001.eastus.azurecontainer.io
+            ui {
+                links {
+                    "My Identity" "/auth/whoami" icon "las la-user"
+                    "File Server" "/" icon "las la-cloud"
+                }
+            }
+            transform user {
+                match origin local
+                action add role authp/user
+            }
+            enable identity store localdb
+        }
 
-		authorization policy file_server_policy {
-			crypto key sign-verify {env.JWT_SHARED_KEY}
-			set auth url /auth/
-			allow roles "authp/admin" "authp/user"
-		}
-	}
+        authorization policy file_server_policy {
+            crypto key sign-verify {env.JWT_SHARED_KEY}
+            set auth url /auth/
+            allow roles "authp/admin" "authp/user"
+        }
+    }
 }
 
 :80 {
-	redir https://{host}{uri} 302
+    redir https://{host}{uri} 302
 }
 
 :443 {
-	tls internal {
-		on_demand
-	}
+    tls internal {
+        on_demand
+    }
 
-	route /version* {
-		respond "app 1.0"
-	}
+    route /version* {
+        respond "app 1.0"
+    }
 
-	route /debug* {
-		authorize with file_server_policy
-		header Content-Type text/html
-		respond <<EOF
-		<html>
-		<body>
-		<p>Host: <code>{http.request.host}</code></p>
-		<p>Time: <code>{time.now.common_log}</code></p>
-		<p>ID: <code>{http.auth.user.id}</code></p>
-		</body>
-		</html>
-		EOF 200
-	}
+    route /debug* {
+        authorize with file_server_policy
+        header Content-Type text/html
+        respond <<EOF
+        <html>
+        <body>
+        <p>Host: <code>{http.request.host}</code></p>
+        <p>Time: <code>{time.now.common_log}</code></p>
+        <p>ID: <code>{http.auth.user.id}</code></p>
+        </body>
+        </html>
+        EOF 200
+    }
 
-	route /auth* {
-		authenticate with myportal
-	}
+    route /auth* {
+        authenticate with myportal
+    }
 
-	route /* {
-		authorize with file_server_policy
-		file_server {
-			root {env.LOCAL_DATA_PATH}
-			browse
-		}
-	}
+    route /* {
+        authorize with file_server_policy
+        file_server {
+            root {env.LOCAL_DATA_PATH}
+            browse
+        }
+    }
 }
 ```
 

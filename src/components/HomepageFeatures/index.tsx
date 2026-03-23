@@ -1,7 +1,5 @@
 import type { ReactNode, ComponentType, SVGProps } from "react";
-import clsx from "clsx";
 import Heading from "@theme/Heading";
-import styles from "./styles.module.css";
 import {
   ShieldCheckIcon,
   DevicePhoneMobileIcon,
@@ -32,7 +30,8 @@ const FeatureList: FeatureItem[] = [
     image: DevicePhoneMobileIcon,
     description: (
       <>
-        Bolster security with support for app-based authentication, hardware tokens, e.g. YubiKeys, and passkeys.
+        Bolster security with support for app-based authentication, hardware
+        tokens, e.g. YubiKeys, and passkeys.
       </>
     ),
   },
@@ -50,17 +49,23 @@ const FeatureList: FeatureItem[] = [
 
 const Feature = ({ title, image: Image, description }: FeatureItem) => {
   return (
-    <div className={clsx("col col--4")}>
-      <div className="text--center padding-bottom--md">
+    <div className="flex flex-col items-center w-full md:w-1/3 px-4 pt-6">
+      <div className="pb-6">
         <Image
-          width={"4em"}
-          className="h-6 w-6 text-white"
+          className="h-12 w-12 text-(--ifm-color-primary) dark:text-(--ifm-color-primary-light)"
           aria-hidden="true"
         />
       </div>
-      <div className="text--center padding-horiz--md">
-        <Heading as="h3">{title}</Heading>
-        <p>{description}</p>
+      <div className="text-center px-4 pb-6">
+        <Heading
+          as="h3"
+          className="pb-6 text-2xl md:text-2xl font-bold text-(--ifm-heading-color) dark:text-(--ifm-heading-color)"
+        >
+          {title}
+        </Heading>
+        <p className="text-md text-(--ifm-font-color-base) dark:text-(--ifm-font-color-base)">
+          {description}
+        </p>
       </div>
     </div>
   );
@@ -68,15 +73,17 @@ const Feature = ({ title, image: Image, description }: FeatureItem) => {
 
 const HomepageFeatures = (): ReactNode => {
   return (
-    <section className={styles.features}>
-      <div className="container">
-        <div className="row">
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
-          ))}
+    <div id="tw-scope">
+      <section className="py-12 bg-(--ifm-background-color) dark:bg-(--ifm-background-color)">
+        <div className="container mx-auto">
+          <div className="flex flex-wrap justify-center">
+            {FeatureList.map((props, idx) => (
+              <Feature key={idx} {...props} />
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };
 

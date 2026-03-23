@@ -5,8 +5,8 @@ import type * as Preset from "@docusaurus/preset-classic";
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: "AuthCrunch aka Caddy Security Documentation",
-  tagline: "Security App for Caddy v2",
+  title: "AuthCrunch",
+  tagline: "Application security functions for application developers",
   favicon: "img/favicon.ico",
 
   url: "https://docs.authcrunch.com",
@@ -73,13 +73,15 @@ const config: Config = {
     ],
   ],
 
+  plugins: ["./src/plugins/tailwind-config.ts"],
+
   themeConfig: {
     image: "img/authcrunch.jpg",
     colorMode: {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: "AuthCrunch aka Caddy Security",
+      title: "AuthCrunch",
       logo: {
         alt: "AuthCrunch Logo",
         src: "img/logo.svg",
@@ -121,6 +123,10 @@ const config: Config = {
               type: "doc",
               docId: "examples/intro",
               label: "Examples",
+            },
+            {
+              to: "/blog",
+              label: "Blog",
             },
           ],
         },
