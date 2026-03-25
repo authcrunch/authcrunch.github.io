@@ -53,6 +53,14 @@ The syntax:
 set <session_id|redirect_url|sandbox_id|id_token|access_token|refresh_token> cookie name <name>
 ```
 
+Additionally, you can set common prefix to all cookies:
+
+```Caddyfile
+		authentication portal myportal {
+			set cookie name prefix CONTOSO
+		}
+```
+
 Importantly, if you changed default session ID cookie name, then you must also update you authorization policy
 to match the changed value.
 
