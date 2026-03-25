@@ -29,6 +29,9 @@ fallbacks based on what the user has registered.
 | `totp` | Authenticate with an authenticator app passcode |
 | `u2f` | Authenticate with a hardware token (e.g. Yubico) or passkey |
 | `mfa` | Authenticate with any available MFA method (totp, u2f, or email) |
+| `email` | Authenticate with an email-based verification code * |
+
+\* Email challenge support is being added.
 
 **The `password` type is always considered available.** The other types
 require the user to have a matching token registered in the identity
