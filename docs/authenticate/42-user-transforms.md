@@ -72,6 +72,9 @@ authenticated user's email is `webadmin@localdomain.local`:
   }
 ```
 
+For more advanced challenge configuration with conditional fallbacks,
+see [Authentication Challenges](./13-authentication-challenges.md).
+
 ## Deny Access
 
 The following transform blocks a user with email `anonymous@badactor.com`
