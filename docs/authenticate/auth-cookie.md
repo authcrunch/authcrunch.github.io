@@ -92,6 +92,22 @@ You can provide more than one cookie name.
 		}
 ```
 
+## Scope
+
+The following table outlines the default scope and path for the cookies used by the authentication
+portal and authorization gateway.
+
+The `BASE_URL` is the default path of the portal. Typically, it is `/auth`, `/`, or `/xauth`
+
+| Cookie Name | Default Scope | Default Path | Comments |
+| :--- | :--- | :--- | :--- |
+| `AUTHP_SESSION_ID` | Domain/Host | `/` | Essential for maintaining the user's authenticated state. It is used to track user session across authentication postal and authorized services |
+| `AUTHP_ACCESS_TOKEN` | Domain/Host | `/` | Used by the gateway to authorize requests against protected upstream services. Also used by the portal itself |
+| `AUTHP_REDIRECT_URL` | Host | `BASE_URL/` | Used to return the user to their original destination after login. |
+| `AUTHP_SANDBOX_ID` | Host | `BASE_URL/` | Holds temporary state during login "challenges", e.g. TOTP, U2F, or WebAuthn authentication prompts |
+| `AUTHP_ID_TOKEN` | Host | `BASE_URL/` + `whoami` | Stores the raw identity provider data, e.g. claims from Google or GitHub |
+| `AUTHP_REFRESH_TOKEN` | Host | `BASE_URL/` + `api/refresh_token` | Allows users to get new access tokens without re-login. |
+
 ## JWT Tokens
 
 The plugin issues JWT tokens to authenticated users. The tokens
