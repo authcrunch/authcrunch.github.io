@@ -34,6 +34,18 @@ curl -v -H 'X-Auth-Realm: local' --user 'jsmith:My@Password123' https://go.myfio
 curl -v -H 'X-Auth-Realm: userpool1.localdomain' --user 'jsmith:My@Password123' https://go.myfiosgateway.com:8443/api/foo
 ```
 
+## Setting Default Realm
+
+If you want to set default realm, so that you don't have to provide `X-Auth-Realm` header, add `request_header` prior
+to `authorize`.
+
+```Caddyfile
+handle * {
+	request_header +X-Auth-Realm "local"
+	authorize with mypolicy
+}
+```
+
 ## Multiple Realms
 
 In the below configuration we have multiple realms: `userpool1.localdomain` and `userpool2.localdomain`.
