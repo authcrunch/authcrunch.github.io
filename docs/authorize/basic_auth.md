@@ -24,6 +24,16 @@ that it authenticates against remote `authentication portal`.
 
 Please see: https://github.com/greenpau/caddy-security/issues/462
 
+## Usage
+
+The following commands pass basic auth credentials:
+
+
+```bash
+curl -v -H 'X-Auth-Realm: local' --user 'jsmith:My@Password123' https://go.myfiosgateway.com:8443/api/foo
+curl -v -H 'X-Auth-Realm: userpool1.localdomain' --user 'jsmith:My@Password123' https://go.myfiosgateway.com:8443/api/foo
+```
+
 ## Multiple Realms
 
 In the below configuration we have multiple realms: `userpool1.localdomain` and `userpool2.localdomain`.

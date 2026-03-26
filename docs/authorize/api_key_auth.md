@@ -62,7 +62,7 @@ For example, the `/api/*` is protected by the `api_access_policy` below.
 The following `curl` request will result in the granted access.
 
 ```bash
-curl -H 'X-Api-Key: r7lQbaotIG4303j2to2sS5cOYBEyRAAgDGlbhfgFBxPM889501VDbk8ZmGHAevr8Buv6YRqG' https://go.myfiosgateway.com:8443/api/foo
+curl -H 'X-Auth-Realm: local' -H 'X-Api-Key: r7lQbaotIG4303j2to2sS5cOYBEyRAAgDGlbhfgFBxPM889501VDbk8ZmGHAevr8Buv6YRqG' https://go.myfiosgateway.com:8443/api/foo
 ```
 
 The server responds with:
@@ -73,9 +73,8 @@ api access granted to webadmin@localhost.localdomain in local
 
 If the API key is malformed:
 
-```
 ```bash
-curl -H 'X-Api-Key: foobar' https://go.myfiosgateway.com:8443/api/foo
+curl -H 'X-Auth-Realm: local' -H 'X-Api-Key: foobar' https://go.myfiosgateway.com:8443/api/foo
 ```
 
 The server responds with:
