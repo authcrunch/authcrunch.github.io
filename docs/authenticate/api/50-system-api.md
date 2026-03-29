@@ -89,7 +89,22 @@ The receiving portal responds with the following message:
 
 ```json
 {
-    "authenticated": true
+  "id": "faaf870b-c350-4a2b-bef3-ebfd90ae3f86",
+  "kind": "auth_response",
+  "authenticated": true,
+  "user_data": {
+    "addr": "10.1.1.1",
+    "email": "jsmith@localhost.localdomain",
+    "name": "Smith, John",
+    "origin": "local",
+    "realm": "local",
+    "roles": [
+      "authp/user",
+      "dash"
+    ],
+    "sub": "jsmith"
+  },
+  "timestamp": "2026-03-29T16:06:45.73201Z"
 }
 ```
 
@@ -98,15 +113,18 @@ Now, let's test the same with `authdbctl` utility.
 ```bash
 cat <<EOF > .tmp/basic_auth_message.json
 {
-    "kind": "basic_auth",
+    "kind": "basic_auth_request",
     "username": "jsmith",
     "password": "My@Password123",
-    "realm": "local"
+    "realm": "local",
+    "address": "10.1.1.1"
 }
 EOF
 
-authdbctl system send message --encryption-key ~/.config/caddy/security_system.key --input-message-file .tmp/basic_auth_message.json
+authdbctl --debug system send message --encryption-key ~/.config/caddy/security_system.key --input-message-file .tmp/basic_auth_message.json --key-id j163xe
 ```
+
+The key ID must match the one configured on the authentication portal.
 
 The following above command emulates the work of a gatekeeper (`authorize` plugin) that received Basic authentication
 credentials and need to authenticate the credentials with remove authentication portal.
@@ -119,9 +137,10 @@ the following payload:
 
 ```json
 {
-    "kind": "api_key_auth",
+    "kind": "api_key_auth_request",
     "api_key": "<API_KEY>",
-    "realm": "<REALM_NAME>"
+    "realm": "<REALM_NAME>",
+    "address": "<SOURCE_ADDRESS>"
 }
 ```
 
@@ -129,8 +148,38 @@ The receiving portal responds with the following message:
 
 ```json
 {
-    "authenticated": true
+  "id": "0b719a2c-0894-4157-ba83-4f5c0ca50ceb",
+  "kind": "auth_response",
+  "authenticated": true,
+  "user_data": {
+    "addr": "10.1.1.1",
+    "email": "jsmith@localhost.localdomain",
+    "name": "Smith, John",
+    "origin": "local",
+    "realm": "local",
+    "roles": [
+      "authp/user",
+      "dash"
+    ],
+    "sub": "jsmith"
+  },
+  "timestamp": "2026-03-29T16:53:55.993986Z"
 }
+```
+
+Now, let's test the same with `authdbctl` utility.
+
+```bash
+cat <<EOF > .tmp/api_key_auth_message.json
+{
+    "kind": "api_key_auth_request",
+    "api_key": "Lpi1BhMmSIcRk96E7QBovuik2rww3PV5JfSkzSVGNmKlNNCjpKbe66750TrUHIgcl67OEeCz",
+    "realm": "local",
+    "address": "10.1.1.1"
+}
+EOF
+
+authdbctl --debug system send message --encryption-key ~/.config/caddy/security_system.key --input-message-file .tmp/api_key_auth_message.json --key-id j163xe
 ```
 
 ## Restricting Access
