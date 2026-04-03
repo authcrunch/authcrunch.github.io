@@ -42,6 +42,25 @@ References:
 * [Mozilla - OIDC in a nutshell](https://infosec.mozilla.org/guidelines/iam/openid_connect.html#oidc-in-a-nutshell)
 
 
+## PKCE
+
+PKCE ([RFC 7636](https://datatracker.ietf.org/doc/html/rfc7636)) adds an extra
+verification step during login to prevent authorization code interception. Some
+identity providers, e.g. Kanidm, require PKCE.
+
+The plugin enables PKCE by default for generic, okta, google, gitlab, azure,
+nextcloud, and cognito providers. Providers with non-standard OAuth flows
+(github, facebook, discord, linkedin) have PKCE disabled automatically.
+
+To disable PKCE for a specific provider:
+
+```
+oauth identity provider generic {
+    ...
+    disable pkce
+}
+```
+
 ## Adding Role Claims
 
 By default, all users authenticated with the plugin get `authp/guest`
