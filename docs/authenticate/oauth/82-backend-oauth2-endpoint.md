@@ -43,3 +43,13 @@ please reach out.
           ...
           enable logout
 ```
+
+## OAuth 2.0 PKCE
+
+PKCE is enabled by default. To disable it for a specific provider:
+
+```
+      oauth identity provider generic {
+          ...
+          disable pkce
+```
