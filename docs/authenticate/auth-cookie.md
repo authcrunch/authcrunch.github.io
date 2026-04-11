@@ -13,7 +13,10 @@ for more information.
 
 * `cookie domain <domain>`: adds the **Domain** attribute to a cookie. It
   determines which hosts are allowed to receive the cookie. By default,
-  the domain is not included.
+  the domain is not included. This leads to that cookies being considered a
+  host-only cookie, meaning it is NOT shared with subdomains. Do not set the
+  domain with a leading dot (like `.example.com`) as this is considered legacy
+  and is not supported by the plugin.
 * `cookie path <path>` (optional): adds the **Path** attribute to a cookie.
   It determines the URL path that must exist in the requested URL in order
   to send  the Cookie header. The default is `/`.
