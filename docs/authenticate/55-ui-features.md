@@ -30,7 +30,7 @@ Defining a theme is optional, by default the `basic` theme is used.
 Every template has its own folder in the `assets` folder. The folder name
 should equal the name of the theme. For example the basic template files
 are located in the folder `assets/templates/basic/`. For reference and as 
-an example the basic template files can be found here https://github.com/greenpau/go-authcrunch/tree/main/assets/portal/templates/basic.
+an example the basic template files can be found here <https://github.com/greenpau/go-authcrunch/tree/main/pkg/authn/ui/page_templates/basic>.
 
 Every template folder should include at least the following files:
 
