@@ -42,7 +42,9 @@ Next, provide Redirect URL:
 ![Google Identity Platform - Identity Platform - Consent Screen](../images/oauth2_google_new_credentials_uri_choice.png)
 
 Login redirect URIs:
-* `https://localhost:8443/auth/oauth2/google/authorization-code-callback`
+* `https://example.com/auth/oauth2/google/authorization-code-callback`
+
+Please note that '/oauth2/google/authorization-code-callback' is the minimum URI, and before that would be your domain and route. ie `route /auth*` would result in the above URI.
 
 Finally, you will get a confirmation. Store the Client ID and Client Secret securely.
 
