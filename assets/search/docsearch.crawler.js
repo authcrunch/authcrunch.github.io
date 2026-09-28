@@ -1,18 +1,21 @@
 // Algolia dashboard configuration. This is not loaded by the website.
-// Retain the existing crawler's private API key and scheduling settings.
-// See README.md before applying this to the existing authp index.
+// Set the private API key in the dashboard only. See README.md for migration.
+// The site's public client stays on its existing index until this one is ready.
 new Crawler({
   appId: 'S074F3F45X',
-  apiKey: 'KEEP_EXISTING_PRIVATE_CRAWLER_KEY',
+  apiKey: 'SET_PRIVATE_CRAWLER_KEY_IN_DASHBOARD',
+  indexPrefix: '',
   rateLimit: 8,
   maxDepth: 10,
+  maxUrls: 1000,
+  schedule: 'on the 14 day of the month',
   startUrls: ['https://docs.authcrunch.com/'],
   sitemaps: ['https://docs.authcrunch.com/sitemap.xml'],
   renderJavaScript: false,
   ignoreCanonicalTo: false,
   discoveryPatterns: ['https://docs.authcrunch.com/**'],
   actions: [{
-    indexName: 'authp',
+    indexName: 'authcrunch-docs',
     pathsToMatch: ['https://docs.authcrunch.com/docs/**', 'https://docs.authcrunch.com/blog/**'],
     recordExtractor: ({$, helpers}) => {
       const isDoc = $('.theme-doc-markdown').length > 0;
@@ -44,10 +47,11 @@ new Crawler({
       });
     },
   }],
+  safetyChecks: {beforeIndexPublishing: {maxLostRecordsPercentage: 30}},
   // These settings initialize NEW indices. Apply the corresponding settings
-  // explicitly to the existing authp index as described in README.md.
+  // explicitly if the target index already exists, as described in README.md.
   initialIndexSettings: {
-    authp: {
+    'authcrunch-docs': {
       attributesForFaceting: ['type', 'lang', 'language', 'version', 'docusaurus_tag', 'topic', 'kind'],
       attributesToRetrieve: ['hierarchy', 'content', 'anchor', 'url', 'url_without_anchor', 'type', 'topic', 'kind'],
       attributesToHighlight: ['hierarchy', 'content'],

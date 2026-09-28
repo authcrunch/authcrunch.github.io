@@ -3,7 +3,9 @@ import {parseArgs} from 'node:util';
 
 // Read-only acceptance checks against the same client used by the site.
 const client = JSON.parse(await readFile(new URL('./client.json', import.meta.url), 'utf8'));
-const {values} = parseArgs({options: {output: {type: 'string'}}});
+const {values} = parseArgs({options: {output: {type: 'string'}, index: {type: 'string'}}});
+const indexName = (values.index ?? client.indexName).trim();
+if (!indexName) throw new Error('--index must not be empty.');
 const origin = 'https://docs.authcrunch.com';
 const cases = [
   {query: 'getting started', paths: ['/docs/intro', '/docs/start/first-app']},
@@ -25,13 +27,13 @@ const excluded = new Set([
   '/docs/authenticate/oauth/backend-oauth2-0005-onelogin', '/docs/authenticate/x509',
 ]);
 const facetFilters = ['language:en', ['docusaurus_tag:docs-default-current', 'docusaurus_tag:default']];
-const requests = cases.map(({query}) => ({indexName: client.indexName, params: {
+const requests = cases.map(({query}) => ({indexName, params: {
   query, hitsPerPage: 30, facetFilters,
   attributesToRetrieve: ['url', 'hierarchy', 'topic', 'kind'],
 }}));
 // An unfiltered sample also catches stale domains and placeholders hidden by
 // contextual search. Large indices require a dashboard audit beyond this sample.
-requests.push({indexName: client.indexName, params: {
+requests.push({indexName, params: {
   query: '', hitsPerPage: 1000, distinct: false,
   attributesToRetrieve: ['url', 'hierarchy', 'topic', 'kind'],
   facets: ['language', 'docusaurus_tag', 'topic', 'kind'],
@@ -54,16 +56,16 @@ try {
   if (!response.ok) throw new Error(`Algolia returned HTTP ${response.status}: ${await response.text()}`);
   const {results} = await response.json();
   if (!Array.isArray(results) || results.length !== requests.length) throw new Error('Unexpected Algolia batch response.');
+  const failed = results.find(result => result.error || result.status >= 400);
+  if (failed) throw new Error(`${indexName}: ${failed.message ?? failed.error ?? `HTTP ${failed.status}`}`);
   const queries = cases.map((test, i) => {
     const result = results[i];
-    if (result.error) failures.push(`${test.query}: ${result.error}`);
     const paths = [...new Set((result.hits ?? []).map(hit => new URL(hit.url).pathname.replace(/\/$/, '')))];
     const passed = paths.slice(0, 5).some(path => test.paths.includes(path));
     if (!passed) failures.push(`${test.query}: expected destination missing from the first five distinct pages.`);
     return {...test, passed, pages: paths.slice(0, 5), hits: result.hits ?? []};
   });
   const sample = results.at(-1);
-  if (sample.error) failures.push(`Index sample: ${sample.error}`);
   const badUrls = new Set();
   const missingMetadata = new Set();
   for (const hit of results.flatMap(result => result.hits ?? [])) {
@@ -76,15 +78,16 @@ try {
   for (const [facet, value] of [['language', 'en'], ['docusaurus_tag', 'docs-default-current'], ['topic', 'authorization'], ['kind', 'Tutorial']]) {
     if (!sample.facets?.[facet]?.[value]) failures.push(`Missing expected facet: ${facet}:${value}`);
   }
-  report = {checkedAt: new Date().toISOString(), index: client.indexName, queries, sample: {
+  report = {checkedAt: new Date().toISOString(), index: indexName, queries, sample: {
     returned: sample.hits?.length ?? 0, total: sample.nbHits, facets: sample.facets,
     badUrls: [...badUrls], missingMetadata: [...missingMetadata],
   }, failures};
 } catch (error) {
   failures.push(error.message);
-  report = {checkedAt: new Date().toISOString(), failures};
+  report = {checkedAt: new Date().toISOString(), index: indexName, failures};
 }
 if (values.output) await writeFile(values.output, JSON.stringify(report, null, 2) + '\n');
+console.log(`Checked index: ${indexName}`);
 for (const query of report.queries ?? []) console.log(`${query.passed ? 'PASS' : 'FAIL'} ${query.query}`);
 for (const failure of failures) console.error(failure);
 if (report.sample) console.log(`Inspected ${report.sample.returned} unfiltered records of ${report.sample.total}. Review the full crawl in Algolia.`);

@@ -101,6 +101,15 @@ not the private crawler credential. The maintained
 [crawler configuration and procedure](../../../assets/search/README.md) own
 extraction, current-domain URLs, document exclusions, and existing-index settings.
 Private crawler credentials stay in Algolia; do not put them in the repository.
+The crawler's display name, its index prefix, and its action's index name are
+separate values. The prefix is concatenated with the action name. Confirm the
+actual index returned by Algolia before changing the site's client. During a
+migration, `npm run check:search -- --index <name>` checks a candidate index with
+the public key while leaving the configured client unchanged. Missing indices
+fail the check. Switch the client only after the candidate's results pass.
+Preserve the maintainer's crawl schedule and publishing safety checks when
+adapting configuration. Do not replace the default crawler to rename an index;
+if it has already been deleted, follow Algolia's DocSearch recovery guidance.
 
 A successful build does not refresh Algolia. Deploy the metadata-bearing site,
 test its generated records in the crawler's URL Tester, then run a full crawl
