@@ -1,10 +1,7 @@
+# Set the public portal hostname and the provider issuer/discovery URLs.
 {
-	http_port 8080
-	https_port 8443
-	debug
-
-	order authenticate before respond
-	order authorize before basicauth
+	admin off
+	persist_config off
 
 	security {
 		oauth identity provider keycloak {
@@ -13,45 +10,56 @@
 			client_id {env.KEYCLOAK_CLIENT_ID}
 			client_secret {env.KEYCLOAK_CLIENT_SECRET}
 			scopes openid email profile
-			metadata_url https://keycloak/auth/realms/master/.well-known/openid-configuration
+			issuer https://id.example.com/realms/example
+			metadata_url https://id.example.com/realms/example/.well-known/openid-configuration
+			login icon text "Keycloak"
 		}
 
 		authentication portal myportal {
-			crypto default token lifetime 3600
-			crypto key sign-verify {env.JWT_SHARED_KEY}
 			enable identity provider keycloak
-			cookie domain myfiosgateway.com
+			crypto default token lifetime 900
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			cookie path /
+
 			ui {
 				links {
-					"My Website" https://assetq.myfiosgateway.com:8443/ icon "las la-star"
-					"My Identity" "/whoami" icon "las la-user"
+					"Example app" /app icon "las la-external-link-alt"
+					"My identity" /auth/whoami icon "las la-user"
 				}
 			}
+
 			transform user {
-				match origin keycloak
+				match realm keycloak
 				action add role authp/user
+			}
+
+			transform user {
+				match realm keycloak
+				match role /app-members
+				action add role app/member
 			}
 		}
 
-		authorization policy mypolicy {
-			set auth url https://auth.myfiosgateway.com:8443/
-			allow roles authp/admin authp/user
+		authorization policy apppolicy {
+			set auth url https://auth.example.com/auth/
 			crypto key verify {env.JWT_SHARED_KEY}
+			allow roles app/member
 		}
 	}
 }
 
-(tls_config) {
-	tls {$HOME}/.local/tls/myfiosgateway/server.crt {$HOME}/.local/tls/myfiosgateway/server.key
-}
+auth.example.com {
+	route {
+		redir /auth /auth/ 308
 
-auth.myfiosgateway.com {
-	import tls_config
-	authenticate with myportal
-}
+		authenticate /auth/* with myportal
 
-assetq.myfiosgateway.com {
-	import tls_config
-	authorize with mypolicy
-	respond "assetq is running"
+		@app path /app /app/*
+		route @app {
+			authorize with apppolicy
+			respond "You reached the Keycloak-protected app." 200
+		}
+
+		respond "AuthCrunch is running. Open /app to begin." 200
+	}
 }

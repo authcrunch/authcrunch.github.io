@@ -133,6 +133,29 @@ Test selected and unselected accounts and a missing organization claim. Local
 provider fixtures verify runtime behavior, not GitHub consent or an actual app
 registration; record those validation boundaries separately.
 
+## Generic OIDC and Keycloak examples
+
+The [generic](../../../assets/conf/oauth/generic/Caddyfile) and
+[Keycloak](../../../assets/conf/oauth/keycloak/Caddyfile) examples are embedded
+in their public pages. Both use the generic driver, explicit issuer/discovery
+URLs, a portal under `/auth/`, and an `app/member` policy for `/app` and its
+descendants. The bundle baseline remains caddy-security v1.3.0 / go-authcrunch
+v1.3.8. Keycloak console and runtime guidance is checked against 26.7.4.
+
+The generic example expects `app-members`; Keycloak's Group Membership mapper
+with Full group path enabled emits `/app-members`. Preserve this exact
+distinction. The mapper adds groups to the ID token; the portal combines them
+into roles before transforms grant `app/member`. Email must also be in the ID
+token for the default check. An optional UserInfo fetch runs later and is not
+an equivalent replacement. Keep portal roles separate from the application grant.
+
+Test actual discovery, a code exchange with S256 PKCE, a member and nonmember,
+and a missing or mismatched group claim when an isolated provider is available.
+Portal logout and provider SSO logout are separate checks. Disposable local
+Keycloak testing may use loopback HTTP with insecure cookies in a temporary
+configuration; keep that adaptation out of the canonical HTTPS examples. Do not
+present local network tests as production TLS, proxy, or certificate validation.
+
 ## Acceptance scenarios
 
 - A provider change updates both its documented snippet and linked Caddyfile;
