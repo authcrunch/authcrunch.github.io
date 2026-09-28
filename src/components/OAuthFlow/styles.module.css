@@ -1,0 +1,59 @@
+.flow {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  border: 1px solid var(--ac-border);
+  border-radius: 1rem;
+  background: var(--ac-surface);
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.steps li {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+  margin: 0;
+  padding-bottom: 1.5rem;
+}
+
+.steps li:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: 2rem;
+  bottom: 0;
+  left: 0.9375rem;
+  border-left: 2px solid var(--ac-border);
+}
+
+.steps li:last-child { padding-bottom: 0; }
+
+.number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: var(--ifm-background-color);
+  font-weight: 700;
+}
+
+.connection {
+  display: block;
+  color: var(--ac-muted);
+  font-size: 0.8125rem;
+  margin-bottom: 0.2rem;
+}
+
+.steps strong { display: block; }
+.steps p { margin: 0.35rem 0 0; font-size: 0.9375rem; }
+.flow figcaption { margin-top: 1.5rem; font-size: 0.875rem; color: var(--ac-muted); }
+
+@media (max-width: 480px) {
+  .flow { padding: 1rem; }
+  .steps li { gap: 0.75rem; }
+}

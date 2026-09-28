@@ -46,11 +46,12 @@ check every changed path. Files under `static/` have public paths without the
 `static` prefix; `assets/conf/` and `assets/solutions/` are repository examples,
 not automatically copied site downloads.
 
-The beginner Caddyfile is imported from
+The beginner and GitHub Caddyfiles are imported from
 [assets/conf/getting-started/Caddyfile](../../../assets/conf/getting-started/Caddyfile)
-using `?raw` and rendered by `CodeBlock` in `docs/start/first-app.md`. Edit that
-canonical file instead of adding a duplicate fenced configuration. The site
-plugin resolves it at build time; the import does not create a download URL.
+and [assets/conf/oauth/github/Caddyfile](../../../assets/conf/oauth/github/Caddyfile)
+using `?raw` and rendered by `CodeBlock` in their walkthroughs. Edit those
+canonical files instead of adding duplicate complete fenced configurations. The
+site plugin resolves them at build time; imports do not create download URLs.
 
 Some pages still link to `greenpau/caddy-auth-docs`. When updating one, verify
 the corresponding file here and use the current

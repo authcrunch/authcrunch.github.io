@@ -110,6 +110,29 @@ Applications page; the user selects Example app. Check browser logout with a
 fresh app request, without claiming that it revokes an independently copied
 token. Scope runtime results to the tested executable and environment.
 
+## GitHub example
+
+[assets/conf/oauth/github/Caddyfile](../../../assets/conf/oauth/github/Caddyfile)
+is embedded in the GitHub guide and targets caddy-security v1.3.0 with
+go-authcrunch v1.3.8. It serves a portal under `/auth/` and protects `/app` plus
+its descendants on one HTTPS hostname. The example grants portal access to
+GitHub users but requires a numeric account ID to receive `app/member`.
+
+Set `GITHUB_ALLOWED_USER_ID` before adaptation: `{$GITHUB_ALLOWED_USER_ID}`
+expands in the Caddyfile parser. The client ID, client secret, and shared signing
+key use runtime `{env.VARIABLE}` placeholders. Use synthetic values when
+capturing adapted JSON. HTTPS certificate provisioning requires a real hostname;
+local runtime checks should use disposable storage, a loopback listener, and a
+local certificate without modifying the user's trust store.
+
+Keep the organization variant's filter and transform together. In this release,
+the driver's organization endpoint returns public memberships and it does not
+follow pagination. Separate role-granting transforms are additive; requiring
+both account ID and organization means putting both matchers in one transform.
+Test selected and unselected accounts and a missing organization claim. Local
+provider fixtures verify runtime behavior, not GitHub consent or an actual app
+registration; record those validation boundaries separately.
+
 ## Acceptance scenarios
 
 - A provider change updates both its documented snippet and linked Caddyfile;

@@ -22,6 +22,11 @@ authentication:
 
 ## Add Roles
 
+For GitHub account access, prefer the released driver's numeric
+[`match github id` and organization matchers](oauth/81-backend-oauth2-0007-github.md#choose-who-can-use-the-app).
+The `github.com/LOGIN` subject used in the legacy example below changes if the
+account is renamed.
+
 The following transform matches `sub` field and grants `authp/viewer` role:
 
 ```

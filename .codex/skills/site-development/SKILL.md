@@ -17,6 +17,7 @@ or stylesheet, then change the narrowest owner.
 | --- | --- |
 | Homepage composition, learning sequence, and topic cards | [index.tsx](../../../src/pages/index.tsx) and [index.module.css](../../../src/pages/index.module.css) |
 | Interactive portal/direct-OAuth comparison | [AccessFlow](../../../src/components/AccessFlow/index.tsx) |
+| Static external-login sequence in the OAuth overview | [OAuthFlow](../../../src/components/OAuthFlow/index.tsx) |
 | Global Infima colors, typography, Tailwind imports | [custom.css](../../../src/css/custom.css) |
 | PostCSS integration | [tailwind plugin](../../../src/plugins/tailwind-config.ts) |
 | Caddyfile text imports for MDX | [configuration-source plugin](../../../src/plugins/configuration-source.ts) |
