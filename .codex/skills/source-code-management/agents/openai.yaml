@@ -1,0 +1,4 @@
+interface:
+  display_name: "Source Code Management"
+  short_description: "Commit messages for AuthCrunch documentation"
+  default_prompt: "Use $source-code-management to create a commit message for this change."

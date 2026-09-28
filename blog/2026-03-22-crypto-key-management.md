@@ -7,7 +7,7 @@ tags: [blog]
 
 This post walks you through how the `security` app manages cryptographic keys for both `authenticate` and `authorize` plugins.
 
-<!-- truncate -->
+{/* truncate */}
 
 ## Authentication Portal
 

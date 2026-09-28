@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release and Versioning"
+  short_description: "Prepare versions and publish the documentation site"
+  default_prompt: "Use $release-and-versioning to prepare a reviewed AuthCrunch documentation release."

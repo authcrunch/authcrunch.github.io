@@ -45,6 +45,6 @@ The QR Code displayed on the page complies [Key Uri Format](https://github.com/g
 In your MFA application, e.g. Microsoft Authenticator, follow these steps to
 onboard your web account.
 
-| <!-- -->    | <!-- -->    | <!-- -->    |
+| Add account | Scan QR code | Account added |
 |-------------|-------------|-------------|
 | ![](./images/ms_mfa_app_add_account.png) | ![](./images/ms_mfa_app_scan_qrcode.png) | ![](./images/ms_mfa_app_new_account.png) |

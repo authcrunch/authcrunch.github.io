@@ -1,0 +1,4 @@
+interface:
+  display_name: "Site Operations"
+  short_description: "Build, check, and maintain the documentation site"
+  default_prompt: "Use $site-operations to diagnose a documentation build or update site dependencies and CI."

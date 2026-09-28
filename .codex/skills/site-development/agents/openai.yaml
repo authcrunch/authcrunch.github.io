@@ -1,0 +1,4 @@
+interface:
+  display_name: "Site Development"
+  short_description: "Develop the Docusaurus UI and theme integration"
+  default_prompt: "Use $site-development to update the AuthCrunch site UI and verify responsive light and dark layouts."

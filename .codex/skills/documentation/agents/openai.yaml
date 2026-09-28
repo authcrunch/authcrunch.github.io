@@ -1,0 +1,4 @@
+interface:
+  display_name: "Documentation"
+  short_description: "Maintain public AuthCrunch docs and blog content"
+  default_prompt: "Use $documentation to update AuthCrunch documentation and check navigation, links, and examples."

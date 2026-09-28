@@ -1,0 +1,4 @@
+interface:
+  display_name: "Configuration Examples"
+  short_description: "Maintain and verify Caddy security examples"
+  default_prompt: "Use $configuration-examples to update a Caddyfile example and verify its documented behavior."

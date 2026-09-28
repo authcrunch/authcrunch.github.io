@@ -15,6 +15,9 @@ Documentation Website: https://docs.authcrunch.com/
 
 ## Local Testing
 
+Use Node.js 24.15 or newer in the 24.x release line and npm 10 or newer.
+Install the locked dependencies with `npm ci`.
+
 If necessary, upgrade packages:
 
 ```bash
@@ -36,7 +39,7 @@ npm run build
 Run the website locally on port 4200:
 
 ```bash
-npx docusaurus start --port 4200 --host 0.0.0.0
+npm run dev
 ```
 
 ## Deployment

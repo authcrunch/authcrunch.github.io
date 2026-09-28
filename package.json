@@ -5,6 +5,7 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
+    "dev": "npx docusaurus start --port 4200 --host 0.0.0.0",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
@@ -16,24 +17,31 @@
     "upgrade": "ncu --upgrade; rm -rf node_modules/ package-lock.json build coverage; npm i"
   },
   "dependencies": {
-    "@docusaurus/core": "3.9.2",
-    "@docusaurus/preset-classic": "3.9.2",
+    "@docusaurus/core": "3.10.2",
+    "@docusaurus/faster": "3.10.2",
+    "@docusaurus/preset-classic": "3.10.2",
     "@heroicons/react": "^2.2.0",
     "@mdx-js/react": "^3.1.1",
     "clsx": "^2.1.1",
     "prism-react-renderer": "^2.4.1",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "^3.9.2",
-    "@docusaurus/tsconfig": "^3.9.2",
-    "@docusaurus/types": "^3.9.2",
-    "@tailwindcss/postcss": "^4.2.2",
-    "npm-check-updates": "^19.6.3",
-    "postcss": "^8.5.8",
-    "tailwindcss": "^4.2.2",
-    "typescript": "~5.9.3"
+    "@docusaurus/module-type-aliases": "^3.10.2",
+    "@docusaurus/tsconfig": "^3.10.2",
+    "@docusaurus/types": "^3.10.2",
+    "@tailwindcss/postcss": "^4.3.3",
+    "npm-check-updates": "^23.1.0",
+    "postcss": "^8.5.28",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~7.0.2"
+  },
+  "overrides": {
+    "serialize-javascript": "^7.1.2",
+    "sockjs": {
+      "uuid": "^11.1.1"
+    }
   },
   "browserslist": {
     "production": [
@@ -48,6 +56,7 @@
     ]
   },
   "engines": {
-    "node": ">=20.0"
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0",
+    "npm": ">=10.0.0"
   }
 }
