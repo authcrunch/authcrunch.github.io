@@ -2,12 +2,12 @@
 
 The public search client in `assets/search/client.json` is imported by
 `docusaurus.config.ts` and the verification script. Its search-only
-key reads the `authp` index in application `S074F3F45X`. Crawler configuration and
-index settings live separately in the Algolia dashboard. A site build does not
-update that hosted index.
+key reads the `authcrunch-docs` index in application `S074F3F45X`. Crawler
+configuration and index settings live separately in the Algolia dashboard.
+A site build does not update that hosted index.
 
 `docsearch.crawler.js` is the maintained extraction configuration for
-`https://docs.authcrunch.com`, targeting a new `authcrunch-docs` index. It follows the
+`https://docs.authcrunch.com`, targeting the `authcrunch-docs` index. It follows the
 [Docusaurus template](https://docsearch.algolia.com/docs/templates/#docusaurus-v2-and-later-template),
 with topic grouping, aliases, code/table content, and explicit exclusions.
 The placeholder API key must be replaced **in the dashboard only** with the
@@ -35,9 +35,15 @@ and [maxUrls](https://www.algolia.com/doc/tools/crawler/apis/configuration/max-u
    `docsearch:exclude=false`, a topic, aliases, and Docusaurus's language/version
    tags. Merge alone does not deploy this repository.
 3. Update the crawler's URLs, extraction action, and index settings from
-   `docsearch.crawler.js`. Confirm an empty Index Prefix and target name
-   `authcrunch-docs`; remove obsolete `authp.github.io` URLs and actions. Keep
-   the site's existing `authp` index available while preparing the new one.
+   `docsearch.crawler.js` in the **Editor**. Paste the JavaScript directly,
+   starting with `new Crawler({` on the first line, without Markdown fences or
+   leading comments. Leading `//` comments caused the editor to report
+   `Unexpected token '/' ... is not valid JSON`; remove those comments rather
+   than converting the function-bearing configuration to JSON. Keep the private
+   key in the dashboard. Confirm an empty Index Prefix and target name
+   `authcrunch-docs`; remove obsolete `authp.github.io` URLs and actions. During
+   an index migration, keep the currently deployed client's index available
+   until the replacement client has been deployed and verified.
 4. `initialIndexSettings` applies when `authcrunch-docs` is first created.
    If that index already exists, update its Searchable Attributes and Facets
    in the dashboard as well. Preserve any additional required attributes.
@@ -57,14 +63,17 @@ and [maxUrls](https://www.algolia.com/doc/tools/crawler/apis/configuration/max-u
    the index to test the configuration.
 7. Run `npm run check:search -- --index authcrunch-docs` before switching the
    website. This reads the new index without changing the live client.
-8. Once the index passes, update `client.json` to use `authcrunch-docs`, build,
-   and deploy that client change. Run `npm run check:search` and test the search
-   dialog (keyboard open, query, result navigation, heading destination, Escape).
+8. Once the index passes, confirm `client.json` uses `authcrunch-docs`. A change
+   to the client requires a build and deployment. Run `npm run check:search` and
+   test the search dialog (keyboard open, query, result navigation, heading
+   destination, Escape).
 
 Algolia documents the [URL Tester](https://docsearch.algolia.com/docs/templates/#update-a-template)
 and [initial index settings](https://www.algolia.com/doc/tools/crawler/apis/configuration/initial-index-settings/).
 Local selector checks cannot reproduce the hosted `helpers.docsearch` service;
 the URL Tester and completed crawl are required to validate generated records.
+Likewise, `node --check assets/search/docsearch.crawler.js` verifies JavaScript
+syntax but does not validate the dashboard editor's input handling.
 
 Do not delete the default crawler as part of an index migration. If it was
 already deleted, ask Algolia to confirm or restore its DocSearch program

@@ -101,6 +101,11 @@ not the private crawler credential. The maintained
 [crawler configuration and procedure](../../../assets/search/README.md) own
 extraction, current-domain URLs, document exclusions, and existing-index settings.
 Private crawler credentials stay in Algolia; do not put them in the repository.
+Keep the dashboard template's first line `new Crawler({`, without leading
+comments or Markdown fences. The editor has reported a JSON parsing error when
+the JavaScript template began with `//` comments. Node syntax checks alone do
+not establish dashboard compatibility; verify the pasted configuration in the
+Editor and URL Tester.
 The crawler's display name, its index prefix, and its action's index name are
 separate values. The prefix is concatenated with the action name. Confirm the
 actual index returned by Algolia before changing the site's client. During a

@@ -1,6 +1,3 @@
-// Algolia dashboard configuration. This is not loaded by the website.
-// Set the private API key in the dashboard only. See README.md for migration.
-// The site's public client stays on its existing index until this one is ready.
 new Crawler({
   appId: 'S074F3F45X',
   apiKey: 'SET_PRIVATE_CRAWLER_KEY_IN_DASHBOARD',

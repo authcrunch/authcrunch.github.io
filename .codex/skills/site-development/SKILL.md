@@ -89,6 +89,9 @@ The light palette follows the portal's blue `#245bca` and navy `#172b4d`; dark
 mode uses lighter text and accent values for contrast. Check both themes.
 The light Prism palette in site configuration also uses contrast-checked colors;
 include a syntax-highlighted reference page in visual/accessibility checks.
+The DocSearch overlay maps highlight and muted colors to the site's theme
+tokens. Check actual search results, highlights, and the results-footer link in
+both themes; navbar-button checks do not cover the lazily loaded modal styles.
 There is no explicit `@config` declaration in the current CSS. Do not assume
 editing `tailwind.config.ts` alone changes the compiled output; verify that the
 configuration or new utility is actually consumed by the installed toolchain.

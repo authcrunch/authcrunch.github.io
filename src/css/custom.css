@@ -87,6 +87,10 @@ a { text-underline-offset: 3px; }
 .navbar .DocSearch-Button { background: var(--ac-soft); border: 1px solid var(--ac-border); border-radius: 6px; color: var(--ac-muted); height: 40px; font-size: .875rem; margin-left: .5rem; }
 .navbar .DocSearch-Search-Icon { color: var(--ac-muted); width: 18px; height: 18px; }
 .navbar .DocSearch-Button-Key { background: var(--ac-soft); border: 1px solid var(--ac-border); box-shadow: none; color: var(--ac-muted); top: 0; }
+.DocSearch-Container {
+  --docsearch-highlight-color: var(--ifm-color-primary);
+  --docsearch-muted-color: var(--ac-muted);
+}
 .button--primary { --ifm-button-background-color: #245bca; --ifm-button-border-color: #245bca; --ifm-button-color: #fff; }
 .button--primary:hover { --ifm-button-background-color: #19469f; --ifm-button-border-color: #19469f; }
 .button--outline.button--secondary { color: var(--ifm-font-color-base); background: var(--ac-surface); border-color: var(--ac-border); }
