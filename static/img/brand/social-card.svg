@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <title>AuthCrunch — authentication and authorization for Caddy</title>
+  <rect width="1200" height="630" fill="#f6f8fc"/>
+  <path d="M0 5H820" stroke="#245bca" stroke-width="10"/>
+  <path d="M820 5H1200" stroke="#172b4d" stroke-width="10"/>
+  <rect x="72" y="64" width="92" height="92" rx="18" fill="#edf3fc"/>
+  <svg x="72" y="64" width="92" height="92" viewBox="0 0 512 512" fill="none">
+    <g transform="translate(256 256) scale(1.12) rotate(-45) translate(-256 -256)" stroke-width="36" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="#245bca" d="M 145.25 176.667 A 52 52 0 0 1 196 136 L 316 136 A 52 52 0 0 1 368 188 L 368 240 A 52 52 0 0 1 316 292 L 200 292"/>
+      <path stroke="#172b4d" transform="rotate(180 256 256)" d="M 145.25 176.667 A 52 52 0 0 1 196 136 L 316 136 A 52 52 0 0 1 368 188 L 368 240 A 52 52 0 0 1 316 292 L 200 292"/>
+    </g>
+  </svg>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="190" y="123" font-size="40" font-weight="700" letter-spacing="-1" fill="#172b4d">AuthCrunch</text>
+    <text x="76" y="290" font-size="66" font-weight="700" letter-spacing="-2" fill="#172b4d">Protect your apps.</text>
+    <text x="76" y="373" font-size="66" font-weight="700" letter-spacing="-2" fill="#245bca">Understand every step.</text>
+    <text x="78" y="445" font-size="28" fill="#52627a">Authentication and authorization for Caddy</text>
+    <text x="78" y="552" font-size="22" fill="#52627a">docs.authcrunch.com</text>
+  </g>
+  <path d="M78 492H1122" stroke="#dce3ed"/>
+</svg>

@@ -14,7 +14,8 @@ authentication or authorization behavior, selected Caddy/plugin version, and
 provider prerequisites. Keep the configuration, explanatory prose, environment
 variable names, and companion files consistent.
 
-`assets/conf/` groups local, LDAP, OAuth, and SAML configurations. The solution
+`assets/conf/` groups the beginner example and local, LDAP, OAuth, and SAML
+configurations. The solution
 directories combine Caddyfiles and environment files; `A00002` also supplies
 custom portal JavaScript. These are examples with machine-specific prerequisites,
 not a hermetic test suite. Read the entire affected example before extracting
@@ -86,6 +87,28 @@ login/redirect results. Missing TLS files, credentials, optional modules, or
 provider availability are environment limits to explain, not reasons to weaken
 the example. A site build, successful adaptation, and a successful provider
 login are different evidence levels.
+
+## Local learning example
+
+[assets/conf/getting-started/Caddyfile](../../../assets/conf/getting-started/Caddyfile)
+is the canonical configuration embedded by `docs/start/first-app.md`. It targets
+the published caddy-security v1.3.0 bundle and go-authcrunch v1.3.8. Keep its
+public walkthrough and executable behavior consistent when updating versions.
+
+Run it in a fresh disposable directory with `data/` and an exported
+`AUTHCRUNCH_DEMO_SECRET`. It binds HTTP to `127.0.0.1:9080`, uses the `localhost`
+hostname, and permits insecure cookies only for this local exercise. Both the
+user database and Caddy storage live under that directory. The disabled admin
+endpoint requires stopping the foreground process and starting it again; reload
+is not available. Provisioning a new local store may add a bootstrap admin in
+addition to its explicit demo users.
+
+The matched `/app` and `/app/*` route must authorize before responding. An
+anonymous request redirects, Alice's `app/member` role permits access, and Bob's
+portal-only role receives 403. After login, the tested flow reaches the portal's
+Applications page; the user selects Example app. Check browser logout with a
+fresh app request, without claiming that it revokes an independently copied
+token. Scope runtime results to the tested executable and environment.
 
 ## Acceptance scenarios
 

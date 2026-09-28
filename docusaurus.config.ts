@@ -6,8 +6,8 @@ import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
   title: "AuthCrunch",
-  tagline: "Application security functions for application developers",
-  favicon: "img/favicon.ico",
+  tagline: "Authentication and authorization for Caddy",
+  favicon: "img/brand/favicon.svg",
 
   url: "https://docs.authcrunch.com",
   baseUrl: "/",
@@ -73,118 +73,73 @@ const config: Config = {
     ],
   ],
 
-  plugins: ["./src/plugins/tailwind-config.ts"],
+  plugins: ["./src/plugins/tailwind-config.ts", "./src/plugins/configuration-source.ts"],
 
   themeConfig: {
-    image: "img/authcrunch.jpg",
+    image: "img/brand/social-card.png",
     colorMode: {
       respectPrefersColorScheme: true,
     },
     navbar: {
       title: "AuthCrunch",
       logo: {
-        alt: "AuthCrunch Logo",
-        src: "img/logo.svg",
+        alt: "",
+        src: "img/brand/logo.svg",
+        width: 40,
+        height: 40,
       },
       items: [
-        {
-          type: "doc",
-          docId: "authenticate/intro",
-          position: "left",
-          label: "Authenticate",
-        },
-        {
-          type: "doc",
-          docId: "authorize/intro",
-          position: "left",
-          label: "Authorize",
-        },
-        {
-          type: "dropdown",
-          label: "Other",
-          position: "left",
-          items: [
-            {
-              type: "doc",
-              docId: "credentials/intro",
-              label: "Credentials",
-            },
-            {
-              type: "doc",
-              docId: "messaging/intro",
-              label: "Messaging",
-            },
-            {
-              type: "doc",
-              docId: "apps/intro",
-              label: "Apps",
-            },
-            {
-              type: "doc",
-              docId: "examples/intro",
-              label: "Examples",
-            },
-            {
-              to: "/blog",
-              label: "Blog",
-            },
-          ],
-        },
-        {
-          href: "https://github.com/greenpau/caddy-security/issues/new/choose",
-          label: "💡 Ask Questions",
-          position: "right",
-          className: "button button--secondary",
-        },
+        {type: "doc", docId: "intro", position: "left", label: "Start here"},
+        {to: "/docs/guides", position: "left", label: "Guides", activeBaseRegex: "^/docs/guides(?:/|$)"},
+        {to: "/docs/reference", position: "left", label: "Reference", activeBaseRegex: "^/docs/reference(?:/|$)"},
+        {to: "/docs/troubleshoot", position: "left", label: "Troubleshoot", activeBaseRegex: "^/docs/troubleshoot(?:/|$)"},
+        {href: "https://github.com/greenpau/caddy-security", label: "GitHub", position: "right"},
       ],
     },
     footer: {
-      style: "dark",
+      style: "light",
       links: [
         {
-          title: "Documentation",
+          title: "Learn",
           items: [
-            {
-              label: "Authenticate",
-              to: "docs/authenticate/intro",
-            },
-            {
-              label: "Authorize",
-              to: "docs/authorize/intro",
-            },
+            {label: "Start here", to: "/docs/intro"},
+            {label: "Your first protected app", to: "/docs/start/first-app"},
+            {label: "Browse by topic", to: "/docs/guides"},
+          ],
+        },
+        {
+          title: "Build & operate",
+          items: [
+            {label: "Reference", to: "/docs/reference"},
+            {label: "Troubleshoot", to: "/docs/troubleshoot"},
+            {label: "Releases", href: "https://github.com/greenpau/caddy-security/releases"},
           ],
         },
         {
           title: "Community",
           items: [
-            {
-              label: "Caddy Community",
-              href: "https://caddy.community",
-            },
-            {
-              label: "Twitter",
-              href: "https://twitter.com/GreenbergTech",
-            },
-          ],
-        },
-        {
-          title: "More",
-          items: [
-            {
-              label: "Blog",
-              to: "/blog",
-            },
-            {
-              label: "GitHub",
-              href: "https://github.com/greenpau/caddy-security",
-            },
+            {label: "GitHub", href: "https://github.com/greenpau/caddy-security"},
+            {label: "Ask a question", href: "https://github.com/greenpau/caddy-security/issues/new/choose"},
+            {label: "Blog", to: "/blog"},
           ],
         },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} Paul Greenberg @greenpau`,
     },
     prism: {
-      theme: prismThemes.github,
+      // Keep syntax highlighting legible on the light documentation surface.
+      theme: {
+        plain: {color: "#172b4d", backgroundColor: "#f6f8fc"},
+        styles: [
+          {types: ["comment", "prolog", "doctype", "cdata"], style: {color: "#52627a", fontStyle: "italic"}},
+          {types: ["string", "attr-value"], style: {color: "#8b2454"}},
+          {types: ["punctuation", "operator"], style: {color: "#52627a"}},
+          {types: ["entity", "url", "symbol", "number", "boolean", "variable", "constant", "property", "regex", "inserted"], style: {color: "#126564"}},
+          {types: ["atrule", "keyword", "attr-name", "selector"], style: {color: "#245bca"}},
+          {types: ["function", "deleted", "tag"], style: {color: "#9d2235"}},
+          {types: ["function-variable"], style: {color: "#6639a8"}},
+        ],
+      },
       darkTheme: prismThemes.dracula,
     },
     algolia: {

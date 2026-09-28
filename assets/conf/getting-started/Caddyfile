@@ -1,0 +1,60 @@
+# Local learning example: run from a new directory, never on a public host.
+{
+	admin off
+	persist_config off
+	storage file_system ./data/caddy
+
+	security {
+		local identity store localdb {
+			realm local
+			path ./data/users.json
+			user alice {
+				name Alice Example
+				email alice@example.test
+				password "LocalDemoPassword123!"
+				roles authp/user app/member
+			}
+			user bob {
+				name Bob Example
+				email bob@example.test
+				password "LocalDemoPassword123!"
+				roles authp/user
+			}
+		}
+
+		authentication portal myportal {
+			enable identity store localdb
+			crypto key sign-verify {env.AUTHCRUNCH_DEMO_SECRET}
+			cookie insecure enabled
+			ui {
+				links {
+					"Example app" /app icon "las la-external-link-alt"
+				}
+			}
+		}
+
+		authorization policy apppolicy {
+			set auth url http://localhost:9080/auth/
+			crypto key verify {env.AUTHCRUNCH_DEMO_SECRET}
+			allow roles app/member
+		}
+	}
+}
+
+http://localhost:9080 {
+	bind 127.0.0.1
+
+	route {
+		redir /auth /auth/ 308
+
+		authenticate /auth/* with myportal
+
+		@app path /app /app/*
+		route @app {
+			authorize with apppolicy
+			respond "You reached the protected app." 200
+		}
+
+		respond "AuthCrunch demo is running. Open /app to begin." 200
+	}
+}

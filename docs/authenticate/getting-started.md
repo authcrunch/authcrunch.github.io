@@ -4,12 +4,15 @@ sidebar_position: 5
 
 # Getting Started
 
-Option 1: Read, ask questions, and improve the docs! :-)
+Follow the [learning path](../intro.md) to run a local authentication portal and
+protect an application with a token policy. It includes a complete Caddyfile,
+demo users, and checks for successful login, allowed access, denied access, and
+logout.
 
-Option 2: Dive right into configuration files in
-the [conf](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/)
+1. [Install and verify](../start/install.md) the bundled executable.
+2. [Protect your first app](../start/first-app.md) with a local identity store.
+3. [Verify access](../start/verify-access.md) for both permitted and denied users.
 
-Additionally, please see issues tagged [reference-config](https://github.com/greenpau/caddy-security/issues?q=label%3A%22reference-config%22).
-
-Further, [search](https://github.com/search?q=greenpau%2Fcaddy-security+lang%3ADockerfile+&type=code)
-Github for the Dockerfile files referencing `caddy-security`. Then, see how others use it.
+Already have a working portal? Use [Guides by topic](../guides.md) to connect an
+identity provider, add MFA, or change the login experience. For configuration
+details, see the [reference](../reference.md).

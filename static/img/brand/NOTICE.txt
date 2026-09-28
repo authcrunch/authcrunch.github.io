@@ -1,0 +1,11 @@
+AuthCrunch branding
+
+logo.svg, favicon.svg, banner.svg and background.svg are unmodified copies of
+github.com/greenpau/go-authcrunch/pkg/authn/ui/core/images at commit
+449d648f967c43dfe52292a313e0d1e90c63e8c9, included in go-authcrunch v1.3.8.
+
+Copyright Paul Greenberg and the go-authcrunch contributors.
+Licensed under Apache-2.0; see LICENSE in this directory.
+
+social-card.svg is a documentation-site composition using the same logo geometry
+and palette. social-card.png is its 1200 x 630 browser-rendered export.

@@ -1,47 +1,134 @@
-/**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
- */
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-
-
-:root {
-  --ifm-color-primary: #4285f4;
-  --ifm-color-primary-dark: #2572f2;
-  --ifm-color-primary-darker: #1669f1;
-  --ifm-color-primary-darkest: #0c55cd;
-  --ifm-color-primary-light: #5f98f6;
-  --ifm-color-primary-lighter: #6ea1f7;
-  --ifm-color-primary-lightest: #9abef9;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
-  --ifm-font-family-base: 'Inter', ui-sans-serif, system-ui;
-  --ifm-font-family-monospace: 'Fira Code', ui-monospace, monospace;
-}
-
-/* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
-  --ifm-color-primary: #9abef9;
-  --ifm-color-primary-dark: #74a6f7;
-  --ifm-color-primary-darker: #6199f6;
-  --ifm-color-primary-darkest: #2875f2;
-  --ifm-color-primary-light: #c0d6fb;
-  --ifm-color-primary-lighter: #d3e3fc;
-  --ifm-color-primary-lightest: #ffffff;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-  --ifm-font-family-base: 'Inter', ui-sans-serif, system-ui;
-  --ifm-font-family-monospace: 'Fira Code', ui-monospace, monospace;
-}
-
 @import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@custom-variant dark (&:is([data-theme="dark"] *));
 
-@layer base {
-  #tw-scope {
-    @import "tailwindcss/preflight.css" layer(base);
-  }
+/* Shared with the AuthCrunch portal's blue and navy SVG identity. */
+:root {
+  --ifm-color-primary: #245bca;
+  --ifm-color-primary-dark: #2052b6;
+  --ifm-color-primary-darker: #1e4daa;
+  --ifm-color-primary-darkest: #19408d;
+  --ifm-color-primary-light: #346bdc;
+  --ifm-color-primary-lighter: #497be0;
+  --ifm-color-primary-lightest: #7298e8;
+  --ifm-font-color-base: #172b4d;
+  --ifm-heading-color: #172b4d;
+  --ifm-background-color: #fff;
+  --ifm-background-surface-color: #fff;
+  --ifm-font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ifm-font-family-monospace: ui-monospace, SFMono-Regular, Consolas, monospace;
+  --ifm-font-size-base: 16px;
+  --ifm-line-height-base: 1.7;
+  --ifm-heading-line-height: 1.25;
+  --ifm-code-font-size: 88%;
+  --ifm-heading-font-weight: 650;
+  --ifm-container-width-xl: 1232px;
+  --ifm-navbar-height: 76px;
+  --ifm-navbar-shadow: none;
+  --ifm-global-radius: 6px;
+  --ifm-code-border-radius: 4px;
+  --ifm-menu-color: #52627a;
+  --ifm-menu-color-background-active: #edf3fc;
+  --ifm-toc-border-color: #dce3ed;
+  --ifm-color-emphasis-300: #dce3ed;
+  --ifm-breadcrumb-color-active: #245bca;
+  --ifm-breadcrumb-item-background-active: #edf3fc;
+  --ifm-table-border-color: #dce3ed;
+  --ifm-table-stripe-background: #f6f8fc;
+  --docusaurus-highlighted-code-line-bg: #245bca12;
+  --ac-muted: #52627a;
+  --ac-soft: #f6f8fc;
+  --ac-surface: #fff;
+  --ac-selected: #edf3fc;
+  --ac-border: #dce3ed;
 }
 
-@import "tailwindcss/utilities.css" layer(utilities);
+[data-theme='dark'] {
+  --ifm-color-primary: #94b7ff;
+  --ifm-color-primary-dark: #79a5ff;
+  --ifm-color-primary-darker: #6497ff;
+  --ifm-color-primary-darkest: #3678ff;
+  --ifm-color-primary-light: #afc9ff;
+  --ifm-color-primary-lighter: #c6d9ff;
+  --ifm-color-primary-lightest: #dfebff;
+  --ifm-font-color-base: #e5edf9;
+  --ifm-heading-color: #e5edf9;
+  --ifm-background-color: #101a2c;
+  --ifm-background-surface-color: #152138;
+  --ifm-navbar-background-color: #152138;
+  --ifm-menu-color: #a4b4ce;
+  --ifm-menu-color-background-active: #1c2e4b;
+  --ifm-toc-border-color: #2d3e59;
+  --ifm-color-emphasis-300: #2d3e59;
+  --ifm-breadcrumb-color-active: #94b7ff;
+  --ifm-breadcrumb-item-background-active: #1c2e4b;
+  --ifm-table-border-color: #2d3e59;
+  --ifm-table-stripe-background: #152138;
+  --docusaurus-highlighted-code-line-bg: #94b7ff15;
+  --ac-muted: #a4b4ce;
+  --ac-soft: #131f33;
+  --ac-surface: #152138;
+  --ac-selected: #1c2e4b;
+  --ac-border: #2d3e59;
+}
 
-@custom-variant dark (&:is([data-theme="dark"] *));
+:focus-visible { outline: 3px solid var(--ifm-color-primary); outline-offset: 3px; }
+h1, h2, h3 { letter-spacing: -.03em; }
+a { text-underline-offset: 3px; }
+.navbar { min-height: var(--ifm-navbar-height); padding: .625rem 2rem; border-bottom: 1px solid var(--ac-border); }
+.navbar::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: url('../../static/img/brand/banner.svg') center / 100% 100%; }
+.navbar__logo { height: 40px; width: 40px; border-radius: 9px; background: #edf3fc; }
+.navbar__logo img { width: 40px; height: 40px; }
+.navbar__brand { gap: .35rem; margin-right: 2rem; }
+.navbar__title { font-size: 1.1rem; letter-spacing: -.025em; }
+.navbar__link { font-size: .875rem; font-weight: 550; color: var(--ac-muted); }
+.navbar__link:hover, .navbar__link--active { color: var(--ifm-color-primary); }
+.navbar__items--right { gap: .3rem; }
+.navbar .DocSearch-Button { background: var(--ac-soft); border: 1px solid var(--ac-border); border-radius: 6px; color: var(--ac-muted); height: 40px; font-size: .875rem; margin-left: .5rem; }
+.navbar .DocSearch-Search-Icon { color: var(--ac-muted); width: 18px; height: 18px; }
+.navbar .DocSearch-Button-Key { background: var(--ac-soft); border: 1px solid var(--ac-border); box-shadow: none; color: var(--ac-muted); top: 0; }
+.button--primary { --ifm-button-background-color: #245bca; --ifm-button-border-color: #245bca; --ifm-button-color: #fff; }
+.button--primary:hover { --ifm-button-background-color: #19469f; --ifm-button-border-color: #19469f; }
+.button--outline.button--secondary { color: var(--ifm-font-color-base); background: var(--ac-surface); border-color: var(--ac-border); }
+.button--outline.button--secondary:hover { color: var(--ifm-color-primary); border-color: var(--ifm-color-primary); }
+
+.theme-doc-sidebar-container { border-right-color: var(--ac-border) !important; }
+.theme-doc-sidebar-menu { font-size: .86rem; }
+.menu__link { line-height: 1.5; padding: .55rem .8rem; border-radius: 5px; }
+.menu__list .menu__list { padding-left: .7rem; }
+.theme-doc-markdown { max-width: 48rem; }
+.markdown > h1 { font-size: clamp(2rem, 3.2vw, 2.75rem); margin-bottom: 1.4rem; }
+.markdown > h2 { font-size: 1.6rem; margin-top: 2.75rem; }
+.markdown > h3 { font-size: 1.2rem; }
+.markdown a:not(.hash-link):not(.button) { text-decoration: underline; }
+.markdown table { font-size: .875rem; }
+.markdown th { background: var(--ac-soft); }
+.markdown pre { font-size: .84rem; }
+.markdown code { overflow-wrap: anywhere; }
+.markdown pre code { overflow-wrap: normal; }
+.table-of-contents { font-size: .78rem; }
+.table-of-contents__link { color: var(--ac-muted); }
+.pagination-nav__link { border-color: var(--ac-border); box-shadow: none; }
+.pagination-nav__sublabel { color: var(--ac-muted); }
+.footer { --ifm-footer-background-color: var(--ac-soft); --ifm-footer-color: var(--ac-muted); --ifm-footer-title-color: var(--ifm-font-color-base); --ifm-footer-link-color: var(--ac-muted); border-top: 1px solid var(--ac-border); padding: 2.5rem 0 1.5rem; }
+.footer__title { font-size: .85rem; }
+.footer__link-item { font-size: .82rem; }
+.footer__copyright { color: var(--ac-muted); font-size: .75rem; margin-top: 1.5rem; }
+
+@media (max-width: 996px) {
+  .navbar { padding-inline: 1rem; }
+  .navbar__brand { margin-right: auto; }
+  .navbar-sidebar__brand { min-height: var(--ifm-navbar-height); }
+  .theme-doc-markdown { max-width: none; }
+}
+@media (max-width: 650px) {
+  .container { padding-inline: 1.25rem; }
+  .navbar__title { font-size: 1rem; }
+  .navbar__logo, .navbar__logo img { width: 34px; height: 34px; }
+  .navbar .DocSearch-Button { margin-left: 0; }
+  .markdown > h2 { font-size: 1.4rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .navbar-sidebar, .navbar-sidebar__backdrop { transition: none; }
+}

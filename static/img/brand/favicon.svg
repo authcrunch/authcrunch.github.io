@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" role="img" aria-labelledby="authcrunch-title authcrunch-desc">
+  <title id="authcrunch-title">AuthCrunch</title>
+  <desc id="authcrunch-desc">AuthCrunch linked-trust icon on a light rounded badge.</desc>
+  <rect width="512" height="512" rx="112" fill="#edf3fc" />
+  <g transform="translate(256 256) scale(1.38) rotate(-45) translate(-256 -256)" stroke-width="36" stroke-linecap="round" stroke-linejoin="round">
+    <path id="brand-primary" stroke="#245bca" d="M 145.25 176.667 A 52 52 0 0 1 196 136 L 316 136 A 52 52 0 0 1 368 188 L 368 240 A 52 52 0 0 1 316 292 L 200 292" />
+    <path id="brand-ink" stroke="#172b4d" transform="rotate(180 256 256)" d="M 145.25 176.667 A 52 52 0 0 1 196 136 L 316 136 A 52 52 0 0 1 368 188 L 368 240 A 52 52 0 0 1 316 292 L 200 292" />
+  </g>
+</svg>

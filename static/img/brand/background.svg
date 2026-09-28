@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" fill="none">
+  <title>AuthCrunch luminous blue background with flowing edge contours</title>
+  <defs>
+    <linearGradient id="page-sky" x1="0" y1="0" x2="1600" y2="1000" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#e3edfc" />
+      <stop offset=".5" stop-color="#f5f8fd" />
+      <stop offset="1" stop-color="#e8effa" />
+    </linearGradient>
+    <radialGradient id="left-light" cx="160" cy="230" r="650" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#245bca" stop-opacity=".22" />
+      <stop offset="1" stop-color="#245bca" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="right-light" cx="1510" cy="820" r="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#245bca" stop-opacity=".18" />
+      <stop offset="1" stop-color="#245bca" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="center-light" cx="800" cy="300" r="600" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff" stop-opacity=".8" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="contour-blue" x1="0" y1="0" x2="530" y2="700" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#245bca" stop-opacity=".24" />
+      <stop offset="1" stop-color="#245bca" stop-opacity=".035" />
+    </linearGradient>
+    <linearGradient id="contour-navy" x1="1600" y1="100" x2="1130" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#172b4d" stop-opacity=".12" />
+      <stop offset="1" stop-color="#245bca" stop-opacity=".08" />
+    </linearGradient>
+  </defs>
+  <path fill="url(#page-sky)" d="M0 0h1600v1000H0z" />
+  <path fill="url(#left-light)" d="M0 0h1600v1000H0z" />
+  <path fill="url(#right-light)" d="M0 0h1600v1000H0z" />
+  <path fill="url(#center-light)" d="M0 0h1600v1000H0z" />
+  <g stroke="url(#contour-blue)" stroke-width="1.5">
+    <path d="M-120 130 C180 10 420 200 290 410 S70 700 -100 810" />
+    <path d="M-120 168 C196 38 432 232 302 440 S78 726 -100 834" />
+    <path d="M-120 206 C212 66 444 264 314 470 S86 752 -100 858" />
+    <path d="M-120 244 C228 94 456 296 326 500 S94 778 -100 882" />
+    <path d="M-120 282 C244 122 468 328 338 530 S102 804 -100 906" />
+    <path d="M-120 320 C260 150 480 360 350 560 S110 830 -100 930" />
+    <path d="M-120 358 C276 178 492 392 362 590 S118 856 -100 954" />
+    <path d="M-120 396 C292 206 504 424 374 620 S126 882 -100 978" />
+    <path d="M-120 434 C308 234 516 456 386 650 S134 908 -100 1002" />
+  </g>
+  <g stroke="url(#contour-navy)" stroke-width="1.5">
+    <path d="M1310 -80 C1090 120 1190 310 1410 410 S1750 760 1430 1100" />
+    <path d="M1336 -80 C1110 136 1214 328 1430 432 S1766 780 1452 1100" />
+    <path d="M1362 -80 C1130 152 1238 346 1450 454 S1782 800 1474 1100" />
+    <path d="M1388 -80 C1150 168 1262 364 1470 476 S1798 820 1496 1100" />
+    <path d="M1414 -80 C1170 184 1286 382 1490 498 S1814 840 1518 1100" />
+    <path d="M1440 -80 C1190 200 1310 400 1510 520 S1830 860 1540 1100" />
+    <path d="M1466 -80 C1210 216 1334 418 1530 542 S1846 880 1562 1100" />
+    <path d="M1492 -80 C1230 232 1358 436 1550 564 S1862 900 1584 1100" />
+    <path d="M1518 -80 C1250 248 1382 454 1570 586 S1878 920 1606 1100" />
+  </g>
+</svg>

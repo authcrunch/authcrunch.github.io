@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 40" preserveAspectRatio="none" fill="none">
+  <title>AuthCrunch blue and navy horizon accent</title>
+  <defs>
+    <linearGradient id="banner-horizon" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#172b4d" />
+      <stop offset=".42" stop-color="#245bca" />
+      <stop offset=".64" stop-color="#245bca" />
+      <stop offset="1" stop-color="#172b4d" />
+    </linearGradient>
+    <linearGradient id="banner-light" x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d8e5fa" stop-opacity="0" />
+      <stop offset=".5" stop-color="#d8e5fa" stop-opacity=".6" />
+      <stop offset="1" stop-color="#d8e5fa" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <path fill="url(#banner-horizon)" d="M0 0h1200v40H0z" />
+  <path fill="url(#banner-light)" d="M0 0h1200v5H0z" />
+</svg>

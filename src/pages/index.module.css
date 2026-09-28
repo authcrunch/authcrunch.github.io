@@ -1,23 +1,68 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
-
-.heroBanner {
-  padding: 4rem 0;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
+.main { padding-bottom: 3.75rem; }
+.hero { display: grid; grid-template-columns: 1.12fr 1fr; gap: 4.25rem; align-items: center; padding-block: 4.5rem; }
+.hero h1 { font-size: clamp(2.5rem, 3.6vw, 3.3rem); font-weight: 700; line-height: 1.2; letter-spacing: -.045em; margin: 0 0 1.5rem; }
+.hero h1 span { color: var(--ifm-color-primary); }
+.eyebrow { font-size: .67rem; font-weight: 700; line-height: 1.5; letter-spacing: .13em; text-transform: uppercase; color: var(--ac-muted); margin: 0 0 1rem; }
+.hero header > .eyebrow { color: var(--ifm-color-primary); }
+.lead { font-size: 1.1rem; line-height: 1.8; color: var(--ac-muted); max-width: 38rem; margin-bottom: 1.75rem; }
+.actions { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: .85rem; font-size: .85rem; line-height: 1.5; min-height: 46px; padding: .75rem 1.1rem; white-space: normal; }
+.button svg, .textLink svg { width: 16px; height: 16px; flex-shrink: 0; }
+.detail { font-size: .8rem; line-height: 1.8; color: var(--ac-muted); margin: 1.5rem 0 0; }
+.learning { background: var(--ac-soft); border-block: 1px solid var(--ac-border); padding: 2.1rem 0 2.25rem; }
+.sectionHeading { display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.6rem; }
+.sectionHeading .eyebrow { margin-bottom: .5rem; }
+.sectionHeading h2 { font-size: 1.65rem; letter-spacing: -.03em; margin: 0; }
+.textLink { display: inline-flex; align-items: center; gap: .75rem; font-size: .85rem; font-weight: 600; flex-shrink: 0; }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); list-style: none; margin: 0; padding: 0; }
+.steps li { border-left: 1px solid var(--ac-border); padding-inline: 1.4rem; }
+.steps li:first-child { border-left: 0; padding-left: 0; }
+.steps a { display: grid; gap: .25rem; text-decoration: none; color: var(--ifm-font-color-base); }
+.stepNumber { color: var(--ifm-color-primary); font: .72rem var(--ifm-font-family-monospace); margin-bottom: .45rem; }
+.steps strong { font-size: .9rem; font-weight: 600; }
+.steps a > span:last-child { font-size: .8rem; color: var(--ac-muted); }
+.steps a:hover strong { text-decoration: underline; color: var(--ifm-color-primary); }
+.topics { padding-block: 3.6rem 3rem; }
+.topicGrid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--ac-border); }
+.topic { padding: 1.65rem 1.65rem 1.65rem 0; border-bottom: 1px solid var(--ac-border); color: var(--ifm-font-color-base); text-decoration: none; }
+.topic:not(:nth-child(3n+1)) { padding-left: 1.65rem; border-left: 1px solid var(--ac-border); }
+.topic:hover { background: var(--ac-soft); color: var(--ifm-font-color-base); text-decoration: none; }
+.topic:hover h3 { color: var(--ifm-color-primary); }
+.topicLabel { display: block; color: var(--ac-muted); font-size: .63rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .75rem; }
+.topic h3 { display: flex; align-items: start; justify-content: space-between; gap: .65rem; font-size: 1.05rem; font-weight: 650; letter-spacing: -.025em; margin-bottom: .6rem; }
+.topic h3 svg { width: 17px; height: 17px; color: var(--ifm-color-primary); flex-shrink: 0; }
+.topic p { font-size: .85rem; color: var(--ac-muted); margin: 0; }
+.help { display: flex; align-items: center; justify-content: space-between; gap: 1.75rem; background: var(--ac-soft); border: 1px solid var(--ac-border); border-radius: 8px; padding: 1.75rem 2rem; }
+.help h2 { font-size: 1.3rem; margin-bottom: .5rem; }
+.help .eyebrow { font-size: .63rem; margin-bottom: .5rem; }
+.help p:last-child { font-size: .85rem; color: var(--ac-muted); margin: 0; }
+.help .button { flex-shrink: 0; }
+@media (max-width: 1100px) { .hero { gap: 2.25rem; } }
+@media (max-width: 850px) {
+  .hero { gap: 1.75rem; padding-block: 3rem; }
+  .hero h1 { font-size: 2.5rem; }
+  .lead { font-size: 1rem; }
+  .topicGrid { grid-template-columns: 1fr 1fr; }
+  .topic:not(:nth-child(3n+1)) { border-left: 0; padding-left: 0; }
+  .topic:nth-child(even) { border-left: 1px solid var(--ac-border); padding-left: 1.4rem; }
+  .sectionHeading h2 { font-size: 1.4rem; }
+  .steps li { padding-inline: .85rem; }
 }
-
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
-}
-
-.buttons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+@media (max-width: 650px) {
+  .hero { grid-template-columns: 1fr; padding-block: 2.5rem; gap: 2rem; }
+  .hero header > .eyebrow { font-size: .6rem; }
+  .hero h1 { font-size: 2.5rem; }
+  .hero .button { font-size: .8rem; padding-inline: .8rem; }
+  .detail { margin-top: 1.1rem; }
+  .sectionHeading { display: block; }
+  .sectionHeading > a { margin-top: .9rem; }
+  .steps { grid-template-columns: 1fr 1fr; row-gap: 1.5rem; }
+  .steps li:nth-child(odd) { padding-left: 0; border-left: 0; }
+  .steps strong { font-size: .85rem; }
+  .steps a > span:last-child { font-size: .78rem; }
+  .topics { padding-block: 2.4rem 2rem; }
+  .topicGrid { grid-template-columns: 1fr; }
+  .topic, .topic:nth-child(even), .topic:not(:nth-child(3n+1)) { border-left: 0; padding: 1.4rem 0; }
+  .help { display: block; padding: 1.5rem; }
+  .help .button { margin-top: 1.25rem; }
 }
