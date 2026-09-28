@@ -1,9 +1,14 @@
 ---
-title: MFA
 sidebar_position: 11
+title: "Multi-factor authentication"
+description: "Require multi-factor authentication for local users and enroll an authenticator application."
+discovery:
+  topic: login-and-mfa
+  kind: guide
+  aliases: ["MFA", "2FA", "TOTP", "authenticator"]
 ---
 
-# Multi-Factor Authentication
+# Multi-factor authentication
 
 ## Enabling MFA
 

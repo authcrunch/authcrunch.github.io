@@ -1,5 +1,10 @@
 ---
 sidebar_position: 14
+description: "Authenticate protected requests with a username, password, and realm."
+discovery:
+  topic: authorization
+  kind: guide
+  aliases: ["HTTP Basic", "curl"]
 ---
 
 # Basic Authentication

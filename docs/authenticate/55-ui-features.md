@@ -1,3 +1,11 @@
+---
+description: "Customize portal templates, styles, scripts, links, and login interface options."
+discovery:
+  topic: login-and-mfa
+  kind: guide
+  aliases: ["CSS", "JavaScript", "branding", "theme", "UI"]
+---
+
 # Customizing the User Interface (UI)
 
 The user interface (UI) can be setup the use custom templates or

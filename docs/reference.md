@@ -1,6 +1,11 @@
 ---
 title: Reference
-description: Entry points for AuthCrunch Caddyfile configuration, authorization rules, token handling, APIs, and version checks.
+description: "Entry points for AuthCrunch Caddyfile configuration, authorization rules, token handling, APIs, and version checks."
+discovery:
+  topic: operations
+  kind: reference
+  aliases: ["configuration", "directives"]
+  listed: false
 ---
 
 # Reference
@@ -16,7 +21,7 @@ routes in a site block.
 
 | Area | Reference |
 | --- | --- |
-| Portal configuration | [Authentication portal](authenticate/auth-portal.md) |
+| Portal configuration | [First portal configuration](start/first-app.md#1-create-the-configuration) |
 | Local identities | [Identity store](authenticate/local/20-identity-store.md) and [static users](authenticate/local/50-static-users.md) |
 | OAuth / OIDC identity providers | [Provider settings](authenticate/oauth/81-backend-oauth2-0000-generic.md) and [endpoint configuration](authenticate/oauth/82-backend-oauth2-endpoint.md) |
 | User mapping | [Transforms](authenticate/42-user-transforms.md) |
@@ -34,8 +39,7 @@ Handler order determines whether an access check runs before the application.
 - [Cookie settings](authenticate/auth-cookie.md)
 - [Token discovery](authorize/token-discovery.md)
 - [Token verification](authorize/token-verification.md)
-- [Token encryption](authorize/encryption.md)
-- [Portal refresh tokens](authenticate/30-refresh-token.md)
+- [Generate an ECDSA key](authorize/encryption.md)
 - [Logout](authenticate/15-logout.md)
 
 ## APIs
@@ -44,7 +48,6 @@ Begin with the [API overview](authenticate/api/10-api.md), then select the
 interface that matches your caller:
 
 - [Portal API](authenticate/api/20-portal-api.md)
-- [Profile API](authenticate/api/30-profile-api.md)
 - [Server API](authenticate/api/40-server-api.md)
 - [System API](authenticate/api/50-system-api.md)
 

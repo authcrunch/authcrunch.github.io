@@ -1,5 +1,10 @@
 ---
 sidebar_position: 10
+description: "Check a request path against access lists carried in token claims."
+discovery:
+  topic: authorization
+  kind: reference
+  aliases: ["ACL", "URI", "path permissions"]
 ---
 
 # Path-Based Access Lists

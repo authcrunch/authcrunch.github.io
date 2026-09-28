@@ -1,3 +1,11 @@
+---
+description: "Use JSON requests to log in and inspect the current portal identity and session."
+discovery:
+  topic: operations
+  kind: reference
+  aliases: ["login endpoint", "whoami", "claims"]
+---
+
 # Portal API 
 
 The Portal API provides programmatic access to authentication tokens and allows you to inspect the current

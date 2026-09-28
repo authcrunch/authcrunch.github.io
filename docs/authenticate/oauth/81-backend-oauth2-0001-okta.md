@@ -1,3 +1,12 @@
+---
+title: "Okta"
+description: "Register an Okta application and configure the portal callback and OAuth credentials."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["OIDC"]
+---
+
 # Okta
 
 Create an "Application," by browsing to "Applications" and clicking

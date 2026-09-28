@@ -1,5 +1,10 @@
 ---
 sidebar_position: 13
+description: "Define the authentication challenges users must complete, including passwords, application codes, and hardware tokens."
+discovery:
+  topic: login-and-mfa
+  kind: guide
+  aliases: ["MFA", "2FA", "passkey", "YubiKey", "passwordless"]
 ---
 
 # Authentication Challenges

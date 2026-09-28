@@ -1,3 +1,11 @@
+---
+description: "Connect an LDAP directory using the Microsoft Active Directory and POSIX configuration examples."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["AD", "Active Directory", "LDAPS"]
+---
+
 # LDAP Configuration
 
 It is recommended reading the documentation for Local identity store, because

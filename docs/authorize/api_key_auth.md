@@ -1,5 +1,10 @@
 ---
 sidebar_position: 15
+description: "Authenticate protected requests using an API key issued by a local portal."
+discovery:
+  topic: authorization
+  kind: guide
+  aliases: ["X-Api-Key"]
 ---
 
 # API Key Authentication

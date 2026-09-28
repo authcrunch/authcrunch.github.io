@@ -1,3 +1,12 @@
+---
+title: "Discord"
+description: "Register a Discord application and filter access by guild membership and roles."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["Discord server", "OAuth2"]
+---
+
 # Discord
 
 Discord OAuth2 integration allows you to use discord as an identity provider.

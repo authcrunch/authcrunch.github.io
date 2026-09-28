@@ -1,8 +1,14 @@
 ---
 sidebar_position: 8
+title: "Authorization redirects"
+description: "Configure how an authorization policy redirects unauthenticated requests to login."
+discovery:
+  topic: sessions-and-cookies
+  kind: reference
+  aliases: ["redirect_url", "302", "login loop"]
 ---
 
-# Auto-Redirect URL
+# Authorization redirects
 
 ## HTTP Redirect
 

@@ -1,4 +1,13 @@
-# Microsoft
+---
+title: "Microsoft OAuth"
+description: "Register a Microsoft application and configure OAuth login for Microsoft accounts."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["Azure AD", "AzureAD", "Microsoft Entra ID", "Live", "Xbox"]
+---
+
+# Microsoft OAuth
 
 To register an OAuth2 application for login with Microsoft accounts
 (either personal, i.e. Live or Xbox accounts, or enterprise,

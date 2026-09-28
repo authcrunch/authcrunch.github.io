@@ -1,3 +1,11 @@
+---
+description: "Define local users, password hashes, and roles inside a Caddyfile identity store."
+discovery:
+  topic: identity-providers
+  kind: reference
+  aliases: ["bootstrap", "bcrypt"]
+---
+
 # Static Users
 
 The following configuration allows to create local users as parts

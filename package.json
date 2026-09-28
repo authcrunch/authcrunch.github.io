@@ -14,6 +14,7 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
+    "check:search": "node assets/search/check-index.mjs",
     "upgrade": "ncu --upgrade; rm -rf node_modules/ package-lock.json build coverage; npm i"
   },
   "dependencies": {

@@ -1,6 +1,10 @@
 ---
 title: Troubleshoot
-description: Diagnose missing security modules, local startup failures, login redirects, and denied access in AuthCrunch.
+description: "Diagnose missing security modules, local startup failures, login redirects, and denied access in AuthCrunch."
+discovery:
+  topic: operations
+  kind: troubleshooting
+  aliases: ["403 Forbidden", "access denied", "error", "login loop", "restart"]
 ---
 
 # Troubleshoot

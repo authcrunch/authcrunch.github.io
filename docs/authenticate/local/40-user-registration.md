@@ -1,3 +1,11 @@
+---
+description: "Configure account registration, email verification, domain restrictions, and administrative approval."
+discovery:
+  topic: login-and-mfa
+  kind: guide
+  aliases: ["sign up", "enrollment", "SMTP"]
+---
+
 # User Registration
 
 ## Configuration

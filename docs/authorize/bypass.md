@@ -1,5 +1,10 @@
 ---
 sidebar_position: 13
+description: "Exclude selected request paths from authorization with URI matching rules."
+discovery:
+  topic: authorization
+  kind: reference
+  aliases: ["bypass uri", "public route"]
 ---
 
 # Bypass Authorization for Specific URIs

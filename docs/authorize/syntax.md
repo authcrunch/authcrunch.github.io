@@ -1,8 +1,14 @@
 ---
 sidebar_position: 4
+title: "Authorization policy syntax"
+description: "Look up authorization policy directives for keys, tokens, access rules, and request handling."
+discovery:
+  topic: authorization
+  kind: reference
+  aliases: ["Caddyfile", "configuration", "syntax"]
 ---
 
-# Plugin Syntax
+# Authorization policy syntax
 
 ```
 {

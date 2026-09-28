@@ -1,5 +1,10 @@
 ---
 sidebar_position: 7
+description: "Configure token signature verification with shared secrets, asymmetric keys, and key sources."
+discovery:
+  topic: sessions-and-cookies
+  kind: reference
+  aliases: ["JWT", "HMAC", "RSA", "ECDSA"]
 ---
 
 # Token Verification

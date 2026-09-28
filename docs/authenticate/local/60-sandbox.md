@@ -1,4 +1,13 @@
-# Sandbox
+---
+title: "Local login sandbox"
+description: "Follow a local login through its sandbox session and password or MFA checkpoints."
+discovery:
+  topic: login-and-mfa
+  kind: concept
+  aliases: ["login session", "checkpoint"]
+---
+
+# Local login sandbox
 
 After a user submits their username, the portal creates a sandbox session
 where the user must complete a sequence of checkpoints before a JWT is

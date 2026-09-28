@@ -1,3 +1,11 @@
+---
+description: "Inspect and manage portal runtime state and user data through administrative API endpoints."
+discovery:
+  topic: operations
+  kind: reference
+  aliases: ["admin API", "metadata"]
+---
+
 # Server API
 
 The Service API allows for programmatic control over the portal’s runtime state and user

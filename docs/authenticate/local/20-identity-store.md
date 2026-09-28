@@ -1,4 +1,13 @@
-# Identity Store
+---
+title: "Local identity store format"
+description: "Inspect the local users.json structure, including password policy, user records, and revision metadata."
+discovery:
+  topic: identity-providers
+  kind: reference
+  aliases: ["local database", "JSON schema"]
+---
+
+# Local identity store format
 
 The `users.json` file has the following structure:
 

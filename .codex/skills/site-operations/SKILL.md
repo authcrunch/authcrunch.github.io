@@ -43,6 +43,7 @@ into the public output.
 | --- | --- | --- |
 | Install reproducibly | `npm ci` | Uses the committed dependency graph; replaces `node_modules/` |
 | Check typed source | `npm run typecheck` | Runs `tsc`; separate from the site build |
+| Check hosted search | `npm run check:search` | Read-only Algolia queries; fails on stale destinations, missing metadata/facets, or failed relevance checks |
 | Build static output | `npm run build` | Compiles MDX and site code and checks configured links |
 | Preview source | `npm run dev` | Starts the development server on port 4200, bound to `0.0.0.0` |
 | Preview generated output | `npm run serve -- --port 4200` | Serves an existing `build/` |
@@ -80,11 +81,43 @@ Read the first substantive error and map it to the responsible input:
 - For apparent cache or dependency drift, compare the installed versions with
   the lockfile, then use targeted cache cleanup or `npm ci` as appropriate.
 
+Development and production builds share `.docusaurus` generated state. Avoid
+building while a dev server is running, or restart that server afterward before
+testing it. Mixed state can load production-only analytics lifecycle code into
+the dev client without its initialization, causing `window.ga` errors on route
+or query changes even when the first page renders correctly.
+
 There is no npm `test` or lint script and the current deployment workflow does
 not run typecheck, Caddy validation, or browser tests. Report checks actually
 performed. Skill-only changes use skill validators and route/link checks;
 public content needs a site build; typed source or dependencies need typecheck
 and build; visible changes also need rendered inspection when available.
+
+## Hosted search
+
+The site and `check:search` script share the public search client in
+[client.json](../../../assets/search/client.json). It contains a search-only key,
+not the private crawler credential. The maintained
+[crawler configuration and procedure](../../../assets/search/README.md) own
+extraction, current-domain URLs, document exclusions, and existing-index settings.
+Private crawler credentials stay in Algolia; do not put them in the repository.
+
+A successful build does not refresh Algolia. Deploy the metadata-bearing site,
+test its generated records in the crawler's URL Tester, then run a full crawl
+and check its results. `initialIndexSettings` does not update an existing index;
+maintainers must apply the corresponding searchable attributes and facets there.
+Preserve Docusaurus language/version/tag facets when changing search settings.
+Missing discovery tags indicate a site/crawler deployment mismatch; do not
+remove that guard to crawl old output. Publication still follows the release
+workflow and requires authorization.
+
+`npm run check:search -- --output tmp/search-check.json` saves observed query
+results and an unfiltered sample of up to 1,000 records. It verifies the first
+five distinct destinations for representative queries and detects obsolete
+URLs and missing title/topic/type metadata in returned records. A larger index
+also needs review in the dashboard. The script cannot prove the hosted extractor
+works, all URLs are clean, or an authentication configuration is valid. Keep
+missing-content queries distinct from indexing failures.
 
 ## GitHub Pages pipeline
 

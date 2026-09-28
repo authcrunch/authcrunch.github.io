@@ -1,8 +1,14 @@
 ---
 sidebar_position: 11
+title: "Identity headers"
+description: "Pass token claims to downstream applications in HTTP headers and strip authentication data."
+discovery:
+  topic: authorization
+  kind: reference
+  aliases: ["X-Token", "inject header", "reverse proxy"]
 ---
 
-# HTTP Headers
+# Identity headers
 
 ## Pass JWT Token Claims in HTTP Request Headers
 

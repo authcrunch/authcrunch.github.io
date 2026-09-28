@@ -1,3 +1,11 @@
+---
+description: "Review communication between portals and gatekeepers, including state synchronization and revocation lists."
+discovery:
+  topic: operations
+  kind: reference
+  aliases: ["PASETO", "remote authentication", "database sync"]
+---
+
 # System API
 
 ## Overview

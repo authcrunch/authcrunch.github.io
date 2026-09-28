@@ -1,8 +1,14 @@
 ---
 sidebar_position: 1
+title: "AWS console SSO with SAML"
+description: "Configure AuthCrunch as a SAML identity provider for access to the AWS console."
+discovery:
+  topic: applications-and-sso
+  kind: guide
+  aliases: ["AWS federation", "SSO", "service provider"]
 ---
 
-# Single Sign-On with SAML
+# AWS console SSO with SAML
 
 ## AWS SSO
 

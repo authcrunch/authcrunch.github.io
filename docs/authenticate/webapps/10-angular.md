@@ -1,4 +1,13 @@
-# Angular Framework Integration
+---
+title: "Angular integration libraries"
+description: "Find Angular libraries for portal redirects and an avatar menu."
+discovery:
+  topic: applications-and-sso
+  kind: reference
+  aliases: ["ngx-authp-service", "ngx-avatar-persona"]
+---
+
+# Angular integration libraries
 
 The following libraries provide an Angular app with the redirect to
 Auth Portal and the ability to display avatar with a menu.

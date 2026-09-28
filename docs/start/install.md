@@ -1,7 +1,11 @@
 ---
 sidebar_position: 1
 title: Install and verify
-description: Get the published AuthCrunch bundle, verify its security modules, and prepare a local learning environment.
+description: "Get the published AuthCrunch bundle, verify its security modules, and prepare a local learning environment."
+discovery:
+  topic: operations
+  kind: tutorial
+  aliases: ["installation", "download", "Caddy module", "version"]
 ---
 
 # Install and verify

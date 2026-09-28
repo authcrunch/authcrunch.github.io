@@ -1,5 +1,10 @@
 ---
 sidebar_position: 12
+description: "Select which token field supplies the user identity returned to Caddy."
+discovery:
+  topic: authorization
+  kind: reference
+  aliases: ["subject", "email", "user ID"]
 ---
 
 # Caddy User Identity

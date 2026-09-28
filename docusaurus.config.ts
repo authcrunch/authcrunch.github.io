@@ -1,6 +1,7 @@
 import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
+import searchClient from "./assets/search/client.json";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -73,7 +74,7 @@ const config: Config = {
     ],
   ],
 
-  plugins: ["./src/plugins/tailwind-config.ts", "./src/plugins/configuration-source.ts"],
+  plugins: ["./src/plugins/tailwind-config.ts", "./src/plugins/configuration-source.ts", "./src/plugins/discovery.ts"],
 
   themeConfig: {
     image: "img/brand/social-card.png",
@@ -143,9 +144,8 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
     algolia: {
-      appId: "S074F3F45X",
-      apiKey: "f65f8a1b016375fdf6f6cc20fba8ff49",
-      indexName: "authp",
+      ...searchClient,
+      contextualSearch: true,
     },
   } satisfies Preset.ThemeConfig,
 };

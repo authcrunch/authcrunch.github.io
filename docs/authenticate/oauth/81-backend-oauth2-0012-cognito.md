@@ -1,3 +1,12 @@
+---
+title: "AWS Cognito"
+description: "Set up a Cognito user pool and client for login through the portal."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["Amazon Cognito", "OpenID Connect", "OIDC"]
+---
+
 # AWS Cognito
 
 Find AWS Cognito integration example in the following [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/oauth/cognito/Caddyfile)

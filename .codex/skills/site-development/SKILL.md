@@ -20,6 +20,9 @@ or stylesheet, then change the narrowest owner.
 | Global Infima colors, typography, Tailwind imports | [custom.css](../../../src/css/custom.css) |
 | PostCSS integration | [tailwind plugin](../../../src/plugins/tailwind-config.ts) |
 | Caddyfile text imports for MDX | [configuration-source plugin](../../../src/plugins/configuration-source.ts) |
+| Topic vocabulary and build-time document catalog | [catalog](../../../src/discovery/catalog.ts) and [discovery plugin](../../../src/plugins/discovery.ts) |
+| Filterable, server-rendered guide directory | [GuideDirectory](../../../src/components/GuideDirectory/index.tsx) |
+| Static document search metadata | [DocItem metadata wrapper](../../../src/theme/DocItem/Metadata/index.tsx) |
 | Additional Tailwind configuration | [tailwind.config.ts](../../../tailwind.config.ts) |
 | Site metadata, navbar/footer, search, themes, plugins | [docusaurus.config.ts](../../../docusaurus.config.ts) |
 | Published images, fonts, domain and verification files | [static](../../../static/) |
@@ -55,6 +58,23 @@ The configuration-source plugin treats `Caddyfile?raw` imports as source text.
 It lets MDX display a canonical example from `assets/conf/` without maintaining
 a second copy. Keep the loader rule limited to Caddyfiles with that query;
 verify both production rendering and development compilation when changing it.
+
+The discovery plugin reads the current docs version through Docusaurus's
+`allContentLoaded` lifecycle and publishes a catalog with resolved permalinks.
+Do not derive it by globbing `.docusaurus` metadata: stale generated files can
+survive removed or renamed documents. Document frontmatter owns classification,
+summaries, aliases, and exclusions; the plugin fails on missing or invalid data.
+Preserve the original DocItem metadata when extending the theme wrapper.
+
+GuideDirectory renders all listed documents into static HTML. Client filters
+match every typed word against titles, summaries, and aliases; topic and type
+are independent filters. The `q`, `topic`, and `kind` query parameters preserve
+the selection on reload and browser Back/Forward. Typing replaces the current
+history entry; explicit filter choices push entries. Unknown topic/type values
+fall back to all. Preserve the six topic heading IDs for incoming hash links.
+Controls use native inputs and pressed-state buttons, with a live result count
+and a clearable empty state. Without JavaScript, all document links remain usable.
+Directory filtering does not replace the navbar's hosted full-text search.
 
 ## Styling contract
 
@@ -104,3 +124,7 @@ unavailable, state that limit instead of claiming visual verification.
   index is current: verify query destinations separately when changing search.
 - Client interaction does not cause a server-rendering failure or hydration
   mismatch, and keyboard users can reach actionable controls.
+- A directory change preserves alias matching, combined filters, empty-state
+  recovery, shared URLs, Back/Forward, topic anchors, and static links without
+  JavaScript. Check both themes and narrow layouts; assert the actual theme
+  attribute when automating accessibility scans.

@@ -1,3 +1,11 @@
+---
+description: "Create a JumpCloud SAML application and connect it to the authentication portal."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["SAML 2.0"]
+---
+
 # JumpCloud SAML Integration
 
 This [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/saml/jumpcloud/Caddyfile)

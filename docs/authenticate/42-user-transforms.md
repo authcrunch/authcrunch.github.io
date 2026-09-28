@@ -1,5 +1,10 @@
 ---
 sidebar_position: 42
+description: "Map identity claims to roles, login requirements, portal links, and access decisions."
+discovery:
+  topic: authorization
+  kind: reference
+  aliases: ["transform user", "groups", "custom claims", "role mapping"]
 ---
 
 # User Transforms

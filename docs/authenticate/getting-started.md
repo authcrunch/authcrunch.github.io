@@ -1,5 +1,10 @@
 ---
 sidebar_position: 5
+description: "Continue to the beginner learning path to run a local authentication portal and verify access."
+discovery:
+  topic: login-and-mfa
+  kind: tutorial
+  listed: false
 ---
 
 # Getting Started

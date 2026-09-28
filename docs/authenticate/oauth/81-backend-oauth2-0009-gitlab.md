@@ -1,4 +1,13 @@
-# Gitlab
+---
+title: "GitLab"
+description: "Connect GitLab.com or a self-hosted GitLab instance using an OAuth application."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["OAuth2"]
+---
+
+# GitLab
 
 Whether you are using gitlab.com or hosting your own Gitlab instance
 (e.g. at `gitlab.contoso.com`), create a new app by browsing to

@@ -1,4 +1,13 @@
-# Local Configuration
+---
+title: "Local identity store configuration"
+description: "Configure a local identity store and connect its realm to the authentication portal."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["local database", "users.json"]
+---
+
+# Local identity store configuration
 
 The following directive instructs the plugin to use the local
 `$HOME/.local/caddy/users.json` file for authentication.

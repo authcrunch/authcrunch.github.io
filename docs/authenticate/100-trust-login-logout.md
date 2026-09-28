@@ -1,3 +1,11 @@
+---
+description: "Limit the destinations accepted by login and logout redirects using domain and path trust rules."
+discovery:
+  topic: sessions-and-cookies
+  kind: guide
+  aliases: ["redirect_url", "redirect_uri", "open redirect"]
+---
+
 # Trusted Login and Logout Redirects
 
 When the `authorize` plugin denies an unauthenticated request, it redirects

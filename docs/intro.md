@@ -1,6 +1,10 @@
 ---
 sidebar_position: 1
-description: Learn how AuthCrunch connects login to application access, then build and verify your first local setup.
+description: "Learn how AuthCrunch connects login to application access, then build and verify your first local setup."
+discovery:
+  topic: operations
+  kind: concept
+  aliases: ["getting started", "beginner", "login model", "OIDC provider"]
 ---
 
 # Start here

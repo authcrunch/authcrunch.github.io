@@ -1,5 +1,10 @@
 ---
 sidebar_position: 1
+description: "Configure email and file messaging providers for verification codes and account workflows."
+discovery:
+  topic: operations
+  kind: reference
+  aliases: ["SMTP", "SMTPS", "notifications"]
 ---
 
 # Messaging Providers

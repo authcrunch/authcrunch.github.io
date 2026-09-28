@@ -1,4 +1,13 @@
-# Developer Notes
+---
+title: "Authentication challenge internals"
+description: "Understand how the portal identifies a user and assembles authentication checkpoints."
+discovery:
+  topic: login-and-mfa
+  kind: concept
+  aliases: ["sandbox", "consent"]
+---
+
+# Authentication challenge internals
 
 ## Authentication Challenges
 

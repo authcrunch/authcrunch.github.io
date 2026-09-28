@@ -1,4 +1,13 @@
-# Advanced Features
+---
+title: "OAuth provider endpoint settings"
+description: "Configure OAuth provider startup delays, key retrieval retries, logout, and PKCE."
+discovery:
+  topic: identity-providers
+  kind: reference
+  aliases: ["endpoint", "retry", "delay_start"]
+---
+
+# OAuth provider endpoint settings
 
 ## OAuth 2.0 Endpoint Delayed Start
 

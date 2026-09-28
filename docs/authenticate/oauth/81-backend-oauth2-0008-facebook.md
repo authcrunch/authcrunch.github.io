@@ -1,3 +1,12 @@
+---
+title: "Facebook"
+description: "Register a Facebook application and connect it to the portal using OAuth credentials."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["Meta", "OAuth2"]
+---
+
 # Facebook
 
 Browse to `https://developers.facebook.com/apps/` and click "Create App".

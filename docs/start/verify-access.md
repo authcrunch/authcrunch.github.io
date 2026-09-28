@@ -1,7 +1,11 @@
 ---
 sidebar_position: 3
 title: Verify access
-description: Test unauthenticated redirects, allowed and denied users, and logout in the local AuthCrunch walkthrough.
+description: "Test unauthenticated redirects, allowed and denied users, and logout in the local AuthCrunch walkthrough."
+discovery:
+  topic: authorization
+  kind: tutorial
+  aliases: ["403 Forbidden", "302", "access denied", "test login"]
 ---
 
 # Verify access

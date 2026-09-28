@@ -1,3 +1,11 @@
+---
+description: "Find the portal, profile, server, and system API families and their intended callers."
+discovery:
+  topic: operations
+  kind: reference
+  aliases: ["REST", "JSON"]
+---
+
 # API Overview
 
 The following APIs provide a structured way to interact with the security portal programmatically. These

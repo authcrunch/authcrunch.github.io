@@ -1,4 +1,13 @@
-# Overview
+---
+title: "OAuth and OIDC providers"
+description: "Understand the external OAuth flow, PKCE, role claims, and provider button options."
+discovery:
+  topic: identity-providers
+  kind: concept
+  aliases: ["OpenID Connect", "OIDC", "OAuth2"]
+---
+
+# OAuth and OIDC providers
 
 ## OAuth 2.0 Flow
 

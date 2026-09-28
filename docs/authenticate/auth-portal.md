@@ -1,5 +1,7 @@
 ---
 sidebar_position: 10
+discovery:
+  exclude: true
 ---
 
 # User Interface

@@ -1,4 +1,13 @@
-# Github
+---
+title: "GitHub"
+description: "Register a GitHub application and configure login, callback URLs, and email claims."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["GitHub organization", "OAuth2"]
+---
+
+# GitHub
 
 Follow the instructions at `https://github.com/settings/apps/new` (or `https://github.com/organizations/<your_org>/settings/apps/new` for orgs).
 

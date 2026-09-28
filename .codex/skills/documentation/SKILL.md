@@ -58,6 +58,23 @@ the corresponding file here and use the current
 
 ## MDX and factual guidance
 
+Every current document needs explicit discovery metadata. A listed document has
+an accurate `description` and a `discovery` object with `topic` and `kind` from
+[the shared vocabulary](../../../src/discovery/catalog.ts). Optional `aliases`
+hold familiar names for content actually covered, such as Azure AD for Microsoft
+Entra ID. Do not add aliases for missing features merely to satisfy a query.
+The build validates this metadata and derives the directory from resolved URLs.
+
+Set `listed: false` within `discovery` for a useful search destination that
+should not duplicate an entry in the directory. Set `discovery: {exclude: true}`
+for placeholders, obsolete screenshot galleries, or duplicate directories;
+do not advertise them as completed guides. Exclusions preserve published routes.
+Draft and unlisted pages are also omitted. Completing an excluded page requires
+adding its description and classification to make it discoverable again.
+Classification alone does not establish that its configuration is up to date.
+The [search maintenance guide](../../../assets/search/README.md) describes how
+this metadata reaches hosted search after deployment and crawling.
+
 The [site config](../../../docusaurus.config.ts) compiles Markdown as MDX. Put
 Caddy placeholders, JSON braces, template syntax, and angle-bracket placeholders
 in inline code or fenced blocks. Use `[text](url)` for links instead of `<url>`

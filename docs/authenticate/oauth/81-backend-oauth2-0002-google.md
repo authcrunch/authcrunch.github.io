@@ -1,3 +1,12 @@
+---
+title: "Google Identity Platform"
+description: "Configure Google OAuth credentials, scopes, and the portal callback."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["Google Workspace", "G Suite", "OpenID Connect"]
+---
+
 # Google Identity Platform
 
 References:

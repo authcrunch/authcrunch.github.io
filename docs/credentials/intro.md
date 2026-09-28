@@ -1,5 +1,10 @@
 ---
 sidebar_position: 1
+description: "Configure named credentials and secret manager integrations for AuthCrunch services."
+discovery:
+  topic: operations
+  kind: reference
+  aliases: ["SMTP password", "secrets"]
 ---
 
 # Secrets Management

@@ -1,8 +1,14 @@
 ---
 sidebar_position: 40
+title: "Authentication cookies"
+description: "Configure the domain, path, and browser attributes of authentication cookies."
+discovery:
+  topic: sessions-and-cookies
+  kind: reference
+  aliases: ["cookie domain", "SameSite", "secure", "subdomain"]
 ---
 
-# Authorization Cookie
+# Authentication cookies
 
 ## Intra-Domain Cookies
 

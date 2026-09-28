@@ -1,8 +1,14 @@
 ---
 sidebar_position: 14
+title: "Generate an ECDSA key"
+description: "Generate an ECDSA P-256 private key using OpenSSL."
+discovery:
+  topic: operations
+  kind: reference
+  aliases: ["ES256", "EC", "openssl"]
 ---
 
-# Miscellaneous
+# Generate an ECDSA key
 
 ## Encryption Keys
 

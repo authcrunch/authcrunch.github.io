@@ -1,3 +1,12 @@
+---
+title: "LinkedIn"
+description: "Register a LinkedIn application and configure its redirect URL and OAuth provider."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["OAuth2"]
+---
+
 # LinkedIn
 
 First, browse to https://www.linkedin.com/developers/apps/new and create an application.

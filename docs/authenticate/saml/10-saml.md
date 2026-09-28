@@ -1,4 +1,13 @@
-# SAML Overview
+---
+title: "SAML identity providers"
+description: "Review SAML identity provider configuration and assertion time synchronization."
+discovery:
+  topic: identity-providers
+  kind: concept
+  aliases: ["SAML 2.0", "NTP"]
+---
+
+# SAML identity providers
 
 The plugin supports the following SAML identity providers (IdP):
 

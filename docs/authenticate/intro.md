@@ -1,8 +1,14 @@
 ---
 sidebar_position: 1
+title: "Authentication portal overview"
+description: "Overview of the authentication portal, identity sources, and token-based connection to authorization."
+discovery:
+  topic: login-and-mfa
+  kind: concept
+  aliases: ["authenticate", "JWT"]
 ---
 
-# Auth Portal Plugin Overview
+# Authentication portal overview
 
 The Authentication Plugin for Caddy v2 implementing
 Form-Based, Basic, Local, LDAP, OpenID Connect, OAuth 2.0, SAML

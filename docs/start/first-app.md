@@ -1,7 +1,11 @@
 ---
 sidebar_position: 2
 title: Protect your first app
-description: Run a local AuthCrunch portal and protect a response with a role-based policy, using a complete tested Caddyfile.
+description: "Run a local AuthCrunch portal and protect a response with a role-based policy, using a complete tested Caddyfile."
+discovery:
+  topic: authorization
+  kind: tutorial
+  aliases: ["getting started", "first setup", "local users", "authenticate", "authorize"]
 ---
 
 import CodeBlock from '@theme/CodeBlock';

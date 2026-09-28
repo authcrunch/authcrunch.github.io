@@ -1,5 +1,10 @@
 ---
 sidebar_position: 14
+description: "Look up user metadata placeholders available to Caddy after authorization."
+discovery:
+  topic: authorization
+  kind: reference
+  aliases: ["variables", "logging"]
 ---
 
 # Caddy Placeholders

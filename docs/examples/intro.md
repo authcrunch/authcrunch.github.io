@@ -1,8 +1,14 @@
 ---
 sidebar_position: 2
+title: "Community examples"
+description: "Find community-written examples of AuthCrunch integrations."
+discovery:
+  topic: operations
+  kind: reference
+  aliases: ["deployment"]
 ---
 
-# General
+# Community examples
 
 Below are examples from users showing how to implement various aspects of AuthCrunch.
 

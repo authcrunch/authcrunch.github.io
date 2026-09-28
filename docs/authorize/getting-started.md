@@ -1,5 +1,10 @@
 ---
 sidebar_position: 5
+description: "Continue to the first-app walkthrough to connect a portal to a role-based authorization policy."
+discovery:
+  topic: authorization
+  kind: tutorial
+  listed: false
 ---
 
 # Getting Started

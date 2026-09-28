@@ -1,3 +1,12 @@
+---
+title: "Ping Identity"
+description: "Find the Ping Identity configuration example and provider setup screenshots."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["PingID", "PingOne", "OAuth2"]
+---
+
 # Ping Identity
 
 Find Ping Identity integration example in the following [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/oauth/pingid/Caddyfile).

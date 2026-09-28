@@ -1,5 +1,10 @@
 ---
 sidebar_position: 6
+description: "Choose where an authorization policy looks for tokens and the order in which sources are checked."
+discovery:
+  topic: sessions-and-cookies
+  kind: reference
+  aliases: ["Authorization header", "cookie", "query", "Bearer"]
 ---
 
 # Token Discovery

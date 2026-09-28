@@ -1,7 +1,11 @@
 ---
 sidebar_position: 4
 title: Next steps
-description: Choose an identity provider, add authentication controls, and understand what must change before deploying the local example.
+description: "Choose an identity provider, add authentication controls, and understand what must change before deploying the local example."
+discovery:
+  topic: operations
+  kind: guide
+  aliases: ["deployment", "production", "reverse proxy"]
 ---
 
 # Next steps

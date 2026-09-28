@@ -1,4 +1,13 @@
-# Azure Active Directory
+---
+title: "Microsoft Entra ID (SAML)"
+description: "Connect Microsoft Entra ID using SAML application metadata and signing certificates."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["Azure AD", "Azure Active Directory", "Office 365"]
+---
+
+# Microsoft Entra ID (SAML)
 
 Azure Active Directory supports Office 365 Applications.
 

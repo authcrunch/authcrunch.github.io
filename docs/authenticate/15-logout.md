@@ -1,3 +1,11 @@
+---
+description: "Configure trusted logout redirects and distinguish portal logout from provider logout."
+discovery:
+  topic: sessions-and-cookies
+  kind: guide
+  aliases: ["sign out", "redirect_uri"]
+---
+
 # Logout
 
 All authentication endpoints have a dedicated logout path, typically accessed through `/logout`.

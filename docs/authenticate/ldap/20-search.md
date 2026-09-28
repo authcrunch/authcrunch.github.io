@@ -1,4 +1,13 @@
-# LDAP Authentication Architecture
+---
+title: "LDAP user search"
+description: "Understand LDAP binding, user search filters, and the directory lookup performed during login."
+discovery:
+  topic: identity-providers
+  kind: concept
+  aliases: ["search_base_dn", "sAMAccountName", "Active Directory"]
+---
+
+# LDAP user search
 
 The plugin does not keep connections open to LDAP servers. The plugin
 tears a connection down each time it finishes authenticating a request

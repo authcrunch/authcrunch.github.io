@@ -1,3 +1,12 @@
+---
+title: "Keycloak"
+description: "Configure a Keycloak realm, roles, groups, users, and a client for portal login."
+discovery:
+  topic: identity-providers
+  kind: guide
+  aliases: ["OpenID Connect", "OIDC"]
+---
+
 # Keycloak
 
 Find Keycloak integration example in the following [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/oauth/keycloak/Caddyfile).

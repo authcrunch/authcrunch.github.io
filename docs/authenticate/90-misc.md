@@ -1,4 +1,13 @@
-# Miscellaneous
+---
+title: "Portal operations notes"
+description: "Notes on privileged ports, source IP tracking, and authentication portal configuration details."
+discovery:
+  topic: operations
+  kind: reference
+  aliases: ["source address", "setcap"]
+---
+
+# Portal operations notes
 
 ## Binding to Privileged Ports
 

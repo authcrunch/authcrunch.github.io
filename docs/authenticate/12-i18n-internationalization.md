@@ -1,3 +1,11 @@
+---
+description: "Set the portal language and find the translation messages used by the login interface."
+discovery:
+  topic: login-and-mfa
+  kind: reference
+  aliases: ["i18n", "localization", "translation"]
+---
+
 # Internationalization (i18n)
 
 The following configuration changes the language to French:

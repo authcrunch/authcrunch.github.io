@@ -1,4 +1,13 @@
-# Password Management
+---
+title: "Local password management"
+description: "Generate local password hashes with authdbctl and change passwords through the portal settings."
+discovery:
+  topic: operations
+  kind: guide
+  aliases: ["authdbctl", "password hash", "bcrypt"]
+---
+
+# Local password management
 
 ## Manually
 

@@ -1,5 +1,10 @@
 ---
 sidebar_position: 9
+description: "Allow or deny requests using roles, claims, and ordered access control rules."
+discovery:
+  topic: authorization
+  kind: reference
+  aliases: ["RBAC", "ACL", "groups", "permissions", "access denied"]
 ---
 
 # Access Lists and Role-based Access Control (RBAC)
