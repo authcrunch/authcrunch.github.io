@@ -110,6 +110,13 @@ a { text-underline-offset: 3px; }
 .markdown pre { font-size: .84rem; }
 .markdown code { overflow-wrap: anywhere; }
 .markdown pre code { overflow-wrap: normal; }
+.doc-screenshot { margin: 1.5rem 0; padding: .75rem; border: 1px solid var(--ac-border); border-radius: 8px; background: var(--ac-surface); }
+.doc-screenshot > p { margin-bottom: 0; }
+.doc-screenshot img { display: block; max-width: 100%; height: auto; margin-inline: auto; border-radius: 3px; }
+.doc-screenshot figcaption { margin-top: .75rem; color: var(--ac-muted); font-size: .82rem; line-height: 1.65; }
+.screenshot-gallery { margin-block: 1.25rem; border-color: var(--ac-border); background: var(--ac-soft); --docusaurus-details-decoration-color: var(--ifm-color-primary); }
+.screenshot-gallery > summary { color: var(--ifm-font-color-base); font-weight: 650; line-height: 1.6; }
+.screenshot-gallery .doc-screenshot:last-child { margin-bottom: .25rem; }
 .table-of-contents { font-size: .78rem; }
 .table-of-contents__link { color: var(--ac-muted); }
 .pagination-nav__link { border-color: var(--ac-border); box-shadow: none; }

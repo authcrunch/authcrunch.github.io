@@ -46,8 +46,23 @@ check every changed path. Files under `static/` have public paths without the
 `static` prefix; `assets/conf/` and `assets/solutions/` are repository examples,
 not automatically copied site downloads.
 
-Complete examples for the beginner sequence, GitHub, generic OIDC, and Keycloak
-are imported from their canonical Caddyfiles under
+Preserve useful screenshots when rewriting a guide. Inspect the images before
+reusing them; update alt text and captions to explain what the reader should
+notice. Keep a representative image visible beside the relevant step and group
+longer sequences in descriptive `details.screenshot-gallery` disclosures.
+Use `figure.doc-screenshot` with a caption and an image link to the full-size
+asset. These elements render without JavaScript and share the site theme.
+
+Older console screenshots can remain as visual references when their captions
+identify the older UI and explain differences in current field names, values,
+or workflows. Do not reinstate obsolete configuration instructions just to match
+an image. Inspect visible credentials before publication and use a reviewed
+redacted derivative where necessary. Keep a record of replacements or omissions
+in ignored working notes; do not remove a useful image merely because its page
+is being rewritten.
+
+Complete examples for the beginner sequence, GitHub, generic OIDC, Keycloak,
+Google, and Microsoft Entra ID are imported from their canonical Caddyfiles under
 [assets/conf](../../../assets/conf/) using `?raw` and rendered by `CodeBlock`.
 Edit those files instead of adding duplicate complete fenced configurations.
 The site plugin resolves them at build time; imports do not create download URLs.

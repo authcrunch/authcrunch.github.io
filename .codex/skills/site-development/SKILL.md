@@ -99,6 +99,11 @@ configuration or new utility is actually consumed by the installed toolchain.
 
 Keep responsive reading order, heading hierarchy, accessible link text, and
 focus behavior. Follow the existing Heroicons system for ordinary UI icons.
+Provider screenshots use `figure.doc-screenshot` with descriptive captions and
+links to full-size assets. Longer reference sequences use
+`details.screenshot-gallery` with meaningful summaries. Preserve native keyboard
+and no-JavaScript disclosure behavior, image aspect ratios, and readable theme
+colors. Verify expanded galleries at narrow widths as well as collapsed pages.
 Static assets are served from the site root; assets imported by components can
 be bundled. Preserve domain and site-verification files during asset cleanup.
 The four original brand SVGs are copied intact from the portal's image directory;

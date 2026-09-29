@@ -1,20 +1,22 @@
-# Set the public portal hostname and GOOGLE_ALLOWED_SUB before use.
+# Set the public portal hostname and ENTRA_TENANT_ID before use.
 {
 	admin off
 	persist_config off
 
 	security {
-		oauth identity provider google {
-			driver google
-			realm google
-			client_id {env.GOOGLE_CLIENT_ID}
-			client_secret {env.GOOGLE_CLIENT_SECRET}
+		oauth identity provider azure {
+			driver azure
+			realm azure
+			client_id {env.ENTRA_CLIENT_ID}
+			client_secret {env.ENTRA_CLIENT_SECRET}
 			scopes openid email profile
-			login icon text "Google"
+			tenant_id {$ENTRA_TENANT_ID}
+			email claim check disabled
+			login icon text "Microsoft Entra ID"
 		}
 
 		authentication portal myportal {
-			enable identity provider google
+			enable identity provider azure
 			crypto default token lifetime 900
 			crypto key sign-verify {env.JWT_SHARED_KEY}
 			cookie path /
@@ -27,13 +29,13 @@
 			}
 
 			transform user {
-				match realm google
+				match realm azure
 				action add role authp/user
 			}
 
 			transform user {
-				match realm google
-				match sub {$GOOGLE_ALLOWED_SUB}
+				match realm azure
+				match role App.Access
 				action add role app/member
 			}
 		}
@@ -55,7 +57,7 @@ auth.example.com {
 		@app path /app /app/*
 		route @app {
 			authorize with apppolicy
-			respond "You reached the Google-protected app." 200
+			respond "You reached the Entra-protected app." 200
 		}
 
 		respond "AuthCrunch is running. Open /app to begin." 200

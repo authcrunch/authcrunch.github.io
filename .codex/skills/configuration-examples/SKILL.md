@@ -156,6 +156,33 @@ Keycloak testing may use loopback HTTP with insecure cookies in a temporary
 configuration; keep that adaptation out of the canonical HTTPS examples. Do not
 present local network tests as production TLS, proxy, or certificate validation.
 
+## Google and Microsoft Entra ID examples
+
+The [Google](../../../assets/conf/oauth/google/Caddyfile) and
+[Entra](../../../assets/conf/oauth/azure/Caddyfile) examples use the same
+portal/application boundary. Google grants access by `sub`; Entra's `azure`
+driver grants it through the ID-token app role `App.Access`. Keep the complete
+Google client ID in its environment value, without appending the suffix again.
+`GOOGLE_ALLOWED_SUB` and `ENTRA_TENANT_ID` expand at Caddyfile parse time;
+credentials and signing keys retain runtime placeholders.
+
+Use a concrete Entra tenant GUID for the workforce example. The bundled
+v1.3.8 validator compares issuer strings literally and does not substitute the
+tenant in `common` or `organizations` metadata. Personal-account `consumers`
+uses a fixed issuer and needs its own subject-based access rule. Entra email
+is optional in the example because app roles, not email, control access.
+
+Google's `hd` and `email_verified`, and Entra's `oid`, `tid`, and
+`preferred_username`, are not extracted by this token parser. Google Cloud
+Identity group lookup adds display names and does not poll unfinished operations;
+lookup failure does not reject login. Entra group overage does not trigger a
+Graph lookup. Require the intended role and test missing claims explicitly.
+
+Local OIDC fixtures should preserve the driver, claim transforms, and policies,
+and verify code exchange, PKCE, issuer/audience/nonce rejection, and allow/deny.
+Record live consent, tenant policy, group API, and production TLS checks
+separately; synthetic provider responses cannot establish those behaviors.
+
 ## Acceptance scenarios
 
 - A provider change updates both its documented snippet and linked Caddyfile;
