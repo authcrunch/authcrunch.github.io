@@ -1,69 +1,65 @@
+# Set the public portal hostname and GITLAB_DOMAIN before use.
 {
-	http_port 8080
-	https_port 8443
-	# debug
-
-	order authenticate before respond
-	order authorize before basicauth
+	admin off
+	persist_config off
 
 	security {
 		oauth identity provider gitlab {
-			realm gitlab
 			driver gitlab
-			domain_name gitlab.contoso.com
-			client_id 522a2f714a1e978c52e80909e543e2a51
-			client_secret d562a48c29a686b343978edbc8ac3d3
+			realm gitlab
+			client_id {env.GITLAB_CLIENT_ID}
+			client_secret {env.GITLAB_CLIENT_SECRET}
+			domain_name {$GITLAB_DOMAIN}
 			scopes openid email profile
-			user_group_filters barfoo
-			user_group_filters ^a
+			user_group_filters ^example-team/app-members$
+			login icon text "GitLab"
 		}
 
 		authentication portal myportal {
-			crypto default token lifetime 3600
-			crypto key sign-verify {env.JWT_SHARED_KEY}
 			enable identity provider gitlab
-			cookie domain myfiosgateway.com
+			crypto default token lifetime 900
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			cookie path /
+
 			ui {
 				links {
-					"My Identity" "/whoami" icon "las la-user"
+					"Example app" /app icon "las la-external-link-alt"
+					"My identity" /auth/whoami icon "las la-user"
 				}
 			}
 
 			transform user {
 				match realm gitlab
 				action add role authp/user
-				ui link "File Server" https://assetq.myfiosgateway.com:8443/ icon "las la-star"
 			}
 
 			transform user {
 				match realm gitlab
-				match email greenpau@contoso.com
-				action add role authp/admin
+				match role {$GITLAB_DOMAIN}/example-team/app-members
+				action add role app/member
 			}
 		}
 
-		authorization policy mypolicy {
-			set auth url https://auth.myfiosgateway.com:8443/oauth2/gitlab
+		authorization policy apppolicy {
+			set auth url https://auth.example.com/auth/
 			crypto key verify {env.JWT_SHARED_KEY}
-			allow roles authp/admin authp/user
-			validate bearer header
-			inject headers with claims
+			allow roles app/member
 		}
 	}
 }
 
-(tls_config) {
-	tls {$HOME}/.local/caddy/server.crt {$HOME}/.local/caddy/server.key
-}
+auth.example.com {
+	route {
+		redir /auth /auth/ 308
 
-auth.myfiosgateway.com {
-	import tls_config
-	authenticate with myportal
-}
+		authenticate /auth/* with myportal
 
-assetq.myfiosgateway.com {
-	import tls_config
-	authorize with mypolicy
-	root * {env.HOME}/www
-	file_server
+		@app path /app /app/*
+		route @app {
+			authorize with apppolicy
+			respond "You reached the GitLab-protected app." 200
+		}
+
+		respond "AuthCrunch is running. Open /app to begin." 200
+	}
 }

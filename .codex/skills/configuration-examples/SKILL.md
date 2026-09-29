@@ -183,6 +183,27 @@ and verify code exchange, PKCE, issuer/audience/nonce rejection, and allow/deny.
 Record live consent, tenant policy, group API, and production TLS checks
 separately; synthetic provider responses cannot establish those behaviors.
 
+## GitLab and Okta examples
+
+The [GitLab](../../../assets/conf/oauth/gitlab/Caddyfile) and
+[Okta](../../../assets/conf/oauth/okta/Caddyfile) examples grant `app/member`
+from an explicit group while keeping ordinary portal access separate. Preserve
+the released v1.3.8 driver's claim source: GitLab fetches UserInfo, while Okta
+uses the ID token and does not fetch UserInfo to fill missing email or groups.
+
+GitLab filters the unprefixed UserInfo `groups` paths with `user_group_filters`,
+then prefixes retained roles with the host derived from `base_auth_url`.
+`GITLAB_DOMAIN` expands at parse time in both the provider and role matcher.
+No filter means no group roles. The subject is the UserInfo profile URL, not
+GitLab's numeric OIDC subject; test renames, missing groups, and failed UserInfo.
+
+Okta's named driver requires a custom authorization-server ID. `OKTA_DOMAIN`
+and `OKTA_SERVER_ID` expand at parse time; credentials resolve at runtime.
+Use an ID-token `groups` claim with Always inclusion and verify email presence.
+The released client sends credentials in the form body (`client_secret_post`).
+App assignment, authorization-server policy, and AuthCrunch policy are separate
+checks. Local fixtures cannot establish live Okta entitlement or console setup.
+
 ## Acceptance scenarios
 
 - A provider change updates both its documented snippet and linked Caddyfile;
