@@ -73,6 +73,32 @@ App; do not substitute an installation token for its client secret.
 
 :::
 
+<details className="screenshot-gallery">
+<summary>Screenshots: an existing GitHub App and its authorization screen</summary>
+
+These retained images are from the earlier GitHub App walkthrough, not the OAuth App registration used above. They help identify the app type and user authorization screen. The client secret is redacted. A GitHub App private signing key is for app/installation authentication and is not required by this portal example.
+
+<figure className="doc-screenshot">
+
+[![Earlier GitHub App settings with client secret redacted](../images/oauth2_github_new_app-redacted.png)](../images/oauth2_github_new_app-redacted.png)
+
+<figcaption>Earlier GitHub App overview: the GitHub Apps breadcrumb identifies this as a different app type from OAuth Apps. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![GitHub App Private keys section with a key fingerprint](../images/oauth2_github_sign_keys.png)](../images/oauth2_github_sign_keys.png)
+
+<figcaption>GitHub App key management, shown for comparison. This fingerprint is not a private key; the OAuth App example does not use this screen. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![GitHub App user authorization screen](../images/oauth2_github_accept_screen.png)](../images/oauth2_github_accept_screen.png)
+
+<figcaption>Earlier user authorization prompt for a GitHub App. Review the actual application and permissions in your own flow. Select the image to view it at full size.</figcaption>
+</figure>
+
+</details>
+
 ## Configure AuthCrunch
 
 Save the following as `Caddyfile` in your working directory. It is embedded
@@ -237,6 +263,13 @@ Organization membership is evaluated during login, not on each application
 request. A later membership change does not immediately remove claims from an
 already issued token.
 
+<figure className="doc-screenshot">
+
+[![Earlier AuthCrunch identity page displaying GitHub profile and roles](./images/github/github_app_whoami.png)](./images/github/github_app_whoami.png)
+
+<figcaption>Earlier portal identity view. In the current example, also verify github_id and app/member; the old roles and example account are not the access policy. Select the image to view it at full size.</figcaption>
+</figure>
+
 ## Email Claims
 
 The example requests `read:user user:email`. GitHub's
@@ -261,6 +294,33 @@ Inspect `/auth/whoami` after a new login to check the result. The presence of
 example uses `github_id` to grant access so an email change does not select a
 different account. The exact selection logic is in the
 [released email extractor](https://github.com/greenpau/go-authcrunch/blob/v1.3.8/pkg/idp/oauth/github_email.go).
+
+<figure className="doc-screenshot">
+
+[![GitHub App account permissions with Email addresses set to Read-only](./images/github/github_app_permissions_02.png)](./images/github/github_app_permissions_02.png)
+
+<figcaption>For an existing GitHub App, Email addresses is a user permission. The OAuth App walkthrough above requests user:email instead. Select the image to view it at full size.</figcaption>
+</figure>
+
+<details className="screenshot-gallery">
+<summary>Screenshots: GitHub App email permissions and renewed consent</summary>
+
+These images accompany the GitHub App variant discussed in Email Claims. Changes to permissions may require another user authorization; inspect the newly issued portal identity afterward.
+
+<figure className="doc-screenshot">
+
+[![GitHub App Permissions and events page with Account permissions section](./images/github/github_app_permissions_01.png)](./images/github/github_app_permissions_01.png)
+
+<figcaption>Locate Account permissions in an existing GitHub App. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![GitHub authorization prompt requesting read-only email access](./images/github/github_app_consent.png)](./images/github/github_app_consent.png)
+
+<figcaption>The user reviews the app’s request for email access before continuing. Select the image to view it at full size.</figcaption>
+</figure>
+
+</details>
 
 ## Troubleshoot
 

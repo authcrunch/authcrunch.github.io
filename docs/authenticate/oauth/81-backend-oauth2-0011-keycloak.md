@@ -64,6 +64,38 @@ Keycloak deployments use `/realms/…` by default. Include an additional `/auth`
 prefix only if your deployment actually configures it. See
 [Keycloak's OIDC endpoints](https://www.keycloak.org/securing-apps/oidc-layers).
 
+<details className="screenshot-gallery">
+<summary>Earlier console reference: realm signing keys</summary>
+
+These images document the old realm-key screens. Keep the current realm signing-key providers enabled as described above; the disabled switches and reduced key list in these historical captures are not steps to reproduce. The current integration discovers the provider’s public keys.
+
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak realm signing provider settings](./images/keycloak/keycloak_realm_1.png)](./images/keycloak/keycloak_realm_1.png)
+
+<figcaption>Earlier realm key-provider form, retained to identify the legacy screen. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak HMAC key provider with disabled switches](./images/keycloak/keycloak_realm_2.png)](./images/keycloak/keycloak_realm_2.png)
+
+<figcaption>Historical disabled HMAC provider: this is not required for the current integration. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak AES key provider with disabled switches](./images/keycloak/keycloak_realm_3.png)](./images/keycloak/keycloak_realm_3.png)
+
+<figcaption>Historical disabled AES provider: leave current provider settings intact for this walkthrough. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak realm active key list](./images/keycloak/keycloak_realm_4.png)](./images/keycloak/keycloak_realm_4.png)
+
+<figcaption>A historical key list does not define which providers your current realm should retain. Select the image to view it at full size.</figcaption>
+</figure>
+
+</details>
+
 ## Client
 
 In the `example` realm, create an **OpenID Connect** client with client ID
@@ -90,6 +122,82 @@ signed client assertion. The driver already sends S256 PKCE; configure the
 client to require that method. See the
 [Keycloak OIDC client settings](https://www.keycloak.org/docs/latest/server_admin/index.html#_oidc_clients).
 
+<details className="screenshot-gallery">
+<summary>Screenshots: client registration in the earlier Keycloak console</summary>
+
+The older console used Access Type = confidential; current Keycloak uses Client authentication = On. The screenshots use the master realm and old example URLs. Use the application realm, exact callback, flow settings, and S256 PKCE from this guide.
+
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Clients list](./images/keycloak/keycloak_new_client_1.png)](./images/keycloak/keycloak_new_client_1.png)
+
+<figcaption>Open Clients in your application realm. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Add Client form with OpenID Connect selected](./images/keycloak/keycloak_new_client_2.png)](./images/keycloak/keycloak_new_client_2.png)
+
+<figcaption>Create an OpenID Connect client with your chosen client ID. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak client settings form](./images/keycloak/keycloak_new_client_3.png)](./images/keycloak/keycloak_new_client_3.png)
+
+<figcaption>The legacy client settings layout predates the current Capability config and Login settings screens. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak client configuration showing confidential access type](./images/keycloak/keycloak_client_config_1.png)](./images/keycloak/keycloak_client_config_1.png)
+
+<figcaption>Use current Client authentication and flow controls from the table above. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Valid Redirect URIs and Base URL fields](./images/keycloak/keycloak_client_config_2.png)](./images/keycloak/keycloak_client_config_2.png)
+
+<figcaption>Use the exact current portal callback; the hostname and mount shown here are historical. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak fine-grained OpenID Connect settings](./images/keycloak/keycloak_client_config_3.png)](./images/keycloak/keycloak_client_config_3.png)
+
+<figcaption>Earlier advanced settings for comparison; do not copy these options over the current client defaults. Select the image to view it at full size.</figcaption>
+</figure>
+
+</details>
+
+<details className="screenshot-gallery">
+<summary>Earlier console reference: client keys and credentials</summary>
+
+This sequence came from the old client-key walkthrough. The current configuration authenticates with a client secret from Credentials; it does not require generating a JKS archive or reusing a key-store password as that secret. The password fields and exported secret below are redacted.
+
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak client Keys tab and Generate new keys button](./images/keycloak/keycloak_new_client_4.png)](./images/keycloak/keycloak_new_client_4.png)
+
+<figcaption>Legacy client key management, separate from the client-secret setup used here. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Generate Private Key form with both passwords redacted](./images/keycloak/keycloak_new_client_5-redacted.png)](./images/keycloak/keycloak_new_client_5-redacted.png)
+
+<figcaption>Historical JKS export form with passwords redacted; this step is not part of the current integration. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak client certificate display](./images/keycloak/keycloak_new_client_6.png)](./images/keycloak/keycloak_new_client_6.png)
+
+<figcaption>The legacy client certificate display is retained as a reference, not a current client-authentication requirement. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Environment exports for KEYCLOAK_CLIENT_ID and a placeholder KEYCLOAK_CLIENT_SECRET](./images/keycloak/keycloak_new_client_7-redacted.png)](./images/keycloak/keycloak_new_client_7-redacted.png)
+
+<figcaption>The environment-variable names remain useful. Use the real client secret from Credentials, not the historical key-store password. Select the image to view it at full size.</figcaption>
+</figure>
+
+</details>
+
 ### Map groups into the ID token
 
 Keep the client's `profile` and `email` scopes. Add a **Group Membership**
@@ -103,6 +211,14 @@ protocol mapper for this client, with these settings:
 | Add to ID token | On |
 | Add to access token | Off for this example |
 | Add to userinfo | Off for this example |
+
+<figure className="doc-screenshot">
+
+[![Keycloak 26.7.4 Group Membership mapper with full group path and ID token enabled](./images/keycloak/keycloak_26_7_4_group_mapper.png)](./images/keycloak/keycloak_26_7_4_group_mapper.png)
+
+<figcaption>Keycloak 26.7.4, captured in the disposable test realm: Full group path and Add to ID token are enabled. The temporary-admin banner belongs to that local test environment. Select the image to view it at full size.</figcaption>
+</figure>
+
 
 Use the client's dedicated scope so this mapping applies to this client.
 In the client, open **Client scopes**, select its dedicated scope, and add a
@@ -122,6 +238,32 @@ The leading slash matters. AuthCrunch combines group claims into its roles,
 so the Caddyfile matches the exact role `/app-members`. Putting the mapper only
 on UserInfo does not supply this example's ID-token claim.
 
+<details className="screenshot-gallery">
+<summary>Screenshots: claim mappers in the earlier console</summary>
+
+Current Keycloak keeps this configuration in the client’s dedicated scope. These older screenshots show the previous Mappers tab and help connect the email/groups claim names to their protocol mappers.
+
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak user-property mapper for the email claim](./images/keycloak/keycloak_client_create_mapper.png)](./images/keycloak/keycloak_client_create_mapper.png)
+
+<figcaption>An older email mapper with Add to ID token enabled. The current walkthrough retains the email client scope. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak built-in mapper list with groups selected](./images/keycloak/keycloak_client_add_builtin_mapper.png)](./images/keycloak/keycloak_client_add_builtin_mapper.png)
+
+<figcaption>The older built-in mapper picker. In the current console, use By configuration → Group Membership. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak mapper list containing email and groups](./images/keycloak/keycloak_client_mappers.png)](./images/keycloak/keycloak_client_mappers.png)
+
+<figcaption>Verify the effective mappers on your current client’s dedicated scope. Select the image to view it at full size.</figcaption>
+</figure>
+
+</details>
+
 ## Groups
 
 Create a top-level group named `app-members`. Assign only the intended
@@ -137,6 +279,74 @@ application users to it. In this walkthrough, Alice is a member and Bob is not.
 
 The transform also gives every signed-in Keycloak user `authp/user` for ordinary
 portal access. That role does not meet the application's rule.
+
+<details className="screenshot-gallery">
+<summary>Screenshots: group creation and role mappings in the earlier console</summary>
+
+The older example used Admins, Editors, and Viewers groups with portal roles. The current example needs one app-members group and a separate AuthCrunch transform that grants app/member. These screenshots illustrate the group editor and where role mappings were displayed; do not grant portal administration just to permit app access.
+
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Create group dialog for Admins](./images/keycloak/keycloak_new_group_1a.png)](./images/keycloak/keycloak_new_group_1a.png)
+
+<figcaption>Group creation dialog in the earlier console. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Admins group settings](./images/keycloak/keycloak_new_group_1b.png)](./images/keycloak/keycloak_new_group_1b.png)
+
+<figcaption>Group settings and the Role Mappings tab. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak group role mapping to authp/admin](./images/keycloak/keycloak_new_group_1c.png)](./images/keycloak/keycloak_new_group_1c.png)
+
+<figcaption>Historical admin-role mapping. The app-members group in this guide does not require authp/admin. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Create group dialog for Editors](./images/keycloak/keycloak_new_group_2a.png)](./images/keycloak/keycloak_new_group_2a.png)
+
+<figcaption>A second group in the original walkthrough. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Editors group settings](./images/keycloak/keycloak_new_group_2b.png)](./images/keycloak/keycloak_new_group_2b.png)
+
+<figcaption>Editing a group’s name and settings. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Editors group role mapping](./images/keycloak/keycloak_new_group_2c.png)](./images/keycloak/keycloak_new_group_2c.png)
+
+<figcaption>A historical group-to-realm-role mapping, distinct from the current group-claim transform. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Create group dialog for Viewers](./images/keycloak/keycloak_new_group_3a.png)](./images/keycloak/keycloak_new_group_3a.png)
+
+<figcaption>A third group in the original walkthrough. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Viewers group settings](./images/keycloak/keycloak_new_group_3b.png)](./images/keycloak/keycloak_new_group_3b.png)
+
+<figcaption>Reviewing the created group. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Viewers group role mapping](./images/keycloak/keycloak_new_group_3c.png)](./images/keycloak/keycloak_new_group_3c.png)
+
+<figcaption>Historical role mapping. Use the current access policy rather than these example portal roles. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak group list containing Admins Editors and Viewers](./images/keycloak/keycloak_new_group_4.png)](./images/keycloak/keycloak_new_group_4.png)
+
+<figcaption>The original group list. Your walkthrough’s group is app-members. Select the image to view it at full size.</figcaption>
+</figure>
+
+</details>
 
 ## Users
 
@@ -154,6 +364,38 @@ if it is temporary, complete Keycloak's required password change during login.
 
 Assign Alice through the user's **Groups** tab. An email address or a similarly
 named Keycloak role does not automatically place a user in this group.
+
+<details className="screenshot-gallery">
+<summary>Screenshots: users, credentials, and membership</summary>
+
+These earlier screens remain useful for locating user creation and credentials. Use ordinary test users in your application realm, set their email, and give only Alice membership in app-members.
+
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Add user form with identity and group fields](./images/keycloak/keycloak_new_user.png)](./images/keycloak/keycloak_new_user.png)
+
+<figcaption>Create the user in the intended application realm; the original screenshot uses different example values. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Users list](./images/keycloak/keycloak_new_user_1.png)](./images/keycloak/keycloak_new_user_1.png)
+
+<figcaption>Select a user to manage credentials and membership. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak user Credentials tab with masked password fields](./images/keycloak/keycloak_new_user_2.png)](./images/keycloak/keycloak_new_user_2.png)
+
+<figcaption>Set a disposable test password; complete any required temporary-password change during sign-in. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak effective realm roles for a user](./images/keycloak/keycloak_user_effective_roles.png)](./images/keycloak/keycloak_user_effective_roles.png)
+
+<figcaption>Historical effective roles. Check group membership and resulting portal roles separately in the current example. Select the image to view it at full size.</figcaption>
+</figure>
+
+</details>
 
 ## Realm Roles
 
@@ -178,6 +420,56 @@ parser; map the needed values into a supported claim. See the
 
 There is no need to give application members `authp/admin` in Keycloak.
 The example keeps portal permissions and application permissions separate.
+
+<details className="screenshot-gallery">
+<summary>Screenshots: realm-role alternative in the earlier console</summary>
+
+These images show the earlier Add Role and role detail screens. For the alternative above, use a dedicated application role such as example-app-member. The old authp/admin, authp/user, and authp/guest names are historical examples and are not required Keycloak roles for this walkthrough.
+
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Add Role form for authp/admin](./images/keycloak/keycloak_new_role_1a.png)](./images/keycloak/keycloak_new_role_1a.png)
+
+<figcaption>Creating a realm role in the earlier console; choose an application-specific role for the current alternative. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak authp/admin role details](./images/keycloak/keycloak_new_role_1b.png)](./images/keycloak/keycloak_new_role_1b.png)
+
+<figcaption>Historical role detail view. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Add Role form for authp/user](./images/keycloak/keycloak_new_role_2a.png)](./images/keycloak/keycloak_new_role_2a.png)
+
+<figcaption>Another role from the original example. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak authp/user role details](./images/keycloak/keycloak_new_role_2b.png)](./images/keycloak/keycloak_new_role_2b.png)
+
+<figcaption>Role name and configuration in the earlier console. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak Add Role form for authp/guest](./images/keycloak/keycloak_new_role_3a.png)](./images/keycloak/keycloak_new_role_3a.png)
+
+<figcaption>The old example’s guest role. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak authp/guest role details](./images/keycloak/keycloak_new_role_3b.png)](./images/keycloak/keycloak_new_role_3b.png)
+
+<figcaption>Reviewing a created role in the earlier console. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak realm role list](./images/keycloak/keycloak_new_role_4.png)](./images/keycloak/keycloak_new_role_4.png)
+
+<figcaption>Role list from the historical example. Map only the role needed by your current application. Select the image to view it at full size.</figcaption>
+</figure>
+
+</details>
 
 ## Configure AuthCrunch
 
@@ -233,6 +525,38 @@ before it and preserve the matcher covering `/app` and `/app/*`.
 Membership and transforms are evaluated at login. Removing Alice from the group
 does not rewrite an existing AuthCrunch token. This example uses a 900-second
 token lifetime; test changed membership with a fresh login.
+
+<details className="screenshot-gallery">
+<summary>Screenshots: sign-in, account applications, and portal identity</summary>
+
+These captures show the older Keycloak account console and AuthCrunch identity view. They illustrate where a user signs in and inspects roles. The current expected roles are /app-members, authp/user, and app/member; the old account names, hostnames, and role set are illustrative only.
+
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak sign-in form](./images/keycloak/keycloak_user_login.png)](./images/keycloak/keycloak_user_login.png)
+
+<figcaption>The provider’s sign-in form; users authenticate at Keycloak before returning to the portal. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak account console Applications page](./images/keycloak/keycloak_user_dashboard.png)](./images/keycloak/keycloak_user_dashboard.png)
+
+<figcaption>Keycloak’s account application list is separate from the AuthCrunch portal’s application links. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier Keycloak account application list with the registered client](./images/keycloak/keycloak_user_profile.png)](./images/keycloak/keycloak_user_profile.png)
+
+<figcaption>The client appears in the earlier account console after authorization. Select the image to view it at full size.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Earlier AuthCrunch identity JSON showing Keycloak roles](./images/keycloak/keycloak_assigned_roles.png)](./images/keycloak/keycloak_assigned_roles.png)
+
+<figcaption>Inspect the current portal identity to verify the exact group path and application role from this guide. Select the image to view it at full size.</figcaption>
+</figure>
+
+</details>
 
 ### Check logout separately
 
