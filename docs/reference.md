@@ -54,12 +54,20 @@ Handler order determines whether an access check runs before the application.
 Begin with the [API overview](authenticate/api/10-api.md), then select the
 interface that matches your caller:
 
+- [Go authentication client](operations/authclient.md)
+- [Profile API](authenticate/api/30-profile-api.md)
 - [Portal API](authenticate/api/20-portal-api.md)
 - [Server API](authenticate/api/40-server-api.md)
 - [System API](authenticate/api/50-system-api.md)
 
 API permissions and authentication requirements are endpoint-specific. A portal
 login alone does not establish administrative API access.
+
+## Management commands
+
+Use the [bundled local management CLI](operations/local-client.md) to inspect
+stores, administer accounts through an enabled Server API, and generate
+credentials offline. Client YAML and server Caddyfile configuration are separate.
 
 ## Executable and versions
 

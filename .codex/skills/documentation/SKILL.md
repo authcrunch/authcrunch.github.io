@@ -148,6 +148,14 @@ Use its generated Caddyfile directive rather than inventing a hash or replacing
 an entire JSON credential record. Keep current profile captures distinct from
 older Settings screens when adding captions.
 
+The released bundled `security local` CLI and reusable `pkg/authclient` SDK are
+separate interfaces. Keep their command/configuration examples separate from
+`authdbctl`. Administrative mutations do not retry automatically after an
+uncertain response. SDK credential validation checks transport syntax rather
+than JWT authenticity or expiry, and does not implement automatic renewal.
+API-key JSON login is access-only; it establishes neither a browser Profile
+session nor an OIDC session. Validate Go examples against the pinned library.
+
 ## Blog workflow
 
 Follow the existing dated filename pattern. Set a stable `slug`, meaningful

@@ -43,6 +43,7 @@ that an adapter exposes a new directive.
 | Completed-session and generated-key persistence | [Runtime state](runtime-state.md) |
 | Provider login directly in an app policy | [Direct OAuth](../authorize/direct-oauth.md) |
 | AuthCrunch serving relying parties as an OIDC provider | [OIDC provider](../apps/oidc-provider.md) |
+| Bundled local management CLI and reusable Go login client | [CLI](local-client.md) and [Go client](authclient.md) |
 | Argon2id and bcrypt local passwords | [Password management](../authenticate/local/30-password-management.md) |
 | Numeric GitHub IDs and organization transforms | [GitHub](../authenticate/oauth/81-backend-oauth2-0007-github.md) |
 | Diagnostic message filtering | [Logging](logging.md) |

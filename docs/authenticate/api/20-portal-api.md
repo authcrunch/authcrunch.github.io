@@ -244,6 +244,24 @@ and native transports have different credential delivery rules; refresh
 credentials are opaque, rotating, and must not be used as access tokens.
 Never infer refresh behavior from an older response example.
 
+### Account API-key login
+
+A provisioned local account can use a separate access-only exchange:
+
+```json
+{"realm":"local","api_key":"replace-with-the-private-account-key"}
+```
+
+Send this body to `POST /auth/login` with JSON selected. Do not include a
+username, password, sandbox checkpoint, or body-refresh selection. The account
+must have a configured [API key](../../authorize/api_key_auth.md) and satisfy
+its direct authentication requirements; a key does not bypass explicit MFA.
+Successful authentication returns an access credential, without a refresh
+family, browser Profile session, or browser OIDC session. Use the returned
+access-token name when constructing a header. The [Go client](../../operations/authclient.md)
+implements this exchange; the [local management CLI](../../operations/local-client.md)
+is a separate administrative interface.
+
 ## Beacon API
 
 A JSON-selected **`GET /auth/beacon`** checks the access token. A valid identity
