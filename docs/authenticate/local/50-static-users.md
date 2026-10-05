@@ -38,6 +38,19 @@ values do not continually synchronize every existing account. Nonempty challenge
 rules are explicitly overwritten; configured API keys are processed separately.
 Use an account mutation API for deliberate role and identity changes.
 
+
+## Initial provisioning is not continuous reconciliation
+
+Read each configured field according to its update behavior rather than assuming the block resynchronizes an existing user.
+
+| Configuration or task | Missing account | Existing account |
+| --- | --- | --- |
+| Name, email, initial roles | Used to provision the account | Not continually reconciled from these initial fields |
+| Configured password | Used for provisioning | Replaced only with explicit `overwrite` |
+| Nonempty challenge rules | Select local challenge policy | Explicitly overwritten; do not enroll factors |
+| Normal role, identity, or password update | Create deliberately through supported administration | Use the supported mutation API/CLI |
+| Password utility | Generates import material only | Does not mutate either account |
+
 ## Password Generation
 
 The released Caddy bundle includes:

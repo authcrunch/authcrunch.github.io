@@ -39,6 +39,18 @@ To contribute missing messages, update the upstream library's catalog and its
 translation checks; a documentation-site language change does not update the
 compiled authentication portal.
 
+
+## Check the language at the right layer
+
+A selected language affects compiled portal messages; it does not replace every visible string.
+
+| What you change | What to inspect | Separate concern |
+| --- | --- | --- |
+| Portal `ui` language | Login and password/MFA messages in the running portal | The documentation website language |
+| A custom template | Literal labels, wrapping, and right-to-left layout | Compiled translation coverage |
+| An upstream message catalog | The matching rebuilt/released library | No runtime message-JSON import directive |
+| An unrecognized language value | Actual English fallback | Successful adaptation alone |
+
 ## Agentic Prompts
 
 Copy a prompt into your LLM to explore this topic. Each prompt prioritizes

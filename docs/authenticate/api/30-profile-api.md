@@ -13,6 +13,20 @@ with a JSON `kind` selecting an operation. This API manages the current local
 account. It does not accept an arbitrary target username, and it is not the
 administrator's user-management API.
 
+
+```mermaid
+flowchart TD
+  accTitle: A signed credential alone is insufficient for local Profile management
+  accDescr: Profile targets the canonical account associated with the live local login session, not an arbitrary username in the body. External login and native body-refresh login do not create this local browser Profile context. A permitted caller submits a supported kind, and the server applies account validation and mutation rules.
+  A["POST under portal mount: JSON kind"] --> B{"Valid credential and allowed portal role?"}
+  B -->|No| N["Deny"]
+  B -->|Yes| C{"Live session tied to canonical local identity?"}
+  C -->|No| N
+  C -->|Yes| U["Resolve this session's account"]
+  U --> K["Validate operation, current proof, and payload"]
+  K --> R["Read or mutate own local account"]
+```
+
 ## Authentication and request format
 
 A caller needs a valid portal token, `authp/user` or `authp/admin`, and the live

@@ -63,6 +63,77 @@ For a portal mounted at `/auth/`:
 5. The requester polls serially and, after successful single-use redemption,
    receives independent credential cookies and continues to the portal.
 
+
+### What each browser shows
+
+These screens were captured from **caddy-security v1.4.0 source with
+go-authcrunch v1.3.11**, using two isolated browsers and a disposable local
+account. The example uses password login; your configured MFA or external
+provider adds its normal steps. The codes shown belong to this completed test
+interaction, not a code to enter into your portal.
+
+<div className="doc-screen-pair">
+<figure className="doc-screenshot">
+
+[![Requesting browser shows a QR code, activation link, matching code, and Cancel button while waiting for approval](./images/cross-device-v1-4-0-request.png)](./images/cross-device-v1-4-0-request.png)
+
+<figcaption><strong>Requesting device.</strong> Choose sign-in on another device, then keep this screen open. Send or scan its link and compare the short matching code. Waiting alone does not authenticate this browser.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+
+[![Approving browser asks whether to sign the other device in as alice@example.test and shows the same matching code with Approve and Deny buttons](./images/cross-device-v1-4-0-confirm.png)](./images/cross-device-v1-4-0-confirm.png)
+
+<figcaption><strong>Approving device, after fresh login.</strong> Check both the displayed account and the same matching code, and approve only the request you initiated on a device you control. Choose Deny for a request you do not recognize.</figcaption>
+</figure>
+</div>
+
+<details className="screenshot-gallery">
+<summary>Follow the complete two-browser walkthrough</summary>
+
+<figure className="doc-screenshot">
+
+[![Portal login page offers Sign in on another device below the ordinary username form](./images/cross-device-v1-4-0-login-option.png)](./images/cross-device-v1-4-0-login-option.png)
+
+<figcaption><strong>1. Requester: choose the alternative.</strong> The option appears only when the portal enables cross-device login.</figcaption>
+</figure>
+
+<figure className="doc-screenshot">
+
+[![Approving browser displays the matching code before its Sign in to continue button](./images/cross-device-v1-4-0-activate.png)](./images/cross-device-v1-4-0-activate.png)
+
+<figcaption><strong>2. Approver: check the request first.</strong> Opening the QR/link displays the same short code. It does not sign in either device; choose Sign in to continue only for your own request.</figcaption>
+</figure>
+
+<figure className="doc-screenshot">
+
+[![Fresh approving-browser login begins with the synthetic local account alice](./images/cross-device-v1-4-0-fresh-login.png)](./images/cross-device-v1-4-0-fresh-login.png)
+
+<figcaption><strong>3. Approver: complete fresh login.</strong> Enter the intended account. An existing approving-browser token is not a substitute for this new HTML login.</figcaption>
+</figure>
+
+<figure className="doc-screenshot">
+
+[![Approving browser presents the password checkpoint for the synthetic Alice Example account](./images/cross-device-v1-4-0-password.png)](./images/cross-device-v1-4-0-password.png)
+
+<figcaption><strong>4. Approver: satisfy the account's checkpoints.</strong> This test uses a password. Required TOTP, passkey, or provider steps must also finish before the account-and-code confirmation screen appears.</figcaption>
+</figure>
+
+<figure className="doc-screenshot">
+
+[![Requesting browser reaches the portal application page after explicit approval and successful redemption](./images/cross-device-v1-4-0-complete.png)](./images/cross-device-v1-4-0-complete.png)
+
+<figcaption><strong>5. Requester: continue in its own session.</strong> After approval, polling and single-use redemption complete sign-in. The requester receives independent credentials; this does not copy the approving browser's cookie.</figcaption>
+</figure>
+
+<figure className="doc-screenshot">
+
+[![Requesting browser reports Sign-in cancelled and hides the QR code and activation details](./images/cross-device-v1-4-0-cancelled.png)](./images/cross-device-v1-4-0-cancelled.png)
+
+<figcaption><strong>Alternative: cancel.</strong> Cancel ends the visible pending request and stops polling. Start a new interaction when you want to try again.</figcaption>
+</figure>
+
+</details>
+
 The QR/link contains an activation code, not the requester secret or bearer
 tokens. A link alone cannot authenticate either browser. Do not approve an
 unsolicited request just because its link points to your legitimate portal.
@@ -72,6 +143,21 @@ fresh HTML completion.
 This is a browser approval flow, **not an RFC 8628 device authorization endpoint**.
 The older `/qrcode/login.png` merely points at ordinary portal navigation and
 does not enable cross-device approval.
+
+
+```mermaid
+flowchart TD
+  accTitle: A pending approval and a completed requester session have different lifetimes
+  accDescr: The v1.4.0 source flow requires fresh HTML login and explicit approval before single-use redemption. Cancellation, denial, expiry, restart, or invalidated approval ends the unfinished interaction. Once redemption completes, the requester owns an independent session; ending the approving session cannot undo that completed transfer.
+  A["Requester starts a bound interaction"] --> P["Pending: QR/link and matching code"]
+  P --> L["Approver checks code and completes fresh login"]
+  L --> C{"Explicit decision"}
+  C -->|Approve| R["Approved and awaiting single-use redemption"]
+  C -->|Deny| X["Interaction ends without requester credentials"]
+  P -->|Cancel, expire, or restart| X
+  R -->|Approval invalidated before redemption| X
+  R -->|Successful redemption| S["Independent requester session"]
+```
 
 ## Session and failure behavior
 

@@ -19,6 +19,23 @@ MFA. `require mfa` adds an enrollment requirement when needed. Explicit rules
 that cannot match the user's registered methods **deny login**; they do not
 silently fall back to the default.
 
+
+```mermaid
+flowchart TD
+  accTitle: Method availability selects a sequence; verification completes it
+  accDescr: Explicit rules are tried in order. The first satisfiable rule selects checkpoints; an or expression takes the first available written alternative. With no satisfiable explicit rule, login is denied. The default applies when there is no explicit policy. Selected methods still need successful verification.
+  A["Local identity and registered methods"] --> B{"Explicit challenge policy applies?"}
+  B -->|No| D["Default password and available MFA; additive requirements apply"]
+  B -->|Yes| C["Examine explicit rules in order"]
+  C --> E{"Satisfiable rule found?"}
+  E -->|No| N["Deny; no default fallback"]
+  E -->|Yes| S["Select ordered methods or first available OR alternative"]
+  D --> V["Verify each selected checkpoint"]
+  S --> V
+  V -->|All complete| Y["Completed authentication evidence"]
+  V -->|Failure| N
+```
+
 ## Challenge Types
 
 | Type | Released portal behavior |

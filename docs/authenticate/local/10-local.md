@@ -31,6 +31,20 @@ policy. Use the [first application](../../start/first-app.md) for the complete
 local exercise, or [refresh sessions](../30-refresh-token.md) for a canonical
 HTTPS renewable-session deployment.
 
+
+```mermaid
+flowchart TD
+  accTitle: Store nickname, realm, and file path identify different things
+  accDescr: The configuration nickname lets a portal enable the store. The realm selects the account namespace during login. The private file path persists account records. A site authenticate handler mounts the portal, and a separate authorize handler protects the app. Runtime session storage is another artifact.
+  F["Private users.json path"] --> S["Store nickname: localdb"]
+  S --> R["Account realm: local"]
+  S --> P["Portal enables localdb"]
+  P --> L["authenticate route mounts portal"]
+  R --> C["Login chooses realm and account"]
+  C --> T["Completed portal credential"]
+  T --> A["Separate authorize policy protects app"]
+```
+
 ## Provision the database
 
 The service creates the database when it does not exist. Prepare its parent

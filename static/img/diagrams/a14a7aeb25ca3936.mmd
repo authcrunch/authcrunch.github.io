@@ -1,0 +1,8 @@
+flowchart TD
+  accTitle: The edge must establish trustworthy forwarding metadata
+  accDescr: The released helper prefers X-Real-IP, then X-Forwarded-For, then the connection address. These values are trustworthy only when the deployment controls who can supply them. The frontend must replace client-supplied forwarding values, and the protected service must reject direct bypass traffic.
+  C["Client and untrusted forwarding headers"] --> E["Controlled edge removes or replaces headers"]
+  E --> S["Service accepts traffic only from trusted frontend"]
+  S --> H["AuthCrunch source-address helper"]
+  H --> A["Normalized address for claims and checks"]
+  X["Direct client traffic"] -.->|Must not bypass frontend| S

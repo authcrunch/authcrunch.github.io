@@ -13,6 +13,18 @@ discovery:
 maintains it; it is not a list of plaintext passwords or a replacement Caddyfile.
 Treat it as private credential storage and retain the full schema when backing it up.
 
+
+```mermaid
+flowchart TD
+  accTitle: Account records and runtime credentials belong to separate storage
+  accDescr: This is a conceptual map, not a JSON schema to copy. The identity database retains account IDs, hashes, enrolled credentials, roles, and revisions. Optional runtime state retains completed sessions and replay information under a separate ownership contract. Signing and downstream OIDC key material have their own configuration.
+  D["Private identity database"] --> I["Immutable account IDs and canonical aliases"]
+  D --> C["Password hashes and enrolled factors"]
+  D --> R["Roles, challenge rules, revisions"]
+  S["Optional private runtime state"] --> T["Completed sessions and spent-credential history"]
+  K["Configured signing and OIDC key material"] --> V["Credential signing and verification"]
+```
+
 ## Database structure
 
 The document contains version/revision metadata, policy and user records:

@@ -20,6 +20,22 @@ The caller's authority is its shared System encryption key, not `authp/admin`.
 The admin API switch does not enable or protect this protocol. A portal needs
 a configured System key whose ID matches the message footer.
 
+
+```mermaid
+sequenceDiagram
+  accTitle: System messages return identity; the remote policy decides access
+  accDescr: Both services share a private System key and key ID. HTTPS carries a PASETO v4.local message; ordinary access JWTs and admin credentials are not this protocol. The portal checks Basic or API-key authentication requirements and returns encrypted identity data. The remote gatekeeper still applies its own ACL.
+  participant C as Client
+  participant G as Remote gatekeeper
+  participant P as Portal System API
+  C->>G: HTTPS Basic or account API-key request
+  G->>P: HTTPS POST with encrypted System message and key ID
+  P->>P: Decrypt, validate account and required evidence
+  P-->>G: Encrypted auth response or failure
+  G->>G: Authenticate returned identity and apply local ACL
+  G-->>C: App response or denial
+```
+
 ## Communication Encryption
 
 The HTTP body is a PASETO **`v4.local`** encrypted message, not ordinary JSON or

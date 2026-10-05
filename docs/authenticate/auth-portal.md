@@ -22,6 +22,22 @@ and disposable demo accounts. Older screenshots remain beside each task as
 historical references. Their lock logo, menus, and `/settings` URLs belong to an
 earlier interface; **current account management is at `/auth/profile/`**.
 
+
+```mermaid
+flowchart TD
+  accTitle: Portal access, account management, and app membership are distinct
+  accDescr: Completing login establishes a portal identity. Local Profile management also requires an allowed portal role and a live local session. Application routes require their own role/claim policy. External-provider users manage provider credentials at that provider rather than through the local Profile API.
+  L["Complete configured login"] --> I["Portal identity and credential"]
+  I --> P["Portal landing page and permitted links"]
+  I --> W["Identity display: whoami"]
+  I --> A{"Application ACL allows?"}
+  A -->|Yes| APP["Protected application"]
+  A -->|No| DENY["Forbidden"]
+  I --> S{"Local identity, allowed portal role, and live session?"}
+  S -->|Yes| PROFILE["Local Profile management"]
+  S -->|No| NO["No local Profile authority"]
+```
+
 ## User Login
 
 Open `/auth/login`, or request an application protected by an authorization

@@ -31,6 +31,22 @@ curl --fail-with-body --silent --show-error \
   --data '{"query":"all"}'
 ```
 
+
+```mermaid
+flowchart TD
+  accTitle: Administrative access and private-key export have independent switches
+  accDescr: The administrative API must be explicitly enabled and the caller must have admin authority. User mutations additionally select the intended realm and account. Private signing-key export requires its own opt-in; turning on administration does not expose it automatically. System messages use a different key-based protocol.
+  A["Server API request with portal credential"] --> E{"Admin API enabled?"}
+  E -->|No| N["No administrative access"]
+  E -->|Yes| R{"Caller has admin authority?"}
+  R -->|No| N
+  R -->|Yes| K{"Requested operation"}
+  K -->|Stores and users| U["Validate target realm, account, and payload"]
+  K -->|Private signing keys| X{"Private-key export enabled too?"}
+  X -->|No| N
+  X -->|Yes| F["Validate whole-set format and export without caching"]
+```
+
 ## Server State
 
 ### Metadata

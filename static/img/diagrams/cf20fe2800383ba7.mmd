@@ -1,0 +1,7 @@
+flowchart TD
+  accTitle: Choose the API by the caller’s authority
+  accDescr: The API families have different credential and permission boundaries, even when they share a portal mount. A successful application request or identity probe does not establish Profile, administrative, or System authority. Refresh and downstream OIDC endpoints implement separate protocols.
+  A{"What must the caller do?"} -->|Login or inspect identity| P["Portal API: login checkpoints or valid access credential"]
+  A -->|Manage own local account| U["Profile API: allowed role and live local portal session"]
+  A -->|Administer users or inspect stores| S["Server API: enabled admin API and admin role"]
+  A -->|Validate remote Basic or API key| Y["System API: encrypted message and shared System key"]

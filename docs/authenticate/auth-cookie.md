@@ -15,6 +15,20 @@ login. Enabling refresh sessions or OIDC adds **separate opaque credentials**.
 Cookie scope controls where the browser sends a credential; token verification
 and the application's policy decide whether that credential permits access.
 
+
+```mermaid
+flowchart TD
+  accTitle: Cookie delivery scope is different from permission to enter an app
+  accDescr: This illustrates host-only cookies with an access path of slash and a portal mounted at /auth. The browser sends only credentials whose host, path, and attributes permit delivery. The refresh credential stays at the portal; the access JWT can reach the app route, which still verifies it and evaluates its ACL.
+  B["Browser cookie store: same HTTPS host"] --> P["Request under /auth"]
+  B --> A["Request under /app"]
+  B --> O["Request to another hostname"]
+  P --> R["Matching access and portal-scoped cookies"]
+  A --> T["Access JWT; no portal-scoped refresh cookie"]
+  O --> N["Host-only credentials are not delivered"]
+  T --> V["App verifies credential and access policy"]
+```
+
 ## Intra-Domain Cookies
 
 For one HTTPS host with a portal at `/auth/` and an application at `/app/`, keep

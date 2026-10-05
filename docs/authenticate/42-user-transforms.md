@@ -18,6 +18,21 @@ A transform's matchers are combined; separate matching transforms run in order
 and can add cumulative roles. A later deny still blocks token issuance. The
 application's authorization policy remains a separate decision.
 
+
+```mermaid
+flowchart TD
+  accTitle: Claim mapping precedes token issuance; app access remains a later decision
+  accDescr: Transforms can add or drop roles, configure links, impose checkpoints, or deny login. During local login they can run before those checkpoints are complete. Authentication supplies factor evidence, and the application independently evaluates its ACL. A mapped role or a displayed link is not proof of MFA or application access.
+  I["Resolved identity and provider claims"] --> T["Apply matching transforms in order"]
+  T -->|Deny action| N["Stop token issuance"]
+  T --> C["Roles, claims, links, required checkpoints"]
+  C --> A["Complete required authentication"]
+  A -->|Success| J["Issue portal credential"]
+  A -->|Failure| N
+  J --> P["Application policy checks roles and verified evidence"]
+  P --> R["Allow or forbid this request"]
+```
+
 ## Add Roles
 
 Grant a portal role and an application role deliberately. For an exact local account:

@@ -1,0 +1,18 @@
+sequenceDiagram
+  accTitle: Refresh rotates a single-use credential against current account evidence
+  accDescr: The browser client serializes renewal across tabs. The portal checks transport, current local identity evidence, deadlines, and replay history before committing a new credential. A spent credential cannot be retried safely after an uncertain response. Native body transport uses explicit JSON credentials rather than this browser cookie exchange.
+  participant B as Browser coordinator
+  participant P as Portal
+  participant S as Account and session state
+  B->>B: Serialize renewal across tabs
+  B->>P: Same-origin POST with current refresh cookie
+  P->>S: Check family, deadlines, current evidence, replay
+  alt Credential is spent or account evidence changed
+    S-->>P: Deny, replay revokes descendants
+    P-->>B: Fresh authentication required
+  else Eligible renewal
+    P->>S: Commit rotation and spent-credential history
+    S-->>P: Commit succeeds
+    P-->>B: Replace access and refresh cookies
+  end
+  Note over B,P: Uncertain response: fresh login, no retry of old credential

@@ -1,0 +1,11 @@
+flowchart TD
+  accTitle: A pending approval and a completed requester session have different lifetimes
+  accDescr: The v1.4.0 source flow requires fresh HTML login and explicit approval before single-use redemption. Cancellation, denial, expiry, restart, or invalidated approval ends the unfinished interaction. Once redemption completes, the requester owns an independent session; ending the approving session cannot undo that completed transfer.
+  A["Requester starts a bound interaction"] --> P["Pending: QR/link and matching code"]
+  P --> L["Approver checks code and completes fresh login"]
+  L --> C{"Explicit decision"}
+  C -->|Approve| R["Approved and awaiting single-use redemption"]
+  C -->|Deny| X["Interaction ends without requester credentials"]
+  P -->|Cancel, expire, or restart| X
+  R -->|Approval invalidated before redemption| X
+  R -->|Successful redemption| S["Independent requester session"]

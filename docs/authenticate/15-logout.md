@@ -23,6 +23,22 @@ Use the built-in sign-out action for browser refresh sessions. Custom clients
 must follow [refresh logout](30-refresh-token.md); a GET alone does not revoke
 that family. Direct policies use the separate [direct OAuth contract](../authorize/direct-oauth.md).
 
+
+```mermaid
+flowchart TD
+  accTitle: Logout affects several independent session owners
+  accDescr: Without refresh, clearing portal cookies does not revoke every copied stateless JWT. With refresh enabled, the protected logout POST revokes the family and deletes cookies only after success. Provider logout and application sessions have their own owners. A storage failure must not be presented as a completed logout.
+  A["User requests portal logout"] --> B{"Refresh credential present?"}
+  B -->|Yes| C["Confirmation and protected logout POST"]
+  C --> D{"Family revocation committed?"}
+  D -->|No| E["Unavailable; do not report success"]
+  D -->|Yes| F["Clear applicable portal cookies"]
+  B -->|No| F
+  F --> P["Configured provider logout, if supported"]
+  F --> R["Configured trusted return destination"]
+  J["Copied access JWT"] --> X["Still subject to its own validation and expiry"]
+```
+
 ## Logout with Redirect URL Query Parameter
 
 An ordinary portal logout can accept an encoded `redirect_uri` destination only

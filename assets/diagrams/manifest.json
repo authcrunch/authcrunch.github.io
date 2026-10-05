@@ -1,4 +1,40 @@
 {
+  "0f97ba7fed02fc1d": {
+    "sourceHash": "0f97ba7fed02fc1da13737429e8e38349ff532e8b919ba8474d3b73992628205",
+    "title": "Method availability selects a sequence; verification completes it",
+    "description": "Explicit rules are tried in order. The first satisfiable rule selects checkpoints; an or expression takes the first available written alternative. With no satisfiable explicit rule, login is denied. The default applies when there is no explicit policy. Selected methods still need successful verification.",
+    "pages": [
+      "docs/authenticate/13-authentication-challenges.md"
+    ],
+    "light": {
+      "width": 394,
+      "height": 1208,
+      "hash": "e13008124110cb19aecf3c2a66c1094ca6212ff3a2d3403551985c8d6f517222"
+    },
+    "dark": {
+      "width": 394,
+      "height": 1208,
+      "hash": "9bf08e5a10968430db99c5cca7dd9f733114f075aa69b14e4f634067bb8a35b4"
+    }
+  },
+  "2706eaeeea99c202": {
+    "sourceHash": "2706eaeeea99c202035ee3737a3e3f5cb305ae6150bf65fe3bab16a3c8104790",
+    "title": "Verified email creates a dropbox request, not an active account",
+    "description": "The implemented registration path verifies form requirements and an emailed passcode, then writes a separate dropbox. Administrative notification follows that write. Approval and active-store provisioning are a separate operator-owned workflow; the released final screen does not implement that transfer.",
+    "pages": [
+      "docs/authenticate/local/40-user-registration.md"
+    ],
+    "light": {
+      "width": 482,
+      "height": 1094,
+      "hash": "82b2fdc968d6bdda077fd57ccbbfad55d2215efab3921192bfd9c48c62c4a386"
+    },
+    "dark": {
+      "width": 482,
+      "height": 1094,
+      "hash": "5bad89ed0897e8a01a34b371bb1b8b893908537fad85c32862e54db0166bd8ba"
+    }
+  },
   "2c294bbea84e8b11": {
     "sourceHash": "2c294bbea84e8b11e8623ee789a7a08217e47b1d6d662113f8aa09a4eabd2254",
     "title": "Trusted identity enters the backend only after authorization",
@@ -33,6 +69,42 @@
       "width": 921,
       "height": 934,
       "hash": "7c916b124006da0e848a98d03f76b9ba54d83bfa229bc1778daccd5f2e8e8538"
+    }
+  },
+  "4802a2bea3796607": {
+    "sourceHash": "4802a2bea37966079943ac94d5057386ef015cd80e5cbc3fcb9011e3790c6351",
+    "title": "The monitoring backend sits behind the authorization handler",
+    "description": "Provider or local login creates an identity, while the monitoring policy grants the specific application role. The protected route must run authorize before reverse_proxy. A visible portal link and an authenticated identity do not protect a backend that is directly reachable.",
+    "pages": [
+      "docs/authenticate/45-usage-examples.md"
+    ],
+    "light": {
+      "width": 537,
+      "height": 812,
+      "hash": "9cab6cbff4dae1c6c6a2cb5707c35f20eba1bf12ac003287ac8d63e3333b8d1b"
+    },
+    "dark": {
+      "width": 537,
+      "height": 812,
+      "hash": "4bc6298729c7f9eb8d3836fb37f9e7f99b86a47d62cdac488d8f0692215428e8"
+    }
+  },
+  "48bb3ec7b252b455": {
+    "sourceHash": "48bb3ec7b252b45595995f086bf38d1c43d7466da92246dbc530bc31aced03f6",
+    "title": "Template customization changes presentation, not authentication authority",
+    "description": "The renderer combines the selected embedded or configured template with portal state and translation helpers. Referenced CSS, JavaScript, and image assets are public UI resources. Login checkpoints, trusted redirects, and application ACLs retain their own server-side enforcement regardless of what the template displays.",
+    "pages": [
+      "docs/authenticate/55-ui-features.md"
+    ],
+    "light": {
+      "width": 744,
+      "height": 407,
+      "hash": "d1caab369d35f52760191698c034b9b018f5ed95b704bbc41711568b5967f1a9"
+    },
+    "dark": {
+      "width": 744,
+      "height": 407,
+      "hash": "556697668b276365e273541677981316baee49ace7b743fec5962ac3314292ba"
     }
   },
   "4a59bdec9754f023": {
@@ -89,6 +161,60 @@
       "hash": "adc5aaef0d5cf6e41694e7a3d46c82098bc48cac3cb3642c6c62eb2ed62c2c82"
     }
   },
+  "5fabdc9ba340a2ed": {
+    "sourceHash": "5fabdc9ba340a2ed93fae82ac52a531c98f4d86c1b0815eb8b115ce7c5d33ff8",
+    "title": "Store nickname, realm, and file path identify different things",
+    "description": "The configuration nickname lets a portal enable the store. The realm selects the account namespace during login. The private file path persists account records. A site authenticate handler mounts the portal, and a separate authorize handler protects the app. Runtime session storage is another artifact.",
+    "pages": [
+      "docs/authenticate/local/10-local.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 604,
+      "hash": "298d0ca4a4c8e95a7e84191ef32217e25b3d36d147dd3c5af9d85e3060dd8964"
+    },
+    "dark": {
+      "width": 360,
+      "height": 604,
+      "hash": "68a005afe2ac6897788c75bf4949054af51515a9bb1ada248ff43963c0624d9a"
+    }
+  },
+  "61caad8c09f06302": {
+    "sourceHash": "61caad8c09f063023614d516e291fa52265aae0b941f932a06527535ca60aa34",
+    "title": "Administrative access and private-key export have independent switches",
+    "description": "The administrative API must be explicitly enabled and the caller must have admin authority. User mutations additionally select the intended realm and account. Private signing-key export requires its own opt-in; turning on administration does not expose it automatically. System messages use a different key-based protocol.",
+    "pages": [
+      "docs/authenticate/api/40-server-api.md"
+    ],
+    "light": {
+      "width": 509,
+      "height": 1408,
+      "hash": "551f9c3bfb096bf1038ad87a656dc33e5ce0f5597e44386885be4d771f05ce85"
+    },
+    "dark": {
+      "width": 509,
+      "height": 1408,
+      "hash": "3034dae2224c1b7fc4173d2e9685281d06e6c0aa82a1cd4b99ca7912a4999fbc"
+    }
+  },
+  "62a61157129b3376": {
+    "sourceHash": "62a61157129b33768f13077565508c2bf91a0adb20322e04aa1ae983ba2fc5c8",
+    "title": "A pending approval and a completed requester session have different lifetimes",
+    "description": "The v1.4.0 source flow requires fresh HTML login and explicit approval before single-use redemption. Cancellation, denial, expiry, restart, or invalidated approval ends the unfinished interaction. Once redemption completes, the requester owns an independent session; ending the approving session cannot undo that completed transfer.",
+    "pages": [
+      "docs/authenticate/cross-device.md"
+    ],
+    "light": {
+      "width": 621,
+      "height": 958,
+      "hash": "861e016db2a799da4a6d4308025bff00de258f93b4adf350ac45513a4d23b8d4"
+    },
+    "dark": {
+      "width": 621,
+      "height": 958,
+      "hash": "09ad0d1939738226855b5431db595f85457f151297de86ed2b8a29d715ead3c3"
+    }
+  },
   "6647b026bd5f0a0c": {
     "sourceHash": "6647b026bd5f0a0c22e50f7c84be064691b6712d5a9acfb86fbd7ef1d86a68fc",
     "title": "Ordered ACL actions determine the final access decision",
@@ -123,6 +249,132 @@
       "width": 483,
       "height": 1279,
       "hash": "5a072f957490a78d598e82fdb82ade5ec3d4c30f2f33edc319e74128ea4a053e"
+    }
+  },
+  "7172acf8069ef6e9": {
+    "sourceHash": "7172acf8069ef6e91344d8627fa0d0025afd63d1b43ed93ef08284c4ba1d0e81",
+    "title": "Enrollment creates a factor; login proves its use",
+    "description": "A local user enrolls and verifies an authenticator through an allowed live Profile session. A subsequent login must complete the selected password and factor checkpoints. Only verified authentication evidence can satisfy an application rule requiring that factor. A required-enrollment setting or saved authenticator is not completed MFA.",
+    "pages": [
+      "docs/authenticate/11-mfa.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 897,
+      "hash": "9e999703554faa2755950e0bb9468e512dc3a7cdffb27fb4eeef8404052ba528"
+    },
+    "dark": {
+      "width": 360,
+      "height": 897,
+      "hash": "0b38f77a187f4f8696546d3460909e03f561e9e330eca004a78fd8390c4673d1"
+    }
+  },
+  "74e8f428350f9583": {
+    "sourceHash": "74e8f428350f9583567d21faf8e2a9375b8d4a1dd290704bd7a616581ba6934f",
+    "title": "Account records and runtime credentials belong to separate storage",
+    "description": "This is a conceptual map, not a JSON schema to copy. The identity database retains account IDs, hashes, enrolled credentials, roles, and revisions. Optional runtime state retains completed sessions and replay information under a separate ownership contract. Signing and downstream OIDC key material have their own configuration.",
+    "pages": [
+      "docs/authenticate/local/20-identity-store.md"
+    ],
+    "light": {
+      "width": 936,
+      "height": 244,
+      "hash": "df0b6f7a351ca081110109e0f4791d05de7b74ba7099d07dd98d686d66da4dec"
+    },
+    "dark": {
+      "width": 936,
+      "height": 244,
+      "hash": "6dc16324e156766ae51faf56cb107798cbd64ff4df2e659ec7fd7d38fdb863ae"
+    }
+  },
+  "750b6bc1aab037b1": {
+    "sourceHash": "750b6bc1aab037b1a45c6a967f3353894f51e9c06dcb1af70aaec18c0e2aeafe",
+    "title": "A signed credential alone is insufficient for local Profile management",
+    "description": "Profile targets the canonical account associated with the live local login session, not an arbitrary username in the body. External login and native body-refresh login do not create this local browser Profile context. A permitted caller submits a supported kind, and the server applies account validation and mutation rules.",
+    "pages": [
+      "docs/authenticate/api/30-profile-api.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 1066,
+      "hash": "cc98f5acd920c89f01163d742865f01c7377bf1386c54c2efe72914841b3889f"
+    },
+    "dark": {
+      "width": 360,
+      "height": 1066,
+      "hash": "f66fcc768470bfcf4c05d3c75b3a8c5802dd9192dac997d67d6f4fe6a4a2791c"
+    }
+  },
+  "83f68c388e1a63c6": {
+    "sourceHash": "83f68c388e1a63c6e8cdb178e1a75eeedf7432bc0596d5e2ac9c4b819158c1c3",
+    "title": "Login entry, trusted return, and logout return are separate destinations",
+    "description": "The policy chooses the login portal. The portal separately checks a requested application return destination against its trust rules. Logout has its own return-target checks. Neither a callback registration nor a UI landing URL grants arbitrary redirect trust.",
+    "pages": [
+      "docs/authenticate/100-trust-login-logout.md"
+    ],
+    "light": {
+      "width": 682,
+      "height": 836,
+      "hash": "ab11d05404b37f0e69108335743899bb727a313b817bcfa03cc2a689ff3ce329"
+    },
+    "dark": {
+      "width": 682,
+      "height": 836,
+      "hash": "a741dd58fd49524017765a034404d30ff680ed48200e56d814e65cb8647dcede"
+    }
+  },
+  "8d6f56425abda3f5": {
+    "sourceHash": "8d6f56425abda3f5849d8514f1697e87ade9cbd04d64cd17baef516684a01c96",
+    "title": "Logout affects several independent session owners",
+    "description": "Without refresh, clearing portal cookies does not revoke every copied stateless JWT. With refresh enabled, the protected logout POST revokes the family and deletes cookies only after success. Provider logout and application sessions have their own owners. A storage failure must not be presented as a completed logout.",
+    "pages": [
+      "docs/authenticate/15-logout.md"
+    ],
+    "light": {
+      "width": 508,
+      "height": 1031,
+      "hash": "fc6fcc894da69f70eca8033bdfc0c82e5b48f458a87f548956866c85a384a8da"
+    },
+    "dark": {
+      "width": 508,
+      "height": 1031,
+      "hash": "565bafc6e1617874aa6b65fd10011fed1d3c856fd60ef9e4e99786f96e974761"
+    }
+  },
+  "8e4e05bda5c7ac73": {
+    "sourceHash": "8e4e05bda5c7ac73e27cefa7b8f0dd03f1d73ea4c3c966e44c5b2a1fadb676e0",
+    "title": "Cookie delivery scope is different from permission to enter an app",
+    "description": "This illustrates host-only cookies with an access path of slash and a portal mounted at /auth. The browser sends only credentials whose host, path, and attributes permit delivery. The refresh credential stays at the portal; the access JWT can reach the app route, which still verifies it and evaluates its ACL.",
+    "pages": [
+      "docs/authenticate/auth-cookie.md"
+    ],
+    "light": {
+      "width": 552,
+      "height": 459,
+      "hash": "c9d3d2b8bc355a8bbdf27bba6956f3034f3d930dc5339809be8b27144c475b17"
+    },
+    "dark": {
+      "width": 552,
+      "height": 459,
+      "hash": "01359af2a7995f49a7635214b465d0fdf8e20cbef7bd9c1065e3e04332eb34e6"
+    }
+  },
+  "8fc135b67a09cca7": {
+    "sourceHash": "8fc135b67a09cca7fa60d18ac0a5261566b4a79d0ac78b8a7b29dbbca039648d",
+    "title": "System messages return identity; the remote policy decides access",
+    "description": "Both services share a private System key and key ID. HTTPS carries a PASETO v4.local message; ordinary access JWTs and admin credentials are not this protocol. The portal checks Basic or API-key authentication requirements and returns encrypted identity data. The remote gatekeeper still applies its own ACL.",
+    "pages": [
+      "docs/authenticate/api/50-system-api.md"
+    ],
+    "light": {
+      "width": 532,
+      "height": 723,
+      "hash": "7aa1b2a075b2b9c11deffc730f84bfd994ef8486e04e636d2cd3368db1e951dc"
+    },
+    "dark": {
+      "width": 532,
+      "height": 723,
+      "hash": "579d7850a98d2c9d829a73e52c3d85e2a20a2cf0317e948d67b58899586905c7"
     }
   },
   "931d656b8aa6637e": {
@@ -171,12 +423,48 @@
     "light": {
       "width": 710,
       "height": 1240,
-      "hash": "8eb41b37aac812359946afd9e680e647e4c9bb058f06c27596b6b4afd5ce54b4"
+      "hash": "f71b9e9d4be816d43091f0ad13dc98de8b06cf0d415477f2777dc35d9f0d3cee"
     },
     "dark": {
       "width": 710,
       "height": 1240,
-      "hash": "f15761c34fec475286b337610016cfb56c6815e5fb0fdb3e31f4636090b4a3bf"
+      "hash": "8f127ee754c52d208a978d1f80985f337b68e8b8037d0f384f6b21baf5830f15"
+    }
+  },
+  "a14a7aeb25ca3936": {
+    "sourceHash": "a14a7aeb25ca3936a600b77eca3311f51103fdb9c5a8a806b4168903fc0a0291",
+    "title": "The edge must establish trustworthy forwarding metadata",
+    "description": "The released helper prefers X-Real-IP, then X-Forwarded-For, then the connection address. These values are trustworthy only when the deployment controls who can supply them. The frontend must replace client-supplied forwarding values, and the protected service must reject direct bypass traffic.",
+    "pages": [
+      "docs/authenticate/90-misc.md"
+    ],
+    "light": {
+      "width": 392,
+      "height": 610,
+      "hash": "b8245351cf46eac01e554600df94f84801b6a67dd829da6feeb96b9b70865ad0"
+    },
+    "dark": {
+      "width": 392,
+      "height": 610,
+      "hash": "c83a8b0d1843ac69f68409bd28a1c83ea49e1d43fff9130ded728f86ecf10f0f"
+    }
+  },
+  "adb88315f567fd06": {
+    "sourceHash": "adb88315f567fd067376310cf221e602ca59df5810946af956740e76579d3b1a",
+    "title": "JSON login advances one bound checkpoint at a time",
+    "description": "The initial identity request creates temporary sandbox state. Each successful continuation returns the current sandbox secret and next challenge; previous secrets must not be replayed. Only authenticated true signals completion. Browser cookie delivery and explicitly enabled native body-refresh delivery remain different transports.",
+    "pages": [
+      "docs/authenticate/api/20-portal-api.md"
+    ],
+    "light": {
+      "width": 368,
+      "height": 927,
+      "hash": "4d80a2e556e11d2e89026b26da96820cd2478a1188dbbf5e2364696cb3ac2ec9"
+    },
+    "dark": {
+      "width": 368,
+      "height": 927,
+      "hash": "747fda10b9e4e22eac191c1415e79a681c831c4512cbf1a1f7af48eac89d17cd"
     }
   },
   "b03108d9121c89fc": {
@@ -195,6 +483,24 @@
       "width": 360,
       "height": 915,
       "hash": "fc1300b68c01830d87062c82e4d377411e62a10104a996b584bb33378ee19dfc"
+    }
+  },
+  "cf20fe2800383ba7": {
+    "sourceHash": "cf20fe2800383ba753d366e4d82dc3a9d7098ce90548ab36030d2228cae1eb31",
+    "title": "Choose the API by the caller’s authority",
+    "description": "The API families have different credential and permission boundaries, even when they share a portal mount. A successful application request or identity probe does not establish Profile, administrative, or System authority. Refresh and downstream OIDC endpoints implement separate protocols.",
+    "pages": [
+      "docs/authenticate/api/10-api.md"
+    ],
+    "light": {
+      "width": 816,
+      "height": 452,
+      "hash": "4c857b9b7eaf5a112d860812825e2bc6e8c60dbfffc60dea820c61724024d398"
+    },
+    "dark": {
+      "width": 816,
+      "height": 452,
+      "hash": "28b535db43a8decac86ee9f6ef24b86fb6531280aa11872299e6653c43d139ff"
     }
   },
   "d8af48e1c9005d29": {
@@ -231,6 +537,60 @@
       "width": 360,
       "height": 576,
       "hash": "55b9a04827651acdce86ba965c40139aed33aa871e15c08753661c80c2384309"
+    }
+  },
+  "e259a8545c6208a3": {
+    "sourceHash": "e259a8545c6208a393309dc45d39394ae7223524c839d5ed31ec6aef9513d1bb",
+    "title": "Claim mapping precedes token issuance; app access remains a later decision",
+    "description": "Transforms can add or drop roles, configure links, impose checkpoints, or deny login. During local login they can run before those checkpoints are complete. Authentication supplies factor evidence, and the application independently evaluates its ACL. A mapped role or a displayed link is not proof of MFA or application access.",
+    "pages": [
+      "docs/authenticate/42-user-transforms.md"
+    ],
+    "light": {
+      "width": 362,
+      "height": 851,
+      "hash": "f0c1384ba2f847397d196d9fbd928db7ddf86d004a22558993814cb67218dcbe"
+    },
+    "dark": {
+      "width": 362,
+      "height": 851,
+      "hash": "5460885c11ebbee2715ebd0d21cbdae168dbdb281569727c97eceb5d519f8ea8"
+    }
+  },
+  "e3784a07eb7f2279": {
+    "sourceHash": "e3784a07eb7f22792a4cf2ae96c236688f361d5f88a0751dabf7daae93879def",
+    "title": "Portal access, account management, and app membership are distinct",
+    "description": "Completing login establishes a portal identity. Local Profile management also requires an allowed portal role and a live local session. Application routes require their own role/claim policy. External-provider users manage provider credentials at that provider rather than through the local Profile API.",
+    "pages": [
+      "docs/authenticate/auth-portal.md"
+    ],
+    "light": {
+      "width": 1049,
+      "height": 614,
+      "hash": "8b1dc43cc296a19135fb4bb47d6141b373a931cad788c5cbe408b18f5336acd4"
+    },
+    "dark": {
+      "width": 1049,
+      "height": 614,
+      "hash": "d04de264bb05b60b701b1ea6daa94053360b351cdadeedb7c4d2bf4a3d3b4172"
+    }
+  },
+  "ed6a477247664999": {
+    "sourceHash": "ed6a4772476649995f6950d33a9280f23502a6f5dc4c5d5da94a43410726e585",
+    "title": "Refresh rotates a single-use credential against current account evidence",
+    "description": "The browser client serializes renewal across tabs. The portal checks transport, current local identity evidence, deadlines, and replay history before committing a new credential. A spent credential cannot be retried safely after an uncertain response. Native body transport uses explicit JSON credentials rather than this browser cookie exchange.",
+    "pages": [
+      "docs/authenticate/30-refresh-token.md"
+    ],
+    "light": {
+      "width": 533,
+      "height": 998,
+      "hash": "6b8f90c2b39907799cca9bfd035134650d90ad4a50e4494eff94b7d8a4ab55f7"
+    },
+    "dark": {
+      "width": 533,
+      "height": 998,
+      "hash": "89127ea1fdff88ad501cea1ce05e52198a687819a1a7f818f981d4d9062ebf3d"
     }
   },
   "eeb073afea56a0d9": {

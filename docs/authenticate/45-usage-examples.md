@@ -15,6 +15,20 @@ then configure that application's external URL to match the proxy path. Login
 alone does not protect Prometheus, Alertmanager, Kibana or Elasticsearch; the
 `authorize` handler must run before their responses and proxy requests.
 
+
+```mermaid
+flowchart TD
+  accTitle: The monitoring backend sits behind the authorization handler
+  accDescr: Provider or local login creates an identity, while the monitoring policy grants the specific application role. The protected route must run authorize before reverse_proxy. A visible portal link and an authenticated identity do not protect a backend that is directly reachable.
+  U["User browser"] --> L["Chosen local or external login"]
+  L --> T["Portal identity and deliberate monitoring role"]
+  T --> P{"Monitoring policy allows?"}
+  P -->|No| N["Denied before proxy"]
+  P -->|Yes| R["Trusted reverse proxy"]
+  R --> M["Private monitoring backend"]
+  D["Direct client access"] -.->|Must be blocked| M
+```
+
 ## Choose the login source
 
 Begin with the maintained [local walkthrough](../start/first-app.md),

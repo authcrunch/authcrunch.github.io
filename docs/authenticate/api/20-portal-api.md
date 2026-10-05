@@ -26,6 +26,27 @@ Use HTTPS. Browser-origin headers on unsafe requests must match the portal's
 public origin. Keep cookies or bearer credentials private. The examples below
 show JSON bodies so secrets do not need to be pasted into a shell history.
 
+
+```mermaid
+sequenceDiagram
+  accTitle: JSON login advances one bound checkpoint at a time
+  accDescr: The initial identity request creates temporary sandbox state. Each successful continuation returns the current sandbox secret and next challenge; previous secrets must not be replayed. Only authenticated true signals completion. Browser cookie delivery and explicitly enabled native body-refresh delivery remain different transports.
+  participant C as JSON client
+  participant P as Portal
+  C->>P: Username, realm, JSON response selection
+  P-->>C: Sandbox ID, current secret, next challenge
+  loop Required checkpoints
+    C->>P: Current sandbox fields and challenge response
+    P->>P: Validate binding and proof
+    break Checkpoint rejected or sandbox expires
+      P-->>C: Deny without completed credentials
+    end
+    P-->>C: Advance to the latest sandbox state
+  end
+  P-->>C: authenticated true after all requirements pass
+  Note over C,P: A challenge or password success alone is not completed login
+```
+
 ## User Login API
 
 **`POST /auth/login`** supports the local challenge sequence. OAuth and SAML

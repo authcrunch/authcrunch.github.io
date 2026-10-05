@@ -15,6 +15,21 @@ TOTP authenticator or WebAuthn credential. An external OAuth, SAML or LDAP
 provider's own MFA is a separate policy at that provider; `require mfa` does not
 turn an upstream login into a local enrollment workflow.
 
+
+```mermaid
+flowchart TD
+  accTitle: Enrollment creates a factor; login proves its use
+  accDescr: A local user enrolls and verifies an authenticator through an allowed live Profile session. A subsequent login must complete the selected password and factor checkpoints. Only verified authentication evidence can satisfy an application rule requiring that factor. A required-enrollment setting or saved authenticator is not completed MFA.
+  P["Local account with live Profile session"] --> E["Enroll authenticator"]
+  E --> V["Verify and save credential"]
+  V --> L["Start fresh login"]
+  L --> C["Select required checkpoints"]
+  C --> A["Verify password and selected factor"]
+  A -->|Success| T["Issue credential with verified amr evidence"]
+  A -->|Failure| N["No completed login"]
+  T --> R["Application ACL checks roles and factor evidence"]
+```
+
 ## Enabling MFA
 
 Add this fragment to an otherwise working local portal:

@@ -13,6 +13,18 @@ Local passwords support **bcrypt and Argon2id** in caddy-security v1.3.0 /
 go-authcrunch v1.3.8. A federated user changes their password at their identity
 provider; signing into the portal does not grant control of a local account.
 
+
+## Choose the password operation
+
+Hash generation, password replacement, and recovery are different operations with different authority.
+
+| Task | Interface | Expected outcome |
+| --- | --- | --- |
+| Generate bcrypt or Argon2id import material | Offline released password utility | A directive; no account is changed |
+| Change your own current password | Local Profile with live session and current proof | Account mutation; verify new login and old credential rejection |
+| Replace another account’s password | Enabled administrative API or compatible management client | Explicit admin mutation of the selected account |
+| Recover a forgotten password | Your administrator-assisted process | The released recovery view is not a complete reset-link service |
+
 ## Manually
 
 Use the released executable's password utility. It prompts without terminal echo:

@@ -13,6 +13,20 @@ Docusaurus documentation site. Begin with links, metadata and a local logo; use
 CSS or template replacement only when those settings cannot express the change.
 Keep the login fields, checkpoint bindings, mount paths and security headers intact.
 
+
+```mermaid
+flowchart TD
+  accTitle: Template customization changes presentation, not authentication authority
+  accDescr: The renderer combines the selected embedded or configured template with portal state and translation helpers. Referenced CSS, JavaScript, and image assets are public UI resources. Login checkpoints, trusted redirects, and application ACLs retain their own server-side enforcement regardless of what the template displays.
+  T["Selected embedded or custom Go template"] --> R["Portal template renderer"]
+  S["Server-owned portal state"] --> R
+  L["Compiled message helpers"] --> R
+  R --> H["Rendered HTML"]
+  A["Public CSS, JavaScript, and images"] --> H
+  H --> B["Browser presentation"]
+  P["Authentication and application policy"] --> E["Server-side access decisions"]
+```
+
 ## Templates
 
 ### Defining another theme

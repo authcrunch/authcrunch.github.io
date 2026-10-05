@@ -17,6 +17,21 @@ not automatically approve an account in the active login database or grant an
 application role. Plan the administrator's approval/provisioning step before
 offering this form to users.
 
+
+```mermaid
+flowchart TD
+  accTitle: Verified email creates a dropbox request, not an active account
+  accDescr: The implemented registration path verifies form requirements and an emailed passcode, then writes a separate dropbox. Administrative notification follows that write. Approval and active-store provisioning are a separate operator-owned workflow; the released final screen does not implement that transfer.
+  F["Registration form and requirements"] --> P["Temporary pending request"]
+  P --> M["Send confirmation passcode"]
+  M --> V{"Correct unexpired acknowledgment?"}
+  V -->|No| N["No active account"]
+  V -->|Yes| D["Write verified request to registration dropbox"]
+  D --> A["Attempt administrator notification"]
+  D -.->|Separate operator-owned approval and provisioning| U["Active identity store"]
+  U --> L["Fresh login and deliberate application grant"]
+```
+
 ## Configuration
 
 This complete example attaches a registry to `localdb` and the explicit `local`

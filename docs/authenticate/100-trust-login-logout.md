@@ -17,6 +17,21 @@ Trust rules govern navigation. They neither grant application access nor share
 cookies across hosts. A complete deployment needs matching routes, a usable
 application role, verification keys and [cookie scope](auth-cookie.md).
 
+
+```mermaid
+flowchart TD
+  accTitle: Login entry, trusted return, and logout return are separate destinations
+  accDescr: The policy chooses the login portal. The portal separately checks a requested application return destination against its trust rules. Logout has its own return-target checks. Neither a callback registration nor a UI landing URL grants arbitrary redirect trust.
+  A["Anonymous app request"] --> P["Policy's configured auth URL"]
+  P --> L["Portal completes login"]
+  L --> T{"Requested application return is trusted?"}
+  T -->|Yes| R["Return to that destination"]
+  T -->|No| F["Use safe portal behavior; no arbitrary return"]
+  O["Portal logout request"] --> X{"Logout return is trusted?"}
+  X -->|Yes| Y["Configured permitted logout destination"]
+  X -->|No| Z["Safe local logout destination"]
+```
+
 ## Trust Login Redirect URI
 
 Inside the portal, explicitly trust the application's exact host and routes:
