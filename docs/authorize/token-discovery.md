@@ -76,11 +76,16 @@ policy and use [token stripping](headers.md#strip-jwt-token-from-http-request).
 ## Agentic Prompts
 
 Use these prompts to explore the topic with your own LLM. Open an exercise and
-copy its prompt. Each one makes the upstream
-[Caddy Security skills](https://github.com/greenpau/caddy-security/tree/main/.codex/skills)
-and [go-authcrunch skills](https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills)
-its primary authorities, with this website as secondary context. The prompts
-ask the LLM to read the relevant skills, follow their implementation references,
+copy its prompt. Each one uses these primary sources, with this website as
+secondary context:
+
+- Caddy Security: [AGENTS.md](https://github.com/greenpau/caddy-security/blob/main/AGENTS.md)
+  and [skills](https://github.com/greenpau/caddy-security/tree/main/.codex/skills).
+- go-authcrunch: [AGENTS.md](https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md)
+  and [skills](https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills).
+
+The prompts ask the LLM to read each repository's root and applicable scoped
+`AGENTS.md` files, follow the relevant skills and implementation references,
 and distinguish `main` from your released version. Use synthetic token values
 and redacted configuration when adding your deployment details.
 
@@ -93,9 +98,13 @@ and redacted configuration when adding your deployment details.
 Act as my tutor for AuthCrunch token discovery.
 
 Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
 https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
 https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
-Read the relevant SKILL.md files and their linked implementation references.
+Read each repository's root AGENTS.md before the relevant SKILL.md files.
+Also read any scoped AGENTS.md files that apply to implementation paths you
+inspect, and follow the skills' linked implementation references.
 
 Secondary reference:
 https://docs.authcrunch.com/docs/authorize/token-discovery
@@ -121,9 +130,13 @@ distinguish these stages; wait for my answers before explaining them.
 Help me reason about AuthCrunch token-source precedence.
 
 Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
 https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
 https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
-Read the relevant SKILL.md files and their linked implementation references.
+Read each repository's root AGENTS.md before the relevant SKILL.md files.
+Also read any scoped AGENTS.md files that apply to implementation paths you
+inspect, and follow the skills' linked implementation references.
 
 Secondary reference:
 https://docs.authcrunch.com/docs/authorize/token-discovery
@@ -150,9 +163,13 @@ trying a different identity later. Do not assume valid means permitted.
 Teach me the header formats accepted by AuthCrunch token discovery.
 
 Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
 https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
 https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
-Read the relevant SKILL.md files and their linked implementation references.
+Read each repository's root AGENTS.md before the relevant SKILL.md files.
+Also read any scoped AGENTS.md files that apply to implementation paths you
+inspect, and follow the skills' linked implementation references.
 
 Secondary reference:
 https://docs.authcrunch.com/docs/authorize/token-discovery
@@ -178,9 +195,13 @@ placeholder, and mark any parsing edge case the documentation does not resolve.
 Help me understand custom token names in AuthCrunch.
 
 Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
 https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
 https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
-Read the relevant SKILL.md files and their linked implementation references.
+Read each repository's root AGENTS.md before the relevant SKILL.md files.
+Also read any scoped AGENTS.md files that apply to implementation paths you
+inspect, and follow the skills' linked implementation references.
 
 Secondary reference:
 https://docs.authcrunch.com/docs/authorize/token-discovery
@@ -207,9 +228,13 @@ another reference rather than guessing from a cookie's name.
 Explain browser cookie scope in an AuthCrunch deployment.
 
 Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
 https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
 https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
-Read the relevant SKILL.md files and their linked implementation references.
+Read each repository's root AGENTS.md before the relevant SKILL.md files.
+Also read any scoped AGENTS.md files that apply to implementation paths you
+inspect, and follow the skills' linked implementation references.
 
 Secondary reference:
 https://docs.authcrunch.com/docs/authorize/token-discovery
@@ -236,9 +261,13 @@ sharing cookies across sibling hosts; keep production examples on HTTPS.
 Help me choose an AuthCrunch token-source policy.
 
 Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
 https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
 https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
-Read the relevant SKILL.md files and their linked implementation references.
+Read each repository's root AGENTS.md before the relevant SKILL.md files.
+Also read any scoped AGENTS.md files that apply to implementation paths you
+inspect, and follow the skills' linked implementation references.
 
 Secondary reference:
 https://docs.authcrunch.com/docs/authorize/token-discovery
@@ -265,9 +294,13 @@ rules. State assumptions instead of inventing unsupported directives.
 Guide me through diagnosing AuthCrunch token discovery.
 
 Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
 https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
 https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
-Read the relevant SKILL.md files and their linked implementation references.
+Read each repository's root AGENTS.md before the relevant SKILL.md files.
+Also read any scoped AGENTS.md files that apply to implementation paths you
+inspect, and follow the skills' linked implementation references.
 
 Secondary reference:
 https://docs.authcrunch.com/docs/authorize/token-discovery
@@ -294,9 +327,13 @@ a time. Do not diagnose the cause from an HTTP status alone.
 Help me design tests for AuthCrunch token discovery.
 
 Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
 https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
 https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
-Read the relevant SKILL.md files and their linked implementation references.
+Read each repository's root AGENTS.md before the relevant SKILL.md files.
+Also read any scoped AGENTS.md files that apply to implementation paths you
+inspect, and follow the skills' linked implementation references.
 
 Secondary reference:
 https://docs.authcrunch.com/docs/authorize/token-discovery
@@ -324,9 +361,13 @@ signature or role failures. Keep commands illustrative until I provide a test UR
 Help me understand how to migrate an AuthCrunch client away from query tokens.
 
 Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
 https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
 https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
-Read the relevant SKILL.md files and their linked implementation references.
+Read each repository's root AGENTS.md before the relevant SKILL.md files.
+Also read any scoped AGENTS.md files that apply to implementation paths you
+inspect, and follow the skills' linked implementation references.
 
 Secondary reference:
 https://docs.authcrunch.com/docs/authorize/token-discovery
@@ -354,9 +395,13 @@ solution to credentials appearing in URLs.
 Quiz me on AuthCrunch token discovery.
 
 Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
 https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
 https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
-Read the relevant SKILL.md files and their linked implementation references.
+Read each repository's root AGENTS.md before the relevant SKILL.md files.
+Also read any scoped AGENTS.md files that apply to implementation paths you
+inspect, and follow the skills' linked implementation references.
 
 Secondary reference:
 https://docs.authcrunch.com/docs/authorize/token-discovery

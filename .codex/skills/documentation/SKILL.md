@@ -174,8 +174,10 @@ authorize adding prompts throughout the corpus.
 
 When requested, use 5–15 topic-specific prompts with concrete learning tasks.
 Each copyable prompt includes the Caddy Security and go-authcrunch upstream
-`.codex/skills` URLs as its primary authorities, ahead of website documentation.
-Ask the LLM to read relevant SKILL.md files and their implementation references,
+`AGENTS.md` and `.codex/skills` URLs as its primary authorities, ahead of website
+documentation. Ask the LLM to read each root AGENTS.md first, any scoped AGENTS.md
+that applies to inspected implementation paths, and then the relevant SKILL.md
+files and their implementation references. It should
 distinguish main from the user's released version, and resolve disagreements
 using linked code/tests. Include the topic's website URL as secondary context;
 ask for pasted content if sources are inaccessible. Use synthetic/redacted
