@@ -9,76 +9,66 @@ discovery:
 
 # Local identity store format
 
-The `users.json` file has the following structure:
+`users.json` is the file-backed local identity database. AuthCrunch creates and
+maintains it; it is not a list of plaintext passwords or a replacement Caddyfile.
+Treat it as private credential storage and retain the full schema when backing it up.
 
-```
+## Database structure
+
+The document contains version/revision metadata, policy and user records:
+
+```json
 {
-  "version": "1.1.2",
-  "policy": {
-    "password": {
-      "keep_versions": 10,
-      "min_length": 8,
-      "max_length": 128,
-      "require_uppercase": false,
-      "require_lowercase": false,
-      "require_number": false,
-      "require_non_alpha_numeric": false,
-      "block_reuse": false,
-      "block_password_change": false
-    },
-    "user": {
-      "min_length": 3,
-      "max_length": 50,
-      "allow_non_alpha_numeric": false,
-      "allow_uppercase": false
-    }
-  },
-  "revision": 2,
-  "last_modified": "2021-10-25T13:04:58.482997492-04:00",
-  "users": [
-    {
-      "id": "39555452-454e-4c85-829b-8195a8dd8c81",
-      "username": "webadmin",
-      "email_address": {
-        "address": "webadmin@localdomain.local",
-        "domain": "localdomain.local"
-      },
-      "email_addresses": [
-        {
-          "address": "webadmin@localdomain.local",
-          "domain": "localdomain.local"
-        }
-      ],
-      "passwords": [
-        {
-          "purpose": "generic",
-          "algorithm": "bcrypt",
-          "hash": "$2a$10$B67nHY0PEdxLYdyoLk1YLOomvs.T/dSIyzPuoX9vWULrsD3PRf/sq",
-          "cost": 10,
-          "expired_at": "0001-01-01T00:00:00Z",
-          "created_at": "2021-10-25T17:04:58.4251263Z",
-          "disabled_at": "0001-01-01T00:00:00Z"
-        }
-      ],
-      "created": "2021-10-25T17:04:58.42512588Z",
-      "last_modified": "2021-10-25T17:04:58.42512594Z",
-      "roles": [
-        {
-          "name": "admin",
-          "organization": "authp"
-        }
-      ]
-    }
-  ]
+  "version": "<database schema version>",
+  "revision": 1,
+  "last_modified": "<timestamp>",
+  "policy": {"password": {}, "user": {}},
+  "users": []
 }
 ```
 
-If the file does not exists, the plugin would create it for you.
-The password will be in the log output.
+This is an explanatory outline, **not a database to copy into a deployment**.
+Actual policy objects contain password length/history/reuse and username rules.
+User records contain immutable IDs, canonical and additional email addresses,
+roles, password records, registered credentials, security revisions and optional
+challenge rules. Fields change with the schema; preserve unknown fields rather
+than reconstructing an account from this outline.
 
-Finally, browse to `/auth` and login with the username and password:
+| Data | Meaning |
+| --- | --- |
+| User `id` | Immutable account identity; deleting/recreating a username changes it |
+| `username`, `email_address`, `email_addresses` | Canonical account and aliases; aliases must resolve to the same account |
+| `roles` | Role objects, including organization/name components |
+| `passwords` | Hash algorithm, encoded hash, creation and disabled/expired state |
+| `auth_challenge_rules` | Ordered local authentication policy |
+| Database/security revisions | Mutation and authentication-evidence tracking |
 
-![](../images/basic_login.png)
+Password records support bcrypt and Argon2id in the released bundle. A Caddyfile
+import such as `bcrypt:COST:HASH` or `argon2:PHC` is **not** the JSON hash field's
+entire value. Use [password management](30-password-management.md) to generate and
+apply credentials through the supported boundary.
 
-There is no web interface for adding users. You would need to manually
-edit the JSON file to add users.
+## Manage accounts through supported interfaces
+
+Use [static users](50-static-users.md) for controlled initial provisioning and
+[Server API](../api/40-server-api.md) or a compatible `authdbctl` for account CRUD.
+Local users manage their own passwords/MFA through `/auth/profile/` with an
+allowed role and live portal session. The older claim that users can only be
+added by manually editing JSON is no longer accurate.
+
+<figure className="doc-screenshot">
+  <a href={require('../images/basic_login.png').default}><img src={require('../images/basic_login.png').default} alt="Historical local portal login form" /></a>
+  <figcaption>Historical login screen retained as a visual reference. Use the current portal's username and password steps; database management is a separate task.</figcaption>
+</figure>
+
+## Protect changes and backups
+
+Do not edit the file while a process is writing it. If manual repair is necessary,
+stop the writer, take a coherent private backup and preserve IDs, schema,
+credentials and revision data. Do not infer that replacing a hash in a live file
+will trigger every security invalidation the supported mutation API performs.
+
+Application signing keys, OIDC private keys and encrypted runtime state are
+separate artifacts. Restore the appropriate coherent set and test fresh login,
+role changes, disabled accounts and old-session invalidation. Never publish the
+database or use it as a browser-downloadable debugging artifact.

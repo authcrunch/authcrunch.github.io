@@ -1,152 +1,42 @@
+# Local registration collection: caddy-security v1.3.0 / go-authcrunch v1.3.8.
+# SMTP is a loopback-only disposable mail sink, not a production mail service.
 {
-	http_port 8080
-	https_port 8443
-	# debug
-
-	order authenticate before respond
-	order authorize before basicauth
-
 	security {
-		credentials root@localhost {
-			username root
-			password foobar
+		local identity store localdb {
+			realm local
+			path /var/lib/authcrunch/users.json
 		}
 
-		messaging email provider localhost-smtp-server {
+		messaging email provider localmail {
 			address 127.0.0.1:1025
 			protocol smtp
 			passwordless
-			sender root@localhost "My Auth Portal"
-			# credentials root@localhost
-			bcc greenpau@localhost
+			sender no-reply@example.com "Example registration"
 		}
 
-		local identity store localdb {
-			realm local
-			path {$HOME}/.local/caddy/users.json
-		}
-
-		oauth identity provider github {env.GITHUB_CLIENT_ID} {env.GITHUB_CLIENT_SECRET}
-
-		user registration localdbRegistry {
-			dropbox {$HOME}/.local/caddy/registrations.json
-			title "User Registration"
-			code "NY2020"
+		user registration localregistry {
+			dropbox /var/lib/authcrunch/registrations.json
+			title "Request an account"
+			code {env.AUTHCRUNCH_REGISTRATION_CODE}
 			require accept terms
-			require domain mx
-			admin email admin@localhost
-			email provider localhost-smtp-server
-			identity store localdb
+			link terms https://auth.example.com/terms
+			link privacy https://auth.example.com/privacy
+			allow exact domain example.com
+			email provider localmail
+			admin email admin@example.com
+			identity store localdb local
 		}
 
 		authentication portal myportal {
-			crypto default token lifetime 3600
-			crypto key sign-verify {env.JWT_SHARED_KEY}
-			cookie domain myfiosgateway.com
 			enable identity store localdb
-			enable identity provider github
-			ui {
-				links {
-					"My Website" https://assetq.myfiosgateway.com:8443/ icon "las la-star"
-					"Guests" https://assetq.myfiosgateway.com:8443/guests icon "las la-star"
-					"Users" https://assetq.myfiosgateway.com:8443/users icon "las la-star"
-					"Admins" https://assetq.myfiosgateway.com:8443/admins icon "las la-star"
-					"My Identity" "/whoami" icon "las la-user"
-				}
-				password_recovery_enabled yes
-			}
-			transform user {
-				match origin local
-				action add role authp/user
-				ui link "Portal Settings" /settings icon "las la-cog"
-			}
-			transform user {
-				match realm github
-				match sub github.com/greenpau
-				action add role authp/user
-			}
-		}
-
-		authorization policy guests_policy {
-			# disable auth redirect
-			set auth url https://auth.myfiosgateway.com:8443/
-			allow roles authp/admin authp/user
-			crypto key verify {env.JWT_SHARED_KEY}
-			acl rule {
-				comment allow guests only
-				match role guest authp/guest
-				allow stop log info
-			}
-			acl rule {
-				comment default deny
-				match any
-				deny log warn
-			}
-		}
-
-		authorization policy users_policy {
-			set auth url https://auth.myfiosgateway.com:8443/
-			allow roles authp/admin authp/user
-			crypto key verify {env.JWT_SHARED_KEY}
-			acl rule {
-				comment allow users
-				match role authp/user
-				allow stop log info
-			}
-			acl rule {
-				comment default deny
-				match any
-				deny log warn
-			}
-		}
-
-		authorization policy admins_policy {
-			set auth url https://auth.myfiosgateway.com:8443/
-			allow roles authp/admin authp/user
-			crypto key verify {env.JWT_SHARED_KEY}
-			acl rule {
-				comment allow users
-				match role authp/user
-				allow stop log info
-			}
-			acl rule {
-				comment default deny
-				match any
-				deny log warn
-			}
+			crypto key sign-verify {env.AUTHCRUNCH_SIGNING_KEY}
 		}
 	}
 }
 
-(tls_config) {
-	tls {$HOME}/.local/caddy/server.crt {$HOME}/.local/caddy/server.key
-}
-
-auth.myfiosgateway.com {
-	import tls_config
+auth.example.com {
 	route {
-		authenticate with myportal
-	}
-}
-
-assetq.myfiosgateway.com {
-	import tls_config
-	route /guests* {
-		authorize with guests_policy
-		respond * "assetq - guests only" 200
-	}
-
-	route /users* {
-		authorize with users_policy
-		respond * "assetq - users" 200
-	}
-
-	route /admins* {
-		authorize with admins_policy
-		respond * "assetq - admins" 200
-	}
-
-	route {
-		respond "assetq is running"
+		redir /auth /auth/ 308
+		authenticate /auth/* with myportal
 	}
 }

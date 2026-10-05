@@ -1,329 +1,182 @@
 ---
-description: "Configure account registration, email verification, domain restrictions, and administrative approval."
+description: "Collect local registration requests, verify email, and understand the separate approval and provisioning boundary."
 discovery:
   topic: login-and-mfa
   kind: guide
   aliases: ["sign up", "enrollment", "SMTP"]
 ---
 
+import CodeBlock from '@theme/CodeBlock';
+import example from '@site/assets/conf/local/registration/Caddyfile?raw';
+
 # User Registration
+
+Registration collects a local account request and verifies its email before
+saving a password-hashed record in a **separate registration dropbox**. It does
+not automatically approve an account in the active login database or grant an
+application role. Plan the administrator's approval/provisioning step before
+offering this form to users.
 
 ## Configuration
 
-The provided configuration defines the security and communication backbone for the
-registration workflow, specifically linking the user interface to the backend services.
+This complete example attaches a registry to `localdb` and the explicit `local`
+realm. The portal enables that store; there is no separate `enable registration`
+portal directive. It uses a **loopback test mail sink** at port 1025.
 
-It establishes a local email provider named `localhost-smtp-server` operating
-on `127.0.0.1:1025`, which handles the delivery of the verification passcodes seen
-in the registration process.
+<CodeBlock language="caddyfile" title="assets/conf/local/registration/Caddyfile">{example}</CodeBlock>
 
-The `user registration` block, labeled `localdbRegistry`, configures the specific
-behavior of the form: it enforces the "NY2020" registration code, requires users to
-accept terms, and validates email domains via MX records. Furthermore, it
-designates `localdb` as the identity store for saving user credentials and specifies
-that registration data should be backed up to a JSON "dropbox" file.
+Set private `AUTHCRUNCH_REGISTRATION_CODE` and `AUTHCRUNCH_SIGNING_KEY` values,
+prepare private writable database paths, and provide the terms/privacy pages.
+For deployment, replace the test mail sink with a configured
+[messaging provider](../../messaging/intro.md) and credentials. `passwordless`
+means no SMTP authentication here, not passwordless user registration.
 
-```text
-	security {
-		credentials root@localhost {
-			username root
-			password foobar
-		}
+| Setting | Purpose |
+| --- | --- |
+| `dropbox` | Private registration database, distinct from the active user database |
+| `identity store localdb local` | Store nickname and explicit registration realm |
+| `code` | Invitation value entered on the form; distinct from the emailed verification passcode |
+| `require accept terms`, `link terms`, `link privacy` | Required acknowledgement and published policy links |
+| `require domain mx` | Optional DNS MX check; not proof of mailbox ownership |
+| `email provider`, `admin email` | Confirmation delivery and administrator notification |
 
-		messaging email provider localhost-smtp-server {
-			address 127.0.0.1:1025
-			protocol smtp
-			passwordless
-			sender root@localhost "My Auth Portal"
-			bcc greenpau@localhost
-		}
-
-		user registration localdbRegistry {
-			dropbox assets/config/registrations.json
-			title "User Registration"
-			code "NY2020"
-			require accept terms
-			require domain mx
-			email provider localhost-smtp-server
-			admin email admin@localhost
-			identity store localdb
-		}
-
-	}
-```
-
-The newly registered users will appear in the `registrations.json` file.
-An administrator must manually move entries from `registrations.json`
-to `users.json` file.
-
-The parameters are:
-
-* `dropbox`: The file path pointing to registration database.
-* `code`: The registration code. A user must know what that code is to
-  successfully submit a registration request.
-* `require accept terms`: A user must accept terms and conditions, as well
-  as privacy policy to proceed
-* `disabled on`: disables user registration
-* `title`: changes the title of the registration page
-* `require domain mx`: forces the check of domain MX record
-* `admin email`: defines the email recipients after a registrant clicked
-  email confirmation link and provided valid code
+The historical `disabled on` setting is not supported by this registry grammar.
+To stop offering registration, remove its registry definition from the deployed
+configuration. A registration password must be a real password; hash-import
+strings are deliberately rejected on this untrusted boundary.
 
 ## Email Domain Restrictions
 
 ### Domain Restrictions Syntax
 
-The `allow` and `deny` directives support various matching strategies to provide flexibility
-when defining domain boundaries. By default, the system performs an **exact** match, but
-you can specify different modes to handle subdomains or complex patterns.
-
 ```text
-<allow|deny> [exact|partial|prefix|suffix|regex] domain <domain>
+<allow|deny> [exact|partial|prefix|suffix|regex] domain PATTERN
 ```
 
-The domain matching strategies are:
-
-* `exact` (Default): The domain must match the input string precisely, e.g. `allow exact domain foo.com` will
-  not match `user@sub.foo.com`.
-* `partial`: Matches if the specified string appears anywhere within the domain name.
-* `prefix`: Matches if the domain starts with the specified string, e.g. `deny prefix domain dev-` would
-  block `dev-portal.com` and `dev-testing.org`.
-* `suffix`: Useful for capturing all subdomains, e.g. `allow suffix domain .edu` would permit
-  any educational institution, while `allow suffix domain .foo.com` would permit `a.foo.com` and `b.foo.com`.
-* `regex`: Allows for complex pattern matching using regular expressions. This is powerful for advanced
-  filtering needs where standard string matching is insufficient.
-
-
-```text
-user registration localdbRegistry {
-    # Allow any subdomain of microsoft.com
-    allow suffix domain .microsoft.com
-    
-    # Block any domain starting with "gmail" or "outlook"
-    deny regex domain ^(gmail|outlook).*
-}
-```
+Rules are evaluated in order; the **first match** decides. With rules present,
+the unmatched default is the opposite of the last configured action. Use exact
+allow rules for a closed domain list. Partial/prefix/suffix and unanchored regex
+rules can admit lookalike names; a domain restriction is not an email-verification
+or organization-membership assertion.
 
 ### Trusted Email Domains
 
-The registration system allows administrators to restrict sign-ups to specific, trusted email
-providers. This is achieved using the `allow domain` directive, which creates
-a **permit-only list** of approved domains.
-
-When these directives are present in the `user registration` block, the system enforces a strict
-validation check on the user's provided email address. Any registration attempt using a domain not
-explicitly listed—such as a personal or unauthorized address—will be automatically blocked. This
-ensures that only users from designated organizations (e.g., `foo.com` or `bar.com`) can
-access the registration form, streamlining the onboarding process for corporate or private
-environments and reducing the volume of unauthorized requests for administrators to review.
-
-```text
-    user registration localdbRegistry {
-        allow domain foo.com
-        allow domain bar.com
-    }
+```caddyfile
+allow exact domain example.com
+allow exact domain subsidiary.example.com
 ```
 
-If there are no `deny` statements, then the registration system applies **default deny**.
+Unmatched domains are denied because the last action is allow. These two domains
+are explicit; subdomains are not automatically included.
 
 ### Untrusted Email Domains
 
-In addition to permitting specific domains, you can explicitly block untrusted or high-risk
-email providers using the `deny domain` directive. This creates an **exclusion list** that
-prevents registrations from specific sources, such as known disposable email services or
-competitors, while potentially leaving the rest of the internet open for registration.
-
-```text
-    user registration localdbRegistry {
-        deny domain anonymous-mail.com
-        deny domain temporary-inbox.org
-    }
+```caddyfile
+deny exact domain blocked.example
 ```
 
-When a user attempts to register, the system cross-references their email domain against
-this list. If a match is found, the registration is immediately halted with an error message. This
-is an effective first line of defense against spam and bot registrations, ensuring that only
-legitimate email providers can reach the verification stage.
-
-If there are no `allow` statements, then the registration system applies **default allow**.
+A deny-only list allows unmatched domains. It is not equivalent to a closed
+invitation policy and does not prevent arbitrary other email domains.
 
 ### Mixture of Allow and Deny Domains
 
-In the case where there are mixture of `allow` and `deny` statements, the default action
-will be the opposite of the last action in the list.
+For `deny ...` then `allow ...`, unmatched domains are denied. Reversing that
+order makes unmatched domains allowed. Overlapping rules use the first match.
+Test intended, unintended and lookalike domains before exposing the form.
 
-For example, the following configuration results in **default deny**.
+<span id="registration-worflow"></span>
 
-```text
-deny domain foo.com
-allow domain bar.com
-```
-
-Contrast with the following configuration where it results in **default allow**.
-
-```text
-allow domain bar.com
-deny domain foo.com
-```
-
-## Registration Worflow
+## Registration workflow
 
 ### Accessing the Registration Page
 
-On the initial Sign In screen, users who do not yet have an account can initiate
-the process by clicking the Register link located at the bottom of the login card.
-
-![](./images/register_button.png)
+Open `/auth/register/local` or the login page's registration link. Registration
+is for anonymous users, not an account-edit screen for an already signed-in user.
 
 ### Filling Out the Registration Form
 
-The user is directed to the User Registration form. Here, they must provide a unique username,
-password, email address, and their first and last name. Additionally, a specific Registration
-Code (e.g., "NY2020") is required to proceed. The user must also agree to the Terms and
-Conditions before clicking Submit.
-
-![](./images/user_registration_form.png)
+Supply the username, email, password and required acknowledgement/invitation code.
+The form and backend enforce their configured policies. Do not submit a password
+hash or assume an email suffix alone grants application membership.
 
 ### Initial Confirmation
 
-Upon submission, a "Thank you" screen appears. This informs the user that the first part of
-the registration is successful and instructs them to check their email for a confirmation
-link within the next 15 minutes.
-
-![](./images/user_registration_confirmation.png)
+The portal sends a confirmation message and retains temporary registration state.
+Restart loses that pending state. The released cache defaults to a 60-minute
+lifetime. The screen's 15-minute delivery estimate is not an expiry deadline, and
+the older email's 45-minute wording differs from that cache lifetime. Complete promptly and start again after expiry.
 
 ### Receiving the Verification Email
 
-The system sends an email containing the registration metadata (e.g. Session ID and IP Address). Importantly, this
-email includes a link to verify the account and a unique 7-character alphanumeric passcode (e.g., `BV9c18W`)
-that expires in 45 minutes.
-
-![](./images/user_registration_email_body.png)
+Use the new link and passcode delivered to **your own mailbox**. The invitation
+code from configuration and the generated emailed passcode serve different
+purposes. Do not reuse values visible in the historical demonstration below.
 
 ### Entering the Passcode
 
-After clicking the link in the email, the user is brought to a Passcode verification
-screen. They must enter the exact code provided in the email and click Submit to
-validate their email address.
-
-![](./images/user_registration_passcode_verification.png)
+The acknowledgement verifies the generated passcode, consumes pending state and
+writes the account request into the registration dropbox. An expired or mismatched
+request does not create an active account.
 
 ### Administrative Approval
 
-Once the email is validated, the user receives a final confirmation message. The account
-is not yet active; it now requires an administrator to approve or disapprove the request. The
-user will receive a final notification via email once the decision is made.
+The administrator receives a notification. The released implementation has no
+complete approval UI or automated dropbox-to-active-store transfer. The final
+screen's promise of an approval email describes the intended workflow, not a
+completed administrative service.
 
-![](./images/user_registration_passcode_complete.png)
+Review requests and provision approved accounts through your established local
+account management process. Offline record migration must stop both writers,
+back up both databases, preserve schema/IDs/credential metadata and assign only
+reviewed roles. Do not casually paste an entire registration database over
+`users.json`. Keep an application role separate from the request's portal role,
+and verify an approved user's fresh login and denied access before that grant.
 
-The `admin email` should get the following message:
+<details className="screenshot-gallery">
+<summary>Historical registration screens and email</summary>
 
-```text
-RCPT TO:<admin@localhost>
-250 2.0.0 I'll make sure <admin@localhost> gets this
-DATA
-354 Go ahead. End your data with <CR><LF>.<CR><LF>
-MIME-Version: 1.0
-Date: Sat, 14 Mar 2026 19:42:18 -0400
-From: "My Auth Portal" <root@localhost>
-Subject: Review User Registration
-Thread-Topic: Account Registration.
-Message-ID: <oXFribHzRN3N0dX9fnWXMORQLDugOtg8OcVfSVXmdBKrPf27zhmKdyKnFDgYcVFe.root@localhost>
-To: admin@localhost
-Bcc: greenpau@localhost
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html; charset="utf-8"
+<figure className="doc-screenshot">
+  <img src={require('./images/register_button.png').default} alt="Historical login card with its registration link" />
+  <figcaption>Registration entrance; current branding and mount follow your deployment.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+  <img src={require('./images/user_registration_form.png').default} alt="Historical local-account registration form" />
+  <figcaption>Account details, invitation code and policy acceptance. Use your own code and current form.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+  <img src={require('./images/user_registration_confirmation.png').default} alt="Historical confirmation asking the registrant to check email" />
+  <figcaption>Pending verification; the 15-minute text estimates email delivery, not credential expiry.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+  <img src={require('./images/user_registration_email_body.png').default} alt="Historical demonstration email containing a registration link and passcode" />
+  <figcaption>Demonstration only; fresh links and codes are delivered by your configured mail provider.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+  <img src={require('./images/user_registration_passcode_verification.png').default} alt="Historical emailed-passcode verification form" />
+  <figcaption>Verify the generated passcode, distinct from the invitation code.</figcaption>
+</figure>
+<figure className="doc-screenshot">
+  <img src={require('./images/user_registration_passcode_complete.png').default} alt="Historical registration acknowledgement mentioning administrator approval" />
+  <figcaption>The request is stored for review; the advertised approval workflow is not automatically implemented.</figcaption>
+</figure>
 
-<html>
-  <body>
-    <p>
-      The following user successfully registered with the portal.
-      Please use management interface to approve or decline the registratio=
-n.
-    </p>
-
-    <p>The registation metadata follows:</p>
-    <ul style=3D"list-style-type: disc">
-      <li>Registration ID: 9J4bpbKo7O6JjM4pWBskM9eXlyit2tftAjbylBB7pJY66geH=
-qJ0dQOemckU3jXvuAS7MN0g5xZG</li>
-      <li>Registration URL: <code>https://auth.myfiosgateway.com:8443/auth/=
-register</code></li>
-      <li>Realm Name: <code>userpool1.localdomain</code></li>
-      <li>Session ID: 4Mi1FZTfRZyUhvcoeC2BkpICfgU007ntltCehlBFR</li>
-      <li>Request ID: e404cf81-51d9-4177-992e-7eee858d0165</li>
-      <li>Username: <code>greenpau</code></li>
-      <li>Email: <code>greenpau@outlook.com</code></li>
-      <li>IP Address: <code>192.168.99.182</code></li>
-      <li>Timestamp: Sat Mar 14 23:42:18 UTC 2026</li>
-    </ul>
-  </body>
-</html>
-```
-
-At the moment, there is no approval workflow. The admin should manually transfer data
-from `registrations.json` file.
-
-> TODO: Add "Admin UI" (similar to Profile UI) to allow approvals via management interface.
+</details>
 
 ## Testing with Mock Email Server
 
-The following command installs `smtp-debug-server`
+Use an isolated, loopback-only SMTP sink on port 1025 with disposable accounts.
+Inspect confirmation and administrator messages locally. Such a sink prints or
+stores verification credentials; it is not production delivery.
 
-```bash
-go install github.com/emersion/go-smtp/cmd/smtp-debug-server@latest
-```
-
-```text
-$ ls -alh ~/dev/bin/smtp-debug-server
--rwxr-xr-x@ 1 greenpau  staff   7.0M Mar  9 09:00 /Users/greenpau/dev/bin/smtp-debug-server
-```
-
-Start the server:
-
-```text
-$ smtp-debug-server
-2026/03/09 09:02:31 Starting SMTP server at 127.0.0.1:1025
-```
-
-Once the mock email server is running, you can test the registration workflow without
-needing a live mail provider. When you submit the registration form, the system connects
-to the server at `127.0.0.1:1025` and transmits the message. The `smtp-debug-server` will
-then output the raw email content directly to your terminal.
+Test the permitted domain, denied/lookalike domains, wrong invitation code,
+missing terms, duplicate username/email, wrong verification passcode, expiry and
+a restart between submission and verification. Confirm that the active user
+store is unchanged until your separate provisioning step. Stop the mail sink
+and test portal when finished.
 
 ## Multiple Realms
 
-Each identity store can support its own distinct registration workflow, provided that they are configured
-with unique `dropbox` paths and identity stores. This isolation ensures that registration data
-and final user credentials remain separate for different authentication domains or user groups within
-the same security configuration.
-
-```Caddyfile
-		user registration localdbRegistry {
-			dropbox assets/config/registrations_local.json
-			title "User Registration"
-			code "NY2020"
-			require accept terms
-			require domain mx
-			email provider localhost-smtp-server
-			admin email admin@localhost
-			identity store localdb
-		}
-
-		user registration userpool1dbRegistry {
-			dropbox assets/config/registrations_userpool1.json
-			title "User Registration"
-			code "NY2020"
-			require accept terms
-			require domain mx
-			email provider localhost-smtp-server
-			admin email admin@localhost
-			identity store userpool1
-		}
-```
-
-In this configuration, the registration endpoints will have identity store realm name in its path:
-
-```text
-/auth/register/local
-/auth/register/userpool1.localdomain
-```
+Use a distinct registration nickname and dropbox per enabled local store.
+Supply the intended realm explicitly in `identity store NICKNAME REALM` and visit
+`/auth/register/REALM`. A portal accepts one attached registry per store. Sharing
+a dropbox or confusing the nickname with the realm defeats that separation.

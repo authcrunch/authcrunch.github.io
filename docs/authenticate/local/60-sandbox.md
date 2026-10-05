@@ -9,102 +9,80 @@ discovery:
 
 # Local login sandbox
 
-After a user submits their username, the portal creates a sandbox session
-where the user must complete a sequence of checkpoints before a JWT is
-issued. The sequence follows this order:
+A local login creates a short-lived interaction before issuing its final access
+credential. The username and realm locate an account; a bound sandbox tracks the
+checkpoints still requiring proof. It is distinct from a completed JWT, refresh
+family or OIDC session.
 
-1. Portal looks up the user in the identity store and runs configured
-   transformers
-2. Portal creates a sandbox session with the resulting checkpoint sequence
-   and redirects the user to `/sandbox/{session_id}`
-3. User completes each checkpoint in order (password, then MFA if required)
-4. When all checkpoints pass, the portal issues a JWT
+1. Resolve the local identity and its registered methods.
+2. Apply transforms and select the effective challenge sequence.
+3. Create the temporary sandbox, bind it to the client, and present its next step.
+4. Verify checkpoints in order, then issue credentials only if current identity
+   and policy evidence still permit completion.
 
-The sandbox session is separate from the final JWT session. It uses its
-own cookie (`SandboxID`) and a temporary secret. The session expires
-after 5 minutes regardless of activity. If it expires, the user is
-redirected back to the login page.
+For a `/auth/` portal, HTML navigation uses `/auth/sandbox/...`. The default
+browser-binding cookie is `AUTHP_SANDBOX_ID`, scoped to `/auth/`; custom prefixes
+change its name. JSON clients use the bound `sandbox_id` and rotating
+`sandbox_secret` from the [Portal API](../api/20-portal-api.md).
 
 ## Checkpoints
 
-The checkpoint sequence is built at login from two sources:
-
-1. **Identity store defaults** -- typically password authentication
-2. **Transformer rules** -- directives like `require mfa` add additional
-   checkpoints
-
-The sandbox processes checkpoints in order. A user who must provide both
-a password and a second factor will see the password form first, then the
-MFA form.
+The account's ordered challenge rules select a sequence. Transform policies can
+replace that selection and additive requirements can add checkpoints. A matched
+explicit policy with no available sequence denies login rather than reverting
+to password. See [challenge rules](../13-authentication-challenges.md).
 
 ### Password
 
-The user enters their password. After 5 consecutive failed attempts the
-sandbox session is terminated.
+The server verifies the current password; it does not trust the submitted
+username as proof. Sandbox retry limits end a failed interaction. A separate
+password-attempt limiter spans browser, JSON and Basic paths, with five failed
+attempts causing a five-minute source block. Public IPv4 sources can share the
+blocked `/24`; private IPv4 and IPv6 use individual addresses. A new sandbox
+does not clear that limiter.
 
-If the user has forgotten their password, the sandbox provides a password
-recovery flow at the same step.
+The recovery view is legacy scaffolding, not a complete forgotten-password flow.
+Use a reviewed administrator-assisted account recovery process.
 
 ### MFA
 
-The MFA checkpoint behavior depends on what tokens the user has registered:
+| Requirement and registration | Outcome |
+| --- | --- |
+| Additive `require mfa`, no usable token | Enrollment flow is required |
+| TOTP checkpoint, usable app token | Verify a current time-based code |
+| `u2f` checkpoint, usable hardware/passkey token | Issue and verify a bound WebAuthn assertion |
+| Generic MFA with both kinds | Factor selection may be offered |
+| Explicit unavailable-method policy | Deny rather than bypass the policy |
 
-| User has | What happens |
-|----------|-------------|
-| No tokens registered | Forced to register a token before proceeding |
-| Authenticator app only | Prompted for TOTP code |
-| Hardware token only | Prompted for WebAuthn challenge |
-| Both app and hardware token | Chooses which method to use |
+Registering a credential changes security state. It is not reusable proof of a
+completed authentication checkpoint; follow the fresh-login requirement after
+enrollment. A WebAuthn challenge response containing options is likewise not a
+successful assertion.
 
-Registration counts as passing the checkpoint.
-
-Failed MFA attempts are tracked on the user record across sandbox
-sessions. After 10 consecutive failures the MFA checkpoint is locked
-for 15 minutes. During lockout, MFA authentication is rejected without
-validating the code. The lockout expires automatically and the counter
-resets on successful MFA validation. Both authenticator app and hardware token failures
-contribute to the same counter.
-
-For adding MFA tokens outside the login flow, see
-[Multi-Factor Authentication](../11-mfa.md).
+Local MFA failures are tracked on the account across sandboxes. Ten failures
+cause a 15-minute lockout; successful validation clears the counter and expired
+lockouts reset. TOTP and hardware failures contribute to the same account limit.
+Use [MFA enrollment](../11-mfa.md) and maintain clock synchronization for TOTP.
 
 ## Configuration
 
-Password-only login requires no additional configuration. The sandbox
-runs automatically.
+In an otherwise configured portal with the local store enabled:
 
-The following configuration adds MFA as a required checkpoint using the
-`require mfa` directive inside `transform user`:
-
-```
-{
-  security {
-    local identity store localdb {
-      realm local
-      path {$HOME}/.local/caddy/users.json
-    }
-
-    authentication portal myportal {
-      enable identity store localdb
-      transform user {
-        match realm local
-        require mfa
-      }
-    }
-  }
-}
-
-auth.myfiosgateway.com {
-  authenticate with myportal
+```caddyfile
+transform user {
+    match realm local
+    require mfa
 }
 ```
 
-With this configuration, every user in the `local` realm must complete
-both a password checkpoint and an MFA checkpoint at login. If the user
-has not registered any MFA token, the sandbox will require them to
-register one before login completes.
+The first application's store and portal wiring are in the
+[complete walkthrough](../../start/first-app.md). Passwordless or strict-factor
+selection needs explicit challenge rules, not merely this additive MFA requirement.
 
 ## Terminating a Session
 
-A user can end their sandbox session early by visiting
-`/sandbox/{id}/terminate`, which redirects back to the login page.
+The sandbox expires after five minutes from creation and can be cancelled. Its terminate navigation
+ends that interaction and returns to login; it does not log out an independently
+completed session. On expiry, stale/rotated-secret rejection or uncertain request
+completion, start a fresh login rather than replaying an old secret. Logout for
+completed sessions follows the [logout guide](../15-logout.md).
