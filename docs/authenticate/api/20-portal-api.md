@@ -1,485 +1,335 @@
 ---
-description: "Use JSON requests to log in and inspect the current portal identity and session."
+description: "Complete JSON login challenges and inspect portal identity, token expiry, and optional upstream ID tokens."
 discovery:
   topic: operations
   kind: reference
-  aliases: ["login endpoint", "whoami", "claims"]
+  aliases: ["login endpoint", "whoami", "claims", "beacon"]
 ---
 
-# Portal API 
+# Portal API
 
-The Portal API provides programmatic access to authentication tokens and allows you to inspect the current
-identity context, such as user claims and session expiration.
+Use this API to complete a local login or inspect a portal access token. Login
+is a stateful sequence: knowing the username or receiving a challenge does not
+authenticate a user. For an ordinary browser integration, prefer the portal's
+built-in login and [Profile UI](../auth-portal.md).
 
 ## Request Requirements
 
-To interact with the Portal API endpoints, your request **must** satisfy at least one of the following
-conditions to ensure a JSON response:
+Request JSON with `Accept: application/json` or `format=json`. A JSON
+`Content-Type` alone does not select a JSON response for these routes.
 
-* The following HTTP header is present `Accept: application/json`.
-* The URL Parameter `format=json` in the query string
+```bash
+export AUTH_PORTAL_BASE_URL=https://auth.example.com/auth
+```
 
-> In the examples below, the portal is at `https://auth.myfiosgateway.com:8443/auth/`.
->
-> ```bash
-> export AUTH_PORTAL_BASE_URL=https://auth.myfiosgateway.com:8443/auth
-> ```
+Use HTTPS. Browser-origin headers on unsafe requests must match the portal's
+public origin. Keep cookies or bearer credentials private. The examples below
+show JSON bodies so secrets do not need to be pasted into a shell history.
 
 ## User Login API
 
-The login endpoint `/login` allows users to log in.
-
-The authentication process is challenge-based. 
+**`POST /auth/login`** supports the local challenge sequence. OAuth and SAML
+login involve provider redirects and callbacks; this is not a password grant
+against every external identity provider.
 
 ### Initial Login Request
 
-To begin the sequence, send a `POST` request with a JSON
-payload containing the user's credentials and realm.
+```json
+{"username":"alice","realm":"local"}
+```
+
+The response identifies a temporary login sandbox:
 
 ```json
 {
-  "username": "<username or email>",
-  "realm":    "<realm_name>"
+  "sandbox_id":"opaque-login-id",
+  "sandbox_secret":"opaque-current-secret",
+  "next_challenge":"password"
 }
 ```
 
-Here, we are initiating login sequence for `jsmith` user.
-
-```bash
-curl -s -X POST ${AUTH_PORTAL_BASE_URL}/login \
--H 'Accept: application/json' -H "Content-Type: application/json" \
--d '{"username": "jsmith", "realm": "local"}'
-```
-
-The response:
-
-```json
-{
-  "sandbox_id": "pCbGuPPvVWN4pGTZ7catkm9T14qEYgtvVU91Jn",
-  "sandbox_secret": "oulYNaZcG4wuNbedKn5HXPB6Rf7RlZjas1Lra6MaKP12eM",
-  "next_challenge": "password"
-}
-```
-
-The data in the response helps navigate challenge-response sequence.
-
-Upon receiving the initial request, the portal determines the necessary **challenges** (e.g passwords, MFA,
-or recovery codes) required for the user to proceed.
+Select the configured realm and retain these values privately. The sandbox
+expires 300 seconds after creation. Send one response at a time; its secret
+rotates as the sequence advances. Never replay the secret from an earlier step.
+An explicit unsatisfiable challenge policy denies login. See
+[challenge selection](../13-authentication-challenges.md) for ordered alternatives.
 
 ### Password Challenge
 
-In the previous response from Portal API we got `sandbox_id`, `sandbox_secret`, and `next_challenge`.
-
-The value of the `next_challenge` is `password`.
-
-The next step is to provide the password.
-
-```bash
-curl -s -X POST ${AUTH_PORTAL_BASE_URL}/login \
--H 'Accept: application/json' -H "Content-Type: application/json" \
--d '{"username": "jsmith", "realm": "local", "sandbox_id": "pCbGuPPvVWN4pGTZ7catkm9T14qEYgtvVU91Jn", "sandbox_secret": "oulYNaZcG4wuNbedKn5HXPB6Rf7RlZjas1Lra6MaKP12eM", "challenge_kind": "password", "challenge_response": "My@Password123"}'
+```json
+{
+  "username":"alice",
+  "realm":"local",
+  "sandbox_id":"opaque-login-id",
+  "sandbox_secret":"opaque-current-secret",
+  "challenge_kind":"password",
+  "challenge_response":"replace-with-the-account-password"
+}
 ```
+
+Use the returned sandbox fields and `next_challenge` to continue. A successful
+password checkpoint may lead to another factor; it is not permission to assume
+that the login is complete. Failed password and MFA attempts have separate
+[lockout behavior](../13-authentication-challenges.md).
 
 ### MFA Application Passcode Challenge
 
-Let's configure MFA app for `jsmith`. That will increase the amount of authentication challenges for the user.
+Enroll an authenticator in `/auth/profile/` before requiring it for login.
+Scan the enrollment QR code in a private authenticator app and verify a code.
+The following preserved Profile screens illustrate enrollment, not an API
+that distributes a user's factor secret to another application.
 
-![](./images/user_profile_mfa_app_01.png)
+<figure className="doc-screenshot">
 
-For demostration purposes, copy the "Token Secret". It could be used for automating of MFA passocode generation.
+[![Profile MFA list with Add MFA App selected](./images/user_profile_mfa_app_01.png)](./images/user_profile_mfa_app_01.png)
 
-![](./images/user_profile_mfa_app_02.png)
+<figcaption>Start application authenticator enrollment from Profile → MFA / 2FA.</figcaption>
+</figure>
 
-In this case the secret is `mrYEe39OnjZquTrFfg44IFlbGTDMrURlW8wORistVDivuOyzhtIkDYIemscayW6QcwumJe9f33C6a6ruUaZn5qxTKkJq`.
+<details className="screenshot-gallery">
+<summary>Application authenticator enrollment screens</summary>
 
-After completing the registration, we have our app token as second factor for authentication purposes.
+<figure className="doc-screenshot">
 
-![](./images/user_profile_mfa_app_03.png)
+[![Application authenticator lifetime, digits, and secret fields](./images/user_profile_mfa_app_02.png)](./images/user_profile_mfa_app_02.png)
 
-Let's replay the authentication sequence:
+<figcaption>This published training account illustrates the enrollment fields. Never reuse its visible secret; generate and keep your own enrollment private.</figcaption>
+</figure>
 
-```bash
-curl -s -X POST ${AUTH_PORTAL_BASE_URL}/login \
--H 'Accept: application/json' -H "Content-Type: application/json" \
--d '{"username": "jsmith", "realm": "local"}' | jq
-```
+<figure className="doc-screenshot">
 
-Response:
+[![Enrolled application authenticator in the MFA list](./images/user_profile_mfa_app_03.png)](./images/user_profile_mfa_app_03.png)
 
-```json
-{
-  "sandbox_id": "QmyqKX1DPxXqx4nvpKDkeAeSd0s5RWE3rCAbhpbIucZ",
-  "sandbox_secret": "ockTNMowxaPXt77DxUbJrhf9zPXrI2m7qnuMozuD2WKOJ",
-  "next_challenge": "password"
-}
-```
+<figcaption>The saved App Token appears in the authenticator list.</figcaption>
+</figure>
 
-The next step is to provide the password.
+<figure className="doc-screenshot">
 
-```bash
-curl -s -X POST ${AUTH_PORTAL_BASE_URL}/login \
--H 'Accept: application/json' -H "Content-Type: application/json" \
--d '{"username": "jsmith", "realm": "local", "sandbox_id": "QmyqKX1DPxXqx4nvpKDkeAeSd0s5RWE3rCAbhpbIucZ", "sandbox_secret": "ockTNMowxaPXt77DxUbJrhf9zPXrI2m7qnuMozuD2WKOJ", "challenge_kind": "password", "challenge_response": "My@Password123"}' | jq
-```
+[![Application authenticator details and Test button](./images/user_profile_mfa_app_04.png)](./images/user_profile_mfa_app_04.png)
 
-Response:
+<figcaption>Inspect the authenticator and use Test to verify a current code.</figcaption>
+</figure>
 
-```json
-{
-  "sandbox_id": "QmyqKX1DPxXqx4nvpKDkeAeSd0s5RWE3rCAbhpbIucZ",
-  "sandbox_secret": "HdxZqeLXmwVlJvJyIKXaeZykw1hHskFqqHguxVrU9B6",
-  "next_challenge": "totp"
-}
-```
+</details>
 
-Note the modifications to the `sandbox_secret` in the response.
-
-The next step is to provide application token password, e.g. `973554`.
-
-```bash
-curl -s -X POST ${AUTH_PORTAL_BASE_URL}/login \
--H 'Accept: application/json' -H "Content-Type: application/json" \
--d '{"username": "jsmith", "realm": "local", "sandbox_id": "QmyqKX1DPxXqx4nvpKDkeAeSd0s5RWE3rCAbhpbIucZ", "sandbox_secret": "HdxZqeLXmwVlJvJyIKXaeZykw1hHskFqqHguxVrU9B6", "challenge_kind": "totp", "challenge_response": "973554"}' | jq
-```
-
-Te authentication flow is complete. The user is now authenticated.
+When `next_challenge` is `totp`, send the current authenticator code and the
+**latest** sandbox secret:
 
 ```json
 {
-  "authenticated": true,
-  "access_token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhZGRyIjoiMTkyLjE2OC45OS4xODIiLCJlbWFpbCI6ImpzbWl0aEBsb2NhbGhvc3QubG9jYWxkb21haW4iLCJleHAiOjE3NzM3MTI0MjksImlhdCI6MTc3MzcwODgyOSwiaXNzIjoiaHR0cHM6Ly9hdXRoLm15Zmlvc2dhdGV3YXkuY29tOjg0NDMvYXV0aC9sb2dpbiIsImp0aSI6InpjZm50VkRsWlYycmdueEJYdjJ5T0NnOHNWSldxVUVtMmdEOVVNWDJnVTAiLCJuYW1lIjoiU21pdGgsIEpvaG4iLCJuYmYiOjE3NzM3MDg3NjksIm9yaWdpbiI6ImxvY2FsIiwicmVhbG0iOiJsb2NhbCIsInJvbGVzIjpbImF1dGhwL3VzZXIiLCJkYXNoIl0sInN1YiI6ImpzbWl0aCJ9.APovz60JMRhMSwCzWoViRi0ntny0QQu2FAPsT0u_PDGN8m2yFZPc74nR9YNedgmXgAkBVnqygn5ZQ2BKwL4tPQ",
-  "access_token_name": "access_token"
+  "username":"alice",
+  "realm":"local",
+  "sandbox_id":"opaque-login-id",
+  "sandbox_secret":"latest-secret-from-password-response",
+  "challenge_kind":"totp",
+  "challenge_response":"current-code-from-authenticator"
 }
 ```
+
+A generic `mfa` checkpoint can accept a numeric authenticator code or begin
+WebAuthn. An explicitly selected `totp` checkpoint does not allow the client to
+substitute another method. Enrollment changes can require a fresh login.
 
 ### WebAuthn/U2F Challenge
 
-Let's configure WebAuthn (U2F) for `jsmith`. That will increase the amount of authentication challenges for the user.
+Enroll and verify the credential in Profile first. Browser and operating-system
+prompts vary; a security key, platform authenticator, or supported passkey
+manager can perform the ceremony. AuthCrunch's UI labels this credential U2F.
 
-Enter a Title and Description for your new token to help you identify it later (e.g., "My PC Passkey"). You can
-also optionally assign labels from the dropdown menu. Click Next to proceed.
+<figure className="doc-screenshot">
 
-![](./images/user_profile_add_u2f_01.png)
+[![Authenticator title and description](./images/user_profile_add_u2f_01.png)](./images/user_profile_add_u2f_01.png)
 
-Prepare your hardware security key (like a Yubikey) or your device's built-in authenticator. Click the Register
-button to begin the handshake.
+<figcaption>Give the authenticator a recognizable title and description.</figcaption>
+</figure>
 
-![](./images/user_profile_add_u2f_02.png)
+<details className="screenshot-gallery">
+<summary>WebAuthn enrollment and verification screens</summary>
 
-A system prompt will appear asking where you want to save the passkey. Choose from options like
-Google Password Manager, iCloud Keychain, a Security Key, or your Chrome profile.
+<figure className="doc-screenshot">
 
-![](./images/user_profile_add_u2f_03.png)
+[![U2F registration button](./images/user_profile_add_u2f_02.png)](./images/user_profile_add_u2f_02.png)
 
-The system will confirm that the site supports passkeys. Click Continue to save the credential to your
-selected password manager or device.
+<figcaption>Start the browser registration ceremony.</figcaption>
+</figure>
 
-![](./images/user_profile_add_u2f_04.png)
+<figure className="doc-screenshot">
 
-Once the registration is saved, you must test it. Click the Verify button to initiate a test authentication challenge.
+[![Browser passkey destination selection](./images/user_profile_add_u2f_03.png)](./images/user_profile_add_u2f_03.png)
 
-![](./images/user_profile_add_u2f_05.png)
+<figcaption>Choose a supported credential manager or security key.</figcaption>
+</figure>
 
-A prompt will appear to sign in using the passkey you just created. Click Continue to move to the final security check.
+<figure className="doc-screenshot">
 
-![](./images/user_profile_add_u2f_06.png)
+[![Operating system add passkey confirmation](./images/user_profile_add_u2f_04.png)](./images/user_profile_add_u2f_04.png)
 
-Provide your local computer account password or biometric (Touch ID/Windows Hello) to authorize the use of
-the passkey. Click Unlock.
+<figcaption>Confirm creation in the selected manager.</figcaption>
+</figure>
 
-![](./images/user_profile_add_u2f_07.png)
+<figure className="doc-screenshot">
 
-A "Token Verification" success message will appear. Click Next to move to the final review stage.
+[![Profile credential verification button](./images/user_profile_add_u2f_05.png)](./images/user_profile_add_u2f_05.png)
 
-![](./images/user_profile_add_u2f_08.png)
+<figcaption>Verify the newly registered credential before saving.</figcaption>
+</figure>
 
-Review the metadata for your new authenticator, including the Title, RP Name, and User Name. If everything
-looks correct, click Register to finalize the setup.
+<figure className="doc-screenshot">
 
-![](./images/user_profile_add_u2f_09.png)
+[![Operating system passkey sign in confirmation](./images/user_profile_add_u2f_06.png)](./images/user_profile_add_u2f_06.png)
 
-You will be redirected to the Multi-Factor Authenticators dashboard. Your new Hardware / U2F Token will now
-appear in the list with its creation timestamp.
+<figcaption>Allow the manager to use the credential for this site.</figcaption>
+</figure>
 
-![](./images/user_profile_add_u2f_10.png)
+<figure className="doc-screenshot">
 
-Let's replay the authentication sequence:
+[![Local credential manager unlock prompt](./images/user_profile_add_u2f_07.png)](./images/user_profile_add_u2f_07.png)
 
-```bash
-curl -s -X POST ${AUTH_PORTAL_BASE_URL}/login \
--H 'Accept: application/json' -H "Content-Type: application/json" \
--d '{"username": "jsmith", "realm": "local"}' | jq
-```
+<figcaption>Unlock the local authenticator; this prompt does not send the computer password to AuthCrunch.</figcaption>
+</figure>
 
-Response:
+<figure className="doc-screenshot">
 
-```json
-{
-  "sandbox_id": "fbXpo2HxezJRVBhxLJdG2vLVb43qXSjLPmxooplZq",
-  "sandbox_secret": "6Fm1gAttdlcdJhLgmIq862IH2ZYs2aPQHzCb",
-  "next_challenge": "password"
-}
-```
+[![Profile U2F verification success](./images/user_profile_add_u2f_08.png)](./images/user_profile_add_u2f_08.png)
 
-The next step is to provide the password.
+<figcaption>A verified credential can proceed to review.</figcaption>
+</figure>
 
-```bash
-curl -s -X POST ${AUTH_PORTAL_BASE_URL}/login \
--H 'Accept: application/json' -H "Content-Type: application/json" \
--d '{"username": "jsmith", "realm": "local", "sandbox_id": "fbXpo2HxezJRVBhxLJdG2vLVb43qXSjLPmxooplZq", "sandbox_secret": "6Fm1gAttdlcdJhLgmIq862IH2ZYs2aPQHzCb", "challenge_kind": "password", "challenge_response": "My@Password123"}' | jq
-```
+<figure className="doc-screenshot">
 
-Response:
+[![Profile authenticator review and create](./images/user_profile_add_u2f_09.png)](./images/user_profile_add_u2f_09.png)
 
-```json
-{
-  "sandbox_id": "fbXpo2HxezJRVBhxLJdG2vLVb43qXSjLPmxooplZq",
-  "sandbox_secret": "2TXTTabXuLN3yTWVxZLuczBZOJH3zVueAVeUeNl",
-  "next_challenge": "mfa"
-}
-```
+<figcaption>Review relying-party and account metadata, then finalize registration.</figcaption>
+</figure>
 
-Not that the next challenge is `mfa`, which means that client may choose to either proceed with `totp` or `u2f`.
+<figure className="doc-screenshot">
 
-> If the client chooses `totp`, then the `challenge_response` should contain the authenticator application passcode.
->
-> ```bash
-> curl -s -X POST ${AUTH_PORTAL_BASE_URL}/login \
-> -H 'Accept: application/json' -H "Content-Type: application/json" \
-> -d '{"username": "jsmith", "realm": "local", "sandbox_id": "fbXpo2HxezJRVBhxLJdG2vLVb43qXSjLPmxooplZq", "sandbox_secret": "2TXTTabXuLN3yTWVxZLuczBZOJH3zVueAVeUeNl", "challenge_kind": "mfa", "challenge_response": "634144"}' | jq
-> ```
+[![Profile authenticator list with application and hardware tokens](./images/user_profile_add_u2f_10.png)](./images/user_profile_add_u2f_10.png)
 
+<figcaption>The completed Hardware / U2F Token appears beside the App Token.</figcaption>
+</figure>
 
-If the client chooses `u2f`, then the `challenge_response` should contain `webauthn`.
+</details>
 
-```bash
-curl -s -X POST ${AUTH_PORTAL_BASE_URL}/login \
--H 'Accept: application/json' -H "Content-Type: application/json" \
--d '{"username": "jsmith", "realm": "local", "sandbox_id": "fbXpo2HxezJRVBhxLJdG2vLVb43qXSjLPmxooplZq", "sandbox_secret": "2TXTTabXuLN3yTWVxZLuczBZOJH3zVueAVeUeNl", "challenge_kind": "mfa", "challenge_response": "webauthn"}' | jq
-```
+For a `u2f` or compatible `mfa` checkpoint, send `challenge_response: "webauthn"`
+with the current sandbox fields. The response's `next_challenge` begins with
+`mfa:u2f:` followed by standard Base64-encoded JSON options. This issues a
+challenge; it does **not** finish authentication.
 
-The response should start with `mfa:u2f:` followed by Base64 encoded string containing WebAuthn challenge.
-
-```json
-{
-    "sandbox_id":"LQneNC1GgeNCeaToTR4lre00NWMiEB8D3D7iAMf5",
-    "sandbox_secret":"ucbM9hFCWB1czonSfErawbfbG0HtZQuag3f7FubCnS",
-    "next_challenge":"mfa:u2f:omitted"
-}
-```
-
-Decode the challenge:
-
-```bash
-echo -n "omitted" | base64 -d | jq
-```
-
-The decoded string should be something like:
-
-```json
-{
-    "challenge": "qQrHiiwTA7eRi88e4NW60pjef2hY4hwoOw29jpKIiDY7XL0wb1giY0eZys3sdWqz",
-    "rp_name": "AUTHP",
-    "timeout": 60000,
-    "user_verification": "discouraged",
-    "ext_uvm": false,
-    "ext_loc": false,
-    "tx_auth_simple": "Could you please verify yourself?",
-    "credentials": [
-        {
-            "id": "-81FaozmPszHXQC5-6dPZpbCXyE",
-            "transports": "usb,nfc,ble,internal",
-            "type": "public-key"
-        }
-    ]
-}
-```
-
-The client responds to WebAuthn challenge by providing it via the `challenge_response` field.
-
-```bash
-curl -s -X POST ${AUTH_PORTAL_BASE_URL}/login \
--H 'Accept: application/json' -H "Content-Type: application/json" \
--d '{"username": "jsmith", "realm": "local", "sandbox_id": "LQneNC1GgeNCeaToTR4lre00NWMiEB8D3D7iAMf5", "sandbox_secret": "ucbM9hFCWB1czonSfErawbfbG0HtZQuag3f7FubCnS", "challenge_kind": "mfa", "challenge_response": "<omitted>"}' | jq
-```
+Use the browser's WebAuthn API to produce the signed assertion. AuthCrunch
+expects `challenge_response` to contain standard Base64-encoded JSON in its
+[assertion request format](https://github.com/greenpau/go-authcrunch/blob/v1.3.8/pkg/identity/webauthn.go):
+`id`, `type`, `auth_data_encoded`, `client_data_encoded`, and
+`signature_encoded`. This is not the options object echoed back. The server
+checks the challenge, public credential, origin, relying-party binding, and
+signature before advancing. A curl-only client cannot simulate a hardware
+assertion by copying the example's challenge text.
 
 ### Successful Authentication
 
-Once all challenges are successfully resolved, the API returns `access_token` and `refresh_token` tokens.
+Completion returns `authenticated: true` and an access token:
 
 ```json
 {
-  "authenticated": true,
-  "access_token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.<omitted>.<omitted>",
-  "access_token_name": "access_token",
-  "refresh_token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.<omitted>.<omitted>",
-  "refresh_token_name": "refresh_token",
-  "created_at": "2026-03-16T21:28:39.256249Z"
+  "authenticated":true,
+  "access_token":"opaque-example-access-jwt",
+  "access_token_name":"access_token"
 }
 ```
+
+The token name depends on configuration. Inspect the actual response and
+cookie policy. Ordinary login does not automatically issue a refresh JWT.
+When [refresh sessions](../30-refresh-token.md) are explicitly enabled, browser
+and native transports have different credential delivery rules; refresh
+credentials are opaque, rotating, and must not be used as access tokens.
+Never infer refresh behavior from an older response example.
 
 ## Beacon API
 
-The /beacon endpoint provides a lightweight way to verify a user's authentication status.
-
-A successful check returns a `200 OK` status. If the user is unauthenticated, the endpoint
-returns a `401 Unauthorized` response with a `Access denied` message.
-
-Source: https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_json_beacon.go
+A JSON-selected **`GET /auth/beacon`** checks the access token. A valid identity
+returns HTTP `200` with the literal body **`OK`**. An unauthenticated or invalid
+credential is denied; the JSON error response is not the success format.
 
 ```bash
-TMP_TOKEN_FILE="$HOME/.config/authdbctl/token.jwt"
-TMP_ACCESS_TOKEN=$(cat "$TMP_TOKEN_FILE" | jq -r .access_token)
-curl -v -s -X POST ${AUTH_PORTAL_BASE_URL}/beacon -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: access_token=${TMP_ACCESS_TOKEN}"
+curl --fail-with-body --silent --show-error \
+  "${AUTH_PORTAL_BASE_URL}/beacon" \
+  -H 'Accept: application/json' \
+  -H "Authorization: Bearer ${AUTHCRUNCH_ACCESS_TOKEN}"
 ```
 
-If the token is expired, you will see the following message in caddy logs:
-
-```
-2026/03/17 12:58:56.302 WARN    security        Access denied   {"session_id": "zj0byfIbUUPoZhGrUOqVy1I4voj70oXJ9tlE", "request_id": "01c4b135-fdd6-47b8-a47a-71cec13f9534", "error": "keystore: parsed token has expired"}
-```
-
-The response follows:
-
-```json
-{
-  "error": true,
-  "message": "Access denied",
-  "timestamp": "2026-03-17T13:00:00.896351Z"
-}
-```
-
-However, if the token is valid, the response is:
-
-```text
-OK
-```
-
-That comes handy when you want quickly check whether to re-authenticate a user.
+This checks authentication, not an application's ACL or local Profile session
+permissions. A successful beacon does not prove that a specific resource is
+allowed.
 
 ## User Identity API
 
-The /whoami endpoint allows authenticated users to retrieve information about their
-current session, identity claims, and associated tokens. It supports different levels
-of verbosity via query parameters.
+A JSON-selected **`GET /auth/whoami`** returns the validated portal identity.
+Without a valid access token the request is denied. The HTML form of the route
+is the portal's identity page.
 
 ### Standard Response
 
-If no parameters are provided, the endpoint returns the standard user claim map, i.e.
-a JSON object containing the user's claims (e.g., sub, name, roles, etc.).
-
 ```bash
-TMP_TOKEN_FILE="$HOME/.config/authdbctl/token.jwt"
-TMP_ACCESS_TOKEN=$(cat "$TMP_TOKEN_FILE" | jq -r .access_token)
-curl -v -s -X POST ${AUTH_PORTAL_BASE_URL}/whoami -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: access_token=${TMP_ACCESS_TOKEN}" | jq
+curl --fail-with-body --silent --show-error \
+  "${AUTH_PORTAL_BASE_URL}/whoami?format=json" \
+  -H "Authorization: Bearer ${AUTHCRUNCH_ACCESS_TOKEN}"
 ```
 
-The response follows:
-
-```json
-{
-  "addr": "192.168.99.182",
-  "email": "jsmith@localhost.localdomain",
-  "exp": 1773758658,
-  "iat": 1773755058,
-  "iss": "https://auth.myfiosgateway.com:8443/auth/login",
-  "jti": "STfliy02dpfKY8w0jRQ7ltDB9WJBQKedkDBZUbwYv",
-  "name": "Smith, John",
-  "nbf": 1773754998,
-  "origin": "local",
-  "realm": "local",
-  "roles": [
-    "authp/user",
-    "dash"
-  ],
-  "sub": "jsmith"
-}
-```
+The result contains configured claims such as `sub`, `email`, `realm`, `roles`,
+`iss`, `iat`, `nbf`, `exp`, and `jti`. Claim presence depends on the source and
+transforms. It is not a mutable local account record.
 
 ### Probe Response
 
-By passing `?probe=true`, the response will contains two additional fields: `expires_in` and `authenticated`.
-
-```bash
-TMP_TOKEN_FILE="$HOME/.config/authdbctl/token.jwt"
-TMP_ACCESS_TOKEN=$(cat "$TMP_TOKEN_FILE" | jq -r .access_token)
-curl -v -s -X POST ${AUTH_PORTAL_BASE_URL}/whoami?probe=true -H "Accept: application/json" -H "Content-Type: application/json" -H "Authorization: access_token=${TMP_ACCESS_TOKEN}" | jq
-```
-
-The response follows. The `expires_in` tells you the number of seconds prior to the token expiration.
-This is helpful if you want to refresh the token prior to it expiring. No need to perform expiration time
-calculations on the client side.
-
-```
-{
-  "addr": "192.168.99.182",
-  "authenticated": true,
-  "email": "jsmith@localhost.localdomain",
-  "exp": 1773758658,
-  "expires_in": 2852,
-  "iat": 1773755058,
-  "iss": "https://auth.myfiosgateway.com:8443/auth/login",
-  "jti": "STfliy02dpfKY8w0jRQ7ltDB9WJBQKedkDBZUbwYv",
-  "name": "Smith, John",
-  "nbf": 1773754998,
-  "origin": "local",
-  "realm": "local",
-  "roles": [
-    "authp/user",
-    "dash"
-  ],
-  "sub": "jsmith"
-}
-```
+Add `probe=true` to include `authenticated` and `expires_in`, the remaining
+seconds before the access token expires. This helps a client decide when to
+reauthenticate or use a separately configured refresh flow. It does not extend
+the token's lifetime. `probe=true` takes precedence over `id_token=true` if
+both are supplied.
 
 ### Identity Token Response
 
-Suppose you have successfully authenticated using the LinkedIn OAuth provider.
-
-> That would apply to any OAuth provider issuing `id_token`.
-
-![](./images/user_login_linkedin_01.png)
-
-The provider's configuration has `enable id token cookie`:
+An OAuth/OIDC provider can optionally enable a cookie for its upstream ID token:
 
 ```Caddyfile
-oauth identity provider linkedin {
-    realm linkedin
-    driver linkedin
-    client_id {env.LINKEDIN_APP_CLIENT_ID}
-    client_secret {env.LINKEDIN_APP_CLIENT_SECRET}
-    icon linkedin priority 200
-    enable id token cookie id_token AUTHP_ID_TOKEN
-}
+# Inside the existing oauth identity provider block:
+enable id token cookie id_token AUTHP_ID_TOKEN
 ```
 
-The `id_token` from the original exchange will be injected in `AUTHP_ID_TOKEN` cookie by the portal.
+With that configuration and cookie present, `whoami?format=json&id_token=true`
+can add the original upstream `id_token` to the portal claim response. Without
+it, the endpoint returns ordinary portal claims. This is not an upstream token
+refresh or introspection call, and the ID token is not the portal access token.
+Enabling it deliberately exposes that upstream credential to the authenticated
+caller; use it only when the integration requires the original token.
 
-![](./images/user_login_linkedin_02.png)
+<figure className="doc-screenshot">
 
-That cookie contains original `id_token` issued by LinkedIn.
+[![Portal LinkedIn sign in button](./images/user_login_linkedin_01.png)](./images/user_login_linkedin_01.png)
 
-```json
-{
-  "iss": "https://www.linkedin.com/oauth",
-  "aud": "78bihyg95w4jjp",
-  "iat": 1773765084,
-  "exp": 1773768684,
-  "sub": "f1CNX59nrd",
-  "name": "Paul Greenberg",
-  "given_name": "Paul",
-  "family_name": "Greenberg",
-  "picture": "https://media.licdn.com/dms/image/v2/C4D03AQFIoK4T52FiFA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1516284211915?e=1775088000&v=beta&t=78UvpW7XSGP9PhQQLU-pV1jl4hFhZXqVpOPVZ6o-pio",
-  "email": "greenpau@outlook.com",
-  "email_verified": "true",
-  "locale": "en_US"
-}
-```
+<figcaption>An external-provider login starts at the configured provider button.</figcaption>
+</figure>
 
-By browsing to `/auth/whoami?format=json&id_token=true`, the original `id_token` issued by the
-provider will be in the response.
+<details className="screenshot-gallery">
+<summary>Upstream ID-token inspection screens</summary>
 
-![](./images/user_login_linkedin_03.png)
+<figure className="doc-screenshot">
 
-Profile UI uses `/auth/whoami?format=json&id_token=true` endpoint.
+[![Browser developer tools showing portal and upstream ID token cookies](./images/user_login_linkedin_02.png)](./images/user_login_linkedin_02.png)
 
+<figcaption>Historical inspection of the separate portal access and upstream ID-token cookies.</figcaption>
+</figure>
+
+<figure className="doc-screenshot">
+
+[![Historical whoami response with an upstream ID token](./images/user_login_linkedin_03.png)](./images/user_login_linkedin_03.png)
+
+<figcaption>The optional identity-token response contains portal claims plus the upstream credential.</figcaption>
+</figure>
+
+</details>
+
+The LinkedIn screenshots are a preserved March 2026 example. Cookie names and
+scopes must match your provider configuration; the screenshot shows `id_token`,
+not the custom name in the fragment above. The visible tokens are historical
+and must never be copied into an integration.

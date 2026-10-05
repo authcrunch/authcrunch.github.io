@@ -67,7 +67,8 @@ historical `/settings` routes. The [portal guide](../../../docs/authenticate/aut
 includes current captures from the released executable and captioned historical
 screens. Preserve that distinction when describing password or MFA enrollment.
 Profile mutations require a local identity, an allowed portal role, and a live
-portal session; an external-provider login does not manage a local account.
+portal JTI session. Native body refresh login does not establish that browser
+Profile session even when its access token passes whoami; an external-provider login does not manage a local account.
 
 Complete examples for the beginner sequence, GitHub, generic OIDC, Keycloak,
 Google, Microsoft Entra ID, GitLab, Okta, Auth0, and OneLogin are imported from
