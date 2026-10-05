@@ -165,6 +165,27 @@ than JWT authenticity or expiry, and does not implement automatic renewal.
 API-key JSON login is access-only; it establishes neither a browser Profile
 session nor an OIDC session. Validate Go examples against the pinned library.
 
+## Agentic Prompts pilot
+
+The [Token Discovery reference](../../../docs/authorize/token-discovery.md)
+pilots an `Agentic Prompts` section with ten standalone learning exercises.
+Further pages await the user's review; the presence of this pilot does not
+authorize adding prompts throughout the corpus.
+
+When requested, use 5–15 topic-specific prompts with concrete learning tasks.
+Each copyable prompt includes the Caddy Security and go-authcrunch upstream
+`.codex/skills` URLs as its primary authorities, ahead of website documentation.
+Ask the LLM to read relevant SKILL.md files and their implementation references,
+distinguish main from the user's released version, and resolve disagreements
+using linked code/tests. Include the topic's website URL as secondary context;
+ask for pasted content if sources are inaccessible. Use synthetic/redacted
+inputs and keep unverified behavior uncertain. Prefer explanation, scenario
+analysis, diagnosis and teach-back over
+generic requests to summarize. Keep existing instructional content intact.
+Wrap native `details` and fenced `text` blocks in `div.agentic-prompts`; its
+scoped styles wrap prose and keep copy controls visible. Verify exact clipboard
+content, keyboard use, narrow layouts and no-JavaScript readability.
+
 ## Blog workflow
 
 Follow the existing dated filename pattern. Set a stable `slug`, meaningful

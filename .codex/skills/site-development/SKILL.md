@@ -114,6 +114,13 @@ keep their provenance and license. The social card is a separate SVG composition
 with a 1200 × 630 PNG export used in site metadata. Keep its export in sync with
 its SVG source. Retaining old asset paths can be necessary for published links.
 
+The Token Discovery learning-prompt pilot uses `div.agentic-prompts` around
+native disclosures and ordinary text code blocks. Scope its neutral surfaces,
+default prose wrapping and visible code controls to that class. Reserve toolbar
+space so the copy button cannot obscure the prompt. Check actual clipboard
+content and expanded blocks at 320px; page-level overflow alone cannot detect
+prompt text hidden by a code block's own horizontal scrollbar.
+
 ## Verification and acceptance
 
 Run `npm run typecheck` and `npm run build` for TypeScript, configuration, or

@@ -118,6 +118,12 @@ a { text-underline-offset: 3px; }
 .screenshot-gallery { margin-block: 1.25rem; border-color: var(--ac-border); background: var(--ac-soft); --docusaurus-details-decoration-color: var(--ifm-color-primary); }
 .screenshot-gallery > summary { color: var(--ifm-font-color-base); font-weight: 650; line-height: 1.6; }
 .screenshot-gallery .doc-screenshot:last-child { margin-bottom: .25rem; }
+.agentic-prompts > details { margin-block: 1rem; border-color: var(--ac-border); background: var(--ac-soft); box-shadow: none; --docusaurus-details-decoration-color: var(--ifm-color-primary); }
+.agentic-prompts summary { color: var(--ifm-font-color-base); font-weight: 650; line-height: 1.6; }
+.agentic-prompts .theme-code-block pre { padding-top: 2.5rem; }
+.agentic-prompts .theme-code-block pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.agentic-prompts details .theme-code-block button,
+.agentic-prompts details .theme-code-block:hover button { opacity: 1; }
 .table-of-contents { font-size: .78rem; }
 .table-of-contents__link { color: var(--ac-muted); }
 .pagination-nav__link { border-color: var(--ac-border); box-shadow: none; }
