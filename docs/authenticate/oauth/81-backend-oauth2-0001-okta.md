@@ -198,10 +198,13 @@ Save this as `Caddyfile`. The source is the
 
 <CodeBlock language="text" title="Caddyfile">{caddyfile}</CodeBlock>
 
-The first transform grants portal access; the second grants `app/member` when
-the token supplies the exact `app-members` role. The portal maps the token's
-`groups` into roles before applying these transforms. A signed-in user without
-that group can enter the portal but receives **403** from `/app` and its children.
+The portal maps the token's `groups` into roles before applying transforms.
+The first transform removes provider-derived `authp/*` and `app/member` roles;
+the following transforms grant portal access and translate the exact
+`app-members` group into app access. Keep that order so a group named
+`app/member` cannot bypass membership or `authp/admin` grant portal
+administration. A signed-in user without `app-members` can enter the portal
+but receives **403** from `/app` and its children.
 
 Set these variables for the process that runs AuthCrunch:
 

@@ -4,7 +4,7 @@ description: "Connect an external identity provider to the portal, choose callba
 discovery:
   topic: identity-providers
   kind: concept
-  aliases: ["OpenID Connect", "OIDC", "OAuth2", "PKCE", "callback URL", "login icon"]
+  aliases: ["OpenID Connect", "OIDC", "OAuth2", "PKCE", "callback URL", "login icon", "reserved roles", "provider role collisions"]
 ---
 
 import OAuthFlow from '@site/src/components/OAuthFlow';
@@ -103,6 +103,22 @@ A scope request does not guarantee that a claim will appear. Provider consent,
 account data, API permissions, and the driver's extraction rules determine the
 result. Inspect the signed-in user's identity at the portal's `/whoami` route
 (`/auth/whoami` for this mount) before relying on a claim in a transform.
+
+### Reserve roles used by your policy
+
+OIDC group and role claims can become portal roles before transforms run.
+If your policy allows `app/member`, an upstream group with that exact name
+could satisfy it without the intended membership transform. The current OIDC
+examples clear provider-derived `authp/*` and `app/member` first, then grant
+portal access and the application role from the documented identity rule.
+Keep those steps in order and test a provider claim containing a reserved role.
+
+`action drop matched role` evaluates each role without the other identity
+fields. Its role-dropping transform therefore matches only roles; adding a
+realm matcher prevents removal. The complete examples enable one provider.
+For a shared portal, define the internal roles each identity source may receive
+and grant them explicitly after clearing reserved input roles. See
+[user transforms](../42-user-transforms.md#drop-matched-roles).
 
 ## PKCE
 

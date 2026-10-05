@@ -28,6 +28,12 @@
 				}
 			}
 
+			# Reserve portal roles and app/member for the transforms below.
+			transform user {
+				regex match role "^(authp/.*|app/member)$"
+				action drop matched role
+			}
+
 			transform user {
 				match realm generic
 				action add role authp/user

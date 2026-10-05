@@ -153,6 +153,12 @@ policy URL. The complete file is embedded from the
 
 <CodeBlock language="text" title="Caddyfile">{caddyfile}</CodeBlock>
 
+The first transform removes provider-derived `authp/*` and `app/member` roles.
+The following transforms grant portal access and translate `App.Access` into
+app access. Keep that order so another Entra app role named `app/member` cannot
+bypass the intended assignment and `authp/admin` cannot grant portal
+administration. The required `App.Access` role remains available.
+
 Set the environment:
 
 ```sh

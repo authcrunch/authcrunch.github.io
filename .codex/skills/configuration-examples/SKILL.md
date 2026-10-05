@@ -81,6 +81,11 @@ secrets. `caddy validate --adapter caddyfile --config ...` additionally loads an
 provisions modules; inspect file writes and external provider contact first and
 prepare an isolated environment. Never treat it as a pure syntax linter.
 
+A formatter's zero exit status does not prove the source is already formatted.
+Inspect its diff or compare the read-only `caddy fmt <file>` output with the
+source. `fmt --diff` can print unchanged context; do not require empty output
+as the acceptance condition. Avoid `--overwrite` for a read-only check.
+
 Use a disposable local runtime when a behavior check is needed. Record the
 binary version, prerequisites, executed commands, and observed allow/deny or
 login/redirect results. Missing TLS files, credentials, optional modules, or
@@ -156,6 +161,26 @@ Keycloak testing may use loopback HTTP with insecure cookies in a temporary
 configuration; keep that adaptation out of the canonical HTTPS examples. Do not
 present local network tests as production TLS, proxy, or certificate validation.
 
+## Reserved roles in OIDC examples
+
+Provider role/group claims enter the portal before transforms. In the generic,
+Keycloak, Google, Entra, Okta, and OneLogin examples, clear provider-derived
+`authp/*` and `app/member` first, then grant portal and app roles from the
+documented subject or membership rule. Auth0 resets all provider roles before
+its subject grant. Otherwise a provider-issued `app/member` can satisfy the
+policy directly, and `authp/admin` can grant portal administration.
+
+Keep the role-dropping transform restricted to a role matcher. The runtime
+evaluates each candidate role without realm or other identity fields; combining
+it with a realm matcher prevents removal. These complete examples enable one
+provider. A shared portal needs explicit grants for the internal roles each
+identity source may receive after reserved input roles are cleared.
+
+Test reserved input roles on both a member and a nonmember, including roles
+supplied through `groups` and `roles`. Assert the intended grant survives,
+unrelated provider roles remain available, and portal administrator roles do
+not survive. Preserve useful images when adding this explanation to a guide.
+
 ## Google and Microsoft Entra ID examples
 
 The [Google](../../../assets/conf/oauth/google/Caddyfile) and
@@ -228,8 +253,6 @@ Review the returned subject after account linking or connection changes.
 OneLogin requests `groups` and maps the connector's Groups parameter to User
 Roles with multi-value output. Clear provider-derived `authp/*` and `app/member`
 before adding portal roles and translating `app-members` into app access.
-The role-dropping transform matches only roles: dropping evaluates each role
-without other identity fields, so adding a realm matcher prevents removal.
 The example does not fetch UserInfo. Test absent, malformed, differently cased,
 and similarly named groups, including a group present only in UserInfo.
 Application assignment and the AuthCrunch policy remain separate boundaries.

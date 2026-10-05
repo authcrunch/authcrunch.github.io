@@ -50,6 +50,12 @@ exact value your provider emits. The complete file is also in the
 
 <CodeBlock language="text" title="Caddyfile">{caddyfile}</CodeBlock>
 
+The first transform removes provider-derived `authp/*` and `app/member` roles.
+The next transforms grant portal access and translate `app-members` into app
+access. Keep this order: an upstream role named `app/member` must not bypass
+the group rule, and `authp/admin` must not grant portal administration.
+Other provider roles remain available for matching.
+
 Supply these variables to the running process:
 
 | Variable | Value |

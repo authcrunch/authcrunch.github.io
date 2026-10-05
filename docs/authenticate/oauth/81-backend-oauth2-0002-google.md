@@ -154,6 +154,12 @@ address and policy URL. The complete file is embedded from the
 
 <CodeBlock language="text" title="Caddyfile">{caddyfile}</CodeBlock>
 
+The first transform clears provider-derived `authp/*` and `app/member` roles.
+The following transforms grant portal access and check the selected subject.
+Keep that order so provider roles cannot grant portal administration or bypass
+the account rule. Other group roles remain available for the optional
+Cloud Identity variant below.
+
 Set the environment before starting the process:
 
 ```sh

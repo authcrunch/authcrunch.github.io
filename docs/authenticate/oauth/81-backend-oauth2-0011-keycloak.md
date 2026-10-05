@@ -483,6 +483,12 @@ The example is embedded from the
 
 <CodeBlock language="text" title="Caddyfile">{caddyfile}</CodeBlock>
 
+The first transform removes provider-derived `authp/*` and `app/member` roles.
+The following transforms grant portal access and translate `/app-members`
+into application access. Keep that order so a Keycloak role named `app/member`
+cannot bypass group membership or a role named `authp/admin` grant portal
+administration. The required `/app-members` group remains available.
+
 Supply these values to the AuthCrunch process:
 
 ```sh
