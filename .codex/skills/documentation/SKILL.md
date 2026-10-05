@@ -61,6 +61,13 @@ redacted derivative where necessary. Keep a record of replacements or omissions
 in ignored working notes; do not remove a useful image merely because its page
 is being rewritten.
 
+The released v1.3.0 portal uses `/profile/` for account management, not the
+historical `/settings` routes. The [portal guide](../../../docs/authenticate/auth-portal.md)
+includes current captures from the released executable and captioned historical
+screens. Preserve that distinction when describing password or MFA enrollment.
+Profile mutations require a local identity, an allowed portal role, and a live
+portal session; an external-provider login does not manage a local account.
+
 Complete examples for the beginner sequence, GitHub, generic OIDC, Keycloak,
 Google, Microsoft Entra ID, GitLab, Okta, Auth0, and OneLogin are imported from
 canonical Caddyfiles under [assets/conf](../../../assets/conf/) using `?raw`
