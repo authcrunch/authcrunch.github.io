@@ -1,265 +1,107 @@
 ---
 sidebar_position: 1
-description: "Configure email and file messaging providers for verification codes and account workflows."
+title: "Messaging providers"
+description: "Configure released SMTP/SMTPS and private file delivery, with accurate registration and template limits."
 discovery:
   topic: operations
   kind: reference
-  aliases: ["SMTP", "SMTPS", "notifications"]
+  aliases: ["SMTP", "SMTPS", "notifications", "registration email", "mail spool"]
 ---
 
 # Messaging Providers
 
-The `security` app's sub-systems require messaging capabilities to facilitate essential identity
-workflows, such as Multi-Factor Authentication (MFA) codes, user registration confirmations,
-and password reset links.
+Messaging providers deliver account-registration notifications. Define a provider in `security`, then attach it to a [local registration](../authenticate/local/40-user-registration.md) through `email provider <name>`. That registration setting can select an email **or file** provider.
 
-The system currently supports two primary messaging backends:
-
-1. Email: For direct delivery via SMTP/SMTPS.
-2. File: For integration with local mail spoolers or directory-based delivery systems
+The released workflow sends a registrant's confirmation and attempts an administrator notification after the verified request is stored in the dropbox. This does not implement account approval, automatic active-store provisioning, password-reset emails or email-based MFA. See [challenge support](../authenticate/13-authentication-challenges.md) before enabling a factor.
 
 ## Email Messaging Provider
 
-The `email` provider connects to a mail server to dispatch messages. It supports standard SMTP,
-secure SMTPS, and various authentication methods.
+The email provider supports `smtp` and `smtps`. Authentication uses SASL PLAIN with a named username/password credential. The release does not implement STARTTLS upgrade or OAuth mail authentication.
 
 ### Configuration
 
-Use this setup for mail servers requiring specific credentials.
+Use implicit TLS on the mail service's configured SMTPS endpoint:
 
-```Caddyfile
-{
-  security {
-    messaging email provider localhost-smtp-server {
-      address 127.0.0.1:1025
-      protocol smtp
-      credentials root@localhost
-      sender root@localhost "My Auth Portal"
-      bcc greenpau@localhost
-    }
-  }
+```caddyfile
+credentials outbound-mail {
+  username {env.SMTP_USERNAME}
+  password {env.SMTP_PASSWORD}
+}
+
+messaging email provider notifications {
+  address smtp.example.com:465
+  protocol smtps
+  credentials outbound-mail
+  sender no-reply@example.com "Example portal"
 }
 ```
+
+Put both blocks in `security`. The address includes the port; the server certificate must validate for its hostname. Attach `email provider notifications` to the registration registry. A successful syntax check does not prove network reachability or mail delivery.
+
+`bcc` accepts addresses, but the released email implementation writes a Bcc header without issuing extra SMTP RCPT commands. Do not rely on it for copies, delivery or recipient privacy. Administrator registration messages use the registry's explicit `admin email` recipients instead.
 
 #### Testing with Mock Email Server
 
-The following command installs `smtp-debug-server`
+Use a disposable mail sink bound to loopback only. For example, the [go-smtp debug server](https://github.com/emersion/go-smtp/tree/master/cmd/smtp-debug-server) can receive test mail; choose a pinned version if installing a tool. The [registration example](https://github.com/authcrunch/authcrunch.github.io/blob/main/assets/conf/local/registration/Caddyfile) targets `127.0.0.1:1025` with `protocol smtp` and `passwordless`.
 
-```bash
-go install github.com/emersion/go-smtp/cmd/smtp-debug-server@latest
-```
-
-```text
-$ ls -alh ~/dev/bin/smtp-debug-server
--rwxr-xr-x@ 1 greenpau  staff   7.0M Mar  9 09:00 /Users/greenpau/dev/bin/smtp-debug-server
-```
-
-Start the server:
-
-```text
-$ smtp-debug-server
-2026/03/09 09:02:31 Starting SMTP server at 127.0.0.1:1025
-```
-
-Once the mock email server is running, you can test the registration workflow without
-needing a live mail provider. When you submit the registration form, the system connects
-to the server at `127.0.0.1:1025` and transmits the message. The `smtp-debug-server` will
-then output the raw email content directly to your terminal.
+Run a fresh test portal and sink, submit a synthetic account, inspect the confirmation, enter the new emailed code and check the dropbox and administrator message. Test a wrong code and failed delivery. Keep test messages private because their links and passcodes authorize the pending confirmation. Stop both servers afterward.
 
 #### SMTP Server Message
 
-Here is an example of a message the SMTP server will receive:
+A confirmation includes the registrant's address, an acknowledgement URL under `/auth/register/<realm>/ack/<id>` and a generated passcode. Treat SMTP acceptance as delivery to the sink, not proof a production mailbox received it. The pending registration remains inactive until your separate approval/provisioning process.
 
-```text
-2026/03/22 11:51:17 Starting SMTP server at 127.0.0.1:1025
-220 localhost ESMTP Service Ready
-EHLO localhost
-250-Hello localhost
-250-PIPELINING
-250-8BITMIME
-250-ENHANCEDSTATUSCODES
-250-CHUNKING
-250 SIZE
-MAIL FROM:<root@localhost> BODY=8BITMIME
-250 2.0.0 Roger, accepting mail from <root@localhost>
-RCPT TO:<greenpau@outlook.com>
-250 2.0.0 I'll make sure <greenpau@outlook.com> gets this
-DATA
-354 Go ahead. End your data with <CR><LF>.<CR><LF>
-MIME-Version: 1.0
-Date: Sun, 22 Mar 2026 11:51:24 -0400
-From: "My Auth Portal" <root@localhost>
-Subject: Registration Confirmation Required
-Thread-Topic: Account Registration.
-Message-ID: <wMMZJXnIfDivJlbSyLV7EVZu6JQH5ck0rHTrXOUFY9De28UndkFk4nyzvO64QXlH.root@localhost>
-To: greenpau@outlook.com
-Bcc: greenpau@localhost
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html; charset="utf-8"
-
-<html>
-  <body>
-    <p>
-      Please confirm your registration by clicking this
-      <a href=3D"https://auth.myfiosgateway.com:8443/auth/register/local/ac=
-k/YiHLj1xbFB7ODSZhgoLId1fHngVvPIbXjpzTyxOMO4eBjMvzG8DXXTwNQTdyHzLa0kuViGUae=
-jQI6">link</a>
-      and providing the registration code <b><code>j3kNpD</code></b>
-      within the next 45 minutes. If you haven't done so, please re-registe=
-r.
-    </p>
-
-    <p>The registation metadata follows:</p>
-    <ul style=3D"list-style-type: disc">
-      <li>Session ID: ctXaWd8UVMyY4mZLDfQuWSuVK8zXwYocYyqOtgr</li>
-      <li>Request ID: a2174fe0-c3af-48e6-814c-7098ee3f32ff</li>
-      <li>Username: <code>greenpau</code></li>
-      <li>Email: <code>greenpau@outlook.com</code></li>
-      <li>IP Address: <code>192.168.99.182</code></li>
-      <li>Timestamp: Sun Mar 22 15:51:24 UTC 2026</li>
-    </ul>
-  </body>
-</html>
-.
-250 2.0.0 OK: queued
-QUIT
-221 2.0.0 Bye
-^C
-```
+If sending the initial confirmation fails, the portal removes pending cache state and shows an error. If notifying an administrator fails **after** acknowledgement, the committed dropbox request remains and the error is logged. Review the dropbox independently of notification delivery.
 
 ### Passwordless
 
-The `passwordless` allows skipping password requirement for the provided credentials.
+`passwordless` means the **SMTP connection** does not authenticate. It does not remove end-user password requirements or turn email into a login factor.
 
-```Caddyfile
-{
-  security {
-    messaging email provider localhost-smtp-server {
-      passwordless
-    }
-  }
+```caddyfile
+messaging email provider local-sink {
+  address 127.0.0.1:1025
+  protocol smtp
+  passwordless
+  sender no-reply@example.com "Disposable test portal"
 }
 ```
+
+Use either `credentials` or `passwordless`, never both. Plain `smtp` does not encrypt the connection in this release; reserve the example above for a controlled loopback sink.
 
 ### TLS
 
-The `protocol smtps` enables TLS for the connection.
-
-```Caddyfilefile
-{
-  security {
-    messaging email provider localhost-smtp-server {
-      protocol smtps
-    }
-  }
-}
-```
+`protocol smtps` opens TLS immediately and validates the server certificate using the system trust roots. It is not STARTTLS on a plaintext SMTP connection. A server that only offers STARTTLS requires a compatible external relay/transport arrangement; changing the port number alone does not implement an upgrade.
 
 ## File Messaging Provider
 
-The `file` provider is utilized for systems where mail is processed via a **drop-folder** or **mail spool**. Instead
-of communicating over a network protocol, the provider writes the message content into a directory. This allows
-external mailers (like Postfix or custom scripts) to pick up and process the message.
+A file provider writes private `.eml` messages for local inspection or an external spool consumer. AuthCrunch does not run that mailer or deliver the files to a remote mailbox.
 
 ### Configuration
 
-Specify the `root_dir` where the system should drop the outgoing message files.
-
-```Caddyfile
-{
-  security {
-    messaging file provider mail-spooler {
-      root_dir /var/spool/auth-messaging/
-      sender root@localhost "My Auth Portal"
-    }
-  }
+```caddyfile
+messaging file provider private-spool {
+  root_dir /var/lib/authcrunch/mail
+  sender no-reply@example.com "Example portal"
 }
 ```
+
+Select `email provider private-spool` in the registry. The release creates a missing directory with mode `0700` and message files with mode `0600`. Pre-existing directory permissions remain the operator's responsibility. Keep the directory outside web roots, backups with broad readership and published site assets; remove expired test mail through your own retention process.
 
 #### Email Message
 
-The server logs the realm and the user information:
-
-```text
-2026/03/22 20:48:22.878 DEBUG   security        Created registration cache entry        {"session_id": "ctXaWd8UVMyY4mZLDfQuWSuVK8zXwYocYyqOtgr", "request_id": "4799120e-2522-4029-924f-64a03fc8cb1f", "registration_id": "TauuHTBQ9iqopZ3hR4k653FlJhpfxwCLpgO96TivSepPK1lCvu5qjFNr9P2SW8f0", "realm_name": "local"}
-2026/03/22 20:48:22.879 INFO    security        Successful user registration    {"session_id": "ctXaWd8UVMyY4mZLDfQuWSuVK8zXwYocYyqOtgr", "request_id": "4799120e-2522-4029-924f-64a03fc8cb1f", "username": "greenpau", "email": "greenpau@outlook.com", "src_ip": "192.168.99.182", "src_conn_ip": "192.168.99.182", "realm_name": "local"}
-```
-
-Additionally, the `security` app created `assets/config/eIs5Ys2UxNIp1JvRHdjb7IoIKBpmNUWb.eml` file.
-
-```eml
-MIME-Version: 1.0
-Date: Sun, 22 Mar 2026 16:48:22 -0400
-Subject: Registration Confirmation Required
-Thread-Topic: Account Registration.
-Message-ID: <eIs5Ys2UxNIp1JvRHdjb7IoIKBpmNUWbKaUNWLW6iXbnzns7XwUghmyvGH4CPRAy>
-To: greenpau@outlook.com
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html; charset="utf-8"
-
-<html>
-  <body>
-    <p>
-      Please confirm your registration by clicking this
-      <a href=3D"https://auth.myfiosgateway.com:8443/auth/register/local/ac=
-k/TauuHTBQ9iqopZ3hR4k653FlJhpfxwCLpgO96TivSepPK1lCvu5qjFNr9P2SW8f0">link</a=
->
-      and providing the registration code <b><code>usebXgb</code></b>
-      within the next 45 minutes. If you haven't done so, please re-registe=
-r.
-    </p>
-
-    <p>The registation metadata follows:</p>
-    <ul style=3D"list-style-type: disc">
-      <li>Session ID: ctXaWd8UVMyY4mZLDfQuWSuVK8zXwYocYyqOtgr</li>
-      <li>Request ID: 4799120e-2522-4029-924f-64a03fc8cb1f</li>
-      <li>Username: <code>greenpau</code></li>
-      <li>Email: <code>greenpau@outlook.com</code></li>
-      <li>IP Address: <code>192.168.99.182</code></li>
-      <li>Timestamp: Sun Mar 22 20:48:22 UTC 2026</li>
-    </ul>
-  </body>
-</html>
-```
+Each message contains subject, recipient and encoded HTML content. The file implementation does not emit the configured From/Bcc headers. An external spool consumer must account for this rather than assuming a complete SMTP envelope is encoded in the file. Check the newly created file instead of copying the historical examples' links or passcodes.
 
 ## Messaging Templates
 
-Messaging templates allow you to customize the content and look of the notifications sent by the
-security app. Each template maps a specific identity workflow event to a physical file on your
-system (typically HTML or text).
+The provider parsers recognize these names:
 
-To define a template, use the following syntax within a messaging provider block:
+| Name | Released workflow boundary |
+| --- | --- |
+| `registration_confirmation` | Used by registration submission |
+| `registration_ready` | Used for attempted administrator notification after acknowledgement |
+| `registration_verdict` | Supported by the library notification method; no complete portal approval workflow invokes it |
+| `password_recovery` | Accepted configuration name; not a completed mail-based password recovery workflow |
+| `mfa_otp` | Accepted configuration name; not a supported email MFA challenge |
 
-```Caddyfilefile
-template <name> <path>
-```
+The syntax `template <name> <path>` is accepted, but the released registration notification method renders **embedded English templates** and does not read the provider's configured template paths. A custom file, accepted configuration or visible reset/approval wording is therefore not evidence that the workflow or override runs.
 
-The `name` is the identifier for the workflow event.
-
-The `path` is the absolute or relative path to the template file.
-
-The security configuration recognizes the following template names:
-
-| Name | Description |
-| :--- | :--- |
-| `password_recovery` | Sent when a user requests a password reset link. |
-| `registration_confirmation` | Sent to verify a user's email address during sign-up. |
-| `registration_ready` | Sent to administrators or users when a registration is ready for review. |
-| `registration_verdict` | Sent to the user once their registration has been approved or denied. |
-| `mfa_otp` | Sent during login to provide a Multi-Factor Authentication one-time passcode. |
-
-
-Here, we associate specific HTML files with the email provider to brand the identity emails.
-
-```Caddyfile
-{
-  security {
-    messaging email provider mail-server {
-      # Mapping workflows to template files
-      template mfa_otp /etc/caddy/templates/mfa.html
-      template password_recovery /etc/caddy/templates/recovery.html
-      template registration_confirmation /etc/caddy/templates/confirm.html
-    }
-  }
-}
-```
+Embedded registration bodies use context-aware HTML escaping and quoted-printable delivery. Keep confirmation credentials private. To change this behavior, verify a future implementation and its consuming workflow before treating template settings as effective customization.

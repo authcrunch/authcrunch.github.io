@@ -1,129 +1,72 @@
 ---
 sidebar_position: 1
-description: "Configure named credentials and secret manager integrations for AuthCrunch services."
+title: "Credentials and secret references"
+description: "Configure named service credentials, private environment values and optional secret-manager modules."
 discovery:
   topic: operations
   kind: reference
-  aliases: ["SMTP password", "secrets"]
+  aliases: ["SMTP password", "secrets", "AWS Secrets Manager", "credentials"]
 ---
 
 # Secrets Management
 
-The `authenticate` and `authorize` sub-systems require managing credentials,
-e.g. email credentials.
-
+Separate service credentials, portal signing keys and user password hashes. A named `credentials` entry supplies a username/password to a consumer such as a messaging provider; it is not an encrypted vault or an end-user login account. Secret-manager references require a separately compiled module.
 
 ## Credentials Directive
 
-The `credentials` directive is the most basic way to store passwords.
+Define a credential label in the global `security` block and reference that label from its consumer:
 
-The syntax for the usage of secrets is:
+```caddyfile
+credentials outbound-mail {
+  username {env.SMTP_USERNAME}
+  password {env.SMTP_PASSWORD}
+}
 
-```Caddyfile
-{
-  security {
-    credentials smtp.outlook.com {
-      username {env.SMTP_USERNAME}
-      password {env.SMTP_PASSWORD}
-    }
-  }
+messaging email provider notifications {
+  address smtp.example.com:465
+  protocol smtps
+  credentials outbound-mail
+  sender no-reply@example.com "Example portal"
 }
 ```
+
+The credential requires a name, nonempty username and nonempty password; `domain` is optional. The email transport uses SASL PLAIN with the username/password, not OAuth or the optional domain. Use [messaging guidance](../messaging/intro.md) for transport and workflow limits.
+
+`{env.VARIABLE}` values here resolve during provisioning. `{$VARIABLE}` expands earlier while adapting a Caddyfile. Supply private service environment values and keep expanded configuration, process environment and credentials out of published assets. Changing an environment value does not rewrite a running provider; reprovision and test delivery. Caddy adaptation alone does not test SMTP credentials.
+
+For local **user** passwords and API keys, use the released [credential generation commands](../authenticate/local/30-password-management.md) and [local administration CLI](../operations/local-client.md). An SMTP password must remain usable by its service; replacing it with a bcrypt hash would not authenticate to the mail server.
 
 ## Static Secrets Plugin
 
-The [caddy-security-secrets-static-secrets-manager](https://github.com/greenpau/caddy-security-secrets-static-secrets-manager)
-is another Caddy plugin that allows reading secrets from config and refer to the in the `security` app with `secrets:`.
+The optional [static secrets module](https://github.com/greenpau/caddy-security-secrets-static-secrets-manager) stores named key/value material in configuration. Its reference form is `secrets:<SECRET_ID>:<FIELD>`: the middle component identifies a configured secret and the last component is the field to retrieve, not the secret value itself.
 
-The syntax for the usage of secrets is `secrets:<KEY>:<VALUE>`.
+For example, the module's `access_token` entry can supply a `shared_secret` field to:
 
-Here, the `KEY` is `shared_secret` and the `VALUE` is `b006d65b-c923-46a1-8da1-7d52558508fe`.
-
-```Caddyfile
-		secrets static_secrets_manager access_token {
-			shared_secret b006d65b-c923-46a1-8da1-7d52558508fe
-		}
+```caddyfile
+crypto key sign-verify secrets:access_token:shared_secret
 ```
 
-Example follows.
+The corresponding module block is `secrets static_secrets_manager access_token { ... }`; use the selected module version's parser for its body. Moving plaintext into that block centralizes references but does not encrypt the Caddyfile or turn static configuration into a remote vault.
 
-```Caddyfile
-{
-	security {
-		# require secrets-static-secrets-manager plugin
-		secrets static_secrets_manager access_token {
-			shared_secret b006d65b-c923-46a1-8da1-7d52558508fe
-		}
-
-		secrets static_secrets_manager users/jsmith {
-			username jsmith
-			name "John Smith"
-			email "jsmith@localhost.localdomain"
-			password "My@Password123"
-		}
-
-		local identity store localdb {
-			realm local
-			path assets/config/users.json
-			user "secrets:users/jsmith:username" {
-				name "secrets:users/jsmith:name"
-				email "secrets:users/jsmith:email"
-				password "secrets:users/jsmith:password"
-				roles "authp/user" "dash"
-			}
-        }
-
-		authentication portal myportal {
-			crypto key sign-verify secrets:access_token:shared_secret
-			enable identity store localdb
-		}
-
-		authorization policy mypolicy {
-			crypto key verify "secrets:access_token:shared_secret"
-		}
-    }
-}
-```
+This module is **not compiled into the published v1.3.0 binary audited here**. Confirm `security.secrets.static_secrets_manager` appears in `authcrunch list-modules` before using its directives. Pin and validate compatible module/integration versions for a custom build; a link to an older module README is not proof of current runtime compatibility.
 
 ## AWS Secrets Manager Secrets
 
-The [ccaddy-security-secrets-aws-secrets-manager](https://github.com/greenpau/caddy-security-secrets-aws-secrets-manager)
-is another Caddy plugin that allows reading secrets from AWS SSM and refer to the in the `security` app with `secrets:`.
+The optional [AWS Secrets Manager module](https://github.com/greenpau/caddy-security-secrets-aws-secrets-manager) retrieves named secret material from **AWS Secrets Manager**, a different service from Systems Manager Parameter Store.
 
-The syntax for the usage of secrets is `secrets:<KEY>:<VALUE>`.
+Its documented module configuration uses:
 
-Example follows.
-
-```Caddyfile
-{
-	security {
-		secrets aws_secrets_manager access_token {
-			region us-east-1
-			path authcrunch/caddy/access_token
-		}
-
-		secrets aws_secrets_manager users/jsmith {
-			region us-east-1
-			path authcrunch/caddy/users/jsmith
-		}
-
-		local identity store localdb {
-			realm local
-			path users.json
-			user jsmith {
-				name "secrets:users/jsmith:name"
-				email "secrets:users/jsmith:email"
-				password "secrets:users/jsmith:password" overwrite
-				api_key "secrets:users/jsmith:api_key" overwrite
-				roles authp/admin authp/user
-			}
-		}
-
-		authentication portal myportal {
-			crypto default token lifetime 3600
-			crypto key sign-verify "secrets:access_token:value"
-			enable identity store localdb
-		}
-	}
+```caddyfile
+secrets aws_secrets_manager access_token {
+  region us-east-1
+  path authcrunch/caddy/access_token
 }
 ```
+
+A consumer can then reference a field such as `secrets:access_token:value`. Match the field to the secret's actual structure. Configure the module's AWS identity/permissions privately and limit access to the intended secrets. Do not paste AWS access keys or resolved signing secrets into documentation.
+
+`security.secrets.aws_secrets_manager` is also absent from the audited published binary. Check the module's current setup and dependencies, build it explicitly, then test retrieval and the actual consumer. Core placeholder substitution supports credential instructions and selected store/provider/key fields; it is not a promise that every arbitrary field accepts secret references or refreshes them continuously.
+
+## Verify the boundary
+
+Inspect the executable's modules, adapt with synthetic values, then provision in an isolated environment using the intended secret source. Check a missing credential/reference fails and the intended service operation succeeds. Record separately whether you verified grammar, secret retrieval, SMTP delivery or user login; those are different checks.

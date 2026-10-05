@@ -120,7 +120,8 @@ request does not create an active account.
 
 ### Administrative Approval
 
-The administrator receives a notification. The released implementation has no
+The portal attempts an administrator notification after storing the request.
+A delivery failure is logged and does not undo the dropbox record. The released implementation has no
 complete approval UI or automated dropbox-to-active-store transfer. The final
 screen's promise of an approval email describes the intended workflow, not a
 completed administrative service.
@@ -165,7 +166,9 @@ and verify an approved user's fresh login and denied access before that grant.
 ## Testing with Mock Email Server
 
 Use an isolated, loopback-only SMTP sink on port 1025 with disposable accounts.
-Inspect confirmation and administrator messages locally. Such a sink prints or
+Inspect confirmation and administrator messages locally. Provider template paths
+are accepted but registration renders embedded templates in this release; see
+[messaging limits](../../messaging/intro.md#messaging-templates). Such a sink prints or
 stores verification credentials; it is not production delivery.
 
 Test the permitted domain, denied/lookalike domains, wrong invitation code,

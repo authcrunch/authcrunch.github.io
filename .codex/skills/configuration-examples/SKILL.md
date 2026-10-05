@@ -337,3 +337,15 @@ App-side `sso provider aws` is a separate partial implementation: metadata and
 menu exist, but the released assume handler returns `ASSUME ROLE`. Accepted
 syntax does not prove AWS assertion issuance. Keep its support warning and
 PKCS#8 key requirement; do not turn the old placeholder into a deployment recipe.
+
+## Messaging consumer verification
+
+For released messaging guidance, trace parser names through registration Notify
+and the transport. In v1.3.8, template paths are accepted but registration uses
+embedded English templates; SMTP has no STARTTLS upgrade, SASL is PLAIN, BCC
+adds a header without extra RCPT recipients, and file delivery omits From/Bcc.
+Only initial confirmation and attempted administrator-ready notification run
+in the portal workflow. Passwordless describes the mail connection, not login.
+Verify acknowledgement writes the separate hashed dropbox while leaving the
+active user store unchanged. A failed administrator delivery does not roll back
+the request. Use disposable local sinks/private spool files and stop them.
