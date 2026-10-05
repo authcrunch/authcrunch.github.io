@@ -22,6 +22,7 @@ owners in the root routes.
 | Local, LDAP, OAuth/OIDC, SAML, X.509, and web app integration | Corresponding subdirectories of `docs/authenticate/` |
 | Portal, profile, server, and system APIs | `docs/authenticate/api/` |
 | Policies, tokens, ACLs, headers, and authorization methods | `docs/authorize/` |
+| Persistence, diagnostic logging, and feature version boundaries | `docs/operations/` |
 | Credentials, messaging, SSO apps, and community examples | `docs/credentials/`, `docs/messaging/`, `docs/apps/`, `docs/examples/` |
 | Dated articles and walkthroughs | `blog/YYYY-MM-DD-topic.md` |
 
@@ -127,6 +128,15 @@ Pin the executable bundle and its library version separately. A newer sibling
 checkout or local tag is not proof that behavior is included in a published
 bundle. Distinguish portal token policies, direct OAuth sessions, and AuthCrunch
 acting as an OIDC provider when describing login or token lifecycle settings.
+
+The released bundle also has canonical examples for local refresh sessions,
+direct OAuth authorization, and AuthCrunch acting as an OIDC provider. Keep their
+guides aligned with `assets/conf/local/refresh/`, `assets/conf/oauth/direct/`, and
+`assets/conf/apps/oidc/`. The version reference distinguishes released library
+features from unreleased Caddy adapter support; preserve explicit preview labels.
+Ordered challenge rules use the first available `or` alternative, and an explicit
+unmatched policy denies login. Check the released selector before changing these
+claims; enrollment alone does not establish completed authentication evidence.
 
 ## Blog workflow
 

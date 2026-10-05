@@ -41,6 +41,13 @@ Handler order determines whether an access check runs before the application.
 - [Token verification](authorize/token-verification.md)
 - [Generate an ECDSA key](authorize/encryption.md)
 - [Logout](authenticate/15-logout.md)
+- [Refresh sessions](authenticate/30-refresh-token.md)
+- [Persistent runtime state](operations/runtime-state.md)
+
+## Application sign-in models
+
+- [Direct OAuth authorization](authorize/direct-oauth.md) for provider sign-in without a portal.
+- [AuthCrunch as an OpenID Provider](apps/oidc-provider.md) for relying applications using local accounts.
 
 ## APIs
 
@@ -71,3 +78,7 @@ library version. The [installation guide](start/install.md) identifies the
 bundle used in the learning path. Check the
 [release notes](https://github.com/greenpau/caddy-security/releases) before
 using configuration from a different version.
+
+See [Feature availability and versions](operations/versions.md) for the
+distinction between the released integration and newer library features, and
+[Authentication logging](operations/logging.md) for diagnostic controls.

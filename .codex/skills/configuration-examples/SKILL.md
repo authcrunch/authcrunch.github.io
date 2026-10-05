@@ -97,6 +97,25 @@ Disposable runtimes and provider fixtures follow the
 finish by stopping their processes and releasing their ports before ending
 the turn.
 
+## Refresh, direct OAuth, and OIDC provider examples
+
+The canonical released feature examples are `assets/conf/local/refresh/Caddyfile`,
+`assets/conf/oauth/direct/Caddyfile`, and `assets/conf/apps/oidc/Caddyfile`.
+Their guides import the files with `?raw`. The baseline is caddy-security v1.3.0
+with go-authcrunch v1.3.8. Refresh uses explicitly selected local realms and
+HTTPS; direct OAuth uses a policy-owned opaque session rather than portal JWTs.
+OIDC provider login selects local realms and dedicated private RSA signing keys.
+Its client secret uses `{$OIDC_WEBSITE_SECRET}` for adaptation-time validation;
+keep expanded JSON private. Its scoped consent response headers were verified
+with an actual browser and must agree with the registered callback origin.
+
+Adaptation alone does not verify these protocols. When changing behavior, use
+disposable TLS storage and synthetic accounts/providers to check rotation/replay,
+allow/deny/logout, or consent/code/PKCE/UserInfo as appropriate. A loopback provider
+with a self-signed certificate can require fixture-only TLS verification disabling;
+do not add that setting to the public production example. Persistent-state checks
+must stop one owner before starting the replacement and retain the same config.
+
 ## Local learning example
 
 [assets/conf/getting-started/Caddyfile](../../../assets/conf/getting-started/Caddyfile)

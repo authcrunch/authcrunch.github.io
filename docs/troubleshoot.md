@@ -92,6 +92,13 @@ before using local accounts in a deployment.
 
 ## Ask for help with a reproducible case
 
+For renewable local sessions, check the status table in
+[Refresh sessions](authenticate/30-refresh-token.md#diagnose-a-failed-renewal).
+For a restart or storage error, check the ownership, permissions and stop/start
+requirements in [Persistent runtime state](operations/runtime-state.md).
+Use [Authentication logging](operations/logging.md) to capture a relevant
+diagnostic without changing the access decision.
+
 Open an [issue](https://github.com/greenpau/caddy-security/issues/new/choose) with:
 
 - The Caddy and AuthCrunch versions and how you installed the binary.

@@ -1,0 +1,57 @@
+# AuthCrunch as an OpenID Provider: caddy-security v1.3.0.
+{
+	security {
+		local identity store localdb {
+			realm local
+			path /var/lib/authcrunch/users.json
+		}
+
+		oauth application website {
+			client_id website-client
+			client_name "Example website"
+			client_secret {$OIDC_WEBSITE_SECRET}
+			token_endpoint_auth_method client_secret_basic
+			redirect_uri https://app.example.com/oidc/callback
+			scopes openid profile email
+			require_pkce yes
+		}
+
+		authentication portal myportal {
+			enable identity store localdb
+			oidc provider {
+				issuer https://auth.example.com/auth
+				realms local
+				signing key files /etc/authcrunch/oidc/signing.pem
+				applications website
+				session lifetime 28800
+				token lifetime 300
+			}
+		}
+	}
+}
+
+# Scope the consent form's headers to its HTML response and exact callback origin.
+(oidc_consent_headers) {
+	@oidcConsent {
+		method GET
+		path /auth/oidc/authorize /auth/oidc/continue
+	}
+	header @oidcConsent {
+		Referrer-Policy same-origin
+		Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self' https://app.example.com"
+		match {
+			status 200
+			header Content-Type "text/html; charset=utf-8"
+			header Content-Security-Policy "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+			header Referrer-Policy no-referrer
+		}
+	}
+}
+
+auth.example.com {
+	route {
+		redir /auth /auth/ 308
+		import oidc_consent_headers
+		authenticate /auth/* with myportal
+	}
+}

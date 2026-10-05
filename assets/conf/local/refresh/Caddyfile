@@ -1,0 +1,49 @@
+# Renewable local sessions: caddy-security v1.3.0 / go-authcrunch v1.3.8.
+{
+	security {
+		local identity store localdb {
+			realm local
+			path /var/lib/authcrunch/users.json
+		}
+
+		authentication portal myportal {
+			enable identity store localdb
+			crypto key sign-verify {env.AUTHCRUNCH_SIGNING_KEY}
+			token refresh {
+				realms local
+				public origin https://auth.example.com
+				base path /auth
+				access lifetime 300
+				idle timeout 1800
+				absolute timeout 28800
+				max sessions 10000
+				max rotations 1024
+				body transport disabled
+			}
+			ui {
+				links {
+					"Example app" /app
+					"My profile" /auth/profile/
+				}
+			}
+		}
+
+		authorization policy apppolicy {
+			set auth url https://auth.example.com/auth/
+			crypto key verify {env.AUTHCRUNCH_SIGNING_KEY}
+			allow roles app/member
+		}
+	}
+}
+
+auth.example.com {
+	route {
+		redir /auth /auth/ 308
+		authenticate /auth/* with myportal
+		@app path /app /app/*
+		route @app {
+			authorize with apppolicy
+			reverse_proxy 127.0.0.1:8080
+		}
+	}
+}

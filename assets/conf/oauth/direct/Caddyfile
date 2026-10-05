@@ -1,0 +1,31 @@
+# Direct OIDC login without a portal: caddy-security v1.3.0.
+{
+	security {
+		oauth identity provider upstream {
+			driver generic
+			realm upstream
+			client_id {env.OIDC_CLIENT_ID}
+			client_secret {env.OIDC_CLIENT_SECRET}
+			base_auth_url {$OIDC_ISSUER}
+			metadata_url {$OIDC_DISCOVERY_URL}
+			scopes openid email profile groups
+		}
+
+		authorization policy apppolicy {
+			use oauth identity provider upstream
+			oauth public origin https://app.example.com
+			oauth base path /_authcrunch/oauth2/apppolicy
+			oauth session lifetime 900
+			oauth maximum sessions 10000
+			oauth maximum pending logins 1024
+			allow roles app-members
+		}
+	}
+}
+
+app.example.com {
+	route {
+		authorize with apppolicy
+		reverse_proxy 127.0.0.1:8080
+	}
+}
