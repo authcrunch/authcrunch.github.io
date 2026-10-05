@@ -96,3 +96,208 @@ using configuration from a different version.
 See [Feature availability and versions](operations/versions.md) for the
 distinction between the released integration and newer library features, and
 [Authentication logging](operations/logging.md) for diagnostic controls.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Choose the right reference family</summary>
+
+```text
+Help me understand Reference.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration, configuration-authorization,
+authentication-portal-api.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/reference
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Ask me what I am trying to accomplish, who the caller is, and which executable
+versions I run. Map the task to named stores/providers, a portal, an
+authorization policy, an application protocol, or a specific API family.
+Explain why similar names can describe different directions of trust.
+```
+
+</details>
+
+<details>
+<summary>Trace a setting through three layers</summary>
+
+```text
+Help me understand Reference.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration, configuration-authorization,
+authentication-portal-api.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/reference
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Choose one directive and follow its Caddy adapter, library configuration
+validation, runtime consumer, and focused tests. Explain what adaptation
+proves, what provisioning proves, and what needs a live request. Compare my
+installed tag with main before recommending the setting.
+```
+
+</details>
+
+<details>
+<summary>Read a complete configuration graph</summary>
+
+```text
+Help me understand Reference.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration, configuration-authorization,
+authentication-portal-api.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/reference
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Annotate a synthetic global security block and its site routes. Trace
+named-component references, authenticate/authorize handler mounting, and the
+application handler order. Identify dangling names and a route that bypasses
+the policy without treating a table of settings as a complete working example.
+```
+
+</details>
+
+<details>
+<summary>Match an API to its caller</summary>
+
+```text
+Help me understand Reference.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration, configuration-authorization,
+authentication-portal-api.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/reference
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare browser identity probes, Profile operations, Server administration,
+encrypted System authentication, the Go client, and downstream OIDC token
+endpoints. Explain authentication transport, live-session requirements, and
+independent admin/export switches. Do not carry a permission or credential
+assumption from one API family to another.
+```
+
+</details>
+
+<details>
+<summary>Navigate a thematic investigation</summary>
+
+```text
+Help me understand Reference.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration, configuration-authorization,
+authentication-portal-api.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/reference
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+For an intermittent sign-in problem, guide me through versions,
+callback/cookie scope, token discovery, verification, roles, current account
+state, logging, and persistence. Ask for one redacted observable at a time.
+Provide a short source-backed explanation and a teach-back question instead of
+a list of unrelated configuration changes.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28Config%20OR%20NewServer%20OR%20parseCaddyfile%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile.go)
+   — registers global security configuration and route directive adapters.
+3. [caddy-security: caddyfile_adapt_test.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_adapt_test.go)
+   — checks complete Caddyfile fixtures against expected adapted configuration.
+4. [go-authcrunch: config.go](https://github.com/greenpau/go-authcrunch/blob/main/config.go)
+   — validates the library configuration graph and named components.
+5. [go-authcrunch: server.go](https://github.com/greenpau/go-authcrunch/blob/main/server.go)
+   — constructs the runtime and delegates named portal and policy requests.
+6. [caddy-security: caddyfile_authn.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn.go)
+   — dispatches authentication-portal configuration.
+7. [caddy-security: caddyfile_authz.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz.go)
+   — dispatches authorization-policy subdirectives into library configuration.
+8. [go-authcrunch: pkg/authn/respond_api.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/respond_api.go)
+   — dispatches API routes and enforces admin enablement and role checks.

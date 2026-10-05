@@ -85,3 +85,199 @@ binary, and test login, allowed access, denied access, logout and session behavi
 Persistent-state deployments require a stop/start handover. Regenerate adapted
 JSON from the Caddyfile when adopting direct OAuth, rather than carrying forward
 an old authorization-handler representation.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Inventory the executable I actually run</summary>
+
+```text
+Help me understand Feature availability and versions.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: release-and-versioning, configuration.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/operations/versions
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Ask for the binary path, Caddy version, security version, compiled modules,
+and integration build provenance. Explain what each proves and what it cannot
+prove. Distinguish a downloadable bundle, a source tag, a library module
+release, and the source currently checked out beside the docs.
+```
+
+</details>
+
+<details>
+<summary>Verify a feature’s release boundary</summary>
+
+```text
+Help me understand Feature availability and versions.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: release-and-versioning, configuration.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/operations/versions
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Choose a capability I want, then trace its adapter grammar, library consumer,
+tests, release tags, and downloadable assets. Compare main with my exact
+release. Mark source-only behavior explicitly and do not infer supported
+syntax merely because the library exposes a related type.
+```
+
+</details>
+
+<details>
+<summary>Read release evidence critically</summary>
+
+```text
+Help me understand Feature availability and versions.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: release-and-versioning, configuration.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/operations/versions
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare a version file, go.mod selection, release notes, a Git tag, and an
+attached executable/checksum. Explain why a tag without published assets is
+not a downloadable upgrade and why updating a source dependency does not
+update an existing binary. Verify current official release information before
+recommending a version.
+```
+
+</details>
+
+<details>
+<summary>Plan a reproducible upgrade check</summary>
+
+```text
+Help me understand Feature availability and versions.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: release-and-versioning, configuration.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/operations/versions
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Create a plan to verify artifact provenance, required modules, redacted
+configuration adaptation, trusted HTTPS, allowed and denied journeys, and
+rollback constraints. Include local identity and persistent-state ownership
+where applicable. Ask about topology and current versions before prescribing
+commands or a deployment method.
+```
+
+</details>
+
+<details>
+<summary>Practice version diagnosis</summary>
+
+```text
+Help me understand Feature availability and versions.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: release-and-versioning, configuration.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/operations/versions
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Quiz me on five mismatches: new docs with an old bundle, new library with an
+old adapter, a release tag without assets, an executable on a different PATH,
+and a locally replaced module. Wait for my evidence and show how to resolve
+each without claiming a version check exercises the feature.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28GetVersion%20OR%20go-authcrunch%20OR%20CaddyVersion%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: go.mod](https://github.com/greenpau/caddy-security/blob/main/go.mod)
+   — records the integration's selected Caddy and AuthCrunch library dependencies.
+3. [caddy-security: command_security.go](https://github.com/greenpau/caddy-security/blob/main/command_security.go)
+   — registers security commands, including the library-version report.
+4. [caddy-security: command_security_version_e2e_test.go](https://github.com/greenpau/caddy-security/blob/main/command_security_version_e2e_test.go)
+   — checks the security version command through the executable boundary.
+5. [go-authcrunch: VERSION](https://github.com/greenpau/go-authcrunch/blob/main/VERSION)
+   — records the library version in the selected source revision.
+6. [go-authcrunch: go.mod](https://github.com/greenpau/go-authcrunch/blob/main/go.mod)
+   — records the library's module and dependency declarations.

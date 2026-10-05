@@ -154,3 +154,215 @@ Test discovery, actual browser login and consent, code/PKCE exchange, independen
 ID-token verification and UserInfo. Then test an unregistered callback, wrong
 verifier, code replay, changed account and logout. Confirm that the callback
 reaches the relying party and all issuer paths reach the unstripped portal mount.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Identify the direction of trust</summary>
+
+```text
+Help me understand AuthCrunch as an OpenID Provider.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-applications,
+authentication-portal-oidc.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/apps/oidc-provider
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Draw the relationship between a local account, AuthCrunch as the OpenID
+Provider, and a relying application. Compare it with an external OIDC login
+provider and direct OAuth authorization. Explain which account kinds the
+installed provider supports and why an upstream login does not prove
+downstream OIDC compatibility.
+```
+
+</details>
+
+<details>
+<summary>Review one relying-party registration</summary>
+
+```text
+Help me understand AuthCrunch as an OpenID Provider.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-applications,
+authentication-portal-oidc.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/apps/oidc-provider
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Review a redacted confidential-client registration for nickname versus
+client_id, exact redirect_uri, secret handling, PKCE, issuer, and dedicated
+RSA signing material. Trace state, nonce, code exchange, ID-token checks,
+UserInfo, and the application’s own session. Show a rejected callback example
+without weakening validation.
+```
+
+</details>
+
+<details>
+<summary>Separate consent and credential lifetimes</summary>
+
+```text
+Help me understand AuthCrunch as an OpenID Provider.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-applications,
+authentication-portal-oidc.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/apps/oidc-provider
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare portal login, provider browser session, authorization code, opaque
+access token, OIDC refresh family, ID token, and relying-party session.
+Explain consent, prompt=none, offline_access, rotation/replay, and logout at
+each boundary. Identify what remains valid after account changes or provider
+logout.
+```
+
+</details>
+
+<details>
+<summary>Explore native clients and advertised capabilities</summary>
+
+```text
+Help me understand AuthCrunch as an OpenID Provider.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-applications,
+authentication-portal-oidc.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/apps/oidc-provider
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+For a public native client, explain no client secret, mandatory S256 PKCE, and
+the literal-loopback redirect exception. Compare this with localhost and
+private URI schemes. Read discovery and installed-version tests before
+claiming Request Object support, remote keys, logout endpoints, or OpenID
+certification.
+```
+
+</details>
+
+<details>
+<summary>Plan restart and key-rollover checks</summary>
+
+```text
+Help me understand AuthCrunch as an OpenID Provider.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-applications,
+authentication-portal-oidc.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/apps/oidc-provider
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design tests for completed grants across a full stop/start, lost pending
+interactions, expired codes, replayed refresh tokens, and two overlapping
+signing keys. Explain exclusive state ownership and back-channel request
+routing. Keep storage continuity separate from relying-party session cleanup
+and certificate/issuer stability.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28OAuthApplicationConfig%20OR%20OpenIDProvider%20OR%20require_pkce%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authn_oidc.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_oidc.go)
+   — attaches an OpenID Provider block to a named portal.
+3. [caddy-security: caddyfile_oauth_application.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_oauth_application.go)
+   — collects OAuth client declarations and delegates their grammar to the library.
+4. [go-authcrunch: pkg/oidc/config.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/oidc/config.go)
+   — defines and validates OpenID Provider configuration.
+5. [go-authcrunch: pkg/oidc/authorization.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/oidc/authorization.go)
+   — processes authorization requests, consent, and authorization-code issuance.
+6. [go-authcrunch: pkg/oidc/token.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/oidc/token.go)
+   — validates token exchanges and issues client-bound grants.
+7. [go-authcrunch: pkg/oidc/claims.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/oidc/claims.go)
+   — builds the claims released to relying applications.
+8. [go-authcrunch: pkg/oidc/provider_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/oidc/provider_e2e_test.go)
+   — tests provider protocol journeys and failure responses.
+9. [caddy-security: oauth_application_e2e_test.go](https://github.com/greenpau/caddy-security/blob/main/oauth_application_e2e_test.go)
+   — exercises application registration and portal OIDC journeys through Caddy.
+10. [caddy-security: assets/config/oidc-consent-headers.Caddyfile](https://github.com/greenpau/caddy-security/blob/main/assets/config/oidc-consent-headers.Caddyfile)
+   — shows the scoped consent-page header configuration used by the OIDC example.

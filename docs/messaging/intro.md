@@ -105,3 +105,207 @@ The provider parsers recognize these names:
 The syntax `template <name> <path>` is accepted, but the released registration notification method renders **embedded English templates** and does not read the provider's configured template paths. A custom file, accepted configuration or visible reset/approval wording is therefore not evidence that the workflow or override runs.
 
 Embedded registration bodies use context-aware HTML escaping and quoted-printable delivery. Keep confirmation credentials private. To change this behavior, verify a future implementation and its consuming workflow before treating template settings as effective customization.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Map a registration notification</summary>
+
+```text
+Help me understand Messaging providers.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-messaging, configuration-credentials,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/messaging/intro
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Trace a registration request, confirmation message, acknowledgment,
+administrative notification, and pending-account dropbox. Explain how the
+named provider is selected and which failures clean up or retain state.
+Distinguish SMTP acceptance, inbox delivery, email confirmation, and account
+approval.
+```
+
+</details>
+
+<details>
+<summary>Choose the actual transport</summary>
+
+```text
+Help me understand Messaging providers.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-messaging, configuration-credentials,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/messaging/intro
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare plaintext SMTP, implicit-TLS SMTPS, and a private file outbox. Explain
+SASL PLAIN, passwordless SMTP, and the lack of STARTTLS/OAuth support in my
+version. Ask for server transport requirements before proposing an address or
+port; do not equate passwordless delivery with passwordless user login.
+```
+
+</details>
+
+<details>
+<summary>Inspect recipients and privacy</summary>
+
+```text
+Help me understand Messaging providers.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-messaging, configuration-credentials,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/messaging/intro
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare message headers with SMTP envelope recipients using synthetic
+addresses. Inspect the implementation of Bcc and file-provider output instead
+of assuming extra delivery or hidden recipients. Explain how to notify
+administrators explicitly and what an external outbox sender must validate.
+```
+
+</details>
+
+<details>
+<summary>Separate accepted templates from working flows</summary>
+
+```text
+Help me understand Messaging providers.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-messaging, configuration-credentials,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/messaging/intro
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Trace a configured template path and the registration renderer’s embedded
+templates. Explain which validated template names have actual consumers and
+why accepted settings do not prove recovery, MFA delivery, or approval is
+implemented. Identify release-specific evidence before proposing custom
+template behavior.
+```
+
+</details>
+
+<details>
+<summary>Design a disposable delivery check</summary>
+
+```text
+Help me understand Messaging providers.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-messaging, configuration-credentials,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/messaging/intro
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Plan a private file-outbox check for rendered content, then a separate
+loopback SMTP check for TLS/authentication and envelope behavior when needed.
+Use synthetic identities and bounded output. Explain what each check proves,
+stop any temporary sender/server afterward, and avoid treating it as proof of
+real mailbox delivery.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28EmailProvider%20OR%20FileProvider%20OR%20dedupRcpt%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_messaging.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_messaging.go)
+   — adapts email/file providers and delegates their settings to the library.
+3. [caddy-security: caddyfile_messaging_test.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_messaging_test.go)
+   — tests messaging-provider adaptation and rejected declarations.
+4. [go-authcrunch: pkg/messaging/email_send.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/messaging/email_send.go)
+   — sends SMTP/SMTPS messages and constructs headers and envelope recipients.
+5. [go-authcrunch: pkg/messaging/file_send.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/messaging/file_send.go)
+   — writes rendered messages to a private file-provider outbox.
+6. [go-authcrunch: pkg/messaging/email_template.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/messaging/email_template.go)
+   — loads the embedded messaging template library.
+7. [go-authcrunch: pkg/registry/local_user_registry.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/registry/local_user_registry.go)
+   — collects and verifies registration requests into a separate local dropbox.

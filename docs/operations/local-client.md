@@ -138,3 +138,212 @@ a request by itself.
 
 For application code that needs portal login without administrative commands,
 use the [Go authentication client](authclient.md).
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Choose the right management tool</summary>
+
+```text
+Help me understand Local management CLI.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api, authentication-client,
+authdbctl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/operations/local-client
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare bundled security local commands, the separate authdbctl utility,
+direct Server API calls, and offline password/API-key generation. Explain
+which operations contact a portal and which mutate accounts. Do not transfer
+flags or retry behavior between tools; ask for the actual executable and its
+help output.
+```
+
+</details>
+
+<details>
+<summary>Read the client configuration</summary>
+
+```text
+Help me understand Local management CLI.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api, authentication-client,
+authdbctl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/operations/local-client
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Annotate a redacted private YAML file for base_url including the portal mount,
+authentication realm, target --realm, CA file, timeout, and token path.
+Explain relative token paths and why Caddy placeholders are not expanded in
+client YAML. Distinguish an admin’s login identity from the store being
+administered.
+```
+
+</details>
+
+<details>
+<summary>Diagnose authentication and token caching</summary>
+
+```text
+Help me understand Local management CLI.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api, authentication-client,
+authdbctl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/operations/local-client
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare missing, invalid, and expired cached credentials with an explicit
+connect operation. Explain password prompting, TOTP requirements, access-only
+API keys, and explicit body refresh transport. Check whether the CLI rotates
+refresh credentials before assuming unattended sessions remain usable.
+```
+
+</details>
+
+<details>
+<summary>Handle an uncertain mutation</summary>
+
+```text
+Help me understand Local management CLI.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api, authentication-client,
+authdbctl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/operations/local-client
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Walk through create, reset-password, role update, challenge update, account
+disable, and store reload requests. Explain generated-password output and why
+a timeout can follow a committed mutation. Plan an inspect-before-retry
+workflow rather than automatically replaying writes; distinguish store reload
+from Caddy reload.
+```
+
+</details>
+
+<details>
+<summary>Review private files and observable failures</summary>
+
+```text
+Help me understand Local management CLI.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api, authentication-client,
+authdbctl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/operations/local-client
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design tests for owner-only config/cache/output, leaf symlink rejection,
+output colliding with input or CA files, untrusted TLS, denied admin role, and
+disabled Server API. Use disposable paths and synthetic identities. Separate
+local file checks from server authentication, authorization, and account
+changes.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28securityLocalClient%20OR%20runSecurityLocal%20OR%20securityLocalPayload%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: command_local.go](https://github.com/greenpau/caddy-security/blob/main/command_local.go)
+   — defines bundled local-management commands and their Server API request payloads.
+3. [caddy-security: command_local_client.go](https://github.com/greenpau/caddy-security/blob/main/command_local_client.go)
+   — loads private client configuration, authenticates, and sends bounded administrative requests.
+4. [caddy-security: command_local_output.go](https://github.com/greenpau/caddy-security/blob/main/command_local_output.go)
+   — formats management results and handles private output files.
+5. [caddy-security: command_local_safety_test.go](https://github.com/greenpau/caddy-security/blob/main/command_local_safety_test.go)
+   — tests private-file handling and local-command safety boundaries.
+6. [caddy-security: command_local_e2e_test.go](https://github.com/greenpau/caddy-security/blob/main/command_local_e2e_test.go)
+   — exercises the bundled client against a portal and local administration API.
+7. [go-authcrunch: pkg/authclient/client.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authclient/client.go)
+   — runs context-bound JSON authentication and checkpoint continuation.
+8. [go-authcrunch: pkg/authn/handle_api_crud_user.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_api_crud_user.go)
+   — validates administrative account targets and requested mutations.
+9. [caddy-security: command_credentials.go](https://github.com/greenpau/caddy-security/blob/main/command_credentials.go)
+   — implements offline password-hash and API-key generation.

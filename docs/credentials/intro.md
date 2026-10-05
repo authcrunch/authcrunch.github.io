@@ -70,3 +70,208 @@ A consumer can then reference a field such as `secrets:access_token:value`. Matc
 ## Verify the boundary
 
 Inspect the executable's modules, adapt with synthetic values, then provision in an isolated environment using the intended secret source. Check a missing credential/reference fails and the intended service operation succeeds. Record separately whether you verified grammar, secret retrieval, SMTP delivery or user login; those are different checks.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Classify the secret before configuring it</summary>
+
+```text
+Help me understand Credentials and secret references.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-credentials, configuration-secrets,
+configuration-runtime-resolution.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/credentials/intro
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare reusable SMTP credentials, user password hashes, account API keys,
+portal signing keys, System keys, and external secret references. Explain
+which component owns each and why a named credentials block is not a vault or
+an LDAP bind configuration. Use only synthetic field values.
+```
+
+</details>
+
+<details>
+<summary>Trace named credentials to a consumer</summary>
+
+```text
+Help me understand Credentials and secret references.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-credentials, configuration-secrets,
+configuration-runtime-resolution.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/credentials/intro
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Annotate a credentials block and its messaging reference, including name
+matching, required username/password, optional domain, and SASL PLAIN
+consumption. Separate grammar, runtime validation, and SMTP acceptance.
+Explain why changing a generic credential does not change a local user’s
+password.
+```
+
+</details>
+
+<details>
+<summary>Understand when values are resolved</summary>
+
+```text
+Help me understand Credentials and secret references.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-credentials, configuration-secrets,
+configuration-runtime-resolution.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/credentials/intro
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare adaptation-time environment expansion, runtime environment
+placeholders, and secrets:manager:field references. Trace the private
+configuration copy and explain where expanded values could appear in adapted
+JSON or diagnostics. Do not assume every setting accepts references or that
+values refresh continuously after startup.
+```
+
+</details>
+
+<details>
+<summary>Check external secret-manager availability</summary>
+
+```text
+Help me understand Credentials and secret references.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-credentials, configuration-secrets,
+configuration-runtime-resolution.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/credentials/intro
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Given a proposed AWS secret integration, inspect my compiled modules and
+installed versions before choosing a plugin. Distinguish Secrets Manager from
+Parameter Store and the secret lookup from the consuming credential object.
+Plan missing-manager, missing-field, denied retrieval, and invalid
+resolved-value checks with disposable examples.
+```
+
+</details>
+
+<details>
+<summary>Diagnose a service authentication failure</summary>
+
+```text
+Help me understand Credentials and secret references.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-credentials, configuration-secrets,
+configuration-runtime-resolution.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/credentials/intro
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Build a staged diagnosis for an SMTP login failure: name resolution, absent or
+malformed secret, provisioning, network/TLS, mechanism support, and server
+rejection. Ask for redacted statuses and module evidence. Keep retrieval
+success separate from service acceptance and avoid printing credentials as a
+debugging technique.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28GenericCredential%20OR%20ResolveRuntimeAppConfig%20OR%20security.secrets%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_credentials.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_credentials.go)
+   — adapts reusable named username/password credential declarations.
+3. [caddy-security: caddyfile_credentials_test.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_credentials_test.go)
+   — tests credential block grammar and adapted fields.
+4. [caddy-security: caddyfile_secrets.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_secrets.go)
+   — adapts separately compiled external secret-manager declarations.
+5. [caddy-security: caddyfile_resolve.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_resolve.go)
+   — resolves runtime environment and secret references in private configuration copies.
+6. [go-authcrunch: pkg/credentials/generic_credential.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/credentials/generic_credential.go)
+   — validates reusable credential names, usernames, passwords, and optional domains.
+7. [go-authcrunch: pkg/messaging/email_send.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/messaging/email_send.go)
+   — sends SMTP/SMTPS messages and constructs headers and envelope recipients.
