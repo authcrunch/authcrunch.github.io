@@ -156,3 +156,206 @@ Also test unavailable methods, wrong assertions, enrollment followed by fresh
 login, and stronger policy changes. Basic/API-key authentication cannot manufacture
 proof of missing checkpoints. Refresh and OIDC recheck local evidence against the
 current policy; selected rules alone are not successful MFA claims.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Trace rule selection</summary>
+
+```text
+Help me understand Authentication Challenges.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-challenges,
+configuration-authentication-user-transforms, configuration-users.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/authentication-challenges
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain ordered rules, availability, all-method sequences, and first-available
+or alternatives. Walk through password, totp, and u2f for accounts with
+different enrolled methods. Separate sequence selection from verifying every
+selected checkpoint.
+```
+
+</details>
+
+<details>
+<summary>Compare policy owners</summary>
+
+```text
+Help me understand Authentication Challenges.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-challenges,
+configuration-authentication-user-transforms, configuration-users.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/authentication-challenges
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare account-stored challenge rules, transform-selected sequences, and
+additive require mfa. Explain precedence and what happens when an explicit
+applicable policy cannot resolve a sequence. Ask for my local realm and
+release before reviewing a policy.
+```
+
+</details>
+
+<details>
+<summary>Analyze a fallback</summary>
+
+```text
+Help me understand Authentication Challenges.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-challenges,
+configuration-authentication-user-transforms, configuration-users.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/authentication-challenges
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Use the hardware-first example to identify when password-only login is
+intentionally allowed. Compare u2f or totp with u2f totp. Help me remove
+ambiguity about unavailable methods without inventing a user-choice screen or
+pretending enrollment equals authentication.
+```
+
+</details>
+
+<details>
+<summary>Design evidence regression tests</summary>
+
+```text
+Help me understand Authentication Challenges.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-challenges,
+configuration-authentication-user-transforms, configuration-users.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/authentication-challenges
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Create cases for unavailable factors, wrong assertions, enrollment followed by
+fresh login, changed challenge policy, direct Basic/API-key calls, and
+renewal. Explain how current account evidence affects refresh/OIDC and which
+test result proves completed factor claims.
+```
+
+</details>
+
+<details>
+<summary>Practice editing interfaces</summary>
+
+```text
+Help me understand Authentication Challenges.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-challenges,
+configuration-authentication-user-transforms, configuration-users.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/authentication-challenges
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain the differences between Caddy static provisioning, supported CLI/API
+challenge updates, and offline JSON edits. Use excerpts rather than
+replacement databases. Ask me five rule-selection questions one at a time and
+require a reasoned checkpoint sequence for each.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28AuthenticationChallengeConfig%20OR%20AuthenticationChallenges%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authn_transform.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_transform.go)
+   — adapts user-transform matchers, actions, and required challenges.
+3. [go-authcrunch: pkg/authchal/config/config.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authchal/config/config.go)
+   — defines ordered authentication challenge rules and their validation.
+4. [go-authcrunch: pkg/authchal/config/check.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authchal/config/check.go)
+   — selects an ordered sequence from available authentication methods.
+5. [go-authcrunch: pkg/authn/authentication_challenges.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/authentication_challenges.go)
+   — checks direct credential login against resolved challenge requirements.
+6. [go-authcrunch: pkg/authn/authentication_challenges_sequence_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/authentication_challenges_sequence_e2e_test.go)
+   — tests ordered authentication sequences through portal requests.
+7. [go-authcrunch: pkg/authn/handle_http_sandbox.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_http_sandbox.go)
+   — handles local browser authentication checkpoints.
+8. [go-authcrunch: pkg/authn/handle_api_profile.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_api_profile.go)
+   — checks local identity/session access and dispatches Profile operations.

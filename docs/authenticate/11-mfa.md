@@ -95,3 +95,209 @@ Test the actual browser and device combinations you support. A discoverable
 passkey is not an automatic promise of username-free login in this portal.
 Maintain a reviewed recovery process with a local administrator; the released
 `/recover` handler does not implement a complete password or MFA recovery flow.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Separate enrollment and authentication</summary>
+
+```text
+Help me understand Multi-factor authentication.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-mfa,
+authentication-portal-challenges,
+configuration-authentication-user-transforms.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/mfa
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain require mfa for a local realm, first-login enrollment, and a fresh
+factor-verified login. Contrast this with upstream provider MFA. Show why a
+registered authenticator or an added role is not evidence that a checkpoint
+succeeded.
+```
+
+</details>
+
+<details>
+<summary>Compare TOTP and WebAuthn</summary>
+
+```text
+Help me understand Multi-factor authentication.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-mfa,
+authentication-portal-challenges,
+configuration-authentication-user-transforms.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/mfa
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain the verification assumptions for a TOTP app and a WebAuthn credential:
+secret/time versus secure origin/relying-party identity. Distinguish
+hardware/passkey support from a promise of username-free login. Use synthetic
+examples and never request an enrollment secret.
+```
+
+</details>
+
+<details>
+<summary>Diagnose a factor failure</summary>
+
+```text
+Help me understand Multi-factor authentication.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-mfa,
+authentication-portal-challenges,
+configuration-authentication-user-transforms.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/mfa
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me investigate a local user stuck at enrollment or a failed factor
+checkpoint. Ask about realm matching, registered method, server/authenticator
+clock, browser origin, and selected challenges. Separate wrong/expired
+assertion from unavailable-method policy and unsupported recovery UI.
+```
+
+</details>
+
+<details>
+<summary>Design fresh-login tests</summary>
+
+```text
+Help me understand Multi-factor authentication.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-mfa,
+authentication-portal-challenges,
+configuration-authentication-user-transforms.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/mfa
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Plan cases for a new account, enrolled factor, password alone, wrong/expired
+TOTP, WebAuthn on the wrong origin, and stronger challenge policy. Explain
+which observations show enrollment and which prove completed factors. Use
+disposable accounts only.
+```
+
+</details>
+
+<details>
+<summary>Review a fallback decision</summary>
+
+```text
+Help me understand Multi-factor authentication.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-mfa,
+authentication-portal-challenges,
+configuration-authentication-user-transforms.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/mfa
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare require mfa with an explicit ordered challenge policy and a
+password-only fallback. Ask what level of assurance I require and how recovery
+is administered. Quiz me on why Basic or API-key authentication cannot
+manufacture interactive-factor evidence.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28RequireMFA%20OR%20WebAuthn%20OR%20TOTP%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authn_transform.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_transform.go)
+   — adapts user-transform matchers, actions, and required challenges.
+3. [go-authcrunch: pkg/authchal/config/check.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authchal/config/check.go)
+   — selects an ordered sequence from available authentication methods.
+4. [go-authcrunch: pkg/authn/authentication_challenges.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/authentication_challenges.go)
+   — checks direct credential login against resolved challenge requirements.
+5. [go-authcrunch: pkg/authn/webauthn_enrollment.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/webauthn_enrollment.go)
+   — binds WebAuthn enrollment to account and browser state.
+6. [go-authcrunch: pkg/authn/mfa_enrollment_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/mfa_enrollment_e2e_test.go)
+   — tests local MFA enrollment and authentication behavior.
+7. [go-authcrunch: pkg/authn/authentication_challenges_sequence_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/authentication_challenges_sequence_e2e_test.go)
+   — tests ordered authentication sequences through portal requests.

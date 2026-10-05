@@ -173,3 +173,202 @@ seconds. Refresh-enabled portals use their access lifetime instead, defaulting
 to 300 seconds. Cookie Max-Age and browser logout do not extend or necessarily
 revoke a copied stateless JWT. Inspect the actual Set-Cookie headers, JWT expiry,
 allowed request, denied request and logout after changing these settings.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Map cookie roles and delivery</summary>
+
+```text
+Help me understand Authentication cookies.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-cookies,
+authentication-portal-cookies.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/auth-cookie
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain the different access, session, return, sandbox, refresh, OIDC, and
+SAML cookies. Map host/domain, path, Secure, HttpOnly, and SameSite to browser
+delivery. Separate a tracking identifier from an application credential and
+check newer cross-device availability explicitly.
+```
+
+</details>
+
+<details>
+<summary>Compare one host with sibling hosts</summary>
+
+```text
+Help me understand Authentication cookies.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-cookies,
+authentication-portal-cookies.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/auth-cookie
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Use synthetic auth.example.com and app.example.com origins to compare
+host-only and parent-domain access cookies. Explain which subdomains must be
+trusted and why a cookie path is not a same-origin script isolation boundary.
+Ask for my actual mount and scheme.
+```
+
+</details>
+
+<details>
+<summary>Diagnose a login loop</summary>
+
+```text
+Help me understand Authentication cookies.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-cookies,
+authentication-portal-cookies.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/auth-cookie
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me inspect redacted Set-Cookie and request-cookie metadata for a repeated
+login. Check domain, path, SameSite, HTTPS, custom names, policy discovery,
+and signing keys. Do not ask for cookie values or conclude that cookie
+delivery proves valid authorization.
+```
+
+</details>
+
+<details>
+<summary>Test dedicated credentials</summary>
+
+```text
+Help me understand Authentication cookies.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-cookies,
+authentication-portal-cookies.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/auth-cookie
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Build browser cases for OAuth redirect, cross-site SAML POST, refresh on the
+portal mount, and an app request. Explain which credentials keep fixed
+attributes independently of ordinary cookie settings. Include name collisions
+and separate-instance policy matching.
+```
+
+</details>
+
+<details>
+<summary>Practice lifetime reasoning</summary>
+
+```text
+Help me understand Authentication cookies.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-cookies,
+authentication-portal-cookies.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/auth-cookie
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Ask me about cookie Max-Age versus signed JWT expiry, insecure demo settings,
+__Host- names, and changing only a session-cookie name. Wait for each
+explanation and correct it from the factory and parser rather than generic
+browser assumptions.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28CookieConfig%20OR%20CookieFactory%20OR%20AUTHP_ACCESS_TOKEN%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authn_cookie.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_cookie.go)
+   — adapts portal cookie directives through the library parser.
+3. [caddy-security: caddyfile_authn_cookie_test.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_cookie_test.go)
+   — tests names, attributes, collisions, and compatibility grammar.
+4. [go-authcrunch: pkg/authn/cookie/configuration.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/cookie/configuration.go)
+   — validates cookie roles, names, attributes, and prefix changes.
+5. [go-authcrunch: pkg/authn/cookie/cookie_get.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/cookie/cookie_get.go)
+   — generates role-specific portal cookie values and delivery attributes.
+6. [go-authcrunch: pkg/authn/cookie_browser_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/cookie_browser_e2e_test.go)
+   — tests cookie delivery and browser-visible behavior.

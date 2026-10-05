@@ -129,3 +129,204 @@ Unsupported, repeated, empty, or incompatible format/encoding parameters return
 than silently omitting keys. The handler disables caching. Keep this opt-in
 absent from routine deployments and perform backups through the private state
 workflow when that meets the operational need.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Read the administrative boundary</summary>
+
+```text
+Help me understand Server API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api,
+configuration-authentication, local-identity-database.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/server-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain explicit admin API enablement and the exact authp/admin role. Compare
+store discovery with OAuth/SAML provider configuration and local self-service.
+Ask which management task I need and how administrator identity is
+provisioned.
+```
+
+</details>
+
+<details>
+<summary>Interpret management results</summary>
+
+```text
+Help me understand Server API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api,
+configuration-authentication, local-identity-database.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/server-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare realm info, users, one-user operations, and store reload. Explain
+required target fields and backend-dependent support. Work through HTTP 200
+with a failure body and an unknown-realm reload result; identify what proves
+an account mutation actually succeeded.
+```
+
+</details>
+
+<details>
+<summary>Diagnose a refused operation</summary>
+
+```text
+Help me understand Server API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api,
+configuration-authentication, local-identity-database.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/server-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me classify disabled API, wrong mount, non-admin role, unknown realm,
+malformed user target, unsupported backend, and response-body failure. Use
+redacted request shape and metadata. Do not recommend printing tokens, reset
+passwords, or credential-bearing account responses.
+```
+
+</details>
+
+<details>
+<summary>Separate public and private key endpoints</summary>
+
+```text
+Help me understand Server API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api,
+configuration-authentication, local-identity-database.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/server-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare ordinary public JWKS with the independent private-key-export opt-in.
+Explain export format/encoding constraints, entire-set failure, and cache
+policy. Help me determine whether private state backup meets my need before
+proposing any export request.
+```
+
+</details>
+
+<details>
+<summary>Design administrative change verification</summary>
+
+```text
+Help me understand Server API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api,
+configuration-authentication, local-identity-database.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/server-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Create a disposable-account plan for role overwrite/add, disable/enable,
+challenge changes, and password reset. Include fresh-login denial and the
+separate lifetime of already issued JWTs. Explain why uncertain mutations
+should be reconciled before a retry rather than assumed idempotent.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28handleAPIAdmin%20OR%20AdminAPI%20OR%20private_keys%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authn_admin_api.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_admin_api.go)
+   — parses independent admin-API and private-key-export opt-ins.
+3. [caddy-security: caddyfile_authn_admin_api_test.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_admin_api_test.go)
+   — tests admin API switches and their adapted configuration.
+4. [go-authcrunch: pkg/authn/respond_api.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/respond_api.go)
+   — dispatches API routes and enforces admin enablement and role checks.
+5. [go-authcrunch: pkg/authn/handle_api_crud_user.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_api_crud_user.go)
+   — validates administrative account targets and requested mutations.
+6. [go-authcrunch: pkg/authn/handle_api_private_keys.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_api_private_keys.go)
+   — handles explicitly enabled private signing-key export and format checks.
+7. [go-authcrunch: pkg/authn/handle_api_admin_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_api_admin_test.go)
+   — tests JSON request-body bounds for administrative handlers.

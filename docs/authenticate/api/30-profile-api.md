@@ -113,3 +113,202 @@ credential material: these are private account responses, not a public
 metadata service. Do not put their bodies in analytics, shared caches, or
 application logs. SSH/GPG enrollment stores public keys; it does not grant
 shell access or replace an application's own key policy.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Explain current-account authority</summary>
+
+```text
+Help me understand Profile API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-profile,
+authentication-portal-mfa, authentication-portal-challenges.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/profile-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain why Profile requires a permitted local identity and live portal
+session, and why it cannot select an arbitrary username. Compare external
+identities, native body-refresh login, and a copied app JWT. Trace the
+account-binding check independently of display transforms.
+```
+
+</details>
+
+<details>
+<summary>Read an operation request</summary>
+
+```text
+Help me understand Profile API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-profile,
+authentication-portal-mfa, authentication-portal-challenges.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/profile-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Walk through POST, JSON kind dispatch, body limits, status, and
+operation-specific fields. Compare fetch_user_info with a password mutation
+using fake values. Explain old-password verification and whitespace behavior
+without asking me for a password.
+```
+
+</details>
+
+<details>
+<summary>Understand challenge-policy replacement</summary>
+
+```text
+Help me understand Profile API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-profile,
+authentication-portal-mfa, authentication-portal-challenges.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/profile-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain effective challenge metadata, an empty array, missing/null/mixed
+values, unsatisfiable sequences, and reauthentication_required. Compare
+account overrides with portal requirements. Show why an atomic rule change
+must not be mistaken for completed new-factor evidence.
+```
+
+</details>
+
+<details>
+<summary>Diagnose a failed Profile call</summary>
+
+```text
+Help me understand Profile API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-profile,
+authentication-portal-mfa, authentication-portal-challenges.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/profile-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me classify invalid token, missing allowed role, lost live session,
+nonlocal identity, unsupported kind, malformed fields, and wrong origin/mount.
+Ask for redacted response metadata. Contrast a successful whoami probe with
+authorization for credential management.
+```
+
+</details>
+
+<details>
+<summary>Plan self-service mutation checks</summary>
+
+```text
+Help me understand Profile API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-profile,
+authentication-portal-mfa, authentication-portal-challenges.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/profile-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design a disposable-user test for password change, authenticator
+enrollment/deletion, challenge policy replacement, and fresh login. Include a
+tampered target identity and a stale session. Explain which secret-bearing
+responses must remain private and what each observation establishes.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28handleAPIProfile%20OR%20overwrite_user_auth_challenges%20OR%20update_user_password%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [go-authcrunch: pkg/authn/handle_api_profile.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_api_profile.go)
+   — checks local identity/session access and dispatches Profile operations.
+3. [go-authcrunch: pkg/authn/api_update_user_password.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/api_update_user_password.go)
+   — validates and applies a signed-in local user’s password change.
+4. [go-authcrunch: pkg/authn/profile_auth_challenges.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/profile_auth_challenges.go)
+   — reads and replaces the current local account’s challenge policy.
+5. [go-authcrunch: pkg/authn/handle_api_profile_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_api_profile_test.go)
+   — tests Profile body limits and malformed operation inputs.
+6. [go-authcrunch: pkg/authn/profile_session_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/profile_session_e2e_test.go)
+   — tests the live-session boundary for profile access.

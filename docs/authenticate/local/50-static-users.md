@@ -74,3 +74,202 @@ Static `auth challenges` statements select methods, not enrolled factors. A
 strict TOTP/WebAuthn rule needs a usable registered credential or login is denied.
 Finally test fresh password/MFA login, the intended application role, a nonmember
 and old-credential invalidation after replacement.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Distinguish provisioning from reconciliation</summary>
+
+```text
+Help me understand Static Users.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-users, local-identity-database,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/static-users
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain which fields initialize a missing static account and which settings
+can replace existing credentials/challenges. Compare initial name/email/roles
+with deliberate API updates. Ask whether the account already exists before
+assuming a Caddyfile edit changed it.
+```
+
+</details>
+
+<details>
+<summary>Read a generated hash directive</summary>
+
+```text
+Help me understand Static Users.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-users, local-identity-database,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/static-users
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain complete bcrypt:COST:HASH and argon2:PHC imports, quoting,
+adaptation-time environment expansion, and private adapted JSON. Use labels
+for salt/digest rather than an invented usable hash. Compare trusted imports
+with registration password input.
+```
+
+</details>
+
+<details>
+<summary>Reason about overwrite lifetime</summary>
+
+```text
+Help me understand Static Users.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-users, local-identity-database,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/static-users
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Walk through a one-time password overwrite and repeated provisioning after a
+self-service change. Explain why leaving overwrite enabled can undo the user’s
+update. Compare that explicit credential replacement with ordinary
+role/account management.
+```
+
+</details>
+
+<details>
+<summary>Diagnose an unchanged account</summary>
+
+```text
+Help me understand Static Users.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-users, local-identity-database,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/static-users
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me investigate a static block that does not update an existing user’s
+password or roles. Ask for redacted directives, existence, and management
+method. Distinguish missing overwrite, initial-only fields, hash validation,
+and an incompatible installed utility.
+```
+
+</details>
+
+<details>
+<summary>Test provisioning and challenges</summary>
+
+```text
+Help me understand Static Users.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-users, local-identity-database,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/static-users
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Create cases for a new account, an existing account, explicit password
+replacement, strict challenge rules without enrolled factors, and fresh login
+with intended/denied app roles. Explain why selecting TOTP or u2f in static
+configuration does not enroll a factor.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28overwrite%20OR%20auth%20challenges%20OR%20path%3Acaddyfile_user.go%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_user.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_user.go)
+   — parses configured local users, credentials, roles, and challenge rules.
+3. [caddy-security: command_credentials.go](https://github.com/greenpau/caddy-security/blob/main/command_credentials.go)
+   — implements offline password-hash and API-key generation.
+4. [go-authcrunch: pkg/ids/local/store.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/ids/local/store.go)
+   — constructs the file-backed local store and provisions configured accounts.
+5. [go-authcrunch: pkg/identity/password_input.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/identity/password_input.go)
+   — distinguishes trusted credential imports from user password input.
+6. [go-authcrunch: pkg/ids/local/store_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/ids/local/store_test.go)
+   — tests local store configuration, provisioning, and behavior.

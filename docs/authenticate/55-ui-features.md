@@ -149,3 +149,204 @@ with `assets/`; media types must describe the actual content. Static assets are
 public: never place credentials, private keys, user databases or internal
 configuration in them. Validate the complete Caddyfile, then inspect actual
 responses and the browser console.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Map customization surfaces</summary>
+
+```text
+Help me understand Customizing the User Interface (UI).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-ui,
+authentication-portal-themes.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/ui-features
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain configuration metadata/links/assets, local template overrides,
+compiled themes, and the separate Profile app. Distinguish the authentication
+portal from this documentation site. Check the registered themes in my release
+rather than assuming any directory name enables a new theme.
+```
+
+</details>
+
+<details>
+<summary>Review a template override</summary>
+
+```text
+Help me understand Customizing the User Interface (UI).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-ui,
+authentication-portal-themes.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/ui-features
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Walk through copying the release-matched login template and preserving form
+actions, names, escaping, state, and portal mount. Explain which tasks require
+source compilation versus a readable local override file. Ask what design
+change I need before recommending replacement.
+```
+
+</details>
+
+<details>
+<summary>Diagnose a missing asset</summary>
+
+```text
+Help me understand Customizing the User Interface (UI).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-ui,
+authentication-portal-themes.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/ui-features
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me inspect a logo/CSS/JS asset that fails to load. Check public assets/
+URI, media type, filesystem permissions, mount prefix, and whether the file is
+read at adaptation or runtime. Treat static assets as public and never request
+private configuration as a served file.
+```
+
+</details>
+
+<details>
+<summary>Plan UI behavior checks</summary>
+
+```text
+Help me understand Customizing the User Interface (UI).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-ui,
+authentication-portal-themes.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/ui-features
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design browser checks for password/MFA, provider callbacks, errors, keyboard
+focus, mobile layout, contrast, and ordinary versus Profile pages. Explain why
+old DOM selectors and replacing settings.template may not affect the current
+client. Include custom JavaScript’s access to credential forms.
+```
+
+</details>
+
+<details>
+<summary>Review navigation and branding</summary>
+
+```text
+Help me understand Customizing the User Interface (UI).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-ui,
+authentication-portal-themes.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/ui-features
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me add current branding and a minimal app/identity/Profile link set while
+preserving login behavior. Explain icons, disabled links, new-tab behavior,
+and identity-specific transforms. Quiz me on why a visible link cannot replace
+the destination’s authorization policy.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28UserInterface%20OR%20CustomCSS%20OR%20StaticAsset%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authn_ui.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_ui.go)
+   — parses templates, metadata, links, language, and local UI assets.
+3. [go-authcrunch: pkg/authn/ui/params.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/ui/params.go)
+   — defines template, branding, link, and asset parameters.
+4. [go-authcrunch: pkg/authn/ui/ui.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/ui/ui.go)
+   — renders Go templates with portal state and template helpers.
+5. [go-authcrunch: pkg/authn/portal.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/portal.go)
+   — constructs the portal, identity sources, session managers, and UI.
+6. [go-authcrunch: pkg/authn/handle_http_static.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_http_static.go)
+   — serves the portal’s embedded and configured public assets.
+7. [go-authcrunch: pkg/authn/ui/ui_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/ui/ui_test.go)
+   — tests UI configuration and rendering behavior.

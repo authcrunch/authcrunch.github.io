@@ -351,3 +351,204 @@ The LinkedIn screenshots are a preserved March 2026 example. Cookie names and
 scopes must match your provider configuration; the screenshot shows `id_token`,
 not the custom name in the fragment above. The visible tokens are historical
 and must never be copied into an integration.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Trace JSON checkpoint state</summary>
+
+```text
+Help me understand Portal API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api,
+authentication-portal-challenges, authentication-client.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/portal-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Walk through username/realm, rotating sandbox fields, password, required
+TOTP/WebAuthn, and authenticated completion. Use fake secrets. Explain why
+receiving a sandbox or completing one checkpoint is not permission to treat
+the user as logged in.
+```
+
+</details>
+
+<details>
+<summary>Read a WebAuthn continuation</summary>
+
+```text
+Help me understand Portal API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api,
+authentication-portal-challenges, authentication-client.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/portal-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare returned WebAuthn options with the signed assertion expected by the
+server. Explain the browser’s role, encoding format, origin/relying-party
+checks, and current sandbox secret. Do not pretend a curl request can complete
+a hardware assertion by echoing challenge options.
+```
+
+</details>
+
+<details>
+<summary>Diagnose response selection and expiry</summary>
+
+```text
+Help me understand Portal API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api,
+authentication-portal-challenges, authentication-client.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/portal-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me investigate HTML instead of JSON, a stale sandbox secret, expired
+sandbox, wrong realm, or next_challenge mismatch. Ask for redacted response
+shape and headers. Keep sequential continuations separate from credential
+replay and explain when to restart login.
+```
+
+</details>
+
+<details>
+<summary>Compare identity probes and credentials</summary>
+
+```text
+Help me understand Portal API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api,
+authentication-portal-challenges, authentication-client.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/portal-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain beacon success, whoami, probe expiry, and optional upstream id_token
+exposure. Contrast those checks with app ACLs and live Profile authority.
+Compare ordinary login, explicitly enabled body refresh, and access-only
+account API-key exchange.
+```
+
+</details>
+
+<details>
+<summary>Design a client state-machine exercise</summary>
+
+```text
+Help me understand Portal API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api,
+authentication-portal-challenges, authentication-client.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/portal-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Create a state-machine test plan for password success followed by MFA, wrong
+response, expired sandbox, completion, identity probe, and uncertain failure.
+Include API-key login that does not create a Profile/refresh/OIDC browser
+session. Never use live credentials in the exercise.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28sandbox_secret%20OR%20next_challenge%20OR%20handleJSONLogin%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: plugin_authn_json_login_test.go](https://github.com/greenpau/caddy-security/blob/main/plugin_authn_json_login_test.go)
+   — tests JSON login through the Caddy portal handler.
+3. [go-authcrunch: pkg/authn/handle_json_login.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_json_login.go)
+   — advances stateful JSON login checkpoints and returns completion results.
+4. [go-authcrunch: pkg/authn/handle_json_api_key_login.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_json_api_key_login.go)
+   — implements the separate access-only account API-key exchange.
+5. [go-authcrunch: pkg/authn/handle_json_whoami.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_json_whoami.go)
+   — returns validated identity, expiry probes, and optional upstream-token data.
+6. [go-authcrunch: pkg/authn/handle_json_beacon.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_json_beacon.go)
+   — checks a JSON-selected caller’s access credential.
+7. [go-authcrunch: pkg/authn/authentication_challenges_sequence_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/authentication_challenges_sequence_e2e_test.go)
+   — tests ordered authentication sequences through portal requests.

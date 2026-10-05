@@ -183,3 +183,203 @@ Use a distinct registration nickname and dropbox per enabled local store.
 Supply the intended realm explicitly in `identity store NICKNAME REALM` and visit
 `/auth/register/REALM`. A portal accepts one attached registry per store. Sharing
 a dropbox or confusing the nickname with the realm defeats that separation.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Trace request versus active account</summary>
+
+```text
+Help me understand User Registration.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-registrations,
+configuration-messaging, local-identity-database.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/user-registration
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain form submission, invitation code, email passcode, temporary state,
+verified dropbox record, and separate administrator provisioning. Distinguish
+portal acknowledgement text from an implemented approval service. Show why
+registration does not automatically grant an application role.
+```
+
+</details>
+
+<details>
+<summary>Read domain-rule order</summary>
+
+```text
+Help me understand User Registration.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-registrations,
+configuration-messaging, local-identity-database.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/user-registration
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Use synthetic allow/deny rules to predict first-match and unmatched behavior.
+Compare closed allow lists with deny-only lists and lookalike names. Explain
+why domain matching, MX lookup, mailbox verification, and organization
+membership establish different facts.
+```
+
+</details>
+
+<details>
+<summary>Diagnose pending verification</summary>
+
+```text
+Help me understand User Registration.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-registrations,
+configuration-messaging, local-identity-database.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/user-registration
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me classify wrong invitation code, missing terms, duplicate account data,
+mail delivery, wrong passcode, expired cache, and restart. Ask for redacted
+state/status only. Separate historical screen/email timing from actual
+configured cache expiry.
+```
+
+</details>
+
+<details>
+<summary>Plan a private mail-sink exercise</summary>
+
+```text
+Help me understand User Registration.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-registrations,
+configuration-messaging, local-identity-database.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/user-registration
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design loopback-only testing for confirmation/admin messages, wrong codes,
+domain restrictions, expiry, and active-store invariance. Explain why SMTP
+passwordless is not passwordless account registration and why embedded
+template behavior needs source verification. Stop the sink and test portal
+afterwards.
+```
+
+</details>
+
+<details>
+<summary>Review approval and multiple realms</summary>
+
+```text
+Help me understand User Registration.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-registrations,
+configuration-messaging, local-identity-database.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/user-registration
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me define a reviewed provisioning process with separate dropboxes and
+explicit realms. Explain coherent backups and stopped writers before any
+offline migration. Quiz me on why copying an entire dropbox over users.json or
+trusting a requested portal role is unsafe.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28LocalUserRegistry%20OR%20DomainRestrictionRuleset%20OR%20dropbox%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_user_registration.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_user_registration.go)
+   — adapts registration dropboxes, stores, domain rules, and messaging selections.
+3. [go-authcrunch: pkg/registry/local_user_registry.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/registry/local_user_registry.go)
+   — collects and verifies registration requests into a separate local dropbox.
+4. [go-authcrunch: pkg/registry/domain_restriction_ruleset.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/registry/domain_restriction_ruleset.go)
+   — evaluates ordered email-domain restrictions.
+5. [go-authcrunch: pkg/registry/cache.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/registry/cache.go)
+   — holds temporary pending registration state and expiry.
+6. [go-authcrunch: pkg/registry/local_user_registry_password_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/registry/local_user_registry_password_e2e_test.go)
+   — tests registration password handling through the provider workflow.

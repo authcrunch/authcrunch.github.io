@@ -150,3 +150,202 @@ Use the connection address unless trusted-proxy configuration supplies a
 verified client address. Protect the key even on a restricted network: anyone
 holding it can construct System requests. An IP matcher does not establish
 caller identity or replace HTTPS.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Explain System caller authority</summary>
+
+```text
+Help me understand System API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api, configuration-crypto,
+configuration-authorization.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/system-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain an encrypted PASETO v4.local System request between remote gatekeeper
+and portal. Contrast its shared-key authority with an admin token, access JWT,
+and plain JSON. Separate supported Basic/API-key validation from
+database/session synchronization or distributed revocation.
+```
+
+</details>
+
+<details>
+<summary>Read key ID and message structure</summary>
+
+```text
+Help me understand System API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api, configuration-crypto,
+configuration-authorization.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/system-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Walk through a fake plaintext request before encryption, authenticated footer
+kid, selected configured System key, and encrypted response. Explain the
+256-bit key representation and private file ownership. Do not treat kid as a
+remote key location or host identity.
+```
+
+</details>
+
+<details>
+<summary>Diagnose remote authentication failure</summary>
+
+```text
+Help me understand System API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api, configuration-crypto,
+configuration-authorization.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/system-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me inspect redacted key IDs, portal base URL/mount, request kind,
+response status/content type, and realm. Separate transport errors,
+decryption/key mismatch, invalid credentials, and later application ACL
+denial. Never ask for System key bytes or a real encrypted credential payload.
+```
+
+</details>
+
+<details>
+<summary>Compare direct-factor requirements</summary>
+
+```text
+Help me understand System API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api, configuration-crypto,
+configuration-authorization.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/system-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain the account evidence established by a remote Basic or API-key request
+and why it cannot satisfy an absent interactive TOTP/WebAuthn checkpoint.
+Trace transforms and the remote policy’s separate allow/deny decision. Keep
+refresh/OIDC credential issuance outside this exchange.
+```
+
+</details>
+
+<details>
+<summary>Plan a remote-boundary exercise</summary>
+
+```text
+Help me understand System API.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: authentication-portal-api, configuration-crypto,
+configuration-authorization.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/api/system-api
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design a disposable-key test for valid call, wrong key ID, wrong key,
+unsupported kind, denied application role, and network restriction before the
+portal route. Explain why HTTPS and key protection remain required even when
+an IP matcher restricts callers.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28basic_auth_request%20OR%20api_key_auth_request%20OR%20v4.local%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authn_crypto.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_crypto.go)
+   — adapts portal signing and System-key declarations.
+3. [caddy-security: caddyfile_authz_crypto.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_crypto.go)
+   — delegates policy verification-key declarations to the keystore parser.
+4. [go-authcrunch: pkg/authn/handle_api_system.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_api_system.go)
+   — decrypts System requests and dispatches supported remote authentication kinds.
+5. [go-authcrunch: pkg/authproxy/remote_authenticator.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authproxy/remote_authenticator.go)
+   — sends encrypted credential-authentication requests to a remote portal.
+6. [go-authcrunch: pkg/authn/authentication_challenges_system_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/authentication_challenges_system_e2e_test.go)
+   — tests encrypted System authentication and required challenge evidence.

@@ -120,3 +120,202 @@ trust logout redirect uri domain exact app.example.com:8443 path exact /signed-o
 For a deliberately reviewed pair of ports, an anchored regex can use
 `^app[.]example[.]com:(443|8443)$`. A URL with no explicit port still has a different
 Host string from one containing `:443`; add a separate exact rule when needed.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Trace trusted navigation</summary>
+
+```text
+Help me understand Trusted Login and Logout Redirects.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication,
+authentication-portal-cookies.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/trust-login-logout
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain how a policy supplies redirect_url and the portal checks domain plus
+path before storing a return destination. Contrast a trusted destination with
+cookie sharing and application access. Use an anonymous user, member, and
+nonmember in one flow diagram.
+```
+
+</details>
+
+<details>
+<summary>Review host and path matching</summary>
+
+```text
+Help me understand Trusted Login and Logout Redirects.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication,
+authentication-portal-cookies.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/trust-login-logout
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare exact/prefix/suffix/regex rules for app.example.com and /dashboard/.
+Include evil-example.com, app.example.com.evil.test, /dashboard-other, and
+explicit ports. Derive matching from the implementation; explain which URL
+parts these rules do not restrict.
+```
+
+</details>
+
+<details>
+<summary>Diagnose landing on Applications</summary>
+
+```text
+Help me understand Trusted Login and Logout Redirects.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication,
+authentication-portal-cookies.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/trust-login-logout
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me investigate login that ends on the portal instead of the requested
+app. Ask for redacted target host/port/path, trust rules, mount, and
+return-cookie metadata. Separate rejected navigation from cookie delivery or
+application-role failure.
+```
+
+</details>
+
+<details>
+<summary>Plan cross-host tests</summary>
+
+```text
+Help me understand Trusted Login and Logout Redirects.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication,
+authentication-portal-cookies.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/trust-login-logout
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design tests that align policy auth URL, portal mount, trusted return rule,
+access-cookie delivery, verifier, and member ACL. Include a relative auth URL
+on the wrong host. Explain why changing a trust rule cannot repair unreachable
+routing or untrusted parent-domain cookie exposure.
+```
+
+</details>
+
+<details>
+<summary>Practice login versus logout</summary>
+
+```text
+Help me understand Trusted Login and Logout Redirects.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication,
+authentication-portal-cookies.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/trust-login-logout
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Quiz me on login redirect_url, logout redirect_uri, domain/path AND,
+alternative rules, scheme handling, and omitted versus explicit ports. Wait
+for each answer and have me predict both the final destination and independent
+application-access decision.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28TrustedRedirect%20OR%20RedirectURI%20OR%20injectRedirectURL%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authn_misc.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_misc.go)
+   — parses portal options, selections, and trusted redirect rules.
+3. [go-authcrunch: pkg/authn/inject_redirect_url.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/inject_redirect_url.go)
+   — accepts a trusted login return URL into portal state.
+4. [go-authcrunch: pkg/redirects/redirect_match.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/redirects/redirect_match.go)
+   — evaluates configured host/path return-target trust rules.
+5. [go-authcrunch: pkg/redirects/redirect_match_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/redirects/redirect_match_test.go)
+   — tests redirect matching strategies and target boundaries.
+6. [go-authcrunch: pkg/authn/handle_http_logout_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_http_logout_test.go)
+   — tests portal logout responses and destinations.

@@ -106,3 +106,204 @@ offering cross-device login to users.
 
 Implementation references: [library v1.3.11](https://github.com/greenpau/go-authcrunch/tree/v1.3.11/pkg/authn),
 [Caddy integration commit](https://github.com/greenpau/caddy-security/commit/a8f81c7).
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Understand two independent browsers</summary>
+
+```text
+Help me understand Cross-device browser login.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-cross-device,
+authentication-portal-cross-device.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/cross-device
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Draw the requester and approver flow, including QR/link, matching code, fresh
+HTML login, explicit approve/deny, polling, and single-use redemption. Explain
+what the link does not contain and why this is not RFC 8628 device
+authorization. Check binary availability first.
+```
+
+</details>
+
+<details>
+<summary>Reason about approval consent</summary>
+
+```text
+Help me understand Cross-device browser login.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-cross-device,
+authentication-portal-cross-device.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/cross-device
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain why an existing JWT, JSON login, Basic request, or API key cannot
+replace the fresh approving-browser completion. Use an unsolicited-request
+scenario to discuss account/code confirmation. Distinguish legitimate portal
+origin from evidence that I intended this device request.
+```
+
+</details>
+
+<details>
+<summary>Diagnose a stopped transfer</summary>
+
+```text
+Help me understand Cross-device browser login.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-cross-device,
+authentication-portal-cross-device.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/cross-device
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me classify denial, cancellation, expiry, incorrect origin/mount,
+restart, and uncertain network failure. Ask for redacted state/status only.
+Explain when a new interaction is required and why a lost redeemed response
+must not be retried to issue another credential.
+```
+
+</details>
+
+<details>
+<summary>Test independent sessions</summary>
+
+```text
+Help me understand Cross-device browser login.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-cross-device,
+authentication-portal-cross-device.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/cross-device
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design cases for local policy change before redemption, provider transform
+reapplication, approving-session logout, and requester refresh/OIDC
+independence. Explain what invalidates outstanding approvals and what cannot
+undo a completed transfer. Include replay and capacity cases.
+```
+
+</details>
+
+<details>
+<summary>Review the deployment boundary</summary>
+
+```text
+Help me understand Cross-device browser login.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication-cross-device,
+authentication-portal-cross-device.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/cross-device
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Review a redacted compatible portal for opt-in syntax, custom-template link,
+HTTPS, trusted source-address normalization, fixed binding cookie, and both
+mobile/browser paths. Explain what stays volatile with persistence, then quiz
+me about a QR link seen by an unintended person.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28CrossDeviceLoginConfig%20OR%20crossDevice%20OR%20cross_device%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authn_misc.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_misc.go)
+   — parses portal options, selections, and trusted redirect rules.
+3. [caddy-security: caddyfile_authn_cross_device_test.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_cross_device_test.go)
+   — tests opt-in cross-device configuration and cookie-name adaptation.
+4. [go-authcrunch: pkg/authn/cross_device_config.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/cross_device_config.go)
+   — defines opt-in cross-device login configuration.
+5. [go-authcrunch: pkg/authn/cross_device_http.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/cross_device_http.go)
+   — handles requester, approver, polling, and redemption requests.
+6. [go-authcrunch: pkg/authn/cross_device_store.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/cross_device_store.go)
+   — maintains bounded pending approvals and single-use transfer state.
+7. [go-authcrunch: pkg/authn/cross_device_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/cross_device_e2e_test.go)
+   — tests approval, denial, authentication evidence, and independent requester sessions.

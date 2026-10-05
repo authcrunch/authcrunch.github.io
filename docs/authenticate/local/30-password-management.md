@@ -83,3 +83,204 @@ is required. The old `/auth/settings` route is not available in this release.
 The released recovery endpoint does not provide a complete forgotten-password
 service. Establish an administrator-assisted recovery process rather than
 promising reset links that the implementation cannot complete.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Compare bcrypt and Argon2id</summary>
+
+```text
+Help me understand Local password management.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: local-password-authentication, configuration-users,
+authentication-portal-profile.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/password-management
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain the released password utility’s algorithms, cost/resource settings,
+and generated Caddyfile directive. Separate hashing from encryption and from a
+JSON credential record. Ask which installed utility/version I use before
+recommending parameters.
+```
+
+</details>
+
+<details>
+<summary>Understand private input handling</summary>
+
+```text
+Help me understand Local password management.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: local-password-authentication, configuration-users,
+authentication-portal-profile.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/password-management
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Walk through interactive terminal input, owner-only password file, and stdin
+without running commands. Explain newline removal, preserved whitespace,
+--db-path policy reading, and why a production password must not appear on a
+command line or in shell history.
+```
+
+</details>
+
+<details>
+<summary>Compare self-service and administration</summary>
+
+```text
+Help me understand Local password management.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: local-password-authentication, configuration-users,
+authentication-portal-profile.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/password-management
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain a current local Profile password change versus administrator
+credential provisioning/reset. Include current-password verification,
+local/live-session requirements, policy enforcement, and fresh login. Keep
+federated password changes at the identity source.
+```
+
+</details>
+
+<details>
+<summary>Diagnose a rejected password</summary>
+
+```text
+Help me understand Local password management.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: local-password-authentication, configuration-users,
+authentication-portal-profile.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/password-management
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me investigate wrong old password, surrounding-whitespace differences,
+hash-format mismatch, password policy, unsupported cost flags, or old Settings
+links. Ask for redacted errors and metadata. Never ask for the actual password
+or manually alter textual hash parameters to rehash it.
+```
+
+</details>
+
+<details>
+<summary>Plan credential-change regression</summary>
+
+```text
+Help me understand Local password management.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: local-password-authentication, configuration-users,
+authentication-portal-profile.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/local/password-management
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design a disposable-user test for new-password success, old-password denial,
+MFA persistence, and refresh/OIDC evidence invalidation. Explain supported
+mutation versus offline stopped-writer repair and the absence of a complete
+released forgotten-password workflow.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28Argon2%20OR%20PasswordHashConfig%20OR%20update_user_password%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: command_credentials.go](https://github.com/greenpau/caddy-security/blob/main/command_credentials.go)
+   — implements offline password-hash and API-key generation.
+3. [caddy-security: command_credentials_test.go](https://github.com/greenpau/caddy-security/blob/main/command_credentials_test.go)
+   — tests credential-generation flags, input, and output handling.
+4. [go-authcrunch: pkg/identity/password.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/identity/password.go)
+   — defines password records and hash handling.
+5. [go-authcrunch: pkg/identity/password_argon2.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/identity/password_argon2.go)
+   — implements bounded Argon2id password-hash handling.
+6. [go-authcrunch: pkg/authn/api_update_user_password.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/api_update_user_password.go)
+   — validates and applies a signed-in local user’s password change.
+7. [go-authcrunch: pkg/identity/password_argon2_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/identity/password_argon2_test.go)
+   — tests Argon2id hashing, verification, and rejected inputs.

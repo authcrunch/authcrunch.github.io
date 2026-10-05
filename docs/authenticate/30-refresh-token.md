@@ -158,3 +158,212 @@ Check the configured origin and mount first. Confirm that cookies reach the
 portal, the realm participates, and the client selected the right transport.
 Use an isolated test account to verify renewal, expiry and logout; never replay
 a live credential as a diagnostic experiment.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Separate three renewal models</summary>
+
+```text
+Help me understand Refresh sessions.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication,
+refresh-token-implementation, refresh-token-transports,
+refresh-token-identity.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/refresh-token
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare local portal refresh families, upstream OAuth refresh tokens, and
+downstream OIDC refresh grants. Trace which local realms and authentication
+evidence qualify for portal renewal. Explain access lifetime, idle timeout,
+absolute deadline, and rotation limits using a timeline.
+```
+
+</details>
+
+<details>
+<summary>Compare browser and body transport</summary>
+
+```text
+Help me understand Refresh sessions.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication,
+refresh-token-implementation, refresh-token-transports,
+refresh-token-identity.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/refresh-token
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain cookies, exact Origin/mount, refresh header, and cross-tab
+coordination for browsers, versus explicitly selected body transport for
+native JSON login and every continuation. Show why enabling native transport
+is not browser CORS and why families cannot change transports.
+```
+
+</details>
+
+<details>
+<summary>Diagnose failed renewal</summary>
+
+```text
+Help me understand Refresh sessions.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication,
+refresh-token-implementation, refresh-token-transports,
+refresh-token-identity.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/refresh-token
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me classify malformed JSON, wrong method/media type, disabled endpoint,
+origin failure, expired/replayed credential, changed account evidence, and
+temporary capacity/storage failures. Ask for redacted metadata and status.
+Never replay a live refresh credential as an experiment.
+```
+
+</details>
+
+<details>
+<summary>Understand uncertain rotation</summary>
+
+```text
+Help me understand Refresh sessions.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication,
+refresh-token-implementation, refresh-token-transports,
+refresh-token-identity.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/refresh-token
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Walk through two tabs or a lost response during single-use rotation. Explain
+spent-credential reuse, family revocation, atomic credential replacement, and
+fresh login after uncertainty. Compare GET logout confirmation with protected
+POST revocation and explain a failed-storage logout response.
+```
+
+</details>
+
+<details>
+<summary>Plan lifecycle tests</summary>
+
+```text
+Help me understand Refresh sessions.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authentication,
+refresh-token-implementation, refresh-token-transports,
+refresh-token-identity.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/refresh-token
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design disposable-session cases for idle and absolute expiry, rotations,
+password/role/factor changes, logout, restart with and without state, and a
+native continuation missing its transport selection. State expected
+observables without claiming existing signed access tokens are instantly
+revoked.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28TokenRefreshConfig%20OR%20RefreshToken%20OR%20refresh_transport%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authn_token_refresh.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_token_refresh.go)
+   — adapts the portal token-refresh block.
+3. [caddy-security: caddyfile_authn_token_refresh_test.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_token_refresh_test.go)
+   — tests refresh configuration and adapter boundaries.
+4. [go-authcrunch: pkg/authn/token_refresh_config.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/token_refresh_config.go)
+   — defines refresh origins, realms, lifetimes, and transport settings.
+5. [go-authcrunch: pkg/authn/handle_api_refresh_token.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/handle_api_refresh_token.go)
+   — validates browser/native refresh and logout request transport.
+6. [go-authcrunch: pkg/authn/token_refresh_runtime.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/token_refresh_runtime.go)
+   — connects refresh rotation to current local account evidence.
+7. [go-authcrunch: pkg/authn/token_refresh/manager.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/token_refresh/manager.go)
+   — manages refresh families, rotation, expiry, and revocation.
+8. [go-authcrunch: pkg/authn/token_refresh_browser_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/token_refresh_browser_e2e_test.go)
+   — tests browser renewal, coordination, and logout journeys.
