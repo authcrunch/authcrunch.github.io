@@ -10,6 +10,8 @@ Start with [getting-started/Caddyfile](getting-started/Caddyfile) and the
 Caddyfiles from this directory. Parser acceptance proves grammar; live provider,
 TLS, directory, mail and cloud configuration require separate verification.
 
+- [Local role matrix](local/Caddyfile) separates portal access from guest/member/admin
+  app policies; its [README](local/README.md) gives the expected allow/deny cases.
 - [Local refresh](local/refresh/Caddyfile), [registration](local/registration/Caddyfile)
   and [LDAP](ldap/Caddyfile) cover their different identity/session boundaries.
 - [Direct OAuth](oauth/direct/Caddyfile) attaches provider login to a policy.

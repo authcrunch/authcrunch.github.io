@@ -378,3 +378,9 @@ or an external auth-request handler. Preserve hostname/mount/callback agreement.
 `assets/solutions/` is explicitly historical: its README records old UI paths,
 machine-specific prerequisites and the client-side dashboard redirect's lack
 of server-side path isolation. Do not promote those scenarios as current recipes.
+
+The root `assets/conf/local/Caddyfile` is a fresh-directory loopback demo with
+Bob as app/guest, Alice as app/member, and Carol as app/admin (all ordinary
+portal users). Its three route policies require app roles, not authp/user.
+Test the complete allow/deny matrix and nested routes before changing it; keep
+portal administration separate and do not reconcile a contributor's real store.

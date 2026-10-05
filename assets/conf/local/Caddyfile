@@ -1,127 +1,93 @@
+# Local learning example: run from a new directory, never on a public host.
 {
-	http_port 8080
-	https_port 8443
-	# debug
-
-	order authenticate before respond
-	order authorize before basicauth
+	admin off
+	persist_config off
+	storage file_system ./data/caddy
 
 	security {
 		local identity store localdb {
 			realm local
-			path {$HOME}/.local/caddy/users.json
+			path ./data/users.json
+			user alice {
+				name Alice Example
+				email alice@example.test
+				password "LocalDemoPassword123!"
+				roles authp/user app/guest app/member
+			}
+			user bob {
+				name Bob Example
+				email bob@example.test
+				password "LocalDemoPassword123!"
+				roles authp/user app/guest
+			}
+			user carol {
+				name Carol Example
+				email carol@example.test
+				password "LocalDemoPassword123!"
+				roles authp/user app/guest app/member app/admin
+			}
 		}
-
-		oauth identity provider github {env.GITHUB_CLIENT_ID} {env.GITHUB_CLIENT_SECRET}
 
 		authentication portal myportal {
-			crypto default token lifetime 3600
-			crypto key sign-verify {env.JWT_SHARED_KEY}
 			enable identity store localdb
-			enable identity provider github
-			cookie domain myfiosgateway.com
+			crypto key sign-verify {env.AUTHCRUNCH_DEMO_SECRET}
+			cookie insecure enabled
 			ui {
 				links {
-					"My Website" https://assetq.myfiosgateway.com:8443/ icon "las la-star"
-					"Guests" https://assetq.myfiosgateway.com:8443/guests icon "las la-star"
-					"Users" https://assetq.myfiosgateway.com:8443/users icon "las la-star"
-					"Admins" https://assetq.myfiosgateway.com:8443/admins icon "las la-star"
-					"My Identity" "/whoami" icon "las la-user"
+					"Guest content" /guests
+					"Member content" /users
+					"Administrator content" /admins
+					"My identity" /auth/whoami
 				}
-				password_recovery_enabled yes
-			}
-			transform user {
-				match origin local
-				action add role authp/user
-				ui link "Portal Settings" /settings icon "las la-cog"
-			}
-			transform user {
-				match realm github
-				match sub github.com/greenpau
-				action add role authp/user
 			}
 		}
 
-		authorization policy guests_policy {
-			# disable auth redirect
-			set auth url https://auth.myfiosgateway.com:8443/
-			allow roles authp/admin authp/user
-			crypto key verify {env.JWT_SHARED_KEY}
-			acl rule {
-				comment allow guests only
-				match role guest authp/guest
-				allow stop log info
-			}
-			acl rule {
-				comment default deny
-				match any
-				deny log warn
-			}
+		authorization policy guestpolicy {
+			set auth url http://localhost:9080/auth/
+			crypto key verify {env.AUTHCRUNCH_DEMO_SECRET}
+			allow roles app/guest
 		}
 
-		authorization policy users_policy {
-			set auth url https://auth.myfiosgateway.com:8443/
-			allow roles authp/admin authp/user
-			crypto key verify {env.JWT_SHARED_KEY}
-			acl rule {
-				comment allow users
-				match role authp/user
-				allow stop log info
-			}
-			acl rule {
-				comment default deny
-				match any
-				deny log warn
-			}
+		authorization policy memberpolicy {
+			set auth url http://localhost:9080/auth/
+			crypto key verify {env.AUTHCRUNCH_DEMO_SECRET}
+			allow roles app/member
 		}
 
-		authorization policy admins_policy {
-			set auth url https://auth.myfiosgateway.com:8443/
-			allow roles authp/admin authp/user
-			crypto key verify {env.JWT_SHARED_KEY}
-			acl rule {
-				comment allow users
-				match role authp/user
-				allow stop log info
-			}
-			acl rule {
-				comment default deny
-				match any
-				deny log warn
-			}
+		authorization policy adminpolicy {
+			set auth url http://localhost:9080/auth/
+			crypto key verify {env.AUTHCRUNCH_DEMO_SECRET}
+			allow roles app/admin
 		}
 	}
 }
 
-(tls_config) {
-	tls {$HOME}/.local/caddy/server.crt {$HOME}/.local/caddy/server.key
-}
-
-auth.myfiosgateway.com {
-	import tls_config
-	route {
-		authenticate with myportal
-	}
-}
-
-assetq.myfiosgateway.com {
-	import tls_config
-	route /guests* {
-		authorize with guests_policy
-		respond * "assetq - guests only" 200
-	}
-
-	route /users* {
-		authorize with users_policy
-		respond * "assetq - users" 200
-	}
-
-	route /admins* {
-		authorize with admins_policy
-		respond * "assetq - admins" 200
-	}
+http://localhost:9080 {
+	bind 127.0.0.1
 
 	route {
-		respond "assetq is running"
+		redir /auth /auth/ 308
+
+		authenticate /auth/* with myportal
+
+		@guestpolicy path /guests /guests/*
+		route @guestpolicy {
+			authorize with guestpolicy
+			respond "Guest application content." 200
+		}
+
+		@memberpolicy path /users /users/*
+		route @memberpolicy {
+			authorize with memberpolicy
+			respond "Member application content." 200
+		}
+
+		@adminpolicy path /admins /admins/*
+		route @adminpolicy {
+			authorize with adminpolicy
+			respond "Administrator application content." 200
+		}
+
+		respond "AuthCrunch local policy demo. Open /guests to begin." 200
 	}
 }
