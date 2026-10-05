@@ -90,6 +90,22 @@ a preview; do not advertise a stopped server as a live preview.
 
 ## Failure triage and verification
 
+### Memory use during validation
+
+On a workstation under memory pressure, stop heavy checks before starting
+another build, browser, or Go test. Run those stages sequentially. Use one
+browser instance with a bounded number of pages; close pages, contexts, and
+the browser in `finally`, including on failed checks. Save full logs and
+results in ignored `tmp/` and return concise summaries to the session.
+
+Check process ownership and memory before attributing pressure to the site.
+On macOS, `top -l 1 -n 10 -o mem -stats pid,ppid,command,mem,cmprs,state`
+and `sysctl vm.swapusage` expose compressed memory and swap that process RSS
+alone can miss. Stop identified repository workers first. A leaking editor
+extension host needs its own restart; a Node heap limit on a build does not
+bound editor, browser, or native compiler memory. Preserve a resumable audit
+checkpoint in `tmp/` before a restart that could disconnect the session.
+
 Read the first substantive error and map it to the responsible input:
 
 - For MDX errors, check fences, unescaped braces/angle brackets, and JSX in
