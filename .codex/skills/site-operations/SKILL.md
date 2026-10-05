@@ -65,6 +65,29 @@ dependency mutation, not a repair or validation command. For dependency work,
 make the requested update, review manifest/lockfile changes together, and run
 typecheck plus build. Avoid changing unrelated versions.
 
+## Local server lifecycle
+
+Before ending a turn, shut down all development, preview, prototype, and
+test-fixture servers started or used for this repository, including leftovers
+from earlier turns. Perform cleanup on successful and failed validation and
+when interrupted work ends. Keep a specific server running only when the user
+explicitly requests it.
+
+Track each server's tool session or PID and listening ports when starting or
+reusing it. Stop it gracefully with Ctrl+C through its session or SIGTERM to
+the identified process, then wait for exit. Verify its ports have no remaining
+listeners, for example with `lsof -nP -iTCP:<port> -sTCP:LISTEN`.
+
+For discovered leftovers, confirm their command and working directory belong
+to this repository before stopping them. If graceful shutdown leaves workers
+or listeners behind, inspect and stop the identified remaining processes.
+Target those processes rather than killing every Node/Caddy process or an
+unrelated service that happens to occupy a port.
+
+Save screenshots, logs, and reproduction commands in ignored `tmp/` before
+cleanup. The final response may link saved artifacts and explain how to restart
+a preview; do not advertise a stopped server as a live preview.
+
 ## Failure triage and verification
 
 Read the first substantive error and map it to the responsible input:
@@ -158,3 +181,6 @@ Use [release-and-versioning](../release-and-versioning/SKILL.md) to prepare a ve
   without treating a no-op Make target as passing coverage.
 - A workflow change preserves the build-to-artifact-to-deploy dependency and
   tests local build behavior without publishing as a smoke test.
+- A preview or fixture check ends with its server processes stopped and ports
+  released, including after validation failure or reuse across turns. Unrelated
+  services remain running; any user-requested exception identifies the server.

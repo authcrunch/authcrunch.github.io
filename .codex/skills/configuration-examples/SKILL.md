@@ -92,6 +92,10 @@ login/redirect results. Missing TLS files, credentials, optional modules, or
 provider availability are environment limits to explain, not reasons to weaken
 the example. A site build, successful adaptation, and a successful provider
 login are different evidence levels.
+Disposable runtimes and provider fixtures follow the
+[local server lifecycle](../site-operations/SKILL.md#local-server-lifecycle);
+finish by stopping their processes and releasing their ports before ending
+the turn.
 
 ## Local learning example
 

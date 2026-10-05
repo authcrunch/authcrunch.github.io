@@ -123,6 +123,9 @@ Preview with `npm run dev` (port 4200, host `0.0.0.0`) or serve a completed buil
 `npm run serve -- --port 4200`. Check the homepage and a representative docs
 page in light/dark themes and narrow/wide layouts. If browser inspection is
 unavailable, state that limit instead of claiming visual verification.
+The [local server lifecycle](../site-operations/SKILL.md#local-server-lifecycle)
+governs cleanup before ending the turn, including previews reused from earlier
+work.
 
 - A hero or topic-card change renders during the production build and keeps
   navigation and reading order usable at mobile widths.

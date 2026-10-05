@@ -137,6 +137,9 @@ as failures. Broken site links throw; broken Markdown links are configured to
 warn. A zero exit status does not replace review of warnings or external links.
 The operational command details are in
 [site-operations](../site-operations/SKILL.md).
+Rendered inspections follow its
+[local server lifecycle](../site-operations/SKILL.md#local-server-lifecycle),
+including shutdown before ending the turn.
 
 - A new provider page appears in the intended category and its images, example
   link, and callback URI agree with the described portal mount path.
