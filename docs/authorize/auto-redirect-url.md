@@ -12,184 +12,92 @@ discovery:
 
 ## HTTP Redirect
 
-Consider the following configuration snippet. When the JWT plugin detects
-unauthenticated user, it forwards the user to `https://auth.example.com`.
+A missing/invalid portal token normally sends a browser to the policy's auth URL:
 
-```
-{
-  security {
-    authorization policy mypolicy {
-      set auth url https://auth.example.com/auth
-    }
-  }
-}
+```Caddyfile
+set auth url https://auth.example.com/auth/
 ```
 
-By default, the plugin adds the `redirect_url` parameter in URL query
-pointing back to the page where the plugin detected unauthenticated user.
-It signals an authenticator to redirect where to redirect the user upon
-successful authentication.
+The default Location redirect is `302`. Its `redirect_url` query parameter
+contains the original application URL so the portal can return there after
+login. The portal must explicitly [trust that destination](../authenticate/100-trust-login-logout.md);
+a policy redirect does not authorize arbitrary return URLs.
 
-If you would like to disable the addition of `redirect_url`, please
-add `disable auth redirect query`:
+Use the configured trusted portal URL. The released gatekeeper does not replace
+it with an arbitrary expired JWT's issuer. Behind a proxy, normalize forwarded
+host/scheme information so the return URL represents the intended public origin.
 
-```
-{
-  security {
-    authorization policy mypolicy {
-      set auth url https://auth.example.com/auth
-      disable auth redirect query
-    }
-  }
-}
-```
+| Policy directive | Effect |
+| --- | --- |
+| `disable auth redirect` | Missing authentication is refused with `401` instead of redirecting |
+| `disable auth redirect query` | Redirect without the return-URL parameter |
+| `set redirect query parameter referer_url` | Rename the return parameter; coordinate the receiving authenticator |
+| `set redirect status 307` | Change Location status; be deliberate about method-preserving redirects |
 
-If you would like to change the parameter name, e.g. from `redirect_url`
-to `referer_url`, use the `set redirect query parameter` Caddyfile directive.
-
-```
-{
-  security {
-    authorization policy mypolicy {
-      set redirect query parameter referer_url
-    }
-  }
-}
-```
-
-The following Caddyfile directive changes the status code (default: `302`) for
-the redirects.
-
-```
-{
-  security {
-    authorization policy mypolicy {
-      set redirect status 307
-    }
-  }
-}
-```
-
-If `authorize` configuration contains the following directive, then the redirect
-is disabled and the request is refused with a HTTP `401 Unauthorized` error.
-
-```
-{
-  security {
-    authorization policy mypolicy {
-      disable auth redirect
-    }
-  }
-}
-```
-
-Importantly, if the plugin finds expired token, it attempts to extract the
-token's issuer value. Then, it checks whether the value starts with `http`.
-If it is, then the `set auth url` will be overwritten with the issuer's
-web address.
+For an API, `disable auth redirect` usually gives a clearer contract than
+returning a login HTML page to a JSON client. A valid identity denied by an ACL
+is a separate [403 response](acl-rbac.md#forbidden-access). Avoid protecting the
+login route or error page with the policy that redirects to it.
 
 ## Javascript Redirect
 
-The following directive enables Javascript-based redirect. This is useful when
-the URI path contains pound (`#`) sign.
+```Caddyfile
+enable js redirect
+```
 
-```
-{
-  security {
-    authorization policy mypolicy {
-      enable js redirect
-    }
-  }
-}
-```
+This returns an HTML script that can preserve a browser fragment such as
+`#section`, which is never sent in an HTTP request. Its default response status
+is `401`; it is not the ordinary Location/302 response. It requires JavaScript
+and a compatible content security policy, so use it only for a browser flow
+that needs this behavior.
 
 ## Login Hint
 
-Login hints are part of the
-[OpenID Connect specification](https://openid.net/specs/openid-connect-core-1_0.html#rfc.section.3.1.2.1)
-and can be used to notify an Authorization Server about the login identifier
-used by a user (e.g. to pre-fill fields in the login form).
+A hint suggests a login identifier to a provider; it does not establish identity.
+The policy can accept `login_hint` from the request and forward it to the portal.
 
-The `enable login hint` command can be used to forward a login hint to the auth URL by passing it to a protected
-route as a query parameter. In case the auth URL belongs to a portal defined in the `authenticate` configuration,
-it will be automatically forwarded to the identity provider.
+```Caddyfile
+enable login hint with email alphanumeric
+```
 
-By default, the `enable login hint` accepts email addresses, phone numbers and alphanumeric characters. Using the
-`with` keyword in combination with one or more of the validator names `email`, `phone` and `alphanumeric`, they can be
-toggled individually. For example, the command `enable login hint with email alphanumeric` would only forward email
-addresses and alphanumeric strings to the auth URL, but no phone numbers.
+The default validators are `email`, `phone`, and `alphanumeric`. Select the forms
+your integration requires. An OAuth provider must support the hint for it to
+affect its UI. Do not treat a hinted email as a verified login or role grant.
 
 ### Configuration Example
 
-```
-{
-  security {
-    authorization policy mypolicy {
-      set auth url https://auth.example.com/auth
-      enable login hint
-    }
-  }
-}
-
-
-myapp.com {
-        route /protected* {
-                authorize with mypolicy
-                respond "myapp is running"
-        }
-}
+```Caddyfile
+# Inside an existing authorization policy:
+set auth url https://auth.example.com/auth/
+enable login hint with email
+allow roles app/member
 ```
 
-Given the above configuration, when a user visits `https://myapp.com/protected?login_hint=myusername`,
-the login hint will be forwarded to the auth URL and therefore the user will be forwarded to the
-following URL:
-
-```
-https://auth.example.com/auth?login_hint=myusername&redirect_url=https://myapp.com/protected
-```
+A request to `/private?login_hint=alice%40example.com` can forward the validated
+hint alongside the return URL. Query identifiers can appear in logs; avoid
+collecting unnecessary login hints in analytics.
 
 ## Additional scopes
 
-Sometimes it is required to have a basic authorization block configure with the ability to inject scopes, into the OAUTH identity provider, that comes from the client. This would be useful to ask the user different scopes depending on your business logic.
+`enable additional scopes` allows the request's `additional_scopes` value to be
+forwarded through the login flow and merged with configured OAuth scopes.
+These are provider API/consent scopes, not authorization-policy application roles.
 
-This will indicate to the authenticator that will fetch from the request a query parameter `additional_scopes`, and merge the conetnt into the OAUTH identity provider block.
-
-If this is enable, the client can make a call like:
-
-```
-myapp.com?additional_scopes=scopeA scope_B
-```
-
-The previous example will then merge `scopeA scope_B` into the current scopes configure in the OAUTH block.
+Enable this only for an integration that deliberately allows client-selected
+consent expansion. Prefer a fixed provider scope list for a predictable login.
+The provider must support the requested scopes; forwarding them does not grant
+the caller access or waive provider consent.
 
 ### Configuration Example
 
-The syntax to enable client scopes to be injected into the identity provider follows:
-
-```
-{
-  security {
-    oauth identity provider customer {
-      realm customerRealm
-      driver generic
-      client_id <THE CLIENT ID>
-      client_secret <THE CLIENT SECRET>
-      base_auth_url <THE BASE AUTHENTICATION URL>
-      scopes openid profile
-    }
-
-    authorization policy mypolicy {
-      set auth url /auth/oauth2/customerRealm
-      enable additional scopes
-    }
-  }
-}
-
-myapp.com {
-        route /protected* {
-                authorize with mypolicy
-                respond "myapp is running"
-        }
-}
+```Caddyfile
+# Inside the policy that redirects to the configured OAuth login:
+set auth url /auth/oauth2/customer
+enable additional scopes
+allow roles app/member
 ```
 
+Here `customer` is the provider's configured realm. URL-encode a request such
+as `additional_scopes=scopeA%20scopeB`. Complete the provider and portal setup
+using the [generic OIDC guide](../authenticate/oauth/81-backend-oauth2-0000-generic.md); this fragment
+does not define an identity provider.

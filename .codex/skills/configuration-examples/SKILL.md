@@ -38,6 +38,11 @@ If matching source or a suitable binary is unavailable, report that limit.
 - Align the portal mount path, OAuth callback/ACS URL, policy auth URL, cookie
   scope, TLS hostnames, and protected site. Explain changes to the route prefix
   wherever they affect provider-console setup or redirects.
+- Released v1.3.0 bundles library v1.3.8: `match any` and `acl default` can
+  be skipped when normalized identity lacks exp. Prefer explicit allow stop
+  rules and implicit denial; the unconditional-rule fix is in library v1.3.11.
+  Full method/path rules need validate method path. Shortcut paths are partial
+  matches, so use a full exact/boundary-aware prefix rule for access boundaries.
 - Match token signing and verification configuration between portal and policy.
   Roles granted by transforms must agree with the policy's allowed roles.
   Demonstrate the intended rejection path as well as successful access.

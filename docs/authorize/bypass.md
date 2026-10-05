@@ -9,38 +9,34 @@ discovery:
 
 # Bypass Authorization for Specific URIs
 
-The `bypass uri` Caddyfile directive allow to bypass authorization for
-specific URIs.
+A bypass lets a matching request proceed without a credential or authenticated
+identity. Use it for deliberately public resources, such as a health endpoint,
+not as a remedy for a login loop.
 
-```
-bypass uri <exact|partial|prefix|suffix|regex> <uri_path>
-```
-
-For example, the following configuration allows bypassing authorization for
-URI `/app/bypassed` and `/app/another/bypass`.
-
-```
-{
-  debug
-
-  security {
-    authorization policy defaultPolicy {
-      bypass uri prefix /app/bypassed
-      bypass uri prefix /app/another/bypass
-      acl rule {
-        match role user admin authp/admin authp/user
-        allow stop log debug
-      }
-      acl default deny
-    }
-  }
-}
-
-app.myfiosgateway.com {
-  route {
-    authorize with defaultPolicy
-    respond * "authorized user or accesses bypassed URLs" 200
-  }
-}
+```Caddyfile
+# Inside the policy:
+bypass uri exact /health
+bypass uri prefix /public/
+allow roles app/member
 ```
 
+| Strategy | Match |
+| --- | --- |
+| `exact` | The whole path |
+| `partial` | A substring anywhere in the path |
+| `prefix` | Beginning of the path |
+| `suffix` | End of the path |
+| `regex` | A Go regular expression; anchor it when the whole path matters |
+
+`prefix /public` also matches `/publicity`. Use an exact path plus a slash-ended
+prefix when granting a directory tree. Query parameters do not turn a protected
+path into a public one.
+
+The released implementation checks decoded and cleaned path interpretations;
+ambiguous encodings must not create a bypass. Test `/health`, `/health-extra`,
+`/public/file`, and a protected sibling separately. The direct OAuth policy's
+reserved callback/logout paths are handled by its [own flow](direct-oauth.md).
+
+Configured identity headers are cleared even on bypass. The backend must treat
+a public request as unauthenticated. For complex public/private routing, separate
+Caddy handlers can make the boundary easier to review than a broad bypass rule.

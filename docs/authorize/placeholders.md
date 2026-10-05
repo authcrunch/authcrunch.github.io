@@ -9,44 +9,49 @@ discovery:
 
 # Caddy Placeholders
 
-Caddy's security module populates specific **placeholders** (variables) after a user has been
-successfully authenticated. These placeholders allow you to access user metadata directly 
-within your `Caddyfile` for logging, headers, or further routing logic.
+After successful `authorize`, Caddy exposes the policy's normalized identity
+through these placeholders. Values may be absent when the authenticated source
+does not supply them. They are not available as trusted identity before the
+policy runs or on a public bypass.
 
 ## Available Placeholders
 
-The following table breaks down the standard placeholders available during the authorization lifecycle:
+| Placeholder | Meaning |
+| --- | --- |
+| `{http.auth.user.id}` | Identity selected by [set user identity](identity.md) |
+| `{http.auth.user.claim_id}` | JWT `jti`, identifying this token/session claim set |
+| `{http.auth.user.sub}` | JWT subject |
+| `{http.auth.user.roles}` | Normalized roles, separated by spaces |
+| `{http.auth.user.email}` | Email claim |
+| `{http.auth.user.name}` | Display-name claim |
+| `{http.auth.user.issuer}` | JWT `iss`; for a portal token this is the portal issuer |
+| `{http.auth.user.origin}` | Authentication source/origin claim |
+| `{http.auth.user.realm}` | Realm supplied by the identity |
+| `{http.auth.user.username}` | `userinfo.preferred_username`, when present |
 
-| Placeholder                 | Description                                                                    | Example Value                    |
-| --------------------------- | ------------------------------------------------------------------------------ | -------------------------------- |
-| `{http.auth.user.claim_id}` | The internal unique identifier for the specific claim set.                     | `c7f3b2...`                      |
-| `{http.auth.user.sub}`      | The **Subject** claim; the unique ID provided by the OIDC/OAuth issuer.        | `user_9921`                      |
-| `{http.auth.user.email}`    | The email address associated with the authenticated user.                      | `admin@example.com`              |
-| `{http.auth.user.name}`     | The full display name of the user.                                             | `John Doe`                       |
-| `{http.auth.user.issuer}`   | The URL of the identity provider (IdP) that issued the identity.               | `https://auth.myfiosgateway.com` |
-| `{http.auth.user.origin}`   | The specific authentication source or backend used.                            | `google` or `local`              |
-| `{http.auth.user.realm}`    | The specific authentication realm used.                                        | `google` or `local`              |
-| `{http.auth.user.username}` | The shorthand login name, typically derived from `userinfo.preferred_username` | `jsmith`                         |
-
+A token's claim ID changes with token issuance; it is not a permanent account
+ID. A subject's namespace belongs to its issuer/realm. Avoid conflating tokens
+from different issuers merely because their `sub` strings match.
 
 ## Passing User Info to an Upstream App
 
-You can use these placeholders to pass user information to backend applications via request
-headers. This is a common pattern for "Identity Aware Proxy" setups.
+`header_up` belongs inside `reverse_proxy`, not directly in a route or global
+options block:
 
-In this configuration, even though the backend doesn't handle the login, it receives
-the user's ID and roles via headers set by Caddy.
-
-```caddy
-{
-  route {
-    authorize with defaultPolicy
-    
-    # Inject user metadata into headers
-    header_up X-User-ID {http.auth.user.id}
-    header_up X-User-Roles {http.auth.user.roles}
-    
-    reverse_proxy localhost:8080
-  }
+```Caddyfile
+app.example.com {
+    route {
+        authorize with apppolicy
+        reverse_proxy 127.0.0.1:8080 {
+            header_up X-User-ID {http.auth.user.id}
+            header_up X-User-Roles {http.auth.user.roles}
+        }
+    }
 }
 ```
+
+Define `apppolicy` in the existing global security block. These assignments
+replace incoming values for the named headers. The backend must accept trusted
+identity only from this proxy and must not be publicly reachable through a
+route that bypasses authorization. See [Caddy's header_up reference](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#headers)
+and [automatic claim headers](headers.md).

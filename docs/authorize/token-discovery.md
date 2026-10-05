@@ -9,68 +9,66 @@ discovery:
 
 # Token Discovery
 
-The `crypto key token name <NAME>` indicates the name of the token to be
-searched in the token sources. By default, it is set to `jwt_access_token`
-and `access_token`.
+An authorization policy's default source order is **cookie → header → query**.
+It selects the first discovered credential; an invalid credential from an
+earlier source is not permission to try a different identity from a later one.
+Keep a client's authentication source deliberate.
 
-The `set token sources` configures where the plugin looks for an authorization
-token. By default, it looks in Authorization header, cookies, and query
-parameters. The way to change the order of the lookup or to limit the
-search to a specific sources is using the following `Caddyfile` directive.
+Configure these fragments inside the existing `authorization policy`:
 
-Limits the search of JWT tokens in cookies only.
-
-```
-{
-  security {
-    authorization policy mypolicy {
-      set token sources cookie
-    }
-  }
-}
+```Caddyfile
+# Browser applications: accept the portal cookie only.
+set token sources cookie
 ```
 
-Limits the search of JWT tokens cookies and query parameters.
-
-```
-{
-  security {
-    authorization policy mypolicy {
-      set token sources cookie query
-    }
-  }
-}
+```Caddyfile
+# API clients: accept Authorization headers and explicit bearer syntax.
+set token sources header
+validate bearer header
 ```
 
-Reorders the default priority of the search of JWT tokens from "cookie",
-"header", "query" to "header", "query", and "cookie".
-
-```
-{
-  security {
-    authorization policy mypolicy {
-      set token sources header query cookie
-    }
-  }
-}
+```Caddyfile
+# Mixed clients, with headers taking precedence.
+set token sources header cookie
+validate bearer header
 ```
 
-Further, the following `Caddyfile` directive instructs the plugin to
-search for `Authorization: Bearer <JWT_TOKEN>` header and authorize
-the found token:
+`cookie`, `header`, and `query` may each occur once; their order is significant.
+Bearer is a format of the header source, not a fourth source name. A policy
+needs `validate bearer header` to accept `Authorization: Bearer TOKEN`; the
+portal's own API validator already enables that form.
 
-```
-{
-  security {
-    authorization policy mypolicy {
-      validate bearer header
-    }
-  }
-}
+## Credential names
+
+The default accepted access cookie names include `AUTHP_ACCESS_TOKEN`,
+`access_token`, and `jwt_access_token`. Named Authorization entries and query
+parameters include `access_token` and `jwt_access_token`. A named header uses
+`Authorization: access_token=TOKEN`, not a header literally named access_token.
+
+For a portal using a custom cookie prefix or name, configure the policy to match:
+
+```Caddyfile
+set access_token cookie name MYAPP_ACCESS_TOKEN
+set session_id cookie name MYAPP_SESSION_ID
 ```
 
-Test it with the following `curl` command:
+Multiple accepted access cookie names belong on one line. The session cookie
+setting accepts one name. Custom access names also add lowercase names to the
+named-header/query lookup. `crypto key token name` concerns keystore token
+configuration; it is not a substitute for selecting the gatekeeper's accepted
+cookie names.
 
-```shell
-curl --insecure -H "Authorization: Bearer JWT_TOKEN" -v https://localhost:8443/myapp
+## Exercise the intended source
+
+```bash
+curl --fail-with-body --silent --show-error \
+  -H "Authorization: Bearer ${AUTHCRUNCH_ACCESS_TOKEN}" \
+  https://app.example.com/private
 ```
+
+For browser tests, inspect the cookie's domain, path, Secure flag, and exact
+name. A cookie scoped to the portal hostname cannot authenticate a sibling
+hostname unless your deployment deliberately provides compatible scope.
+Avoid query tokens in new integrations: URLs can enter histories, logs, and
+referrers. If a legacy client requires them, limit that source to the relevant
+policy and use [token stripping](headers.md#strip-jwt-token-from-http-request).

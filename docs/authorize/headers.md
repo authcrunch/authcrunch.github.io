@@ -10,122 +10,80 @@ discovery:
 
 # Identity headers
 
+Pass only the identity data the backend needs. Run authorization before the
+proxy and keep the backend reachable only through the trusted proxy path;
+otherwise a client can bypass the policy and send its own identity headers.
+
 ## Pass JWT Token Claims in HTTP Request Headers
 
 ### Auto-Defined Headers
 
-To pass JWT token claims in auto-generated HTTP headers to downstream
-plugins, use the following Caddyfile directive:
-
-```
-{
-  security {
-    authorization policy mypolicy {
-      inject headers with claims
-    }
-  }
-}
+```Caddyfile
+# Inside the policy:
+inject headers with claims
 ```
 
-The downstream plugins would get the following `X-Token-` headers:
+After successful authorization, the policy injects available claims:
 
-```
-    "X-Token-Subject": "webadmin"
-    "X-Token-User-Name": "Web Administrator"
-    "X-Token-User-Email": "webadmin@localdomain.local"
-    "X-Token-User-Roles": "superadmin guest anonymous"
-```
+| Header | Claim |
+| --- | --- |
+| `X-Token-Subject` | `sub` |
+| `X-Token-User-Name` | `name` |
+| `X-Token-User-Email` | `email` |
+| `X-Token-User-Roles` | Normalized roles, separated by spaces |
 
+Configured destination headers are cleared before authentication, including
+deny and bypass paths. This prevents a client-supplied value from surviving as
+trusted identity. A bypassed request does not get an authenticated user.
 
 ### Custom Headers
 
-The syntax for adding a custom header follows:
-
-```
-inject header <header_name> from <field_name>
-```
-
-For example, add the injection of `X-Picture` header with the value from `picture` field
-of JWT token:
-
-```
-{
-  security {
-    authorization policy mypolicy {
-      inject headers with claims
-      inject header "X-Picture" from picture
-    }
-  }
-}
+```Caddyfile
+inject header X-User-Email from email
+inject header X-Picture from picture
 ```
 
-After the addition, we could see the `X-Picture` header, as well as the other
-headers injected by `inject headers with claims`:
-
-```json
-{
-  "X-Picture": "https://avatars.githubusercontent.com/u/3826416?v=4",
-  "X-Token-Subject": "github.com/greenpau",
-  "X-Token-User-Name": "Paul Greenberg",
-  "X-Token-User-Roles": "authp/guest"
-}
-```
+Map only claims whose source and meaning the application understands. A
+profile picture or email value is not proof of application membership, email
+verification, or administrator status.
 
 #### Nested Data Source
 
-Additionally, one could inject data from a nested data structure.
+Use `|` to traverse a nested claim:
 
-The partical list of token claims follows:
-
-```
-{
-  "userinfo": {
-    "custom_groups": [
-      "authp/admin",
-      "authp/user"
-    ],
-    "name": "Paul Greenberg",
-    "zoneinfo": "America/Los_Angeles"
-  }
-}
+```Caddyfile
+inject header X-User-Timezone from "userinfo|zoneinfo"
+inject header X-User-Groups from "userinfo|custom_groups"
 ```
 
-Apply the following configuration snippet:
-
-```
-{
-  security {
-    authorization policy mypolicy {
-      inject header "X-User-Custom-Groups" from "userinfo|custom_groups"
-      inject header "X-User-Timezone" from "userinfo|zoneinfo"
-      inject header "X-User-Name" from "userinfo|name"
-    }
-  }
-}
-```
-
-Based on the above configuration, the plugin sends the following headers:
-
-```
-    "X-User-Custom-Groups": "authp/admin, authp/user",
-    "X-User-Name": "Paul Greenberg",
-    "X-User-Timezone": "America/Los_Angeles"
-```
+String arrays are rendered as comma-separated values for custom injection.
+Check the actual response to your upstream, including absent/malformed claim
+values; do not build an authorization decision around a display-format guess.
+Prefer normalized application roles for permissions. Custom header traversal
+is separate from the [typed ACL field registration](custom-fields.md) available
+only in newer library/adapter versions.
 
 ## Strip JWT Token from HTTP Request
 
-The following directive instructs the plugin to remove the found
-token from a request.
-
-```
-{
-  security {
-    authorization policy mypolicy {
-      enable strip token
-    }
-  }
-}
+```Caddyfile
+enable strip token
 ```
 
-**Note**: Currently, this feature works with cookies only. It will
-not strip a token from an authorization header.
+The released implementation supports more than cookies:
+
+| Accepted source | Removed before the downstream handler |
+| --- | --- |
+| Cookie | Matching accepted token cookie; unrelated cookies remain |
+| Bearer or named Authorization entry | Matching token entry; unrelated entries remain |
+| Basic | Basic Authorization entries |
+| API-key header | Configured API-key header |
+| Query | Accepted token value; unrelated parameters remain |
+
+This removes a credential from the **forwarded request**. It does not delete the
+browser cookie, revoke a token, or log the user out. It also does not strip every
+possible credential a client could attach. For an upstream that should never
+receive an Authorization header, use an explicit proxy header rule such as
+`header_up -Authorization` in the `reverse_proxy` block.
+
+See [Caddy placeholders](placeholders.md) for an alternative that lets the proxy
+construct a small explicit identity-header set.

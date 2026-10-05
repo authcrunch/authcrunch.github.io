@@ -9,135 +9,78 @@ discovery:
 
 # API Key Authentication
 
+Use a local account API key for machine requests that should not send the
+account's password. Keys are private credentials, not browser access JWTs or
+refresh tokens. Give the account a narrow application role and use HTTPS.
+
 ## Usage
 
-The following directives instruct the authorizer to validate API keys
-with the "myportal" portal and "local" realm.
-
-With such a setup, the api key generated in the portal can be
-used in the `X-Api-Key` header to access authorized resources.
-
-```
-security {
-  authorization policy mypolicy {
-    with api key auth portal myportal realm local
-  }
-}
+```Caddyfile
+# Inside the existing policy:
+with api key auth portal myportal realm local
+disable auth redirect
+allow roles app/member
+enable strip token
 ```
 
-Currently, for the configuration to work, the `authenticate` and `authorize` should be on
-the same server instance.
-
-In the near future, you will be able to configure `authorization policy` in such a way
-that it authenticates against remote `authentication portal`.
-
-Please see: https://github.com/greenpau/caddy-security/issues/462
-
-
-For example, the `/api/*` is protected by the `api_access_policy` below.
-
-```text
-...
-
-		local identity store localdb {
-			realm local
-			path assets/config/users.json
-			user webadmin {
-				# secret: r7lQbaotIG4303j2to2sS5cOYBEyRAAgDGlbhfgFBxPM889501VDbk8ZmGHAevr8Buv6YRqG
-				api key r7lQbaotIG4303j2to2sS5cO "bcrypt:10:$2a$10$dQTjh/Vt2Bu2Vf5OEvyLwOD3wMIi/jbKVdim1xH9GhpV065nUa80G"
-			}
-		}
-
-...
-
-		authorization policy api_access_policy {
-			crypto key verify 01ee2688-36e4-47f9-8c06-d18483702520
-			allow roles authp/admin authp/user
-			with api key auth portal myportal realm local
-		}
-
-...
-
-	route /api/* {
-		authorize with api_access_policy
-		respond * "api access granted to {http.auth.user.id} in {http.auth.user.realm}" 200
-	}
-```
-
-The following `curl` request will result in the granted access.
+`myportal` must enable the selected local store. An HTTPS portal base URL can
+replace the local name for [remote encrypted authentication](../authenticate/api/50-system-api.md),
+with matching System keys configured on both services.
 
 ```bash
-curl -H 'X-Auth-Realm: local' -H 'X-Api-Key: r7lQbaotIG4303j2to2sS5cOYBEyRAAgDGlbhfgFBxPM889501VDbk8ZmGHAevr8Buv6YRqG' https://go.myfiosgateway.com:8443/api/foo
+curl --fail-with-body --silent --show-error \
+  -H 'X-Auth-Realm: local' \
+  -H "X-Api-Key: ${AUTHCRUNCH_ACCOUNT_API_KEY}" \
+  https://app.example.com/api/report
 ```
 
-The server responds with:
+The realm selector is required unless a trusted route assigns it. A recognized
+invalid key returns `401`. A successfully authenticated account still needs the
+application role; a wrong/missing header follows missing-authentication behavior.
+Do not diagnose a redirect as proof that a key itself was accepted.
 
-```text
-api access granted to webadmin@localhost.localdomain in local
-```
-
-If the API key is malformed:
-
-```bash
-curl -H 'X-Auth-Realm: local' -H 'X-Api-Key: foobar' https://go.myfiosgateway.com:8443/api/foo
-```
-
-The server responds with:
-
-```
-401 Unauthorized
-```
-
-If the API header is not the one configured (e.g. different api key header name set), you will get `302` redirect.
-
-```text
-> GET /api/foo HTTP/2
-> Host: go.myfiosgateway.com:8443
-> User-Agent: curl/8.7.1
-> Accept: */*
-> X-Api-Key: r7lQbaotIG4303j2to2sS5cOYBEyRAAgDGlbhfgFBxPM889501VDbk8ZmGHAevr8Buv6YRqG
-> 
-* Request completely sent off
-< HTTP/2 302 
-< alt-svc: h3=":8443"; ma=2592000
-< location: /auth?redirect_url=https%3A%2F%2Fgo.myfiosgateway.com%3A8443%2Fapi%2Ffoo
-< server: Caddy
-< content-type: text/plain; charset=utf-8
-< content-length: 5
-< date: Thu, 12 Mar 2026 19:29:32 GMT
-< 
-* Connection #0 to host go.myfiosgateway.com left intact
-Found
-```
+The portal's direct-authentication boundary applies: an API key does not prove
+password, TOTP, or WebAuthn use and cannot bypass a required interactive factor.
+It does not mint a native refresh family or an OIDC grant. Use a dedicated
+machine account whose requirements fit this authentication method.
 
 ## Changing API Key Header Name
 
-To change the `X-Api-Key` header to something else, use the following directive:
-
-```
-security {
-  authorization policy mypolicy {
-    with api key auth portal myportal realm local
-    with api key header name X-Secret
-  }
-}
+```Caddyfile
+with api key header name X-Service-Key
 ```
 
-Please see: https://github.com/greenpau/caddy-security/issues/466
+The client must use the same configured name. `enable strip token` removes that
+accepted header before forwarding; the backend can consume trusted
+[identity headers](headers.md) instead of the credential.
 
 ## Changing Authentication Realm Header Name
 
-To change the `X-Auth-Realm` header to something else, use the following directive:
+```Caddyfile
+with auth realm header name X-Account-Realm
+```
 
-```
-security {
-  authorization policy mypolicy {
-    with auth realm header name X-Secret-Realm
-  }
-}
-```
+For a single-realm route, `request_header X-Account-Realm local` before
+`authorize` replaces a client value. Do not use an append operation to construct
+an ambiguous selector.
 
 ## Generating API Key
 
-Please see https://github.com/greenpau/go-authcrunch/blob/main/cmd/authdbctl/README.md#generating-api-key to
-learn how to generate API keys.
+Create and manage a key in the local user's [Profile](../authenticate/auth-portal.md#user-settings)
+or provision it using the bundled offline generator:
+
+```bash
+authcrunch security local generate api key
+```
+
+The separate pinned `authdbctl` client also provides `generate api key`.
+The bundled command emits a private `secret` for the caller and an `api key PREFIX HASH`
+Caddyfile directive for a static user. Store the secret privately; put only the
+generated directive inside the intended local store's `user` block. Never reuse
+an example key. Profile enrollment accepts a unique 64–72-character
+alphanumeric key and stores it through the account-management workflow.
+
+Treat deletion, replacement, account disabling, and role changes as lifecycle
+operations. Successful credential identities can be cached until their validity
+interval expires, so deletion is not a promise of immediate distributed
+revocation. Test key rotation and the denial path in the deployed architecture.

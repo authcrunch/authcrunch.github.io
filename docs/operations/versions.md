@@ -46,7 +46,9 @@ that an adapter exposes a new directive.
 | Argon2id and bcrypt local passwords | [Password management](../authenticate/local/30-password-management.md) |
 | Numeric GitHub IDs and organization transforms | [GitHub](../authenticate/oauth/81-backend-oauth2-0007-github.md) |
 | Diagnostic message filtering | [Logging](logging.md) |
-| Explicit administrative API permissions | [Server API](../authenticate/api/40-server-api.md) |
+| Explicit administrative API permissions and private-key export | [Server API](../authenticate/api/40-server-api.md) |
+| RSA, EC, and Ed25519 public signing-key JWKS | [Token verification](../authorize/token-verification.md) |
+| Header/query/Basic/API-key credential stripping | [Identity headers](../authorize/headers.md) |
 
 ## Newer library and integration work
 
@@ -55,6 +57,7 @@ The current Caddy source checkout contains changes after v1.3.0:
 | Feature | Library availability | Released Caddy bundle |
 | --- | --- | --- |
 | [Typed policy-local custom ACL fields](../authorize/custom-fields.md) | go-authcrunch v1.3.9 and later | Not in v1.3.0; Caddy integration is unreleased |
+| Correct unconditional/default ACL evaluation | go-authcrunch v1.3.11 | Not in v1.3.0; see the [released limitation](../authorize/acl-rbac.md#match-any-condition) |
 | [Optional cross-device browser login](../authenticate/cross-device.md) | go-authcrunch v1.3.11 | Not in v1.3.0; Caddy integration is unreleased |
 
 Treat configuration for those features as a preview for a matching custom

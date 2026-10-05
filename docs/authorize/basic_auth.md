@@ -9,168 +9,92 @@ discovery:
 
 # Basic Authentication
 
-The following directives instruct the authorizer to validate Basic
-Authentication credentials with the "myportal" portal
-and "local" realm.
+HTTP Basic sends an account username and password with each request. Use HTTPS,
+a specific application role, and a policy suitable for machine/API callers.
+It does not run an interactive MFA ceremony.
 
+Inside the existing authorization policy:
+
+```Caddyfile
+with basic auth portal myportal realm local
+disable auth redirect
+allow roles app/member
 ```
-security {
-  authorization policy mypolicy {
-    with basic auth portal myportal realm local
-  }
-}
-```
 
-Currently, for the configuration to work, the `authenticate` and `authorize` should be on
-the same server instance.
-
-In the near future, you will be able to configure `authorization policy` in such a way
-that it authenticates against remote `authentication portal`.
-
-Please see: https://github.com/greenpau/caddy-security/issues/462
+`myportal` is a portal on the same instance with the selected store enabled.
+Released remote authentication is also supported: replace the name with the
+portal HTTPS base URL and configure matching [System keys](../authenticate/api/50-system-api.md)
+on both services. It is no longer a future feature.
 
 ## Usage
 
-The following commands pass basic auth credentials:
-
-
 ```bash
-curl -v -H 'X-Auth-Realm: local' --user 'jsmith:My@Password123' https://go.myfiosgateway.com:8443/api/foo
-curl -v -H 'X-Auth-Realm: userpool1.localdomain' --user 'jsmith:My@Password123' https://go.myfiosgateway.com:8443/api/foo
+curl --fail-with-body --silent --show-error \
+  -H 'X-Auth-Realm: local' --user alice \
+  https://app.example.com/api/report
 ```
+
+Omitting the password from `--user alice` lets curl prompt instead of putting
+it in shell history. Send the configured realm even when only one is declared.
+A valid password must still satisfy the portal's direct-authentication challenge
+boundary and the policy's ACL. An identity requiring another factor cannot
+satisfy that requirement merely by using Basic. Use interactive login and
+an appropriate session/token for MFA-protected access.
+
+Recognized invalid credentials return `401`; an authenticated nonmember is
+forbidden. Missing or unrecognized credentials use the policy's ordinary
+missing-authentication behavior. Keep denied tests alongside a successful call.
 
 ## Setting Default Realm
 
-If you want to set default realm, so that you don't have to provide `X-Auth-Realm` header, add `request_header` prior
-to `authorize`.
+If this route is deliberately tied to one realm, replace the incoming selector
+before authorization. Do not append another header value:
 
 ```Caddyfile
-handle * {
-	request_header +X-Auth-Realm "local"
-	authorize with mypolicy
+route /api/* {
+    request_header X-Auth-Realm local
+    authorize with apipolicy
+    reverse_proxy 127.0.0.1:8080
 }
 ```
+
+This is a site-block fragment, with `apipolicy` defined in global security
+options. On a multi-realm route, keep the explicit permitted realm selection
+instead of forcing a default.
 
 ## Multiple Realms
 
-In the below configuration we have multiple realms: `userpool1.localdomain` and `userpool2.localdomain`.
-
-```text
-	security {
-
-    ...
-
-		local identity store userpool1 {
-			realm userpool1.localdomain
-			path assets/config/userpool1.json
-			icon "USERPOOL1" "las la-shield-alt la-2x" "white" "#fc6d26" priority 90
-			user webadmin {
-				name Webmaster
-				email webadmin@localhost.localdomain
-				password "bcrypt:10:$2a$10$r3mhN5ZzrmufA2rjcn4iCuaAXN9.3OCDxiPYheSuU8Pq1xWiiDBhG" overwrite
-				roles "authp/admin" "authp/user"
-			}
-			user jsmith {
-				name John Smith
-				email jsmith@localhost.localdomain
-				password "My@Password123"
-				roles "authp/user" "dash"
-				# apikey: FDWgq9cSwD6lF1d6djazgSxyh6cDRFfkBobyp5bWIkbRvCWt03oXauCSz8pa1sJsAO8txytf
-				api key FDWgq9cSwD6lF1d6djazgSxy "bcrypt:10:$2a$10$UQNdEmDD0zhg1crmy9EoEeXyxfPzVf31y8Dvig8rCceHj0xW1W7nC"
-			}
-		}
-
-		local identity store userpool2 {
-			realm userpool2.localdomain
-			icon "USERPOOL2" "las la-shield-alt la-2x" "white" "#fc6d26" priority 80
-			path assets/config/userpool2.json
-			user webadmin {
-				name Webmaster
-				email webadmin@localhost.localdomain
-				password "bcrypt:10:$2a$10$r3mhN5ZzrmufA2rjcn4iCuaAXN9.3OCDxiPYheSuU8Pq1xWiiDBhG" overwrite
-				roles "authp/admin" "authp/user"
-			}
-			user mstone {
-				name Mia Stone
-				email mstone@localhost.localdomain
-				password "My@Password123"
-				roles "authp/user" "dash"
-				# apikey: IP8PjcP4sKRS50CVuIYHN5ylNaKoJHCwtg3eklq67uk0dX9OQoylCWnBcKFqpTD5u2cFyARr
-				api key IP8PjcP4sKRS50CVuIYHN5yl "bcrypt:10:$2a$10$.DFyI5DxFeuQUWoTFNQIiOAG5Pf8DuzrClFA7qSTg5azL44mtaSRa"
-			}
-		}
-
-...
-
-
-		authentication portal myportal {
-
-...
-			enable identity store userpool1
-			enable identity store userpool2
-		}
-
-...
-
-		authorization policy api_access_policy {
-			crypto key verify 01ee2688-36e4-47f9-8c06-d18483702520
-			allow roles authp/admin authp/user
-			with basic auth portal myportal realm userpool1.localdomain
-			with basic auth portal myportal realm userpool2.localdomain
-			# with auth realm header name X-Auth-Realm
-		}
-...
-
-  }
-
-...
-
-*:8443 {
-	route /api/* {
-		authorize with api_access_policy
-		respond * "api access granted to {http.auth.user.id} in {http.auth.user.realm}" 200
-	}
-}
+```Caddyfile
+# Inside the policy:
+with basic auth portal myportal realm userpool1.localdomain
+with basic auth portal myportal realm userpool2.localdomain
+allow roles app/member
 ```
 
-When user logs in, the user can see the two realms present:
+The portal must enable both stores, each with a distinct configured realm.
+Each request selects one using `X-Auth-Realm`. Accounts with the same username
+in different stores are different identities; keep the realm in application
+account mapping when it matters.
 
-![](./images/multi_realm_basic_auth_login.png)
+<figure className="doc-screenshot">
 
-A user from `userpool1.localdomain` authenticates the following way:
+[![Portal login page listing two local user pools](./images/multi_realm_basic_auth_login.png)](./images/multi_realm_basic_auth_login.png)
 
-```bash
-curl -H 'X-Auth-Realm: userpool1.localdomain' -H 'Authorization: Basic anNtaXRoOk15QFBhc3N3b3JkMTIz' https://go.myfiosgateway.com:8443/api/foo
-curl -H 'X-Auth-Realm: userpool1.localdomain' -u "jsmith:My@Password123" https://go.myfiosgateway.com:8443/api/foo
-```
-
-The expected output follows. Note the `userpool1.localdomain` in the output.
-
-```text
-api access granted to jsmith@localhost.localdomain in userpool1.localdomain
-```
-
-A user from `userpool2.localdomain` authenticates the following way:
-
-```bash
-curl -H 'X-Auth-Realm: userpool2.localdomain' -H 'Authorization: Basic bXN0b25lOk15QFBhc3N3b3JkMTIz' https://go.myfiosgateway.com:8443/api/foo
-curl -H 'X-Auth-Realm: userpool2.localdomain' -u "mstone:My@Password123" https://go.myfiosgateway.com:8443/api/foo
-```
-
-The expected output follows. Note the `userpool2.localdomain` in the output.
-
-```text
-api access granted to mstone@localhost.localdomain in userpool2.localdomain
-```
+<figcaption>The preserved portal screen illustrates two configured user pools. HTTP Basic selects a realm with a header; it does not click this browser login UI.</figcaption>
+</figure>
 
 ## Changing Authentication Realm Header Name
 
-To change the `X-Auth-Realm` header to something else, use the following directive:
+```Caddyfile
+with auth realm header name X-Account-Realm
+```
 
-```
-security {
-  authorization policy mypolicy {
-    with auth realm header name X-Secret-Realm
-  }
-}
-```
+Update the client or trusted route assignment to use the same name. A realm
+header selects an allowed backend; it is not an authorization grant. Keep
+passwords out of access logs and use [credential stripping](headers.md) when
+the backend should receive identity rather than the Basic credential.
+
+Successful credential identities may be cached for their validity interval.
+Do not assume each request rechecks a password or that changing an account
+instantly invalidates every cached result. Plan credential changes and token
+lifetimes as part of the application's access policy.

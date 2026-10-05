@@ -9,23 +9,25 @@ discovery:
 
 # Caddy User Identity
 
-When the plugin successfully validates a JWT token, the plugin passes
-the user identity identifier back to the Caddy server.
+`set user identity` selects the value returned as Caddy's user ID after
+successful authorization. It changes request metadata, not the token's claims,
+the local account record, or access permissions.
 
-By default, the identity passed to Caddy is email address. However,
-it could be changed with `set user identity` Caddyfile directive.
-
-```
-{
-  security {
-    authorization policy mypolicy {
-      set user identity id
-      set user identity subject
-      set user identity email
-    }
-  }
-}
+```Caddyfile
+# Inside the policy; choose one setting.
+set user identity subject
 ```
 
-If `email` is being set, but a JWT token does not contain an email address,
-then the plugin uses `subject` for identity.
+| Value | Caddy user ID |
+| --- | --- |
+| `email` (default) | Email, falling back to subject when email is absent |
+| `subject` or `sub` | JWT `sub` |
+| `id` | JWT `jti` claim ID |
+
+`id` therefore identifies a token's claim set, not a durable user identifier.
+Do not use it to key an application account. For external issuers, bind a subject
+to its trusted issuer namespace before mapping application users.
+
+The other [identity placeholders](placeholders.md) remain available when
+supplied. Apply role/claim rules separately; displaying an email or subject
+does not grant permission to access the application.
