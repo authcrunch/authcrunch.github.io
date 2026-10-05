@@ -24,6 +24,9 @@ routes in a site block.
 | Portal configuration | [First portal configuration](start/first-app.md#1-create-the-configuration) |
 | Local identities | [Identity store](authenticate/local/20-identity-store.md) and [static users](authenticate/local/50-static-users.md) |
 | OAuth / OIDC identity providers | [Provider settings](authenticate/oauth/81-backend-oauth2-0000-generic.md) and [endpoint configuration](authenticate/oauth/82-backend-oauth2-endpoint.md) |
+| Upstream token trust | [Issuer/audience, static pins and JWKS rollover](authenticate/oauth/83-oidc-trust.md) |
+| SAML login | [Browser-bound flow and pinned signing trust](authenticate/saml/10-saml.md) |
+| Service credentials and delivery | [Secret references](credentials/intro.md) and [messaging limits](messaging/intro.md) |
 | User mapping | [Transforms](authenticate/42-user-transforms.md) |
 | Login requirements | [Authentication challenges](authenticate/13-authentication-challenges.md) |
 | Policy syntax | [Authorization syntax](authorize/syntax.md) |
@@ -48,6 +51,9 @@ Handler order determines whether an access check runs before the application.
 
 - [Direct OAuth authorization](authorize/direct-oauth.md) for provider sign-in without a portal.
 - [AuthCrunch as an OpenID Provider](apps/oidc-provider.md) for relying applications using local accounts.
+
+Use [Applications and SSO](apps/intro.md) to distinguish these models from
+upstream SAML login and the incomplete AWS SAML assertion flow.
 
 ## APIs
 

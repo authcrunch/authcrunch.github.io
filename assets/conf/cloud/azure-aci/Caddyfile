@@ -1,0 +1,74 @@
+# Configuration reference only; Azure image, TLS and storage must be verified.
+# Set the public portal hostname and ENTRA_TENANT_ID before use.
+{
+	admin off
+	persist_config off
+
+	security {
+		oauth identity provider azure {
+			driver azure
+			realm azure
+			client_id {env.ENTRA_CLIENT_ID}
+			client_secret {env.ENTRA_CLIENT_SECRET}
+			scopes openid email profile
+			tenant_id {$ENTRA_TENANT_ID}
+			email claim check disabled
+			login icon text "Microsoft Entra ID"
+		}
+
+		authentication portal myportal {
+			enable identity provider azure
+			crypto default token lifetime 900
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			cookie path /
+
+			ui {
+				links {
+					"Example app" /app/ icon "las la-external-link-alt"
+					"My identity" /auth/whoami icon "las la-user"
+				}
+			}
+
+			# Reserve portal roles and app/member for the transforms below.
+			transform user {
+				regex match role "^(authp/.*|app/member)$"
+				action drop matched role
+			}
+
+			transform user {
+				match realm azure
+				action add role authp/user
+			}
+
+			transform user {
+				match realm azure
+				match role App.Access
+				action add role app/member
+			}
+		}
+
+		authorization policy apppolicy {
+			set auth url https://{$AUTHCRUNCH_PUBLIC_HOST}/auth/
+			crypto key verify {env.JWT_SHARED_KEY}
+			allow roles app/member
+		}
+	}
+}
+
+{$AUTHCRUNCH_PUBLIC_HOST} {
+	route {
+		redir /auth /auth/ 308
+
+		authenticate /auth/* with myportal
+
+		@app path /app /app/*
+		route @app {
+			authorize with apppolicy
+			uri strip_prefix /app
+			root * /srv/public
+			file_server
+		}
+
+		respond "AuthCrunch is running. Open /app to begin." 200
+	}
+}

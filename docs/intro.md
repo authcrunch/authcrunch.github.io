@@ -55,8 +55,8 @@ integration needs; their session and configuration settings are not interchangea
 | Model | Use it when… | How access works |
 | --- | --- | --- |
 | Portal and token policy | You want a login portal, local users, or portal MFA and profile pages | The portal issues a token; a policy checks the token on the protected route |
-| Direct OAuth policy | You want an application's policy to send users directly to an external provider | The policy handles the provider callback and creates its own session; portal user transforms do not apply |
-| AuthCrunch as an OIDC provider | Your application is an OIDC client and needs AuthCrunch to supply identity | The application participates in an OIDC authorization flow; this is a separate integration from putting a policy in front of a route |
+| [Direct OAuth policy](authorize/direct-oauth.md) | You want an application's policy to send users directly to an external provider | The policy handles the provider callback and creates its own session; portal user transforms do not apply |
+| [AuthCrunch as an OIDC provider](apps/oidc-provider.md) | Your application is an OIDC client and needs AuthCrunch to supply identity | The application participates in an OIDC authorization flow; this is a separate integration from putting a policy in front of a route |
 
 Begin with **[Install and verify](start/install.md)**. If you already have a
 working deployment, [browse the guides by topic](guides.md) or go to the

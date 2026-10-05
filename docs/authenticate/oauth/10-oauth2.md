@@ -201,3 +201,10 @@ The class uses the portal's Line Awesome icons. Text and colors affect the
 button; priority controls ordering relative to other providers. Changing the
 button does not rename the provider or realm, alter the callback, or grant
 application access.
+
+## Additional provider trust controls
+
+[Upstream OIDC token trust](83-oidc-trust.md) covers static key pins, exact
+issuer/audience/authorized-party checks and bounded remote JWKS rollover.
+The accepted [Nextcloud driver](81-backend-oauth2-0014-nextcloud.md) lacks a
+complete native account-identity flow; do not infer support from its name.

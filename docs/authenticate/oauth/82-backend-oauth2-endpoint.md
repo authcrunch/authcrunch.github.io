@@ -90,3 +90,12 @@ Do not disable signature, issuer, audience, or nonce checks to hide a failed
 OIDC registration. The [OAuth/OIDC overview](10-oauth2.md#pkce) and
 [generic OIDC guide](81-backend-oauth2-0000-generic.md) explain the flow and
 validation controls. State binding and PKCE are complementary checks.
+
+## Accepted flags and actual discovery
+
+In this release, `disable metadata discovery` is accepted configuration but
+not read by the provider consumer. Explicit endpoints plus static keys and no
+metadata URL can avoid discovery; supplying metadata still causes it to be
+fetched. See [OIDC token trust](83-oidc-trust.md) for static pins and remote key
+rollover. `disable key verification` controls remote fetching, while the JWT
+parser still enforces asymmetric signature/key checks.

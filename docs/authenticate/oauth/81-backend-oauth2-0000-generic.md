@@ -111,6 +111,9 @@ claims if its signature and trust checks succeed; a failed supplemental access
 token check does not invalidate an otherwise accepted ID token. Put essential
 application membership in the ID token to make the mapping explicit.
 
+For static public-key pins, access-token audiences and remote rollover behavior,
+see [Upstream OIDC token trust](83-oidc-trust.md).
+
 ## Map claims to application permissions
 
 The generic driver's supported role paths include:

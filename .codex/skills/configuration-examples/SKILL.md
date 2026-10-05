@@ -349,3 +349,18 @@ in the portal workflow. Passwordless describes the mail connection, not login.
 Verify acknowledgement writes the separate hashed dropbox while leaving the
 active user store unchanged. A failed administrator delivery does not roll back
 the request. Use disposable local sinks/private spool files and stop them.
+
+## Upstream OIDC trust and deployment references
+
+`docs/authenticate/oauth/83-oidc-trust.md` documents released static `jwks key`
+pins, explicit issuer/access-token audience, authorized party and bounded
+remote rollover. Static IDs override remote keys; malformed/claim failures
+do not trigger signature bypasses. The accepted metadata-discovery disable
+flag has no released consumer. Check actual fetch paths, not flag comments.
+The legacy Nextcloud driver is incomplete for native OAuth2 account identity.
+
+The ACI reference under `assets/conf/cloud/azure-aci/` embeds the current Entra
+role boundary and serves only `/srv/public` after authorization. Its host/tenant
+expand at adaptation. Validate the image/entrypoint, Azure mounts and TLS
+separately; local grammar acceptance is not a cloud deployment result. Keep
+private configuration, identity and TLS data outside every file-server root.

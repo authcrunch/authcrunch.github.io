@@ -16,6 +16,7 @@ while rejecting another. Choose the next task based on your application.
 ## Connect your identity source
 
 - **Use an external provider:** start with [OAuth and OIDC](../authenticate/oauth/10-oauth2.md), then select the provider guide in [Identity providers](../guides.md#identity-providers).
+- **Use enterprise SAML:** follow [the signed, browser-bound SAML flow](../authenticate/saml/10-saml.md).
 - **Use a directory:** review [LDAP](../authenticate/ldap/10-ldap.md) and its user search settings.
 - **Keep local users:** learn about the [local identity store](../authenticate/local/20-identity-store.md) and [password management](../authenticate/local/30-password-management.md).
 
@@ -53,6 +54,11 @@ Use [Caddy's reverse proxy reference](https://caddyserver.com/docs/caddyfile/dir
 for upstream configuration and its [running guide](https://caddyserver.com/docs/running)
 for service operation. Keep the authorization check ahead of the app handler and
 test the full set of application paths you intend to protect.
+
+For renewable local login, configure [refresh sessions](../authenticate/30-refresh-token.md)
+explicitly. For restart continuity, follow [runtime-state storage](../operations/runtime-state.md);
+a mounted user database alone does not preserve sessions. For an app acting as
+an OIDC client, use the [OIDC provider](../apps/oidc-provider.md).
 
 For a specific task, continue with the [topic directory](../guides.md). For
 configuration details, use the [reference](../reference.md).
