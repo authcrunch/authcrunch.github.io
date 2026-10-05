@@ -422,3 +422,30 @@ scenario to solve without hints. Keep undocumented behavior explicitly uncertain
 </details>
 
 </div>
+
+## Source Code References
+
+Follow token discovery from Caddyfile options to the request handler and its
+tests. These links target `main`; use GitHub's branch/tag selector to compare
+the code with your installed release.
+
+1. [Search token discovery in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20language%3AGo%20%28AllowedTokenSources%20OR%20SetSourcePriority%20OR%20ValidateBearerHeader%29&type=code)
+   — finds the source-order and Bearer configuration symbols across both Go codebases.
+2. [caddy-security: caddyfile_authz_misc.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_misc.go)
+   — parses `set token sources`, cookie-name settings, and `validate bearer header`.
+3. [go-authcrunch: pkg/authz/config.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/config.go)
+   — defines the policy fields for allowed sources, accepted cookie names, and Bearer parsing.
+4. [caddy-security: caddyfile_resolve.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_resolve.go)
+   — sets policy cookie-name defaults during provisioning before constructing the runtime.
+5. [go-authcrunch: pkg/authz/gatekeeper.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/gatekeeper.go)
+   — wires policy settings into the validator, including accepted names and custom source order.
+6. [go-authcrunch: pkg/authz/validator/validator.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/validator/validator.go)
+   — validates source names and duplicates in `SetSourcePriority`, and configures accepted credential names.
+7. [go-authcrunch: pkg/authz/validator/sources.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/validator/sources.go)
+   — extracts cookies, Authorization entries, and query values; `Authorize` selects the first discovered credential before validating it.
+8. [go-authcrunch: pkg/authz/authenticate.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/authenticate.go)
+   — uses `stripAuthToken` to remove the accepted credential from its request source when stripping is enabled.
+9. [go-authcrunch: pkg/authz/validator/sources_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/validator/sources_test.go)
+   — exercises source precedence, custom names, disabled sources, and header parsing with test credentials.
+10. [caddy-security: caddyfile_authz_test.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_test.go)
+    — shows Caddyfile options such as query-only discovery and Bearer parsing in adaptation tests.

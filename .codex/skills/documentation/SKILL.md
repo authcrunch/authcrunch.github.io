@@ -165,6 +165,18 @@ than JWT authenticity or expiry, and does not implement automatic renewal.
 API-key JSON login is access-only; it establishes neither a browser Profile
 session nor an OIDC session. Validate Go examples against the pinned library.
 
+## Source Code References pilot
+
+The Token Discovery reference also has a `Source Code References` section
+after `Agentic Prompts`. Preserve that order.
+Keep the section to at most ten links. Its first link must be a GitHub code-search
+query scoped to caddy-security/go-authcrunch with topic-specific terms. Follow
+with relevant production and test files and brief descriptions of what to inspect.
+Verify file paths and the described symbols against the actual upstream code.
+Check query encoding and repository scope. Label the linked revision; main can
+differ from a deployed release. Prefer file links over mutable line anchors,
+or pin a commit when exact line references are needed. Preserve existing sections.
+
 ## Agentic Prompts pilot
 
 The [Token Discovery reference](../../../docs/authorize/token-discovery.md)
