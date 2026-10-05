@@ -100,3 +100,201 @@ Verify valid input, absent fields, empty lists, null/mixed values, independent
 policies, cached requests and wrong-token trust. See the
 [library implementation](https://github.com/greenpau/go-authcrunch/tree/v1.3.11/pkg/acl)
 and [Caddy adapter commit](https://github.com/greenpau/caddy-security/commit/fe9a179).
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Understand a policy-local alias</summary>
+
+```text
+Help me understand Typed custom ACL fields.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/custom-fields
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain how a typed ACL alias refers to a literal top-level authenticated
+claim. Compare a URL-shaped claim key, a nested object, and an ordinary role.
+Show what remains unchanged in the token and headers. Check adapter and
+library availability before showing syntax.
+```
+
+</details>
+
+<details>
+<summary>Explore the type table</summary>
+
+```text
+Help me understand Typed custom ACL fields.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/custom-fields
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Using synthetic department and entitlements claims, compare absent, null,
+empty string, empty list, mixed list, and wrong scalar type. Predict existence
+and positive/negative match outcomes from the implementation. Explain why
+malformed referenced data must not become an accidental allow.
+```
+
+</details>
+
+<details>
+<summary>Review a field declaration</summary>
+
+```text
+Help me understand Typed custom ACL fields.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/custom-fields
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Review my redacted declaration for alias naming, reserved fields, type,
+literal claim spelling, duplicate declarations, and policy scope. Ask who
+controls the claim. Explain why signature validity does not make a
+user-editable department attribute safe for privilege grants.
+```
+
+</details>
+
+<details>
+<summary>Test isolation and version boundaries</summary>
+
+```text
+Help me understand Typed custom ACL fields.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/custom-fields
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design cases for two policies using the same alias for different claims,
+malformed referenced versus unreferenced claims, cached identities, and
+textual declaration order. Add a check proving my binary actually supports the
+field grammar. Mark source-only capabilities explicitly.
+```
+
+</details>
+
+<details>
+<summary>Practice custom-field reasoning</summary>
+
+```text
+Help me understand Typed custom ACL fields.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/custom-fields
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Quiz me one case at a time on literal versus nested keys, absence versus null,
+negating an empty list, and allowing before a malformed field check. Wait for
+my answer. Resolve current-main behavior separately from my installed release.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28ACLFieldConfig%20OR%20AccessListFields%20OR%20AllowWithClaims%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authz_acl.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_acl.go)
+   — adapts full ACL rules, actions, defaults, and field declarations.
+3. [caddy-security: caddyfile_authz_fields_test.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_fields_test.go)
+   — tests typed ACL field adaptation and rejection cases.
+4. [go-authcrunch: pkg/acl/parser/fields.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/acl/parser/fields.go)
+   — parses typed field declarations through the reusable library interface.
+5. [go-authcrunch: pkg/acl/fields.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/acl/fields.go)
+   — validates typed field declarations and projects authenticated claims.
+6. [go-authcrunch: pkg/acl/fields_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/acl/fields_test.go)
+   — covers typed values, absence, malformed claims, and policy isolation.

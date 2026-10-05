@@ -98,3 +98,202 @@ Successful credential identities may be cached for their validity interval.
 Do not assume each request rechecks a password or that changing an account
 instantly invalidates every cached result. Plan credential changes and token
 lifetimes as part of the application's access policy.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Trace a Basic request</summary>
+
+```text
+Help me understand Basic Authentication.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authentication-portal-challenges.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/basic_auth
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain how a username/password and realm selector reach a local or remote
+portal, then an application ACL. Distinguish HTTP Basic transport from the
+interactive login page. Explain why HTTPS and an application role remain
+necessary.
+```
+
+</details>
+
+<details>
+<summary>Compare realms and remote trust</summary>
+
+```text
+Help me understand Basic Authentication.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authentication-portal-challenges.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/basic_auth
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Use two stores containing the same username to explain explicit realm
+selection. Compare a named local portal with an HTTPS remote portal and System
+keys. Show how a trusted route replaces a selector rather than appending an
+ambiguous value.
+```
+
+</details>
+
+<details>
+<summary>Diagnose 401 versus 403</summary>
+
+```text
+Help me understand Basic Authentication.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authentication-portal-challenges.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/basic_auth
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me classify missing credentials, recognized invalid credentials, a valid
+password lacking application membership, and an account requiring another
+factor. Ask for redacted headers/status and challenge policy. Do not suggest
+bypassing MFA or assume every request rechecks the password.
+```
+
+</details>
+
+<details>
+<summary>Design credential-lifecycle tests</summary>
+
+```text
+Help me understand Basic Authentication.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authentication-portal-challenges.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/basic_auth
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Create cases for allowed account, wrong password, wrong realm, denied role,
+and credential changes while identities may be cached. Include upstream
+credential stripping observations. Keep passwords out of URLs, command
+history, and logs.
+```
+
+</details>
+
+<details>
+<summary>Choose the right client flow</summary>
+
+```text
+Help me understand Basic Authentication.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authentication-portal-challenges.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/basic_auth
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Ask about my machine client and whether it must prove MFA. Compare Basic with
+interactive session/token access and API keys within the documented
+boundaries. Have me explain why a successful password check alone may not
+satisfy the required authentication evidence.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28BasicAuth%20OR%20AuthenticateBasic%20OR%20AuthProxyConfig%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authz_misc.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_misc.go)
+   — parses source selection, validation, identity, and redirect options.
+3. [go-authcrunch: pkg/authz/validator/auth.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/validator/auth.go)
+   — parses Basic/API-key Authorization credentials and derives credential-cache keys.
+4. [go-authcrunch: pkg/authz/validator/sources.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/validator/sources.go)
+   — selects credentials and invokes the configured Basic/API-key authenticators.
+5. [go-authcrunch: pkg/authz/validator/auth_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/validator/auth_test.go)
+   — tests quoted Authorization parsing and nonsecret credential-cache keys.
+6. [go-authcrunch: pkg/authz/authenticate.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/authenticate.go)
+   — authenticates requests, forwards claims, and strips accepted credentials.

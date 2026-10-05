@@ -87,3 +87,201 @@ receive an Authorization header, use an explicit proxy header rule such as
 
 See [Caddy placeholders](placeholders.md) for an alternative that lets the proxy
 construct a small explicit identity-header set.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Trace trusted identity headers</summary>
+
+```text
+Help me understand Identity headers.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/headers
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain how a verified claim becomes an upstream identity header and why the
+backend must be reachable only through the trusted proxy. Distinguish incoming
+client headers, policy clearing, successful injection, and bypass or denial.
+Use synthetic identities.
+```
+
+</details>
+
+<details>
+<summary>Read standard and custom mappings</summary>
+
+```text
+Help me understand Identity headers.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/headers
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare standard role headers with custom claim injection and pipe-separated
+nested lookup. Show scalar, list, absent, and malformed data examples using
+the actual formatter. Explain why display values and verified email appearance
+do not by themselves grant application membership.
+```
+
+</details>
+
+<details>
+<summary>Understand credential stripping</summary>
+
+```text
+Help me understand Identity headers.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/headers
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Walk through accepted cookie, Bearer, named Authorization entry, Basic,
+API-key, and query credentials. Explain what stripping removes from the
+forwarded request and what can remain. Separate stripping from logout,
+browser-cookie deletion, and distributed revocation.
+```
+
+</details>
+
+<details>
+<summary>Test spoofing and forwarding</summary>
+
+```text
+Help me understand Identity headers.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/headers
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Build a downstream-observation test matrix for successful access, denial,
+public bypass, forged identity headers, unrelated cookies, and multiple
+Authorization entries. Include an explicit proxy header rule if the upstream
+must never receive Authorization. Explain the expected provenance for each
+observed value.
+```
+
+</details>
+
+<details>
+<summary>Review a minimal contract</summary>
+
+```text
+Help me understand Identity headers.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/headers
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me define the smallest identity-header contract for my backend. Ask which
+fields it needs and how it restricts direct access. Compare policy injection
+with Caddy placeholders, then have me explain how the backend distinguishes
+authenticated and public requests.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28HeaderInjection%20OR%20injectHeaders%20OR%20stripAuthToken%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authz_inject.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_inject.go)
+   — maps identity-header directives into policy configuration.
+3. [go-authcrunch: pkg/authz/authenticate.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/authenticate.go)
+   — authenticates requests, forwards claims, and strips accepted credentials.
+4. [go-authcrunch: pkg/authz/gatekeeper.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/gatekeeper.go)
+   — constructs validators and handles policy requests, bypass, and redirects.
+5. [go-authcrunch: pkg/authz/strip_token_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/strip_token_e2e_test.go)
+   — observes accepted-credential stripping at the downstream boundary.

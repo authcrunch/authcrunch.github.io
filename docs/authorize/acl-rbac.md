@@ -163,3 +163,202 @@ A valid identity that fails the policy receives `403 Forbidden`. If configured,
 error page reachable without an authorization loop, and avoid placing secrets
 in its URL. Authentication failures and missing credentials follow the separate
 [redirect/401 policy](auto-redirect-url.md).
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Trace an access decision</summary>
+
+```text
+Help me understand Access Lists and Role-based Access Control (RBAC).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/acl-rbac
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain how verified identity claims reach normalized roles and then ordered
+ACL evaluation. Walk through a member, signed identity without roles, and
+request without a credential. Separate baseline portal roles, anonymous/guest
+normalization, and application membership.
+```
+
+</details>
+
+<details>
+<summary>Reason about rule order</summary>
+
+```text
+Help me understand Access Lists and Role-based Access Control (RBAC).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/acl-rbac
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Use a reports role plus method and path restriction to compare allow, allow
+stop, deny, and any. Trace which conditions and later rules run for each
+request. Explain the installed release’s catch-all limitation before proposing
+defaults.
+```
+
+</details>
+
+<details>
+<summary>Diagnose a denied member</summary>
+
+```text
+Help me understand Access Lists and Role-based Access Control (RBAC).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/acl-rbac
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me investigate a valid token whose user still gets 403. Ask for redacted
+normalized claims, rule order, method/path settings, and verified factor
+evidence. Separate missing role normalization, missing amr evidence, and
+method/path mismatch; do not recommend broadening roles as a first fix.
+```
+
+</details>
+
+<details>
+<summary>Challenge an overly broad grant</summary>
+
+```text
+Help me understand Access Lists and Role-based Access Control (RBAC).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/acl-rbac
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Review a synthetic policy allowing authp/user or a substring path shortcut.
+Produce positive and negative test cases showing who could enter. Explain how
+to express deliberate app membership and a path boundary, and identify what
+must be verified in the issuer.
+```
+
+</details>
+
+<details>
+<summary>Teach back ACL semantics</summary>
+
+```text
+Help me understand Access Lists and Role-based Access Control (RBAC).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/acl-rbac
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Ask me five scenarios about AND versus OR, later deny after allow, allow stop,
+missing fields, and a valid role-less identity. Wait for each answer and ask
+me to justify it. Cite the installed-version code or tests when correcting my
+reasoning.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28AccessList%20OR%20AddRule%20OR%20AllowWithClaims%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authz_acl.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_acl.go)
+   — adapts full ACL rules, actions, defaults, and field declarations.
+3. [caddy-security: caddyfile_authz_acl_shortcuts.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_acl_shortcuts.go)
+   — adapts compact allow/deny rules and their method/path conditions.
+4. [go-authcrunch: pkg/acl/acl.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/acl/acl.go)
+   — compiles and evaluates ordered ACL rules.
+5. [go-authcrunch: pkg/acl/fields.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/acl/fields.go)
+   — validates typed field declarations and projects authenticated claims.
+6. [go-authcrunch: pkg/acl/rule_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/acl/rule_test.go)
+   — tests ACL rule matching and action semantics.

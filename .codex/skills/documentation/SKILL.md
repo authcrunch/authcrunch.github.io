@@ -165,26 +165,16 @@ than JWT authenticity or expiry, and does not implement automatic renewal.
 API-key JSON login is access-only; it establishes neither a browser Profile
 session nor an OIDC session. Validate Go examples against the pinned library.
 
-## Source Code References pilot
+## Agentic Prompts
 
-The Token Discovery reference also has a `Source Code References` section
-after `Agentic Prompts`. Preserve that order.
-Keep the section to at most ten links. Its first link must be a GitHub code-search
-query scoped to caddy-security/go-authcrunch with topic-specific terms. Follow
-with relevant production and test files and brief descriptions of what to inspect.
-Verify file paths and the described symbols against the actual upstream code.
-Check query encoding and repository scope. Label the linked revision; main can
-differ from a deployed release. Prefer file links over mutable line anchors,
-or pin a commit when exact line references are needed. Preserve existing sections.
+Guides and references carry an `Agentic Prompts` section followed by
+`Source Code References`. Use discovery kind `guide` or `reference` to inventory
+the scope, including unlisted references. Preserve existing routes, instructions,
+examples, and images when adding or maintaining these sections. The
+[Token Discovery reference](../../../docs/authorize/token-discovery.md) provides
+the original ten-prompt example; choose 5–15 exercises for each page's topic.
 
-## Agentic Prompts pilot
-
-The [Token Discovery reference](../../../docs/authorize/token-discovery.md)
-pilots an `Agentic Prompts` section with ten standalone learning exercises.
-Further pages await the user's review; the presence of this pilot does not
-authorize adding prompts throughout the corpus.
-
-When requested, use 5–15 topic-specific prompts with concrete learning tasks.
+Use topic-specific prompts with concrete learning tasks.
 Each copyable prompt includes the Caddy Security and go-authcrunch upstream
 `AGENTS.md` and `.codex/skills` URLs as its primary authorities, ahead of website
 documentation. Ask the LLM to read each root AGENTS.md first, any scoped AGENTS.md
@@ -199,6 +189,22 @@ generic requests to summarize. Keep existing instructional content intact.
 Wrap native `details` and fenced `text` blocks in `div.agentic-prompts`; its
 scoped styles wrap prose and keep copy controls visible. Verify exact clipboard
 content, keyboard use, narrow layouts and no-JavaScript readability.
+For a broad content change, check every changed route and copy block, then inspect
+representative long/short pages and provider, API, and version-boundary topics.
+Keep inventory, source receipts, and browser results in ignored `tmp/`.
+
+## Source Code References
+
+Place this section after the complete Agentic Prompts section. Keep it to at most
+ten links. Its first link must be a GitHub code-search query scoped to
+caddy-security/go-authcrunch with topic-specific terms. Follow with relevant
+production and test files and brief descriptions of what to inspect. A short,
+focused list is preferable to filling the limit with adjacent code.
+Verify file paths and the described symbols against the actual upstream code;
+a sibling-only file does not establish that a public main-branch link exists.
+Check query encoding and repository scope. Label the linked revision; main can
+differ from a deployed release. Prefer file links over mutable line anchors,
+or pin a commit when exact line references are needed. Preserve existing sections.
 
 ## Blog workflow
 

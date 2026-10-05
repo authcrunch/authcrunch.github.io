@@ -125,3 +125,202 @@ A remote portal URL requires [System keys](../authenticate/api/50-system-api.md)
 For a provider-backed opaque browser session, see the separate
 [direct OAuth policy](direct-oauth.md). These modes still require a deliberate
 application allow rule and do not automatically satisfy interactive MFA.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Read a policy from outside in</summary>
+
+```text
+Help me understand Authorization policy syntax.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/syntax
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain the relationship between the global security block, a named policy,
+and authorize on a route. Annotate a small existing policy and separate
+grammar acceptance, provisioning, authentication, and access decisions. Ask
+for my installed versions before selecting syntax.
+```
+
+</details>
+
+<details>
+<summary>Review rule grammar</summary>
+
+```text
+Help me understand Authorization policy syntax.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/syntax
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me read compact and full ACL rules. Use synthetic roles and compare
+exact/prefix matching with shortcut path matching. Explain action arguments,
+condition combination, and stop behavior. Identify syntax or semantics that
+differ between the downloadable bundle and newer source.
+```
+
+</details>
+
+<details>
+<summary>Diagnose adaptation versus runtime failure</summary>
+
+```text
+Help me understand Authorization policy syntax.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/syntax
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Give me a staged diagnosis for a policy that adapts successfully but refuses
+access. Separate missing access rules, wrong keys, credential sources, role
+mismatch, and route mounting. Ask for redacted configuration and observed
+status; do not infer login success from parser acceptance.
+```
+
+</details>
+
+<details>
+<summary>Design a policy test table</summary>
+
+```text
+Help me understand Authorization policy syntax.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/syntax
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Build a test table for a read-only reports policy: allowed member GET,
+nonmember, missing token, expired token, sibling path, and wrong method. For
+each, identify the layer being tested and observable outcome. Keep
+configuration checks separate from live requests.
+```
+
+</details>
+
+<details>
+<summary>Practice syntax review</summary>
+
+```text
+Help me understand Authorization policy syntax.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-authorization,
+authorization-policy-acl.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/syntax
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Quiz me with five short policy fragments, one at a time. Include an action
+with wrong arity, a broad shortcut path, misplaced proxy header, unsupported
+custom field on an older release, and a missing allow rule. Wait for my
+reasoning before explaining each correction.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28parseCaddyfileAuthorizationPolicy%20OR%20PolicyConfig%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authz.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz.go)
+   — dispatches authorization-policy subdirectives into library configuration.
+3. [caddy-security: caddyfile_authz_misc.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_misc.go)
+   — parses source selection, validation, identity, and redirect options.
+4. [caddy-security: caddyfile_authz_acl.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_acl.go)
+   — adapts full ACL rules, actions, defaults, and field declarations.
+5. [go-authcrunch: pkg/authz/config.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authz/config.go)
+   — defines and validates authorization-policy settings.
+6. [caddy-security: caddyfile_authz_test.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_test.go)
+   — checks policy grammar and adapted ACL/credential settings.

@@ -112,3 +112,198 @@ removing a role at an external provider, or signing out of a portal does not
 implement immediate distributed revocation of all already issued JWTs. Use
 short appropriate lifetimes and the [refresh session](../authenticate/30-refresh-token.md)
 workflow when renewable local sessions fit your application.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Separate decoding from trust</summary>
+
+```text
+Help me understand Token Verification.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-crypto, configuration-authorization.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/token-verification
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain the sequence from a presented JWT to signature/time checks and then
+ACL evaluation. Compare payload decoding with verification and issuer/audience
+restrictions. Use synthetic claims; do not ask me to paste a real credential.
+```
+
+</details>
+
+<details>
+<summary>Compare signing-key choices</summary>
+
+```text
+Help me understand Token Verification.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-crypto, configuration-authorization.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/token-verification
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare HMAC, RSA, ECDSA, and Ed25519 for a portal and separate verifiers.
+Explain which parties can sign when holding each kind of material. Match
+curves and algorithms, including ES512/P-521, and separate signing keys from
+System encryption keys.
+```
+
+</details>
+
+<details>
+<summary>Diagnose verification failure</summary>
+
+```text
+Help me understand Token Verification.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-crypto, configuration-authorization.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/token-verification
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me inspect a redacted failure using algorithm, kid, key type, key source,
+clock, and service-readable paths. Ask for public metadata only. Separate a
+missing configured key from a claim/ACL rejection and avoid treating kid as
+authority to fetch an arbitrary URL.
+```
+
+</details>
+
+<details>
+<summary>Plan rotation without assumptions</summary>
+
+```text
+Help me understand Token Verification.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-crypto, configuration-authorization.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/token-verification
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Build a key-rotation learning exercise with old/new overlap, token lifetimes,
+reload behavior, and generated-key persistence. Compare public JWKS
+publication with whether this policy actually polls it. State the evidence
+needed for every automatic-rotation claim.
+```
+
+</details>
+
+<details>
+<summary>Test the trust boundary</summary>
+
+```text
+Help me understand Token Verification.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-crypto, configuration-authorization.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authorize/token-verification
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design positive and negative cases for correct signature, wrong key, wrong
+algorithm, expired token, untrusted issuer, and wrong audience. Show how a
+verified but unauthorized identity differs from a failed verification. Tie
+behavior to my installed library and adapter versions.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28CryptoKeyStore%20OR%20VerifyToken%20OR%20CryptoKeyConfig%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_authz_crypto.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authz_crypto.go)
+   — delegates policy verification-key declarations to the keystore parser.
+3. [go-authcrunch: pkg/kms/crypto_keystore.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/kms/crypto_keystore.go)
+   — loads and organizes configured signing, verification, and System keys.
+4. [go-authcrunch: pkg/kms/crypto_key_config.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/kms/crypto_key_config.go)
+   — parses individual key declarations and key-source settings.
+5. [go-authcrunch: pkg/kms/methods.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/kms/methods.go)
+   — maps supported signing methods and key types.
+6. [go-authcrunch: pkg/kms/crypto_key_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/kms/crypto_key_test.go)
+   — tests key construction and supported cryptographic operations.
+7. [go-authcrunch: pkg/kms/jwks.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/kms/jwks.go)
+   — builds public JSON Web Key Sets from appropriate signing keys.
