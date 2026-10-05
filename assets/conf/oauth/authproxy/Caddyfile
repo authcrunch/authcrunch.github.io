@@ -1,36 +1,63 @@
+# caddy-security v1.3.0 / go-authcrunch v1.3.8. Single-provider portal entry.
+# Replace auth.example.com in both places with your public hostname.
 {
-	order authenticate before respond
-	order authorize before basicauth
+	admin off
+	persist_config off
 
 	security {
-		oauth identity provider github {env.GITHUB_CLIENT_ID} {env.GITHUB_CLIENT_SECRET}
+		oauth identity provider github {
+			driver github
+			realm github
+			client_id {env.GITHUB_CLIENT_ID}
+			client_secret {env.GITHUB_CLIENT_SECRET}
+			scopes read:user user:email
+		}
 
-		authentication portal authz_proxy_portal {
-			crypto key sign-verify {env.JWT_SHARED_KEY}
+		authentication portal myportal {
 			enable identity provider github
+			crypto default token lifetime 900
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			cookie path /
+
+			ui {
+				links {
+					"Example app" /app icon "las la-external-link-alt"
+					"My identity" /authzproxy/whoami icon "las la-user"
+				}
+			}
+
 			transform user {
 				match realm github
 				action add role authp/user
-				ui link "My Website" / icon "las la-star"
+			}
+
+			transform user {
+				match realm github
+				match github id exact {$GITHUB_ALLOWED_USER_ID}
+				action add role app/member
 			}
 		}
 
-		authorization policy default_authz_policy {
-			# disable auth redirect
-			set auth url /authzproxy/oauth2/github/
+		authorization policy apppolicy {
+			set auth url https://auth.example.com/authzproxy/oauth2/github
 			crypto key verify {env.JWT_SHARED_KEY}
-			allow roles authp/user authp/admin
+			allow roles app/member
 		}
 	}
 }
 
-myapp.myfiosgateway.com {
-	route /authzproxy* {
-		authenticate with authz_proxy_portal
-	}
-
+auth.example.com {
 	route {
-		authorize with default_authz_policy
-		respond "myapp is running"
+		redir /authzproxy /authzproxy/ 308
+
+		authenticate /authzproxy/* with myportal
+
+		@app path /app /app/*
+		route @app {
+			authorize with apppolicy
+			respond "You reached the GitHub-protected app." 200
+		}
+
+		respond "AuthCrunch is running. Open /app to begin." 200
 	}
 }

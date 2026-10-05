@@ -1,3 +1,4 @@
+# Historical scenario; see README.md for current alternatives and limitations.
 {
 	http_port 8080
 	https_port 8443
