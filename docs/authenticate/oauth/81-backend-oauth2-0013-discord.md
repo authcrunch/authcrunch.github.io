@@ -1,119 +1,99 @@
 ---
 title: "Discord"
-description: "Register a Discord application and filter access by guild membership and roles."
+description: "Connect a user OAuth app, filter exact guild IDs, map guild roles to application permission, and test denied identities."
 discovery:
   topic: identity-providers
   kind: guide
-  aliases: ["Discord server", "OAuth2"]
 ---
+
+import CodeBlock from '@theme/CodeBlock';
+import example from '@site/assets/conf/oauth/discord/Caddyfile?raw';
 
 # Discord
 
-Discord OAuth2 integration allows you to use discord as an identity provider.
-
-It also allows you to add roles to the users based on which "discord servers" they are members of.
-
-The following [`Caddyfile`](https://github.com/authcrunch/authcrunch.github.io/blob/main/assets/conf/oauth/discord/Caddyfile) allows Discord-based authentication
+Use the Discord OAuth2 named driver to identify an account and optionally map
+its guild memberships/roles. A guild is Discord's term for a server. This is a
+user OAuth application, not a bot invitation or a bot token configuration.
 
 ### Registering a discord application
 
-In order to use this plugin with caddy-security you'll need a to register an application in the [Discord Developer Portal](https://discord.com/developers/applications).
+Create an application in the [Discord developer portal](https://discord.com/developers/applications),
+record its client ID and private OAuth client secret, and add exactly:
 
-Once an application has been created go to the OAuth tab:
+```text
+https://auth.example.com/auth/oauth2/discord/authorization-code-callback
+```
 
-![Discord Application Dashboard](../images/oauth2_discord_new_app.jpg)
+Save `DISCORD_CLIENT_ID` and `DISCORD_CLIENT_SECRET` in the server environment.
+Enable developer mode when copying numeric guild and role IDs. IDs and display
+names are different; names alone cannot populate this example's filters.
+See [Discord's OAuth2 scopes and code flow](https://docs.discord.com/developers/topics/oauth2).
 
-Copy the `CLIENT ID` and `CLIENT SECRET` and click on `Add Redirect` to add the caddy-security redirect
-* For an app hosted on `localhost:443` with the auth portal on route `/auth` add the following redirect: `https://localhost/auth/oauth2/discord/authorization-code-callback`
+<figure className="doc-screenshot">
 
-Be sure to save the changes before closing the browser.
+[![Historical Discord OAuth2 settings and Add Redirect; keep the client secret private and use the public callback above.](../images/oauth2_discord_new_app.jpg)](../images/oauth2_discord_new_app.jpg)
 
+<figcaption>Historical Discord OAuth2 settings and Add Redirect; keep the client secret private and use the public callback above.</figcaption>
+</figure>
 ### Sample Caddyfile configuration
 
-```caddyfile
-oauth identity provider discord {
-  realm discord
-  driver discord
-  client_id {$CLIENT_ID}
-  client_secret {$CLIENT_SECRET}
-  scopes identify email guilds guilds.members.read # Optional, `email`, `guilds`, and `guilds.members.read` are optional, see notes below
-  user_group_filters {$DISCORD_GUILD_ID} {$OTHER_GUILD_ID} # Optional, effective only if scope guilds is specified
-}
-```
+<CodeBlock language="caddyfile" title="assets/conf/oauth/discord/Caddyfile">{example}</CodeBlock>
+Set a private `AUTHCRUNCH_SIGNING_KEY` plus numeric `DISCORD_GUILD_ID` and
+`DISCORD_ROLE_ID` before parsing. The ID placeholders expand at parse time.
+The initial transform clears reserved portal roles and direct `app/member`;
+only the intended role in the intended guild grants application access.
 
-By default the request for authentication to discord is made only with the "identify" scope (the bare minimum) and that will give you back the id, username and avatar of the logged in user.
+The named driver defaults to `identify` and disables PKCE and nonce. `email`
+requests optional email, `guilds` enables membership queries, and
+`guilds.members.read` enables a per-guild member-role query. Email may still be
+missing; choose deliberately whether your subject-based application permits
+`disable email claim check`.
 
-you can then match the user ID in the a `transform user` directive like this:
-
-```caddyfile
-transform user {
-    match sub discord.com/{$DISCORD_USER_ID}
-    action add role authp/admin
-}
-```
-
-**Note**: The DISCORD_USER_ID is a number uniquely identifying the user in question.
-To get a discord ID for a particular user using the discord desktop app:
-1. Enable developer mode by going to Settings->\[App Settings\]->Advanced->Enable Developer Mode
-2. Right click on a user and the last option in the popup menu will be "Copy ID"
-
-**Note**: If you add "email" to the list of scopes requested the email will also be saved.
+For account-specific access instead, match the **entire**
+`discord.com/NUMERIC_USER_ID` subject with the correct realm, then add an
+application role. A Discord account or guild administrator is not automatically
+an AuthCrunch administrator.
 
 ### Filtering by guild
 
-**Note**: "Guild" is the discord terminology for a "discord server"
+`user_group_filters` contains **regular expressions**, not a wildcard language.
+Use anchored `^NUMERIC_GUILD_ID$` for one exact guild. The old `*` example is
+invalid regex; `.*` would match every returned guild and should be used only
+when that broad disclosure/role mapping is intentional. Without filters, guild
+membership does not produce these roles.
 
-**Note**: In order to discriminate users based on which guild they belong to you have to enable the `guilds` scope in the discord oauth configuration above (`scopes identify guilds`)
+| Observed membership | Derived role |
+| --- | --- |
+| Member of an included guild | `discord.com/GUILD_ID/members` |
+| Administrator permission bit in that guild | `discord.com/GUILD_ID/admins` |
 
-After the user is authenticated another query is made to the discord api requesting a list of guild IDs the user is part of. By default the result is ignored, which means no new roles will be added to the user object based on guild membership.
-
-To create roles based on the user's membership of ALL his guilds use `user_group_filters *` in the discord oauth configuration.
-
-If you are only interested in the membership of a particular guild then add the guild id like this: `user_group_filters 1254335`
-
-**NOTE**: To get a guild id follow the same instructions as for a DISCORD_USER_ID (explained above)
-
-If the `user_group_filters` filter check passes then additional `roles` will be added to the user as following:
-1. If the user is a member of a guild => role `discord.com/{$DISCORD_GUILD_ID}/members`
-2. If the user has admin privileges in a guild => role `discord.com/{$DISCORD_GUILD_ID}/admins`
-
-You can them match them like this:
-
-```caddyfile
-transform user {
-    match role discord.com/{$DISCORD_GUILD_ID}/admins
-    action add role authp/admin
-}
-
-transform user {
-    match role discord.com/{$DISCORD_GUILD_ID}/members
-    action add role authp/user
-}
-```
-
-To find the Role IDs for a server:
-1. Enable developer mode by going to Settings->\[App Settings\]->Advanced->Enable Developer Mode
-2. Go to the Server Settings for the guild you want to filter by
-3. Go to Roles, and right click on the Role in the list of roles that you want, you should see an option "Copy Role ID"
+Filtering controls which membership data becomes roles; it does not itself deny
+an otherwise valid Discord login. The application's policy still requires
+`app/member`. An API failure can leave login without guild roles; a restrictive
+policy then denies application access.
 
 ### Filtering by guild role
 
-**Note**: To enable discriminating users based on their role in a specific guild you must enable both the `guilds` AND `guilds.members.read` scopes. (`scopes identify guilds guilds.members.read`) [Read more here](https://discord.com/developers/docs/resources/user#get-current-user-guild-member)
+With both `guilds` and `guilds.members.read`, the connector queries each included
+guild member and adds `discord.com/GUILD_ID/role/ROLE_ID` for returned role IDs.
+The canonical transform admits exactly the selected guild-role combination.
+It does not grant all guild members application access, nor does it promote a
+Discord guild administrator to portal administration.
 
-Filtering by role in a guild can be combined with `Filtering by guild` above. Members of a guild will still receive the `discord.com/{$DISCORD_GUILD_ID}/members` and `discord.com/{$DISCORD_GUILD_ID}/admins` roles above.
+Test a member with the selected role, a member without it, and an account in
+another guild. Removing a guild role does not revoke every previously issued
+portal JWT immediately; use a suitable access lifetime and require a fresh
+login to inspect changed provider data.
 
-Users will also receive `discord.com/{$DISCORD_GUILD_ID}/role/{$DISCORD_ROLE_ID}` for each role the user has in each of the guilds specified in `user_group_filters`
+## Verify and troubleshoot
 
-Just as in the section above `Filter by guild`, after the user authenticates another query is made to the discord api to fetch their guild IDs, this list of guild IDs is filtered by `user_group_filters`. If the `guilds.members.read` scope is specified then for each specified guild, a query to fetch the user's member data will be made. Only the role ids from this response are saved and they can be used as demonstrated below.
+Sign in through `/auth/oauth2/discord`, inspect `/auth/whoami?format=json`, and
+record the exact subject and realm without logging access tokens. Confirm that
+an intended member reaches `/app` and another valid identity is denied. A
+successful provider login alone does not establish application authorization.
 
-```caddyfile
-transform user { # Give a role `authp/rolename` for the specified Role ID in a specific guild
-    match role discord.com/{$DISCORD_GUILD_ID}/role/{$DISCORD_ROLE_ID}
-    action add role authp/rolename
-}
-
-transform user { # Give the role `authp/user` for all members of the guild regardless of their role in the guild
-    match role discord.com/{$DISCORD_GUILD_ID}/members
-    action add role authp/user
-}
-```
+Check callback scheme, hostname, port, mount, and realm literally; inspect
+provider errors and [diagnostic logs](../../operations/logging.md). Keep client
+secrets on the server. These examples are parser-verified against the released
+bundle; console registration, live provider login, consent, and production TLS
+require verification in your own organization.

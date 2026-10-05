@@ -1,56 +1,59 @@
+# caddy-security v1.3.0 / go-authcrunch v1.3.8. Replace auth.example.com.
 {
-	http_port 8080
-	https_port 8443
-	# debug
-
-	order authenticate before respond
-	order authorize before basicauth
-
+	admin off
+	persist_config off
 	security {
 		oauth identity provider discord {
 			realm discord
 			driver discord
-			client_id {$CLIENT_ID}
-			client_secret {$CLIENT_SECRET}
-			scopes identify guilds guilds.members.read
-			user_group_filters {$GUILD_ID}
+			client_id {env.DISCORD_CLIENT_ID}
+			client_secret {env.DISCORD_CLIENT_SECRET}
+			scopes identify email guilds guilds.members.read
+			user_group_filters ^{$DISCORD_GUILD_ID}$
 		}
-		authentication portal discordportal {
-			crypto default token lifetime 3600
-			crypto key sign-verify {env.JWT_SHARED_KEY}
-			enable identity provider discord
-			cookie domain myfiosgateway.com
 
-			transform user {
-				match role discord.com/{$GUILD_ID}/role/{$ADMIN_ROLE_ID}
-				action add role authp/admin
+		authentication portal myportal {
+			enable identity provider discord
+			crypto default token lifetime 900
+			crypto key sign-verify {env.AUTHCRUNCH_SIGNING_KEY}
+			ui {
+				links {
+					"Example app" /app
+					"My identity" /auth/whoami
+				}
 			}
 			transform user {
-				match role discord.com/{$MYGUILDID}/members
+				regex match role "^(authp/.*|app/member)$"
+				action drop matched role
+			}
+			transform user {
+				match realm discord
 				action add role authp/user
 			}
+			transform user {
+				match realm discord
+				match role discord.com/{$DISCORD_GUILD_ID}/role/{$DISCORD_ROLE_ID}
+				action add role app/member
+			}
 		}
-		authorization policy mypolicy {
-			set auth url https://myfiosgateway.com/auth/oauth2/discord
-			crypto key verify {env.JWT_SHARED_KEY}
-			allow roles authp/admin authp/user
+		authorization policy apppolicy {
+			set auth url https://auth.example.com/auth/
+			crypto key verify {env.AUTHCRUNCH_SIGNING_KEY}
 			validate bearer header
-			inject headers with claims
+			allow roles app/member
 		}
 	}
 }
 
-(tls_config) {
-	tls {$HOME}/.local/caddy/server.crt {$HOME}/.local/caddy/server.key
-}
-
-https://myfiosgateway.com {
-	import tls_config
-	route /auth/* {
-		authenticate with discordportal
-	}
+auth.example.com {
 	route {
-		authorize with mypolicy
-		respond "Hello World"
+		redir /auth /auth/ 308
+		authenticate /auth/* with myportal
+		@app path /app /app/*
+		route @app {
+			authorize with apppolicy
+			respond "You reached the protected example app." 200
+		}
+		respond "Open /app to begin." 200
 	}
 }

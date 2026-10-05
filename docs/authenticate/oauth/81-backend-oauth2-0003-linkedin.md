@@ -1,53 +1,98 @@
 ---
 title: "LinkedIn"
-description: "Register a LinkedIn application and configure its redirect URL and OAuth provider."
+description: "Register the current LinkedIn OIDC product, align callbacks, and grant application access by an exact account subject."
 discovery:
   topic: identity-providers
   kind: guide
-  aliases: ["OAuth2"]
 ---
+
+import CodeBlock from '@theme/CodeBlock';
+import example from '@site/assets/conf/oauth/linkedin/Caddyfile?raw';
 
 # LinkedIn
 
-First, browse to https://www.linkedin.com/developers/apps/new and create an application.
+Use **Sign In with LinkedIn using OpenID Connect**, not the older profile/email
+permission product. The named driver in [released v1.3.0](../../operations/versions.md)
+uses LinkedIn discovery and validates the returned identity token. LinkedIn's
+sign-in product identifies an account; it does not verify a person's real-world
+identity. See [LinkedIn's current OIDC guide](https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2).
 
-![LinkedIn Developers - New Application](../images/oauth2_linkedin_new_app.png)
+## Register the application
 
-Next, note the "Client Secret"
+Create an application in the [developer portal](https://www.linkedin.com/developers/apps),
+complete its required organization/application details, and request the **Sign
+In with LinkedIn using OpenID Connect** product. Copy your application's client
+ID and private secret into the server's `LINKEDIN_CLIENT_ID` and
+`LINKEDIN_CLIENT_SECRET`. Never put the secret into browser code.
 
+Register exactly:
 
-![LinkedIn Developers - Auth Screen](../images/oauth2_linkedin_auth_screen.png)
-
-
-After that, add "redirect URLS":
-
+```text
+https://auth.example.com/auth/oauth2/linkedin/authorization-code-callback
 ```
-https://localhost:8443/auth/oauth2/linkedin/authorization-code-callback
-```
 
-![LinkedIn Developers - Auth Screen - Redirect URLs](../images/oauth2_linkedin_redirect_url.png)
+Request `openid profile email`. The older screenshots below show where
+application credentials, redirects, and products were configured; current
+product names differ. Their localhost callback is historical, not the callback
+used by the example.
 
-Next, browse to "Products" tab and enabled "Sign In with LinkedIn":
+<figure className="doc-screenshot">
 
-![LinkedIn Developers - Products Screen](../images/oauth2_linkedin_products_screen.png)
+[![Historical LinkedIn redirect registration; use the exact public callback above.](../images/oauth2_linkedin_redirect_url.png)](../images/oauth2_linkedin_redirect_url.png)
 
-References:
-* [LinkedIn - LinkedIn API Documentation - Authentication - Authorization Code Flow](https://docs.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow)
-* [LinkedIn - Consumer Solutions Platform - Integrations - Sign In with LinkedIn](https://docs.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin)
+<figcaption>Historical LinkedIn redirect registration; use the exact public callback above.</figcaption>
+</figure>
+<details className="screenshot-gallery">
+<summary>Preserved LinkedIn application screens</summary>
 
-`Caddyfile` configuration:
+<figure className="doc-screenshot">
 
-```
-		oauth identity provider linkedin {
-			realm linkedin
-			driver linkedin
-			client_id {env.LINKEDIN_APP_CLIENT_ID}
-			client_secret {env.LINKEDIN_APP_CLIENT_SECRET}
-		}
+[![Historical application creation and organization details.](../images/oauth2_linkedin_new_app.png)](../images/oauth2_linkedin_new_app.png)
 
-		authentication portal myportal {
+<figcaption>Historical application creation and organization details.</figcaption>
+</figure>
 
-			enable identity provider linkedin
+<figure className="doc-screenshot">
 
-		}
-```
+[![Historical Auth tab; keep your own client secret private.](../images/oauth2_linkedin_auth_screen.png)](../images/oauth2_linkedin_auth_screen.png)
+
+<figcaption>Historical Auth tab; keep your own client secret private.</figcaption>
+</figure>
+
+<figure className="doc-screenshot">
+
+[![The old Sign In product has been replaced by Sign In with LinkedIn using OpenID Connect.](../images/oauth2_linkedin_products_screen.png)](../images/oauth2_linkedin_products_screen.png)
+
+<figcaption>The old Sign In product has been replaced by Sign In with LinkedIn using OpenID Connect.</figcaption>
+</figure>
+
+</details>
+## Configure AuthCrunch
+
+<CodeBlock language="caddyfile" title="assets/conf/oauth/linkedin/Caddyfile">{example}</CodeBlock>
+Set `AUTHCRUNCH_SIGNING_KEY` privately. `LINKEDIN_ALLOWED_SUB` expands before
+parsing and must equal the entire observed LinkedIn subject. The example resets
+provider roles and grants only that account application access. A matching email
+or portal role is insufficient. LinkedIn can omit email; the bundled parser's
+default email requirement can then reject login. If your application identifies
+users by subject, `disable email claim check` is a deliberate provider option;
+review the application's identity requirements before enabling it.
+
+The named driver disables PKCE and nonce generation in this release while
+retaining its state-bound callback and signature/issuer/audience checks. Do not
+claim it has the same defaults as the generic OIDC driver. It fetches LinkedIn
+UserInfo for profile data; it does not return arbitrary organization memberships
+as application permissions.
+
+## Verify and troubleshoot
+
+Sign in through `/auth/oauth2/linkedin`, inspect `/auth/whoami?format=json`, and
+record the exact subject and realm without logging access tokens. Confirm that
+an intended member reaches `/app` and another valid identity is denied. A
+successful provider login alone does not establish application authorization.
+
+Check callback scheme, hostname, port, mount, and realm literally; inspect
+provider errors and [diagnostic logs](../../operations/logging.md). Keep client
+secrets on the server. These examples are parser-verified against the released
+bundle; console registration, live provider login, consent, and production TLS
+require verification in your own organization.

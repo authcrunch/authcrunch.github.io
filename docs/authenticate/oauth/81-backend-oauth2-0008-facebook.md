@@ -1,61 +1,123 @@
 ---
 title: "Facebook"
-description: "Register a Facebook application and connect it to the portal using OAuth credentials."
+description: "Understand the released Facebook driver compatibility limit, callback and credential requirements, and historical setup screens."
 discovery:
   topic: identity-providers
   kind: guide
-  aliases: ["Meta", "OAuth2"]
 ---
+
+import CodeBlock from '@theme/CodeBlock';
+import example from '@site/assets/conf/oauth/facebook/Caddyfile?raw';
 
 # Facebook
 
-Browse to `https://developers.facebook.com/apps/` and click "Create App".
+:::warning[Released driver compatibility limit]
 
-![Facebook Developers - Apps](../images/oauth2_facebook_apps_screen.png)
+The bundled Facebook driver hard-codes `v12.0` authorization, token, and Graph
+profile endpoints. Its configuration overwrites the authorization/token URLs;
+changing `base_auth_url` does not upgrade those calls. This page preserves the
+integration reference, but it does **not** establish compatibility with Meta's
+current Graph API. Verify support with Meta before relying on it for a new
+production deployment. A parser check cannot resolve this upstream limitation.
 
-When asked about "What do you need your app to do?", choose "Build Connected Experiences".
+:::
 
-![Facebook Developers - New App - App Type](../images/oauth2_facebook_apps_type_choice_screen.png)
+## Application and callback reference
 
-Next, choose the name for the application:
+For a compatible deployment, register a server-side Facebook Login application
+in the [Meta developer dashboard](https://developers.facebook.com/apps/), keep
+its App Secret on the server, and use the exact authorized redirect:
 
-![Facebook Developers - New App - App Name](../images/oauth2_facebook_apps_name_choice_screen.png)
+```text
+https://auth.example.com/auth/oauth2/facebook/authorization-code-callback
+```
 
-Once your app (in this case App ID is `38409328409`) is available,
-click "Set Up" next to "Facebook Login" product:
+The App Secret is the confidential OAuth credential. A Client Token or browser
+SDK app identifier is not a substitute. The named driver calculates an
+`appsecret_proof` for the Graph profile request. Consult
+[Meta's web login guide](https://developers.facebook.com/docs/facebook-login/web/)
+and [API version policy](https://developers.facebook.com/docs/graph-api/changelog/versions/)
+for current application, permission, and version requirements. The old wizard's
+app-type labels are historical.
 
-![Facebook Developers - App Screen](../images/oauth2_facebook_app_screen.png)
+<figure className="doc-screenshot">
 
-When at Quickstart screen, select "Other".
+[![Historical valid OAuth redirect field; the current example uses the public /auth mount.](../images/oauth2_facebook_app_login_settings_screen.png)](../images/oauth2_facebook_app_login_settings_screen.png)
 
-Next, click "Settings - Advanced" on the left navigation bar and browse to "Security" section.
+<figcaption>Historical valid OAuth redirect field; the current example uses the public /auth mount.</figcaption>
+</figure>
+<details className="screenshot-gallery">
+<summary>Preserved Facebook setup and consent screens</summary>
 
-Set "Require App Secret" to "Yes".
-The Client Token is not being used because `client_secret` is being used to calculate `appsecret_proof`.
+<figure className="doc-screenshot">
 
-![Facebook Developers - App Settings - Advanced](../images/oauth2_facebook_app_settings_advanced_screen.png)
+[![Historical developer application list.](../images/oauth2_facebook_apps_screen.png)](../images/oauth2_facebook_apps_screen.png)
 
-Next, click "Settings - Basic" on the left navigation bar and extract "App Secret".
-The App Secret is used in `client_secret` Caddyfile directive.
+<figcaption>Historical developer application list.</figcaption>
+</figure>
 
-![Facebook Developers - App Settings - Basic](../images/oauth2_facebook_app_settings_basic_screen.png)
+<figure className="doc-screenshot">
 
-Next, click "Settings" under "Facebook Login" on the left navigation bar and browse to "Client OAuth Settings" section:
+[![Historical connected-experiences app-type wizard; current app selection can differ.](../images/oauth2_facebook_apps_type_choice_screen.png)](../images/oauth2_facebook_apps_type_choice_screen.png)
 
-Set "Valid OAuth Redirect URIs" to:
+<figcaption>Historical connected-experiences app-type wizard; current app selection can differ.</figcaption>
+</figure>
 
-* `https://localhost:8443/auth/oauth2/facebook/authorization-code-callback`
+<figure className="doc-screenshot">
 
-![Facebook Developers - Facebook Login - Settings](../images/oauth2_facebook_app_login_settings_screen.png)
+[![Historical application name and contact fields.](../images/oauth2_facebook_apps_name_choice_screen.png)](../images/oauth2_facebook_apps_name_choice_screen.png)
 
-Additionally, add the URL in "Redirect URI Validator":
+<figcaption>Historical application name and contact fields.</figcaption>
+</figure>
 
-* `https://localhost:8443/auth/oauth2/facebook/authorization-code-callback`
+<figure className="doc-screenshot">
 
-The following [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/oauth/facebook/Caddyfile)
-allows Facebook-based authentication.
+[![Historical Facebook Login product selection.](../images/oauth2_facebook_app_screen.png)](../images/oauth2_facebook_app_screen.png)
 
-When a user get redirected to Facebook Login, the screen looks as follows:
+<figcaption>Historical Facebook Login product selection.</figcaption>
+</figure>
 
-![Facebook Developers - Facebook Login - User Login](../images/oauth2_facebook_user_login_screen.png)
+<figure className="doc-screenshot">
 
+[![Historical App Secret proof requirement and client-token fields; do not reuse pictured values.](../images/oauth2_facebook_app_settings_advanced_screen.png)](../images/oauth2_facebook_app_settings_advanced_screen.png)
+
+<figcaption>Historical App Secret proof requirement and client-token fields; do not reuse pictured values.</figcaption>
+</figure>
+
+<figure className="doc-screenshot">
+
+[![Historical private App Secret access with an account confirmation prompt.](../images/oauth2_facebook_app_settings_basic_screen.png)](../images/oauth2_facebook_app_settings_basic_screen.png)
+
+<figcaption>Historical private App Secret access with an account confirmation prompt.</figcaption>
+</figure>
+
+<figure className="doc-screenshot">
+
+[![Historical user consent screen; consent does not grant AuthCrunch application roles.](../images/oauth2_facebook_user_login_screen.png)](../images/oauth2_facebook_user_login_screen.png)
+
+<figcaption>Historical user consent screen; consent does not grant AuthCrunch application roles.</figcaption>
+</figure>
+
+</details>
+## Released configuration reference
+
+<CodeBlock language="caddyfile" title="assets/conf/oauth/facebook/Caddyfile">{example}</CodeBlock>
+Replace the client values and private signing key in the server environment.
+`FACEBOOK_ALLOWED_SUB` expands at parse time and must be the exact app-scoped
+account ID returned by this integration. The example resets provider roles and
+grants `app/member` only to that subject. It does not grant portal administration
+by email or allow every Facebook identity into the application.
+
+Facebook access tokens are opaque to this driver; it retrieves the profile
+through the provider rather than treating them as signed OIDC ID tokens. PKCE
+and nonce are disabled for this named driver. Email can be absent even when
+requested, so decide explicitly whether the application's subject-based identity
+permits disabling the default email claim check.
+
+## Compatibility verification
+
+Before deployment, test code exchange, Graph profile retrieval, application
+assignment/permissions, exact subject mapping, and a nonmember's rejection.
+If a retired endpoint or provider permission blocks the flow, a Caddyfile
+rewrite is not evidence of a repaired upstream implementation. Use another
+[documented provider](10-oauth2.md) that meets your deployment requirements.

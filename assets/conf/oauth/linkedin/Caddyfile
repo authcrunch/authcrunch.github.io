@@ -3,16 +3,16 @@
 	admin off
 	persist_config off
 	security {
-		oauth identity provider facebook {
-			realm facebook
-			driver facebook
-			client_id {env.FACEBOOK_CLIENT_ID}
-			client_secret {env.FACEBOOK_CLIENT_SECRET}
-			scopes email
+		oauth identity provider linkedin {
+			realm linkedin
+			driver linkedin
+			client_id {env.LINKEDIN_CLIENT_ID}
+			client_secret {env.LINKEDIN_CLIENT_SECRET}
+			scopes openid profile email
 		}
 
 		authentication portal myportal {
-			enable identity provider facebook
+			enable identity provider linkedin
 			crypto default token lifetime 900
 			crypto key sign-verify {env.AUTHCRUNCH_SIGNING_KEY}
 			ui {
@@ -22,12 +22,12 @@
 				}
 			}
 			transform user {
-				match realm facebook
+				match realm linkedin
 				action overwrite role authp/user
 			}
 			transform user {
-				match realm facebook
-				match sub {$FACEBOOK_ALLOWED_SUB}
+				match realm linkedin
+				match sub {$LINKEDIN_ALLOWED_SUB}
 				action add role app/member
 			}
 		}

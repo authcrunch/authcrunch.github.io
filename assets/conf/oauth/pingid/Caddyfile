@@ -1,61 +1,58 @@
+# caddy-security v1.3.0 / go-authcrunch v1.3.8. Replace auth.example.com.
 {
-	http_port 8080
-	https_port 8443
-	debug
-
-	order authenticate before respond
-	order authorize before basicauth
-
+	admin off
+	persist_config off
 	security {
 		oauth identity provider pingid {
 			realm pingid
 			driver generic
-			client_id {env.PINGID_CLIENT_ID}
-			client_secret {env.PINGID_CLIENT_SECRET}
+			client_id {env.PINGONE_CLIENT_ID}
+			client_secret {env.PINGONE_CLIENT_SECRET}
 			scopes openid profile email
-			response_type token id_token
-			# response_type code
-			enable js callback
-			base_auth_url https://auth.pingone.com/{env.PINGID_APP_ID}/as/authorize
-			metadata_url https://auth.pingone.com/{env.PINGID_APP_ID}/as/.well-known/openid-configuration
+			response_type code
+			issuer {$PINGONE_ISSUER}
+			metadata_url {$PINGONE_DISCOVERY_URL}
+			login icon text "PingOne"
 		}
 
 		authentication portal myportal {
-			crypto default token lifetime 3600
-			crypto key sign-verify {env.JWT_SHARED_KEY}
 			enable identity provider pingid
-			cookie domain myfiosgateway.com
+			crypto default token lifetime 900
+			crypto key sign-verify {env.AUTHCRUNCH_SIGNING_KEY}
 			ui {
 				links {
-					"My Website" https://assetq.myfiosgateway.com:8443/ icon "las la-star"
-					"My Identity" "/whoami" icon "las la-user"
+					"Example app" /app
+					"My identity" /auth/whoami
 				}
 			}
 			transform user {
-				match origin pingid
-				action add role authp/user
+				match realm pingid
+				action overwrite role authp/user
+			}
+			transform user {
+				match realm pingid
+				match sub {$PINGONE_ALLOWED_SUB}
+				action add role app/member
 			}
 		}
-
-		authorization policy mypolicy {
-			set auth url https://auth.myfiosgateway.com:8443/
-			allow roles authp/admin authp/user
-			crypto key verify {env.JWT_SHARED_KEY}
+		authorization policy apppolicy {
+			set auth url https://auth.example.com/auth/
+			crypto key verify {env.AUTHCRUNCH_SIGNING_KEY}
+			validate bearer header
+			allow roles app/member
 		}
 	}
 }
 
-(tls_config) {
-	tls {$HOME}/.local/tls/myfiosgateway/server.crt {$HOME}/.local/tls/myfiosgateway/server.key
-}
-
-auth.myfiosgateway.com {
-	import tls_config
-	authenticate with myportal
-}
-
-assetq.myfiosgateway.com {
-	import tls_config
-	authorize with mypolicy
-	respond "assetq is running"
+auth.example.com {
+	route {
+		redir /auth /auth/ 308
+		authenticate /auth/* with myportal
+		@app path /app /app/*
+		route @app {
+			authorize with apppolicy
+			respond "You reached the protected example app." 200
+		}
+		respond "Open /app to begin." 200
+	}
 }

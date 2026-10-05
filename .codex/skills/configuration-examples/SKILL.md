@@ -289,6 +289,18 @@ Local fixtures verify the released executable, not live provider registration,
 group mapping, tenant policy, consent, or production TLS. Preserve that boundary
 in public guidance and verify those settings with the real organization.
 
+## Additional OAuth provider examples
+
+LinkedIn uses its current OIDC product; the named driver disables nonce/PKCE.
+PingOne uses the generic code flow, exact copied discovery/issuer values, and
+Client Secret Post. Do not restore the old implicit-flow/JS-callback example.
+Cognito maps ID-token custom:roles, cognito:groups/roles, timezone, and username;
+keep permission-bearing attributes administrator-controlled. Discord group
+filters are regular expressions, so use an anchored numeric guild ID; a bare
+asterisk is invalid. Clear reserved input roles before granting app/member.
+The bundled Facebook driver hard-codes v12.0 endpoints; parser acceptance is
+not evidence of compatibility with Meta's current API.
+
 ## LDAP examples
 
 The AD, secondary-group, and GLAuth examples use verified LDAPS and a private
