@@ -1,296 +1,208 @@
 ---
-description: "Connect an LDAP directory using the Microsoft Active Directory and POSIX configuration examples."
+description: "Connect LDAP over verified TLS, map directory groups to application roles, and distinguish memberOf, secondary searches, and fallback access."
 discovery:
   topic: identity-providers
   kind: guide
-  aliases: ["AD", "Active Directory", "LDAPS"]
+  aliases: ["AD", "Active Directory", "LDAPS", "GLAuth", "fallback roles"]
 ---
+
+import CodeBlock from '@theme/CodeBlock';
+import activeDirectory from '@site/assets/conf/ldap/Caddyfile?raw';
+import secondaryGroups from '@site/assets/conf/ldap/posix/Caddyfile?raw';
+import glauth from '@site/assets/conf/ldap/glauth/Caddyfile?raw';
 
 # LDAP Configuration
 
-It is recommended reading the documentation for Local identity store, because
-it outlines important principles of operation of all identity stores.
+An LDAP identity store authenticates an account against your directory and maps
+its memberships to AuthCrunch roles. It can run **without a local store**.
+Enable multiple stores only when users actually need a realm choice. LDAP
+passwords and account lifecycle remain with the directory; the local Profile
+password, MFA enrollment, and registration workflows do not manage LDAP accounts.
 
-Additionally, the LDAP identity store works in conjunction with Local identity store.
-As you will see later, the two can be used together by introducing a
-dropdown in UI interface to choose local versus LDAP domain authentication.
+This guide targets [Caddy Security v1.3.0 / library v1.3.8](../../operations/versions.md).
+Read [user search](20-search.md) for the service-bind, lookup, and password-bind
+sequence. Directory authentication and application permission are separate:
+`authp/user` is a portal role; `app/member` grants the example application access.
 
 ## Configuration Examples
 
-The reference configuration for the identity store is in the following files:
+Choose the example matching your membership schema:
 
-* [`assets/conf/ldap/Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/ldap/Caddyfile):
-  Microsoft AD LDAP integration
-* [`assets/conf/ldap/posix/Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/ldap/posix/Caddyfile):
-  LDAP integration with POSIX groups
-* [`assets/conf/ldap/glauth/Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/ldap/glauth/Caddyfile):
-  LDAP integration with GLAuth
+| Directory behavior | Example |
+| --- | --- |
+| AD returns group DNs in the user's `memberOf` attribute | [Microsoft AD](#microsoft-ad-integration) |
+| Membership requires a second search using the user's DN | [Secondary groups](#posix-groups-integration) |
+| GLAuth returns configured group DNs in `memberOf` | [GLAuth](#glauth) |
 
-The following Caddy endpoint at `/auth` authentications users
-from `contoso.com` domain.
+Prepare a trusted HTTPS portal hostname, a reachable LDAPS server, a least
+privilege service account that can search the required subtree/attributes, its
+private bind-password file, and the directory's CA certificate obtained from
+your administrator. Set a private, strong `AUTHCRUNCH_SIGNING_KEY`, and run the
+example backend on `127.0.0.1:8080`. Change DNs and attribute names to match an
+observed directory entry; the example paths are deployment prerequisites.
 
 ## Microsoft AD Integration
 
-There is a single LDAP server associated with the domain: `ldaps://ldaps.contoso.com`.
+The service account searches by `sAMAccountName` or `mail`; exactly one user
+must match. Explicit group DNs map to application roles. The portal adds
+`authp/user` after directory identification, while the gatekeeper admits only
+`app/member`. Do not map an ordinary directory group to `authp/admin` merely
+to let it into an application: that reserved role can enable portal administration.
 
-The plugin DOES NOT ignore certificate errors when connecting to the servers.
-However, one may ignore the errors by appending `ignore_cert_errors` to the
-ldap server address.
+<CodeBlock language="caddyfile" title="assets/conf/ldap/Caddyfile">{activeDirectory}</CodeBlock>
 
-```
-          servers {
-            ldaps://ldaps.contoso.com ignore_cert_errors
-          }
-```
+`ldaps://` verifies the server certificate and hostname. Repeat
+`trusted_authority` for additional required CA files. The released connector
+does not upgrade `ldap://` with STARTTLS: that scheme sends simple-bind
+credentials without TLS. `ignore_cert_errors` disables verification and belongs
+only in a controlled disposable fixture, not a production example. Collecting a
+certificate from an unverified network connection does not establish trust.
 
-As a better alternative to ignoring certificate errors, the plugin allows
-adding trusted certificate authorities via `trusted_authority` Caddyfile directive:
-
-```
-          servers {
-            ldaps://ldaps.contoso.com
-          }
-          trusted_authority /etc/gatekeeper/tls/trusted_authority/contoso_com_root1_ca_cert.pem
-          trusted_authority /etc/gatekeeper/tls/trusted_authority/contoso_com_root2_ca_cert.pem
-          trusted_authority /etc/gatekeeper/tls/trusted_authority/contoso_com_root3_ca_cert.pem
-```
-
-The following commands allow you connecting LDAPS server, e.g. `ldaps.localhost.local:636` and
-collecting certificates for the `trusted_authority` directive.
-
-```bash
-mkdir -p certs && cd certs
-openssl s_client -showcerts -verify 5 -connect ldaps.localhost.local:636 < /dev/null | \
-    awk '/BEGIN/,/END/{ if(/BEGIN/){a++}; out="cert"a".crt"; print >out}' && \
-    for cert in *.crt; do \
-        newname=$(openssl x509 -noout -subject -in $cert | sed -n 's/^.*CN=\(.*\)$/\1/; s/[ ,.*]/_/g; s/__/_/g; s/^_//g;p').pem;
-        mv $cert $newname;
-    done
-```
-
-The LDAP attribute mapping to JWT fields is as follows. This is a typical Microsoft AD mapping.
-
-| **JWT Token Field** | **LDAP Attribute** |
-| --- | --- |
-| `name` | `givenName` |
-| `surname` | `sn` |
-| `username` | `sAMAccountName` |
-| `member_of` | `memberOf` |
-| `email` | `mail` |
-
-The plugin uses `authzsvc` domain user to perform LDAP bind.
-
-The base search DN is `DC=CONTOSO,DC=COM`.
-
-The plugin accepts username (`sAMAccountName`) or email address (`mail`)
-and uses the following search filter: `(&(|(sAMAccountName=%s)(mail=%s))(objectclass=user))`.
-
-For example:
-
-```json
-      {
-        "Name": "sAMAccountName",
-        "Values": [
-          "jsmith"
-        ]
-      },
-      {
-        "Name": "mail",
-        "Values": [
-          "jsmith@contoso.com"
-        ]
-      }
-```
-
-Upon successful authentication, the plugin assign the following rules
-to a user, provided the user is a member of a group:
-
-| **JWT Role** | **LDAP Group Membership** |
-| --- | --- |
-| `admin` | `CN=Admins,OU=Security,OU=Groups,DC=CONTOSO,DC=COM` |
-| `editor` | `CN=Editors,OU=Security,OU=Groups,DC=CONTOSO,DC=COM` |
-| `viewer` | `CN=Viewers,OU=Security,OU=Groups,DC=CONTOSO,DC=COM` |
-
-The security of the `password` could be improved by the following techniques:
-
-* pass the password via environment variable `LDAP_USER_SECRET`
-* store the password in a file and pass the file inside the `password`
-  field with `file:` prefix, e.g. `file:/path/to/password`.
-
-This [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/ldap/Caddyfile)
-secures Prometheus/Alertmanager services. Users may access using local and LDAP credentials.
+Use an owner-readable secret file for `password file:/etc/authcrunch/ldap-bind.secret`.
+Its content is trimmed; a password that relies on leading/trailing whitespace
+will not survive that loader. Alternatively omit `password` and supply
+`LDAP_USER_SECRET` to the server process. Never commit the bind password or
+expanded configuration to a public repository.
 
 ## POSIX Groups Integration
 
-The configuration in [`assets/conf/ldap/posix/Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/conf/ldap/posix/Caddyfile)
-is for the integration with [Online LDAP Test Server](https://www.forumsys.com/tutorials/integration-how-to/ldap/online-ldap-test-server/).
+The `posix_groups` server option requests a **secondary group search**. Its
+name does not imply support for every POSIX membership schema. The default
+filter is `(&(uniqueMember=%s)(objectClass=groupOfUniqueNames))`; each `%s` is
+replaced with the escaped **user DN**, not the login username or UID.
 
-The key differences of the configuration follow:
+<CodeBlock language="caddyfile" title="assets/conf/ldap/posix/Caddyfile">{secondaryGroups}</CodeBlock>
 
-First, the `posix_groups` directive at the LDAP server level instructs the
-plugin to make a secondary LDAP call to discover user memberships in groups.
+Use `search_group_filter` for your directory's DN-valued membership attribute,
+for example a `member` filter when the groups store full user DNs. A
+`memberUid` schema containing bare usernames cannot be made equivalent simply
+by substituting `memberUid` into this filter. Verify what your server actually
+returns before choosing this mode. Search results use each group entry's DN.
 
-The search similar to the command below:
+Attribute names are compared to the configured strings. Use the directory's
+actual spelling and casing. `givenName` plus `sn` suits entries with separate
+name components; do not invent a nonexistent surname attribute to compensate
+for an unrelated schema.
 
-```
-ldapsearch -x -h ldap.forumsys.com -D "cn=read-only-admin,dc=example,dc=com" -w password -b "dc=example,dc=com" \
- "(&(uniqueMember=uid=riemann,dc=example,dc=com)(objectClass=groupOfUniqueNames))"
-```
+<figure className="doc-screenshot">
 
-Second, the `search_group_filter` directive allows the modification of the
-default `(&(uniqueMember=uid=` + USER_DN + `)(objectClass=groupOfUniqueNames))`
-group search string.
+[![Historical LDAP sign-in realm selector](./images/ldap_demo_01.png)](./images/ldap_demo_01.png)
 
-Third, there are a number of attributes that would require modification.
+<figcaption>The preserved training portal offered LDAP alongside local and OAuth providers. The configuration above intentionally enables one LDAP store.</figcaption>
+</figure>
 
-The user object follows:
+<details className="screenshot-gallery">
+<summary>Preserved LDAP login, application, and identity screens</summary>
 
-```
-# riemann, example.com
-dn: uid=riemann,dc=example,dc=com
-objectClass: inetOrgPerson
-objectClass: organizationalPerson
-objectClass: person
-objectClass: top
-cn: Bernhard Riemann
-sn: Riemann
-uid: riemann
-mail: riemann@ldap.forumsys.com
-```
+<figure className="doc-screenshot">
 
-The comments in the below snippet explain the changes.
+[![Historical LDAP username checkpoint](./images/ldap_demo_02.png)](./images/ldap_demo_02.png)
 
-```
-attributes {
-    # The name us mapped to cn attribute, i.e. Bernhard Riemann
-    name cn
-    # Although surname is being kept in sn attribute, there is no
-    # attribute for given name. Thus, it is useless in isolation.
-    # Therefore, changeing surname value to non-existing attribute foo.
-    surname foo
-    # The username is mapped to uid attribute, i.e. riemann
-    username uid
-    # The member_of is not being used.
-    member_of uniqueMember
-    email mail
-}
-```
+<figcaption>Enter the directory login or email accepted by the configured user filter.</figcaption>
+</figure>
 
-The relevant parts of the configuration follow:
+<figure className="doc-screenshot">
 
-```Caddyfile
-		ldap identity store example.com {
-			realm example.com
-			servers {
-				ldap://ldap.forumsys.com posix_groups
-			}
-			attributes {
-				name cn
-				surname foo
-				username uid
-				member_of uniqueMember
-				email mail
-			}
-			username "cn=read-only-admin,dc=example,dc=com"
-			password "password"
-			search_base_dn "DC=EXAMPLE,DC=COM"
-			search_filter "(&(|(uid=%s)(mail=%s))(objectClass=inetOrgPerson))"
-			groups {
-				"ou=mathematicians,dc=example,dc=com" authp/admin
-				"ou=scientists,dc=example,dc=com" authp/user
-			}
-		}
+[![Historical LDAP password checkpoint](./images/ldap_demo_03.png)](./images/ldap_demo_03.png)
 
-...
+<figcaption>The directory validates the user's password; the search-service password is a separate server credential.</figcaption>
+</figure>
 
-		authentication portal myportal {
-		  ...
-			enable identity store example.com
-		}
-```
+<figure className="doc-screenshot">
 
-The configuration is for the [Online LDAP Test Server](https://www.forumsys.com/2022/05/10/online-ldap-test-server/).
+[![Historical LDAP portal application links](./images/ldap_demo_04.png)](./images/ldap_demo_04.png)
 
-All of the following usernames have password value of `password`.
+<figcaption>A configured application link leads to a separately protected route. Seeing the link does not prove authorization.</figcaption>
+</figure>
 
-```
-riemann
-gauss
-euler
-euclid
-einstein
-newton
-galieleo
-tesla
-```
+<figure className="doc-screenshot">
 
-The screenshots from the login, portal, and whoami pages follow.
+[![Historical LDAP whoami claim response](./images/ldap_demo_05.png)](./images/ldap_demo_05.png)
 
-![Sign In](./images/ldap_demo_01.png)
+<figcaption>The March 2026 public-directory demo granted a portal administrator role. The current examples use app/member and must not copy that old administrator assignment.</figcaption>
+</figure>
 
-![Username Prompt](./images/ldap_demo_02.png)
+</details>
 
-![Password Prompt](./images/ldap_demo_03.png)
-
-![Portal Screen](./images/ldap_demo_04.png)
-
-![Whoami Screen](./images/ldap_demo_05.png)
+These screens used a public test directory with shared demo passwords. Keep
+such accounts separate from your real services; the current examples require
+your own private directory and verified TLS.
 
 ## Case Insensitive Matching of LDAP Groups
 
-In complex environments, such as a **virtual federated directory**, attribute names and Distinguished Name (DN)
-values are often unpredictable. Because data may be aggregated from multiple sources, the casing of group paths
-and names can vary significantly even for the same logical entity.
-
-When performing group membership lookups or authorization checks, exact string matching often fails due to
-inconsistent casing. For example, a portal might encounter any of the following variations for what should
-be considered the same group:
-
-* `cn=MyGroup1,ou=groups,dc=example,dc=com`
-* `CN=myGroup1,ou=Groups,dc=example,dc=com`
-* `cn=MYGROUP1,OU=Groups,DC=example,DC=com`
-
-According to standard LDAP administrative practices, client software is generally expected to treat DNs and attribute
-types as **case-insensitive**. This requirement is reinforced by the behavior of major Java-based LDAP libraries, including:
-
-* JLDAP
-* UnboundID LDAP SDK
-* JNDI (Java Naming and Directory Interface)
-
-The project implements **case-insensitive** by default.
+Explicit group DN mapping uses case-insensitive string comparison. For example,
+`CN=App Members,OU=Groups,DC=CONTOSO,DC=COM` matches the same string in lowercase.
+This is not complete DN canonicalization: changing escaping, spacing, or the
+order of a multi-valued RDN can still matter. It does not make every attribute
+name, user filter, role, or policy case-insensitive.
 
 ## Dynamic Role Mapping from LDAP Groups
 
-In environments where LDAP group structures are well-organized, manual mapping of every individual
-group to a role can become an administrative burden. To streamline this, the portal supports dynamic
-mapping modes that automatically translate LDAP Group Distinguished Names (DNs) into application roles.
-
-If your directory structure uses the first attribute of the DN (typically the Common Name
-or Organizational Unit) as the functional role name, you can use
-the `enable short automatic group mapping` configuration.
+Automatic mapping applies to group entries returned by the **secondary search**,
+not the ordinary `memberOf` mapping loop. Configure `posix_groups` on the server
+and enable the required mode in the LDAP store:
 
 ```Caddyfile
-		ldap identity store example.com {
-			enable short automatic group mapping
-		}
+enable short automatic group mapping
+# Or, instead:
+# enable full automatic group mapping
 ```
 
-If enabled, the portal extracts the value of the first Relative Distinguished Name (RDN). Technically, it
-captures the string located between the first `=` and the first `,`.
+Short mapping parses the DN, extracts the first attribute value of its first
+RDN, and lowercases it. It correctly handles escaped commas; it does not split
+at the first literal comma. Full mapping lowercases the entire returned DN.
 
-Additionally, the the portal applies a mandatory lowercase normalization to the resulting role string.
+| Returned group DN | Short role | Full role |
+| --- | --- | --- |
+| `cn=App-Members,ou=Groups,dc=example,dc=com` | `app-members` | `cn=app-members,ou=groups,dc=example,dc=com` |
+| `cn=Research\, West,ou=Groups,dc=example,dc=com` | `research, west` | `cn=research\, west,ou=groups,dc=example,dc=com` |
 
-| Original LDAP Group DN | Resulting Role |
-| --- | --- |
-| `cn=Admin,ou=Groups,dc=example,dc=com` | `admin` |
-| `ou=mathematicians,dc=example,dc=com` | `mathematicians` |
-| `cn=Editor,ou=Groups,dc=corp` | `editor` |
+Treat automatically derived roles as directory-controlled input. Translate
+only intended memberships into application roles with a narrow
+[user transform](../42-user-transforms.md), or use explicit DN mappings for a
+small, stable access boundary. Do not grant all authenticated directory accounts
+application access merely because they receive a portal role.
 
-Additionally, you can use the `enable full automatic group mapping` configuration. In that
-case the following transformation will apply.
+## Fallback roles
 
-| Original LDAP Group DN | Resulting Role |
-| --- | --- |
-| `cn=Admin,ou=Groups,dc=example,dc=com` | `cn=admin,ou=groups,dc=example,dc=com` |
-| `ou=mathematicians,dc=example,dc=com` | `ou=mathematicians,dc=example,dc=com` |
-| `cn=Editor,ou=Groups,dc=corp` | `cn=editor,ou=groups,dc=corp` |
+Inside the LDAP store, `fallback roles authp/user directory/unmapped` assigns
+those roles only when successful user lookup/mapping produces no roles. It
+allows an identified, password-verified user into a limited portal workflow
+without granting `app/member`. Mapped users do not also receive fallback roles.
+Repeating the setting replaces the list.
+
+Fallback does not bypass a failed bind, ambiguous user search, or secondary
+group-search error. Secondary search with no entries or no resulting roles is
+an error before fallback assignment. The store still requires an explicit
+group mapping or an automatic mapping mode; fallback alone is not a complete
+group configuration. Keep the application's gatekeeper restrictive.
+
+## GLAuth
+
+Configure GLAuth's LDAPS listener, certificate, and private key first, following
+[GLAuth's server documentation](https://glauth.github.io/). The example chooses
+port `3894`; it does not enable the GLAuth listener for you. Use a certificate
+matching `directory.example.com` and a trusted CA.
+
+<CodeBlock language="caddyfile" title="assets/conf/ldap/glauth/Caddyfile">{glauth}</CodeBlock>
+
+Copy your actual service-account DN, object class, attributes, and returned
+group DNs. GLAuth's schema and backends are configurable. The historical
+plaintext loopback sample is not a production TLS configuration.
+
+## Verify and troubleshoot
+
+1. Confirm service-account bind, subtree access, and the exact attribute/DN
+   response using an LDAP tool with verified TLS. Keep its password out of
+   command-line arguments and logs.
+2. Sign in as a mapped account; inspect `/auth/whoami?format=json` and confirm
+   the intended realm, subject, and `app/member` role.
+3. Confirm the protected `/app` route admits it. A second account without that
+   role must fail; a fallback portal identity must not inherit application access.
+4. Check wrong passwords, ambiguous user matches, certificate failures, and
+   group-search errors. Review [diagnostic logging](../../operations/logging.md)
+   without enabling sensitive data dumps.
+
+Local fixtures can verify the released connector's bind/search/mapping behavior.
+They do not establish your AD access controls, nested-group expansion, GLAuth
+schema, production certificates, or directory availability.

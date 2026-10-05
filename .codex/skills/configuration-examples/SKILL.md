@@ -289,6 +289,16 @@ Local fixtures verify the released executable, not live provider registration,
 group mapping, tenant policy, consent, or production TLS. Preserve that boundary
 in public guidance and verify those settings with the real organization.
 
+## LDAP examples
+
+The AD, secondary-group, and GLAuth examples use verified LDAPS and a private
+bind-secret file. `posix_groups` substitutes the returned user DN into the
+secondary filter, not a bare UID. Automatic mappings operate on that secondary
+search; ordinary memberOf uses explicit DN mappings. Fallback roles apply only
+after successful lookup without mapped roles, not after an empty/failed secondary
+search. Preserve separate portal and application roles. A local LDAPS fixture
+checks these boundaries without proving a real directory's schema or policy.
+
 ## Acceptance scenarios
 
 - A provider change updates both its documented snippet and linked Caddyfile;

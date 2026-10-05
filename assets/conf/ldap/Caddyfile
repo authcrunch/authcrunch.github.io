@@ -1,24 +1,16 @@
+# Active Directory over verified LDAPS; caddy-security v1.3.0.
 {
-	http_port 8080
-	https_port 8443
-	# debug
-
-	order authenticate before respond
-	order authorize before basicauth
-
 	security {
-		local identity store localdb {
-			realm local
-			path {$HOME}/.local/caddy/users.json
-		}
-
-		oauth identity provider github {env.GITHUB_CLIENT_ID} {env.GITHUB_CLIENT_SECRET}
-
-		ldap identity store contoso.com {
-			realm contoso.com
+		ldap identity store directory {
+			realm directory
 			servers {
-				ldaps://ldaps.contoso.com ignore_cert_errors
+				ldaps://directory.contoso.com:636
 			}
+			trusted_authority /etc/authcrunch/directory-ca.pem
+			username "CN=authcrunch,OU=Service Accounts,DC=CONTOSO,DC=COM"
+			password file:/etc/authcrunch/ldap-bind.secret
+			search_base_dn "DC=CONTOSO,DC=COM"
+			search_user_filter "(&(|(sAMAccountName=%s)(mail=%s))(objectClass=user))"
 			attributes {
 				name givenName
 				surname sn
@@ -26,100 +18,44 @@
 				member_of memberOf
 				email mail
 			}
-			username "CN=authzsvc,OU=Service Accounts,OU=Administrative Accounts,DC=CONTOSO,DC=COM"
-			password "P@ssW0rd123"
-			search_base_dn "DC=CONTOSO,DC=COM"
-			search_filter "(&(|(sAMAccountName=%s)(mail=%s))(objectclass=user))"
 			groups {
-				"CN=Admins,OU=Security,OU=Groups,DC=CONTOSO,DC=COM" admin
-				"CN=Editors,OU=Security,OU=Groups,DC=CONTOSO,DC=COM" editor
-				"CN=Viewers,OU=Security,OU=Groups,DC=CONTOSO,DC=COM" viewer
+				"CN=App Members,OU=Groups,DC=CONTOSO,DC=COM" app/member
+				"CN=App Editors,OU=Groups,DC=CONTOSO,DC=COM" app/member app/editor
 			}
 		}
 
 		authentication portal myportal {
-			crypto default token lifetime 3600
-			crypto key sign-verify {env.JWT_SHARED_KEY}
-			enable identity store localdb
-			enable identity provider github
-			enable identity store contoso.com
-			cookie domain myfiosgateway.com
+			enable identity store directory
+			crypto key sign-verify {env.AUTHCRUNCH_SIGNING_KEY}
 			ui {
-				logo url "https://caddyserver.com/resources/images/caddy-circle-lock.svg"
-				logo description "Caddy"
 				links {
-					"Prometheus" https://assetq.myfiosgateway.com:8443/prometheus/
-					"Alertmanager" https://assetq.myfiosgateway.com:8443/alertmanager/
-					"Elasticsearch" https://assetq.myfiosgateway.com:8443/elk/
-					"My App" https://assetq.myfiosgateway.com:8443/myapp/
-					"My Identity" "/whoami" icon "las la-user"
+					"Example app" /app
+					"My identity" /auth/whoami
 				}
-				password_recovery_enabled yes
 			}
 			transform user {
-				match origin local
-				action add role authp/user
-				ui link "Portal Settings" /settings icon "las la-cog"
-			}
-			transform user {
-				match realm github
-				match sub github.com/greenpau
+				match realm directory
 				action add role authp/user
 			}
 		}
 
-		authorization policy mypolicy {
-			# disable auth redirect
-			set auth url https://auth.myfiosgateway.com:8443/
-			allow roles authp/admin authp/user
-			crypto key verify {env.JWT_SHARED_KEY}
-			allow roles anonymous guest admin
-			allow roles authp/admin authp/guest
-			allow roles admin editor viewer
-			allow roles AzureAD_Administrator AzureAD_Editor AzureAD_Viewer
-			allow roles everyone Everyone
+		authorization policy apppolicy {
+			set auth url https://auth.example.com/auth/
+			crypto key verify {env.AUTHCRUNCH_SIGNING_KEY}
+			validate bearer header
+			allow roles app/member
 		}
 	}
 }
 
-(tls_config) {
-	tls {$HOME}/.local/caddy/server.crt {$HOME}/.local/caddy/server.key
-}
-
-auth.myfiosgateway.com {
-	import tls_config
+auth.example.com {
 	route {
-		authenticate with myportal
-	}
-}
-
-assetq.myfiosgateway.com {
-	import tls_config
-
-	route /prometheus/* {
-		authorize with mypolicy
-		uri strip_prefix /prometheus
-		reverse_proxy http://127.0.0.1:9080
-	}
-
-	route /alertmanager/* {
-		authorize with mypolicy
-		uri strip_prefix /alertmanager
-		reverse_proxy http://127.0.0.1:9083
-	}
-
-	route /elk/* {
-		authorize with mypolicy
-		uri strip_prefix /elk
-		reverse_proxy 127.0.0.1:5601
-	}
-
-	route /myapp* {
-		authorize with mypolicy
-		respond * "myapp" 200
-	}
-
-	route {
-		respond "assetq is running"
+		redir /auth /auth/ 308
+		authenticate /auth/* with myportal
+		@app path /app /app/*
+		route @app {
+			authorize with apppolicy
+			reverse_proxy 127.0.0.1:8080
+		}
 	}
 }

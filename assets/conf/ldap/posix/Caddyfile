@@ -1,119 +1,62 @@
+# Secondary DN-based group lookup over verified LDAPS; caddy-security v1.3.0.
 {
-	http_port 8080
-	https_port 8443
-	# debug
-
-	order authenticate before respond
-	order authorize before basicauth
-
 	security {
-		local identity store localdb {
-			realm local
-			path {$HOME}/.local/caddy/users.json
-		}
-
-		oauth identity provider github {env.GITHUB_CLIENT_ID} {env.GITHUB_CLIENT_SECRET}
-
-		ldap identity store example.com {
-			realm example.com
+		ldap identity store directory {
+			realm directory
 			servers {
-				ldap://ldap.forumsys.com posix_groups
+				ldaps://directory.example.com:636 posix_groups
 			}
+			trusted_authority /etc/authcrunch/directory-ca.pem
+			username "cn=authcrunch,ou=services,dc=example,dc=com"
+			password file:/etc/authcrunch/ldap-bind.secret
+			search_base_dn "dc=example,dc=com"
+			search_user_filter "(&(|(uid=%s)(mail=%s))(objectClass=inetOrgPerson))"
+			search_group_filter "(&(uniqueMember=%s)(objectClass=groupOfUniqueNames))"
 			attributes {
-				name cn
-				surname foo
+				name givenName
+				surname sn
 				username uid
-				member_of uniqueMember
+				member_of memberOf
 				email mail
 			}
-			username "cn=read-only-admin,dc=example,dc=com"
-			password "password"
-			search_base_dn "DC=EXAMPLE,DC=COM"
-			search_filter "(&(|(uid=%s)(mail=%s))(objectClass=inetOrgPerson))"
 			groups {
-				"ou=mathematicians,dc=example,dc=com" authp/admin
-				"ou=scientists,dc=example,dc=com" authp/user
+				"cn=app-members,ou=groups,dc=example,dc=com" app/member
+				"cn=app-editors,ou=groups,dc=example,dc=com" app/member app/editor
 			}
 		}
 
 		authentication portal myportal {
-			crypto default token lifetime 3600
-			crypto key sign-verify {env.JWT_SHARED_KEY}
-			enable identity store localdb
-			enable identity provider github
-			enable identity store example.com
-			cookie domain myfiosgateway.com
-
+			enable identity store directory
+			crypto key sign-verify {env.AUTHCRUNCH_SIGNING_KEY}
 			ui {
-				logo url "https://caddyserver.com/resources/images/caddy-circle-lock.svg"
-				logo description "Caddy"
 				links {
-					"Prometheus" https://assetq.myfiosgateway.com:8443/prometheus
-					"Alertmanager" https://assetq.myfiosgateway.com:8443/alertmanager
-					"My App" https://assetq.myfiosgateway.com:8443/myapp
-					"My Identity" "/whoami" icon "las la-user"
+					"Example app" /app
+					"My identity" /auth/whoami
 				}
-				password_recovery_enabled yes
-			}
-
-			transform user {
-				match origin local
-				action add role authp/user
-				ui link "Portal Settings" /settings icon "las la-cog"
 			}
 			transform user {
-				match realm github
-				match sub github.com/greenpau
+				match realm directory
 				action add role authp/user
 			}
 		}
 
-		authorization policy mypolicy {
-			# disable auth redirect
-			set auth url https://auth.myfiosgateway.com:8443/
-			allow roles authp/admin authp/user
-			crypto key verify {env.JWT_SHARED_KEY}
-			allow roles anonymous guest admin
-			allow roles authp/admin authp/guest
-			allow roles admin editor viewer
-			allow roles AzureAD_Administrator AzureAD_Editor AzureAD_Viewer
-			allow roles everyone Everyone
+		authorization policy apppolicy {
+			set auth url https://auth.example.com/auth/
+			crypto key verify {env.AUTHCRUNCH_SIGNING_KEY}
+			validate bearer header
+			allow roles app/member
 		}
 	}
 }
 
-(tls_config) {
-	tls {$HOME}/.local/caddy/server.crt {$HOME}/.local/caddy/server.key
-}
-
-auth.myfiosgateway.com {
-	import tls_config
+auth.example.com {
 	route {
-		authenticate with myportal
-	}
-}
-
-assetq.myfiosgateway.com {
-	import tls_config
-
-	route /prometheus* {
-		authorize with mypolicy
-		uri strip_prefix /prometheus
-		reverse_proxy http://127.0.0.1:9080
-	}
-
-	route /alertmanager* {
-		authorize with mypolicy
-		uri strip_prefix /alertmanager
-		reverse_proxy http://127.0.0.1:9083
-	}
-
-	route /myapp* {
-		authorize with mypolicy
-		respond * "myapp" 200
-	}
-
-	route {
-		respond "assetq is running"
+		redir /auth /auth/ 308
+		authenticate /auth/* with myportal
+		@app path /app /app/*
+		route @app {
+			authorize with apppolicy
+			reverse_proxy 127.0.0.1:8080
+		}
 	}
 }
