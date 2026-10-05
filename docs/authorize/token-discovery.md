@@ -38,6 +38,22 @@ Bearer is a format of the header source, not a fourth source name. A policy
 needs `validate bearer header` to accept `Authorization: Bearer TOKEN`; the
 portal's own API validator already enables that form.
 
+
+```mermaid
+flowchart TD
+  accTitle: The first discovered credential fixes the identity candidate
+  accDescr: This shows the default cookie, header, query order. A missing source permits the next source to be examined; a discovered but invalid credential does not. Bearer is a header format that needs explicit policy support. Verification and ACL evaluation follow selection rather than rescuing a failed earlier credential.
+  A["Protected request"] --> B{"Recognized cookie credential?"}
+  B -->|Yes| V["Validate this credential"]
+  B -->|No| C{"Recognized Authorization credential?"}
+  C -->|Yes| V
+  C -->|No| D{"Recognized query credential?"}
+  D -->|Yes| V
+  D -->|No| M["Missing authentication: redirect or 401"]
+  V -->|Invalid| N["Deny; do not try a later source"]
+  V -->|Valid| P["Evaluate application policy"]
+```
+
 ## Credential names
 
 The default accepted access cookie names include `AUTHP_ACCESS_TOKEN`,

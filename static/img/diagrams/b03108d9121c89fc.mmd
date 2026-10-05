@@ -1,0 +1,9 @@
+flowchart TD
+  accTitle: A signed path grant supplements the application ACL
+  accDescr: The request must satisfy the ordinary policy and its token-carried path restriction. Checked path interpretations prevent an encoded or traversing spelling from manufacturing a grant. A single star cannot cross a slash; a double star can, but neither represents an empty suffix. These grants are issued by a trusted signer.
+  T["Verified token: roles and acl.paths"] --> P{"Ordinary application policy passes?"}
+  P -->|No| N["Deny"]
+  P -->|Yes| C["Check request path interpretations"]
+  C --> M{"Signed path pattern permits the request?"}
+  M -->|No or ambiguous| N
+  M -->|Yes| Y["Application handler"]

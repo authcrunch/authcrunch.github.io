@@ -1,0 +1,13 @@
+flowchart TD
+  accTitle: A login redirect is different from an authenticated denial
+  accDescr: Missing credentials and ordinary JWT-validation failures follow the configured login redirect or 401 behavior. Recognized Basic/API-key failures return 401; malformed token claim data can return 400. A valid identity failing the ACL is forbidden or sent to the denial page. The portal separately checks return-target trust.
+  A["Protected request"] --> B{"Credential state"}
+  B -->|Missing or ordinary JWT failure| C{"Authentication redirect enabled?"}
+  C -->|Yes| L["Login URL with configured return parameter"]
+  C -->|No| U["401"]
+  B -->|Basic or API-key failure| U
+  B -->|Malformed token claim data| BAD["400"]
+  B -->|Valid| P{"Policy allows?"}
+  P -->|Yes| Y["Application"]
+  P -->|No| N["403 or configured forbidden redirect"]
+  L --> T["Portal validates return-target trust after login"]

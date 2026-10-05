@@ -1,0 +1,26 @@
+sequenceDiagram
+  accTitle: A Basic-authenticated request still needs an ACL grant
+  accDescr: The client supplies a password and an allowed realm over HTTPS. A valid cached identity may be reused; otherwise the portal checks the credential and applicable direct-authentication requirements. The gatekeeper then evaluates access rules. This flow does not perform interactive MFA or create a browser login session.
+  participant C as API client
+  participant G as Gatekeeper
+  participant P as Portal
+  participant A as Application
+  C->>G: HTTPS request with Basic credential and realm
+  G->>G: Select configured realm and credential authenticator
+  alt Valid cached credential identity
+    G->>G: Reuse within its validity interval
+  else No usable cached identity
+    G->>P: Check account credential and required evidence
+    P-->>G: Authenticated identity or credential failure
+  end
+  alt Recognized credential is invalid
+    G-->>C: 401
+  else Identity authenticated
+    G->>G: Evaluate ACL and request constraints
+    alt Policy allows this request
+      G->>A: Forward request, strip credentials if configured
+      A-->>C: Application response
+    else Policy denies
+      G-->>C: Forbidden response or configured denial redirect
+    end
+  end

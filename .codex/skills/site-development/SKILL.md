@@ -18,6 +18,7 @@ or stylesheet, then change the narrowest owner.
 | Homepage composition, learning sequence, and topic cards | [index.tsx](../../../src/pages/index.tsx) and [index.module.css](../../../src/pages/index.module.css) |
 | Interactive portal/direct-OAuth comparison | [AccessFlow](../../../src/components/AccessFlow/index.tsx) |
 | Static external-login sequence in the OAuth overview | [OAuthFlow](../../../src/components/OAuthFlow/index.tsx) |
+| Static Mermaid figures and narrow-screen scrolling | [DocDiagram](../../../src/components/DocDiagram/index.tsx), [MDX mapping](../../../src/theme/MDXComponents/index.tsx), and [remark plugin](../../../src/plugins/mermaid-diagrams.ts) |
 | Global Infima colors, typography, Tailwind imports | [custom.css](../../../src/css/custom.css) |
 | PostCSS integration | [tailwind plugin](../../../src/plugins/tailwind-config.ts) |
 | Caddyfile text imports for MDX | [configuration-source plugin](../../../src/plugins/configuration-source.ts) |
@@ -59,6 +60,14 @@ The configuration-source plugin treats `Caddyfile?raw` imports as source text.
 It lets MDX display a canonical example from `assets/conf/` without maintaining
 a second copy. Keep the loader rule limited to Caddyfiles with that query;
 verify both production rendering and development compilation when changing it.
+
+The Mermaid remark plugin replaces authored `mermaid` fences with DocDiagram.
+SVGs are rendered during authoring, not in the reader's browser. The caption and
+alternate theme images render on the server; CSS selects the visible theme.
+Keep image dimensions, descriptive alternatives, full-size links, downloadable
+source, and keyboard scrolling usable without JavaScript. Preserve the original
+MDX component mapping when extending it. The checked source-to-render manifest
+and regeneration command belong to [diagram assets](../../../assets/diagrams/README.md).
 
 The discovery plugin reads the current docs version through Docusaurus's
 `allContentLoaded` lifecycle and publishes a catalog with resolved permalinks.

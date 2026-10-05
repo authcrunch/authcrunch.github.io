@@ -14,6 +14,20 @@ Pass only the identity data the backend needs. Run authorization before the
 proxy and keep the backend reachable only through the trusted proxy path;
 otherwise a client can bypass the policy and send its own identity headers.
 
+
+```mermaid
+flowchart TD
+  accTitle: Trusted identity enters the backend only after authorization
+  accDescr: The trusted proxy replaces the identity headers it supplies, and the backend accepts them only from that proxy. Configured token stripping removes the accepted credential from its request source. A public bypass has no authenticated identity. Direct backend reachability would escape this boundary.
+  C["Client request and untrusted headers"] --> G["Gatekeeper: discover and verify credential"]
+  G --> P{"Application policy allows?"}
+  P -->|No| N["Deny before backend"]
+  P -->|Yes| H["Inject configured verified identity headers"]
+  H --> S["Strip accepted credential if enabled"]
+  S --> A["Backend reachable only through trusted proxy"]
+  X["Direct client-to-backend access"] -.->|Must be prevented by deployment| A
+```
+
 ## Pass JWT Token Claims in HTTP Request Headers
 
 ### Auto-Defined Headers

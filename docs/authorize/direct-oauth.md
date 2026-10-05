@@ -21,6 +21,28 @@ Use a portal when you need local accounts, portal transforms, profile management
 local MFA or downstream OIDC. Direct authorization retains provider claims and
 checks its ACL on every request; it does not run those portal features.
 
+
+```mermaid
+sequenceDiagram
+  accTitle: A policy completes provider login without a portal
+  accDescr: The policy owns its callback, provider transaction, opaque browser session, and logout. The callback must return to the same policy and origin. Provider authentication yields a local policy identity; the ACL still decides application membership. Ordinary portal access JWTs and Profile sessions are a separate model.
+  participant B as Browser
+  participant G as OAuth policy
+  participant I as Provider
+  participant A as App
+  B->>G: Request protected app without local session
+  G-->>B: Redirect into bound provider transaction
+  B->>I: Provider login and consent
+  I-->>B: Callback with code and state
+  B->>G: Policy callback
+  G->>I: Exchange code and verify identity
+  I-->>G: Provider identity data
+  G-->>B: Opaque local session cookie
+  B->>G: Request application with cookie
+  G->>G: Check current request against ACL
+  G->>A: Forward only when allowed
+```
+
 ## Register and configure
 
 Create a confidential provider application supporting authorization code,

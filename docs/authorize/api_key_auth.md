@@ -13,6 +13,22 @@ Use a local account API key for machine requests that should not send the
 account's password. Keys are private credentials, not browser access JWTs or
 refresh tokens. Give the account a narrow application role and use HTTPS.
 
+
+```mermaid
+flowchart TD
+  accTitle: An account API key authenticates a request, not an MFA ceremony
+  accDescr: The key identifies an account in an explicitly selected realm. Credential authentication, required evidence, and application authorization remain separate checks. A valid cached credential identity can avoid a new backend lookup. This request flow does not issue portal refresh credentials or establish a browser Profile session.
+  A["HTTPS request: API key plus realm"] --> B["Configured key header and permitted realm"]
+  B --> C{"Usable cached credential identity?"}
+  C -->|Yes| E["Authenticated account identity"]
+  C -->|No| D["Portal checks key and direct-authentication requirements"]
+  D -->|Accepted| E
+  D -->|Rejected| F["Authentication denied"]
+  E --> G{"Application ACL allows this request?"}
+  G -->|Yes| H["Application handler"]
+  G -->|No| I["Forbidden"]
+```
+
 ## Usage
 
 ```Caddyfile

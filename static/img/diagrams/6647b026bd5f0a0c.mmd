@@ -1,0 +1,16 @@
+flowchart TD
+  accTitle: Ordered ACL actions determine the final access decision
+  accDescr: This depicts explicit rules after identity validation. An ordinary allow can still be overturned by a later deny; allow stop returns immediately. Conditions normally use AND, while an action with any uses OR. The diagram deliberately avoids the older bundle’s catch-all limitation described below.
+  A["Validated identity and current request"] --> B["Start with no grant"]
+  B --> C{"Next rule exists?"}
+  C -->|No| D{"Any earlier allow recorded?"}
+  D -->|Yes| Y["Allow after last rule"]
+  D -->|No| N["Deny: no grant"]
+  C -->|Yes| E{"Rule conditions match?"}
+  E -->|No| H["Continue to next rule"]
+  E -->|Yes| F{"Action"}
+  F -->|deny| ND["Deny immediately"]
+  F -->|allow stop| YA["Allow immediately"]
+  F -->|allow| G["Record grant"]
+  G --> H
+  H --> C

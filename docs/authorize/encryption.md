@@ -10,6 +10,18 @@ discovery:
 
 # Generate an ECDSA key
 
+
+## Follow the key material
+
+The generated ECDSA files have different owners and permissions even though they form one pair.
+
+| Material | Owner | Purpose |
+| --- | --- | --- |
+| P-256 private PEM | Portal signer; protected service-readable file | Signs ES256 access tokens |
+| Derived public PEM | Gatekeepers and other trusted verifiers | Checks signatures; cannot sign |
+| Public JWKS entry | Consumers configured to trust this issuer | Distributes public key data; does not configure polling |
+| A different curve or JWT method | Explicitly matching signer and verifier configuration | Requires compatible key and method; a file name proves neither |
+
 ## Encryption Keys
 
 This published heading is retained for existing links. ECDSA keys **sign and

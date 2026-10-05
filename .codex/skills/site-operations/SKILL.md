@@ -45,6 +45,8 @@ into the public output.
 | Check typed source | `npm run typecheck` | Runs `tsc`; separate from the site build |
 | Check hosted search | `npm run check:search` | Read-only Algolia queries; fails on stale destinations, missing metadata/facets, or failed relevance checks |
 | Build static output | `npm run build` | Compiles MDX and site code and checks configured links |
+| Check diagram assets | `npm run diagrams:check` | Verifies authored Mermaid inventory, source assets, and committed SVG hashes without a browser |
+| Regenerate diagrams | `npm run diagrams:render` | Uses one local Chrome instance to generate light/dark SVGs; closes it on completion or failure |
 | Preview source | `npm run dev` | Starts the development server on port 4200, bound to `0.0.0.0` |
 | Preview generated output | `npm run serve -- --port 4200` | Serves an existing `build/` |
 | Clear stale generated state | `npm run clear` | Docusaurus cache cleanup; rebuild afterward |
@@ -113,7 +115,7 @@ Read the first substantive error and map it to the responsible input:
 - For navigation errors, compare document IDs, frontmatter, sidebar generation,
   and configured navbar/footer targets. Broken site links throw; broken Markdown
   links warn according to `docusaurus.config.ts`. Do not weaken checks to hide
-  a bad link.
+a bad link.
 - For CSS/PostCSS or server-rendering errors, inspect the registered plugin,
   imports, and browser-only component code. Separate a TypeScript diagnostic
   from a successful build; they establish different things.

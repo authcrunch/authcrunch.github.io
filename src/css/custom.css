@@ -115,6 +115,19 @@ a { text-underline-offset: 3px; }
 .doc-screenshot > p { margin-bottom: 0; }
 .doc-screenshot img { display: block; max-width: 100%; height: auto; margin-inline: auto; border-radius: 3px; }
 .doc-screenshot figcaption { margin-top: .75rem; color: var(--ac-muted); font-size: .82rem; line-height: 1.65; }
+.doc-diagram { margin-block: 1.5rem; padding: 1rem; border: 1px solid var(--ac-border); border-radius: 8px; background: var(--ac-surface); }
+.doc-diagram__viewport { max-width: 100%; overflow-x: auto; border-radius: 4px; }
+.doc-diagram__viewport:focus-visible { outline: 2px solid var(--ifm-color-primary); outline-offset: 4px; }
+.doc-diagram__image { display: block; width: 100%; }
+.doc-diagram__image img { display: block; width: 100%; height: auto; max-width: none; }
+.doc-diagram__dark { display: none; }
+[data-theme="dark"] .doc-diagram__light { display: none; }
+[data-theme="dark"] .doc-diagram__dark { display: block; }
+.doc-diagram figcaption { margin-top: 1rem; font-size: .9rem; line-height: 1.7; }
+.doc-diagram__help { margin: .5rem 0 0; color: var(--ac-muted); font-size: .8rem; line-height: 1.6; }
+.doc-screen-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; align-items: start; }
+.doc-screen-pair .doc-screenshot { margin-top: .5rem; }
+@media (max-width: 700px) { .doc-screen-pair { grid-template-columns: 1fr; } }
 .screenshot-gallery { margin-block: 1.25rem; border-color: var(--ac-border); background: var(--ac-soft); --docusaurus-details-decoration-color: var(--ifm-color-primary); }
 .screenshot-gallery > summary { color: var(--ifm-font-color-base); font-weight: 650; line-height: 1.6; }
 .screenshot-gallery .doc-screenshot:last-child { margin-bottom: .25rem; }

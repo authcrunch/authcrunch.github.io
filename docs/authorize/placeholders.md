@@ -14,6 +14,18 @@ through these placeholders. Values may be absent when the authenticated source
 does not supply them. They are not available as trusted identity before the
 policy runs or on a public bypass.
 
+
+```mermaid
+flowchart TD
+  accTitle: Placeholders are populated after the policy allows
+  accDescr: Verified claims become normalized Caddy request metadata after successful authorization. The reverse proxy can replace selected upstream headers with those values. This does not change claims, invent absent fields, or make an unprotected request authenticated. The backend must trust only the proxy that owns these assignments.
+  A["Credential and claims"] --> B["Verification and application ACL"]
+  B -->|Denied| N["No trusted app identity"]
+  B -->|Allowed| C["Normalized Caddy identity placeholders"]
+  C --> D["Configured header_up replacements"]
+  D --> E["Protected backend"]
+```
+
 ## Available Placeholders
 
 | Placeholder | Meaning |

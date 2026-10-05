@@ -32,6 +32,18 @@ The other [identity placeholders](placeholders.md) remain available when
 supplied. Apply role/claim rules separately; displaying an email or subject
 does not grant permission to access the application.
 
+
+## Choose the identifier for the job
+
+An account identifier, a displayed identity, and a token identifier solve different problems.
+
+| Need | Suitable evidence | Do not confuse it with |
+| --- | --- | --- |
+| Stable external account mapping | Trusted issuer namespace plus `sub` | An email address that can change |
+| Caddy user metadata | Configured `email`, `subject`, or `id` selection | An ACL grant |
+| Identify one issued claim set | JWT `jti` / `claim_id` | A permanent account ID |
+| App membership | Verified roles and policy conditions | A recognizable display name |
+
 ## Agentic Prompts
 
 Copy a prompt into your LLM to explore this topic. Each prompt prioritizes

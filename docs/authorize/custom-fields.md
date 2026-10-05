@@ -24,6 +24,20 @@ alias used by one policy's ACL rules. This lets a policy match a namespaced
 claim without renaming canonical roles or changing the JWT, header output or
 another policy's field definitions.
 
+
+```mermaid
+flowchart TD
+  accTitle: A typed alias projects a literal authenticated claim into one policy
+  accDescr: This is the newer typed-field flow, not v1.3.0 bundle grammar. Referenced malformed data denies evaluation before an allow-stop rule can succeed. An absent claim remains absent; a declaration does not fetch or invent a value. The original JWT, canonical roles, and other policies are unchanged.
+  A["Verified token claims"] --> B["Literal top-level claim key"]
+  P["This policy's alias and declared type"] --> C{"Referenced value has an accepted shape?"}
+  B --> C
+  C -->|Malformed or wrong type| N["Deny evaluation"]
+  C -->|Valid or absent| D["Policy-local typed projection"]
+  D --> E["Existence and value conditions"]
+  E --> F["Ordered ACL actions"]
+```
+
 ## Declare and match a field
 
 In a Caddy Security v1.4.0 source build, add the declaration and rule inside

@@ -81,6 +81,30 @@ When updating a historical `greenpau/caddy-auth-docs` link, verify the
 corresponding file here and use the current
 `authcrunch/authcrunch.github.io` repository URL. Avoid unrelated link rewrites.
 
+## Diagrams and visual aids
+
+Choose a diagram for actor exchanges, ownership, state transitions, or decisions
+that prose is hard to follow. Use a small comparison table for simple choices;
+preserve useful existing screenshots and avoid repeating the same diagram without
+topic-specific information. Name the question answered, show material failure
+branches, and keep release boundaries consistent with the surrounding guide.
+
+Author diagrams in fenced `mermaid` blocks with a single-line `accTitle` and
+`accDescr`. The description explains the flow in readable prose, including
+important omissions. The site renders these as static SVG figures in both themes,
+with captions, keyboard-scrollable narrow layouts, and downloadable Mermaid source.
+They remain visible without JavaScript. Follow the renderer procedure in
+[the diagram assets guide](../../../assets/diagrams/README.md); edit the Markdown
+source and regenerate, rather than editing SVG output. A regular build checks
+the committed source and render hashes and rejects stale assets.
+
+For UI walkthroughs, capture actual behavior in a disposable runtime with synthetic
+accounts, and record the exact executable/library provenance in ignored `tmp/`.
+Inspect each image for credential exposure and misleading UI state. Label source
+builds, older interfaces, and optional factors accurately. Two-device screenshots
+must show the same interaction and account/code checks rather than combining
+unrelated captures. Stop the runtime and browser after capture.
+
 ## MDX and factual guidance
 
 Every current document needs explicit discovery metadata. A listed document has

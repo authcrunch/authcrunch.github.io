@@ -41,6 +41,20 @@ Configured identity headers are cleared even on bypass. The backend must treat
 a public request as unauthenticated. For complex public/private routing, separate
 Caddy handlers can make the boundary easier to review than a broad bypass rule.
 
+
+```mermaid
+flowchart TD
+  accTitle: A public bypass never creates an authenticated identity
+  accDescr: The bypass matcher is evaluated against checked path interpretations. A match proceeds publicly after configured identity headers are cleared; it does not grant a user role. Nonmatching paths follow normal credential validation and ACL evaluation. Review exact directory boundaries rather than treating a substring as a protected tree.
+  A["Request path"] --> B["Check decoded and cleaned interpretations"]
+  B --> C{"Deliberate public bypass matches safely?"}
+  C -->|Yes| D["Clear configured identity headers"]
+  D --> E["Backend receives a public request"]
+  C -->|No| F["Discover and validate credential"]
+  F --> G["Evaluate application ACL"]
+  G --> H["Allow or deny"]
+```
+
 ## Agentic Prompts
 
 Copy a prompt into your LLM to explore this topic. Each prompt prioritizes

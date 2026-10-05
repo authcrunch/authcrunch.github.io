@@ -32,6 +32,18 @@ selection. Test those transitions before enabling this rule for a browser
 application. To restrict a management endpoint to a CIDR, use an appropriate
 Caddy request matcher rather than this token-equality feature.
 
+
+```mermaid
+flowchart TD
+  accTitle: Source-address validation binds two observations
+  accDescr: The issuer records a normalized source address at login; the gatekeeper compares the current normalized address with that signed claim. Missing or different values deny validation. This is token/address equality, not a CIDR allowlist. A mobile network change or inconsistent proxy normalization can therefore reject a legitimate user.
+  L["Trusted source address at login"] --> T["Issuer signs addr claim"]
+  R["Trusted source address of this request"] --> C{"Equal to token's addr?"}
+  T --> C
+  C -->|Missing or different| N["Validation denied"]
+  C -->|Equal| A["Continue policy checks"]
+```
+
 ## Agentic Prompts
 
 Copy a prompt into your LLM to explore this topic. Each prompt prioritizes

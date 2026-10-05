@@ -1,0 +1,12 @@
+flowchart TD
+  accTitle: The first discovered credential fixes the identity candidate
+  accDescr: This shows the default cookie, header, query order. A missing source permits the next source to be examined; a discovered but invalid credential does not. Bearer is a header format that needs explicit policy support. Verification and ACL evaluation follow selection rather than rescuing a failed earlier credential.
+  A["Protected request"] --> B{"Recognized cookie credential?"}
+  B -->|Yes| V["Validate this credential"]
+  B -->|No| C{"Recognized Authorization credential?"}
+  C -->|Yes| V
+  C -->|No| D{"Recognized query credential?"}
+  D -->|Yes| V
+  D -->|No| M["Missing authentication: redirect or 401"]
+  V -->|Invalid| N["Deny; do not try a later source"]
+  V -->|Valid| P["Evaluate application policy"]

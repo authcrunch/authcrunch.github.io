@@ -14,6 +14,20 @@ signature and time validity before access rules. Decoding a JWT payload is
 not verification. Accept only keys belonging to the intended token issuer,
 and constrain issuer/audience claims when multiple applications share trust.
 
+
+```mermaid
+flowchart TD
+  accTitle: Signing authority and verification authority have different owners
+  accDescr: An asymmetric signer keeps the private key; a gatekeeper needs only the matching public material. Signature and validity checks establish a trusted identity before ACL evaluation. HMAC instead gives every secret holder signing authority. Publishing JWKS does not automatically configure an AuthCrunch policy to poll it.
+  P["Portal: private signing key"] -->|Signs| T["Access JWT with key ID and expiry"]
+  K["Policy: configured public verification key"] --> V["Signature and validity checks"]
+  T --> V
+  V -->|Invalid| N["Authentication denied"]
+  V -->|Valid| I["Verified identity claims"]
+  I --> A["Application ACL and request restrictions"]
+  A --> R["Allow or forbid this request"]
+```
+
 ## Verification with Shared Secret
 
 HMAC verification supports `HS256`, `HS384`, and `HS512`. Anyone holding an HMAC

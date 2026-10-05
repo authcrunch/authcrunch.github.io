@@ -1,0 +1,17 @@
+sequenceDiagram
+    accTitle: Account identification precedes proof of ownership
+    accDescr: The portal resolves an account and selects checkpoints before verifying each response. Only completed required checkpoints issue a login credential; a username, challenge, or enrollment alone is not authentication evidence.
+    participant Browser
+    participant Portal
+    participant Store as Local store
+    Browser->>Portal: Username and realm
+    Portal->>Store: Resolve account and registered methods
+    Store-->>Portal: Identity and security evidence
+    Portal->>Portal: Apply transforms and select checkpoints
+    Portal-->>Browser: Bound sandbox and next challenge
+    loop Required checkpoints
+        Browser->>Portal: Bound response to current challenge
+        Portal->>Store: Verify password or MFA evidence
+        Portal-->>Browser: Next checkpoint or denial
+    end
+    Portal-->>Browser: Completed login credential

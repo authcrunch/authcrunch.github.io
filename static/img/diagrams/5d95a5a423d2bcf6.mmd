@@ -1,0 +1,9 @@
+flowchart TD
+  accTitle: Configuration declarations become active only through routes
+  accDescr: Global security contains named components. A site route selects a policy with authorize and places the application handler behind it. Adaptation validates configuration structure, provisioning resolves named components, and live requests exercise actual access decisions. The stages are different kinds of evidence.
+  C["Global security: named policy, stores, and portal"] --> A["Caddyfile adaptation"]
+  A --> P["Provision names, settings, and keys"]
+  P --> R["Site route selects authorize with policy"]
+  R --> V["Request authentication and ACL"]
+  V -->|Allowed| H["Application handler"]
+  V -->|Denied| N["Response before application"]

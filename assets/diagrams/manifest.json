@@ -1,0 +1,272 @@
+{
+  "2c294bbea84e8b11": {
+    "sourceHash": "2c294bbea84e8b11e8623ee789a7a08217e47b1d6d662113f8aa09a4eabd2254",
+    "title": "Trusted identity enters the backend only after authorization",
+    "description": "The trusted proxy replaces the identity headers it supplies, and the backend accepts them only from that proxy. Configured token stripping removes the accepted credential from its request source. A public bypass has no authenticated identity. Direct backend reachability would escape this boundary.",
+    "pages": [
+      "docs/authorize/headers.md"
+    ],
+    "light": {
+      "width": 558,
+      "height": 862,
+      "hash": "1f58e3b4294685510230cd55a10487a09300a6c8972fcb08757a20ba06154629"
+    },
+    "dark": {
+      "width": 558,
+      "height": 862,
+      "hash": "ac0a6663d2a1a5c8501bd0e577fc393e5204a7c4f96c823008984825a622d641"
+    }
+  },
+  "3bba41cdf8072ad4": {
+    "sourceHash": "3bba41cdf8072ad4a9c2f3313e86a434dedad49496d86db8ca4a592eec238fc3",
+    "title": "A login redirect is different from an authenticated denial",
+    "description": "Missing credentials and ordinary JWT-validation failures follow the configured login redirect or 401 behavior. Recognized Basic/API-key failures return 401; malformed token claim data can return 400. A valid identity failing the ACL is forbidden or sent to the denial page. The portal separately checks return-target trust.",
+    "pages": [
+      "docs/authorize/auto-redirect-url.md"
+    ],
+    "light": {
+      "width": 921,
+      "height": 934,
+      "hash": "b1cd17f80aab1e73170c02e932a04b433cc71b9db02321d3b4ef9060320c2d29"
+    },
+    "dark": {
+      "width": 921,
+      "height": 934,
+      "hash": "7c916b124006da0e848a98d03f76b9ba54d83bfa229bc1778daccd5f2e8e8538"
+    }
+  },
+  "4a59bdec9754f023": {
+    "sourceHash": "4a59bdec9754f023683338c5b65a3c48454c506dfbf77afa27e3ae4dc452729c",
+    "title": "A policy completes provider login without a portal",
+    "description": "The policy owns its callback, provider transaction, opaque browser session, and logout. The callback must return to the same policy and origin. Provider authentication yields a local policy identity; the ACL still decides application membership. Ordinary portal access JWTs and Profile sessions are a separate model.",
+    "pages": [
+      "docs/authorize/direct-oauth.md"
+    ],
+    "light": {
+      "width": 708,
+      "height": 845,
+      "hash": "daedb55613be97c5da054eeab9b84831179906aa8fd1120814cfda0785788d92"
+    },
+    "dark": {
+      "width": 708,
+      "height": 845,
+      "hash": "1044a6adb93917b187bbf529cc14d19c5a184ed4461a186f798d6936f11269b6"
+    }
+  },
+  "522b237e0d8b17c8": {
+    "sourceHash": "522b237e0d8b17c8069499f61bb2ee159f3e554a1b31a301d84ae5ddc0d7c000",
+    "title": "Account identification precedes proof of ownership",
+    "description": "The portal resolves an account and selects checkpoints before verifying each response. Only completed required checkpoints issue a login credential; a username, challenge, or enrollment alone is not authentication evidence.",
+    "pages": [
+      "docs/authenticate/95-dev.md"
+    ],
+    "light": {
+      "width": 531,
+      "height": 843,
+      "hash": "e140c8d5bd079d704f961f257d36b5991d8a011e88c3c3d96eddc11fc35a12df"
+    },
+    "dark": {
+      "width": 531,
+      "height": 843,
+      "hash": "77d371477ed7f8f38eedada700f414ef33cc33216f4c4b6469db2051fe775385"
+    }
+  },
+  "5d95a5a423d2bcf6": {
+    "sourceHash": "5d95a5a423d2bcf6fef97e7d929d0e5a35f0c34739f8f4a2651f4d357495cf54",
+    "title": "Configuration declarations become active only through routes",
+    "description": "Global security contains named components. A site route selects a policy with authorize and places the application handler behind it. Adaptation validates configuration structure, provisioning resolves named components, and live requests exercise actual access decisions. The stages are different kinds of evidence.",
+    "pages": [
+      "docs/authorize/syntax.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 754,
+      "hash": "4056070b61ee77b9d8dc9d65a373b3b42f3dba5bf33eddd47bc9c3a1cf275f2c"
+    },
+    "dark": {
+      "width": 360,
+      "height": 754,
+      "hash": "adc5aaef0d5cf6e41694e7a3d46c82098bc48cac3cb3642c6c62eb2ed62c2c82"
+    }
+  },
+  "6647b026bd5f0a0c": {
+    "sourceHash": "6647b026bd5f0a0c22e50f7c84be064691b6712d5a9acfb86fbd7ef1d86a68fc",
+    "title": "Ordered ACL actions determine the final access decision",
+    "description": "This depicts explicit rules after identity validation. An ordinary allow can still be overturned by a later deny; allow stop returns immediately. Conditions normally use AND, while an action with any uses OR. The diagram deliberately avoids the older bundle’s catch-all limitation described below.",
+    "pages": [
+      "docs/authorize/acl-rbac.md"
+    ],
+    "light": {
+      "width": 990,
+      "height": 1211,
+      "hash": "3d1605b326841897d58308be68fb4e0fd4502ef3700bd0cf308d4a08b3869b19"
+    },
+    "dark": {
+      "width": 990,
+      "height": 1211,
+      "hash": "5e4305ef9a7d6e40537e4b48286b6955a3c5d31d88d3083f94615563e7d79734"
+    }
+  },
+  "68fdeab079078cc1": {
+    "sourceHash": "68fdeab079078cc115488b2ba26def11c868a2ababc9e3aa940d0bed03b7bd19",
+    "title": "The first discovered credential fixes the identity candidate",
+    "description": "This shows the default cookie, header, query order. A missing source permits the next source to be examined; a discovered but invalid credential does not. Bearer is a header format that needs explicit policy support. Verification and ACL evaluation follow selection rather than rescuing a failed earlier credential.",
+    "pages": [
+      "docs/authorize/token-discovery.md"
+    ],
+    "light": {
+      "width": 483,
+      "height": 1279,
+      "hash": "553787ae0896427e75455e67435d6d4fc3377a1ea853188a11096935ab692b00"
+    },
+    "dark": {
+      "width": 483,
+      "height": 1279,
+      "hash": "5a072f957490a78d598e82fdb82ade5ec3d4c30f2f33edc319e74128ea4a053e"
+    }
+  },
+  "931d656b8aa6637e": {
+    "sourceHash": "931d656b8aa6637e06ccd45ee392a7f834343caee59a7b18a8292c5de8d2f3d7",
+    "title": "Signing authority and verification authority have different owners",
+    "description": "An asymmetric signer keeps the private key; a gatekeeper needs only the matching public material. Signature and validity checks establish a trusted identity before ACL evaluation. HMAC instead gives every secret holder signing authority. Publishing JWKS does not automatically configure an AuthCrunch policy to poll it.",
+    "pages": [
+      "docs/authorize/token-verification.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 745,
+      "hash": "53fdb44ed5d37c0b87246a04771439d160a75a6d90fda72ebe6dbb79c9b47b16"
+    },
+    "dark": {
+      "width": 360,
+      "height": 745,
+      "hash": "849284e8d585dcfb390eb8187732380ebdb8a1a3fb8367965b2e60a4030626ec"
+    }
+  },
+  "95173f600c73e0b6": {
+    "sourceHash": "95173f600c73e0b607ff982c5d9e3b62b33884cc4ec8bd92e3c96231d78c8058",
+    "title": "A public bypass never creates an authenticated identity",
+    "description": "The bypass matcher is evaluated against checked path interpretations. A match proceeds publicly after configured identity headers are cleared; it does not grant a user role. Nonmatching paths follow normal credential validation and ACL evaluation. Review exact directory boundaries rather than treating a substring as a protected tree.",
+    "pages": [
+      "docs/authorize/bypass.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 792,
+      "hash": "c1c50094d81137223b82f49cc9492573ad1104e313a3048b01dc70dedf0725ca"
+    },
+    "dark": {
+      "width": 360,
+      "height": 792,
+      "hash": "c11d5ce7e438c9de4392b9d4bd84cf0fe81dae2f68383482240f476fd57fb039"
+    }
+  },
+  "9813e4e6ea220cfb": {
+    "sourceHash": "9813e4e6ea220cfba178f1d218a7dd86356678bc1d017f0f9a946f7b979fe9a1",
+    "title": "A Basic-authenticated request still needs an ACL grant",
+    "description": "The client supplies a password and an allowed realm over HTTPS. A valid cached identity may be reused; otherwise the portal checks the credential and applicable direct-authentication requirements. The gatekeeper then evaluates access rules. This flow does not perform interactive MFA or create a browser login session.",
+    "pages": [
+      "docs/authorize/basic_auth.md"
+    ],
+    "light": {
+      "width": 710,
+      "height": 1240,
+      "hash": "8eb41b37aac812359946afd9e680e647e4c9bb058f06c27596b6b4afd5ce54b4"
+    },
+    "dark": {
+      "width": 710,
+      "height": 1240,
+      "hash": "f15761c34fec475286b337610016cfb56c6815e5fb0fdb3e31f4636090b4a3bf"
+    }
+  },
+  "b03108d9121c89fc": {
+    "sourceHash": "b03108d9121c89fce5d3b829cce13adcb68ffa1e6102e2005c6aa99736cc251d",
+    "title": "A signed path grant supplements the application ACL",
+    "description": "The request must satisfy the ordinary policy and its token-carried path restriction. Checked path interpretations prevent an encoded or traversing spelling from manufacturing a grant. A single star cannot cross a slash; a double star can, but neither represents an empty suffix. These grants are issued by a trusted signer.",
+    "pages": [
+      "docs/authorize/path-acl.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 915,
+      "hash": "781d7b8af51cadd6ab7a689bdda7f48e0e8c5080cbe554565185dbb5fd722a89"
+    },
+    "dark": {
+      "width": 360,
+      "height": 915,
+      "hash": "fc1300b68c01830d87062c82e4d377411e62a10104a996b584bb33378ee19dfc"
+    }
+  },
+  "d8af48e1c9005d29": {
+    "sourceHash": "d8af48e1c9005d29034d546e3e9cc6f11a0eb1bce30fe09756618e0f96e9bedb",
+    "title": "A typed alias projects a literal authenticated claim into one policy",
+    "description": "This is the newer typed-field flow, not v1.3.0 bundle grammar. Referenced malformed data denies evaluation before an allow-stop rule can succeed. An absent claim remains absent; a declaration does not fetch or invent a value. The original JWT, canonical roles, and other policies are unchanged.",
+    "pages": [
+      "docs/authorize/custom-fields.md"
+    ],
+    "light": {
+      "width": 375,
+      "height": 809,
+      "hash": "65e138a7f86f9a4736e0cfa90ca72eec2273dde410f20404b96945fa96f9abe0"
+    },
+    "dark": {
+      "width": 375,
+      "height": 809,
+      "hash": "907f6efe98300ce80c97c96671d0df75d0f1185d9f88b3f907f22c8a41f1b8ac"
+    }
+  },
+  "dc5309195d539da4": {
+    "sourceHash": "dc5309195d539da407983d7aa20921b537d3b4a0e2819268e718d1cfb3dec227",
+    "title": "Source-address validation binds two observations",
+    "description": "The issuer records a normalized source address at login; the gatekeeper compares the current normalized address with that signed claim. Missing or different values deny validation. This is token/address equality, not a CIDR allowlist. A mobile network change or inconsistent proxy normalization can therefore reject a legitimate user.",
+    "pages": [
+      "docs/authorize/ip-filter.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 576,
+      "hash": "bfb71142af838624c3da920fe40ccaf83a445ed13892ab6a559a117bace1d58c"
+    },
+    "dark": {
+      "width": 360,
+      "height": 576,
+      "hash": "55b9a04827651acdce86ba965c40139aed33aa871e15c08753661c80c2384309"
+    }
+  },
+  "eeb073afea56a0d9": {
+    "sourceHash": "eeb073afea56a0d942247ec57e0ff49a0d5ecf901527ac8238ab5878aa7e5ab1",
+    "title": "Placeholders are populated after the policy allows",
+    "description": "Verified claims become normalized Caddy request metadata after successful authorization. The reverse proxy can replace selected upstream headers with those values. This does not change claims, invent absent fields, or make an unprotected request authenticated. The backend must trust only the proxy that owns these assignments.",
+    "pages": [
+      "docs/authorize/placeholders.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 566,
+      "hash": "70c881b102c0d53d8cede766d981aa4c8c7d2fdb556c5216719bda51bef353ac"
+    },
+    "dark": {
+      "width": 360,
+      "height": 566,
+      "hash": "1051efa1c9bb58e30e13ee94552232a1e2178f8b8b3dc893d8c4957eb7b26c19"
+    }
+  },
+  "fc458a3a9070c918": {
+    "sourceHash": "fc458a3a9070c918c8432e480223d5e27231928dd931691c85ad029549f2a473",
+    "title": "An account API key authenticates a request, not an MFA ceremony",
+    "description": "The key identifies an account in an explicitly selected realm. Credential authentication, required evidence, and application authorization remain separate checks. A valid cached credential identity can avoid a new backend lookup. This request flow does not issue portal refresh credentials or establish a browser Profile session.",
+    "pages": [
+      "docs/authorize/api_key_auth.md"
+    ],
+    "light": {
+      "width": 456,
+      "height": 1227,
+      "hash": "2e7432b6a1175270e65f1f822593e123bd7a15e56b03fb2a2eff684671ad7f59"
+    },
+    "dark": {
+      "width": 456,
+      "height": 1227,
+      "hash": "cb748ac7c29863653c5579b72b8a2795fcc1eb007073b76d350b24d01bbb764d"
+    }
+  }
+}

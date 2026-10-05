@@ -1,0 +1,10 @@
+flowchart TD
+  accTitle: A typed alias projects a literal authenticated claim into one policy
+  accDescr: This is the newer typed-field flow, not v1.3.0 bundle grammar. Referenced malformed data denies evaluation before an allow-stop rule can succeed. An absent claim remains absent; a declaration does not fetch or invent a value. The original JWT, canonical roles, and other policies are unchanged.
+  A["Verified token claims"] --> B["Literal top-level claim key"]
+  P["This policy's alias and declared type"] --> C{"Referenced value has an accepted shape?"}
+  B --> C
+  C -->|Malformed or wrong type| N["Deny evaluation"]
+  C -->|Valid or absent| D["Policy-local typed projection"]
+  D --> E["Existence and value conditions"]
+  E --> F["Ordered ACL actions"]

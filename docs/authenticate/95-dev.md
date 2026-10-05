@@ -22,6 +22,8 @@ It verifies each checkpoint in order before issuing the final credential.
 
 ```mermaid
 sequenceDiagram
+    accTitle: Account identification precedes proof of ownership
+    accDescr: The portal resolves an account and selects checkpoints before verifying each response. Only completed required checkpoints issue a login credential; a username, challenge, or enrollment alone is not authentication evidence.
     participant Browser
     participant Portal
     participant Store as Local store
