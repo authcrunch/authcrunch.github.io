@@ -197,3 +197,203 @@ AuthCrunch application policy.
 
 For supported claims, PKCE, and token validation, continue to
 [Generic OpenID Connect](81-backend-oauth2-0000-generic.md).
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Trace OneLogin role mapping</summary>
+
+```text
+Help me understand OneLogin.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0005-onelogin
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain OneLogin app assignment, provider roles emitted as OIDC groups, portal
+transforms, and app access. Use one assigned member and one assigned
+nonmember. Distinguish OneLogin role names from reserved AuthCrunch roles.
+```
+
+</details>
+
+<details>
+<summary>Compare discovery layouts</summary>
+
+```text
+Help me understand OneLogin.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0005-onelogin
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Review the exact OneLogin v2 issuer/discovery document against older regional
+layouts. Explain trailing-slash equality, callback realm, confidential client,
+Client Secret Post, and S256 PKCE. Use current official OneLogin configuration
+material for registration controls.
+```
+
+</details>
+
+<details>
+<summary>Understand claim-source choice</summary>
+
+```text
+Help me understand OneLogin.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0005-onelogin
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare groups and email in the ID token with enabling generic UserInfo
+groups. Inspect replacement/merge behavior in my release before predicting
+roles. Explain why requesting a groups scope does not itself produce the
+intended values.
+```
+
+</details>
+
+<details>
+<summary>Diagnose sign-in and denial</summary>
+
+```text
+Help me understand OneLogin.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0005-onelogin
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me separate assignment rejection, token-authentication mismatch, wrong
+discovery issuer, missing group/email, and AuthCrunch 403. Ask for redacted
+normalized roles and configuration. Preserve issuer/audience/signature/nonce
+checks while identifying the mismatched boundary.
+```
+
+</details>
+
+<details>
+<summary>Verify changes with fresh identity</summary>
+
+```text
+Help me understand OneLogin.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0005-onelogin
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Create tests for intended role, nonmember, similarly named role, reserved-role
+injection, removed membership, and portal versus provider logout. Explain why
+old portal credentials retain issued claims until their validation lifecycle
+ends.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28generic%20OR%20groups%20OR%20user_info_fields%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_identity_provider_oauth.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_identity_provider_oauth.go)
+   — adapts OAuth/OIDC provider settings, scopes, endpoints, and trust options.
+3. [go-authcrunch: pkg/idp/oauth/provider.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/provider.go)
+   — loads discovery metadata, provider readiness, and driver setup.
+4. [go-authcrunch: pkg/idp/oauth/jwt.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/jwt.go)
+   — checks upstream token signatures, issuer, audience, and transaction trust.
+5. [go-authcrunch: pkg/idp/oauth/claim_parser.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/claim_parser.go)
+   — maps supported token claims into the normalized provider identity.
+6. [go-authcrunch: pkg/idp/oauth/user_info.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/user_info.go)
+   — fetches explicitly selected generic UserInfo fields and roles.
+7. [go-authcrunch: pkg/idp/oauth/claim_parser_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/claim_parser_test.go)
+   — tests supported claim paths and rejected value shapes.

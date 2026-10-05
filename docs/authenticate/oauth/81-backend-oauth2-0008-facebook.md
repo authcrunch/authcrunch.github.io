@@ -121,3 +121,202 @@ assignment/permissions, exact subject mapping, and a nonmember's rejection.
 If a retired endpoint or provider permission blocks the flow, a Caddyfile
 rewrite is not evidence of a repaired upstream implementation. Use another
 [documented provider](10-oauth2.md) that meets your deployment requirements.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Inspect compatibility before setup</summary>
+
+```text
+Help me understand Facebook.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0008-facebook
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Audit the installed Facebook driver’s hard-coded API versions and endpoint
+override behavior. Compare them with current official Meta support policy
+before proposing a deployment. Explain why parsing or an authorization
+redirect is not evidence of successful modern profile retrieval.
+```
+
+</details>
+
+<details>
+<summary>Distinguish Facebook credentials</summary>
+
+```text
+Help me understand Facebook.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0008-facebook
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain App ID, confidential App Secret, Client Token, and user access token
+in this named driver. Trace appsecret_proof and profile lookup. Use fake
+values and keep real secrets out of browser code, screenshots, and logs.
+```
+
+</details>
+
+<details>
+<summary>Compare identity trust models</summary>
+
+```text
+Help me understand Facebook.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0008-facebook
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain this driver’s opaque-token/profile path versus generic OIDC signed
+identity tokens. Inspect actual PKCE, nonce, state, and email behavior for my
+release. Do not invent an ID token or automatically weaken a different driver
+to match Facebook defaults.
+```
+
+</details>
+
+<details>
+<summary>Diagnose without inventing compatibility</summary>
+
+```text
+Help me understand Facebook.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0008-facebook
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me classify unsupported API version, callback registration,
+permission/app-review restrictions, profile error, absent email, and app-role
+denial. Ask for redacted response metadata and consult official Meta
+requirements. Leave unsupported behavior explicitly unresolved.
+```
+
+</details>
+
+<details>
+<summary>Design a compatibility gate</summary>
+
+```text
+Help me understand Facebook.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0008-facebook
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Create a go/no-go checklist that requires live profile retrieval and
+member/nonmember access, not only adaptation. Include secret handling,
+missing-email policy, exact subject mapping, and logout/session limits.
+Explain which upstream change would be needed if the named driver’s endpoints
+are obsolete.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28facebook%20OR%20appsecret_proof%20OR%20v12.0%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_identity_provider_oauth.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_identity_provider_oauth.go)
+   — adapts OAuth/OIDC provider settings, scopes, endpoints, and trust options.
+3. [go-authcrunch: pkg/idp/oauth/config.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/config.go)
+   — validates generic and named-driver defaults and endpoint settings.
+4. [go-authcrunch: pkg/idp/oauth/user.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/user.go)
+   — fetches and normalizes named-provider profile, membership, and identity data.
+5. [go-authcrunch: pkg/idp/oauth/authenticate.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/authenticate.go)
+   — handles authorization callbacks, token exchange, and identity completion.
+6. [go-authcrunch: pkg/idp/oauth/config_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/config_test.go)
+   — tests generic/named provider configuration and validation.

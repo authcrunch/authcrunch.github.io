@@ -339,3 +339,206 @@ For PKCE, the bundled GitHub driver forces it off even though GitHub supports
 it. See the [release-specific PKCE table](10-oauth2.md#pkce) before changing
 that setting. This guide covers GitHub.com; it does not establish GitHub
 Enterprise Server compatibility.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Compare GitHub app types</summary>
+
+```text
+Help me understand GitHub.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+configuration-authentication-user-transforms, oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0007-github
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain the supported GitHub OAuth application flow and any GitHub App mode
+present in my installed source/version. Distinguish user sign-in,
+installation/repository permissions, and AuthCrunch app access. Consult the
+actual driver and current official GitHub registration guidance before
+asserting compatibility.
+```
+
+</details>
+
+<details>
+<summary>Choose a stable account matcher</summary>
+
+```text
+Help me understand GitHub.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+configuration-authentication-user-transforms, oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0007-github
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain numeric github_id versus mutable login names and email data. Trace its
+normalization and a realm-scoped transform to app/member. Compare organization
+membership with repository access without treating either as an automatic
+portal administrator grant.
+```
+
+</details>
+
+<details>
+<summary>Understand profile and email retrieval</summary>
+
+```text
+Help me understand GitHub.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+configuration-authentication-user-transforms, oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0007-github
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain opaque OAuth access token use with GitHub profile/email APIs and the
+email selection rules. Contrast this with a signed OIDC ID-token flow. Review
+requested scopes and what missing/private email means for the intended policy.
+```
+
+</details>
+
+<details>
+<summary>Diagnose missing access</summary>
+
+```text
+Help me understand GitHub.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+configuration-authentication-user-transforms, oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0007-github
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me investigate callback registration, client secret, organization
+authorization, ID types, missing email, and a valid GitHub account denied by
+the app. Ask for redacted driver/configuration and normalized claims. Do not
+use a mutable display name to repair an identity mismatch.
+```
+
+</details>
+
+<details>
+<summary>Test durable membership</summary>
+
+```text
+Help me understand GitHub.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+configuration-authentication-user-transforms, oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0007-github
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Create cases for intended numeric account ID, another account, renamed login,
+malformed ID, selected organization, and reserved upstream role names. Include
+fresh login after membership changes and local logout. Explain what each
+observed claim and 403 proves.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28github_id%20OR%20fetchGithubUserInfo%20OR%20github_email%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_identity_provider_oauth.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_identity_provider_oauth.go)
+   — adapts OAuth/OIDC provider settings, scopes, endpoints, and trust options.
+3. [go-authcrunch: pkg/idp/oauth/config.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/config.go)
+   — validates generic and named-driver defaults and endpoint settings.
+4. [go-authcrunch: pkg/idp/oauth/user.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/user.go)
+   — fetches and normalizes named-provider profile, membership, and identity data.
+5. [go-authcrunch: pkg/idp/oauth/github_id.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/github_id.go)
+   — normalizes stable numeric GitHub account IDs.
+6. [go-authcrunch: pkg/idp/oauth/github_id_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/github_id_test.go)
+   — tests GitHub ID normalization and invalid data.
+7. [go-authcrunch: pkg/idp/oauth/github_email.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/github_email.go)
+   — selects appropriate email data from the GitHub email API.
+8. [caddy-security: caddyfile_authn_transform.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_authn_transform.go)
+   — adapts user-transform matchers, actions, and required challenges.

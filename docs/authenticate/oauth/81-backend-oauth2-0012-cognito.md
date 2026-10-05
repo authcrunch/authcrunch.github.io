@@ -290,3 +290,202 @@ provider errors and [diagnostic logs](../../operations/logging.md). Keep client
 secrets on the server. These examples are parser-verified against the released
 bundle; console registration, live provider login, consent, and production TLS
 require verification in your own organization.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Separate user and identity pools</summary>
+
+```text
+Help me understand AWS Cognito.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0012-cognito
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain the Cognito user-pool confidential code client used for sign-in versus
+an identity pool issuing AWS credentials. Trace hosted UI/domain, pool issuer
+metadata, callback realm, and AuthCrunch token issuance. Keep AWS resource
+credentials outside the portal session model.
+```
+
+</details>
+
+<details>
+<summary>Read Cognito claim mappings</summary>
+
+```text
+Help me understand AWS Cognito.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0012-cognito
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Inspect cognito:groups and supported custom role/profile fields in my
+installed parser. Explain malformed types, attribute readability, and
+administrator-controlled authorization inputs. Compare a custom user-writable
+attribute with a managed membership grant.
+```
+
+</details>
+
+<details>
+<summary>Diagnose a pool/client mismatch</summary>
+
+```text
+Help me understand AWS Cognito.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0012-cognito
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me investigate region/pool issuer, hosted-domain setup, secret-enabled
+app client, exact callback, scope, confirmed account, and claim shape. Ask for
+public identifiers and redacted metadata only. Do not bypass required password
+changes to imitate historical screenshots.
+```
+
+</details>
+
+<details>
+<summary>Review logout and refresh boundaries</summary>
+
+```text
+Help me understand AWS Cognito.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0012-cognito
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain Cognito upstream logout URL requirements separately from portal logout
+and local refresh sessions. Compare Cognito refresh-token availability with
+whether AuthCrunch renews it. Check current official Cognito registration
+rules before constructing a complete URL.
+```
+
+</details>
+
+<details>
+<summary>Test groups and account lifecycle</summary>
+
+```text
+Help me understand AWS Cognito.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/backend-oauth2-0012-cognito
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Create cases for managed app group member, nonmember, user-editable custom
+role, malformed list, missing optional data, and fresh login after group
+removal. Include local versus upstream session observations and keep reserved
+portal role injection from becoming a grant.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28cognito%20OR%20cognito%3Agroups%20OR%20custom%3Aroles%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_identity_provider_oauth.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_identity_provider_oauth.go)
+   — adapts OAuth/OIDC provider settings, scopes, endpoints, and trust options.
+3. [go-authcrunch: pkg/idp/oauth/config.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/config.go)
+   — validates generic and named-driver defaults and endpoint settings.
+4. [go-authcrunch: pkg/idp/oauth/claim_parser.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/claim_parser.go)
+   — maps supported token claims into the normalized provider identity.
+5. [go-authcrunch: pkg/idp/oauth/jwt.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/jwt.go)
+   — checks upstream token signatures, issuer, audience, and transaction trust.
+6. [go-authcrunch: pkg/idp/oauth/claim_parser_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/claim_parser_test.go)
+   — tests supported claim paths and rejected value shapes.

@@ -60,3 +60,202 @@ The historical `disable key verification` setting controls remote key fetching; 
 ## Verify the provider boundary
 
 Test a valid ID token, wrong issuer/client/nonce, multiple audiences with missing/wrong `azp`, a changed remote key and a rogue key claiming a pinned ID. Test optional access-token claims separately. Successful adaptation only proves grammar and static-file acceptance; a synthetic signing fixture verifies these checks, while live provider consent and certificate/network setup need their own test.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Separate upstream trust from portal keys</summary>
+
+```text
+Help me understand Upstream OIDC token trust and key rollover.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/oidc-trust
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain verifying upstream ID/access tokens versus signing the portal access
+JWT and serving downstream OIDC. Trace issuer, audience, azp, nonce,
+algorithm, and key selection. Separate opaque tokens from signed identity
+claims.
+```
+
+</details>
+
+<details>
+<summary>Work through token purposes</summary>
+
+```text
+Help me understand Upstream OIDC token trust and key rollover.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/oidc-trust
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare required ID token, optional supplemental access JWT, and
+multi-audience identity token. Use synthetic claim maps to explain when azp
+and configured access-token audience matter. Inspect whether invalid
+supplemental data rejects login or simply contributes no claims.
+```
+
+</details>
+
+<details>
+<summary>Understand pins and rollover</summary>
+
+```text
+Help me understand Upstream OIDC token trust and key rollover.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/oidc-trust
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare a local public PEM pin with a remote JWKS entry having the same kid.
+Trace complete remote snapshot replacement and bounded refresh/retry after an
+eligible missing key or signature failure. Explain what malformed transport
+and static pins must preserve.
+```
+
+</details>
+
+<details>
+<summary>Diagnose a trust rejection</summary>
+
+```text
+Help me understand Upstream OIDC token trust and key rollover.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/oidc-trust
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me inspect public algorithm/kid/issuer/audience metadata and redacted
+errors for wrong client, wrong issuer, missing azp, nonce mismatch, or rotated
+key. Do not treat kid as an arbitrary fetch URL or disable signature checks to
+solve a rollout problem.
+```
+
+</details>
+
+<details>
+<summary>Build a synthetic trust matrix</summary>
+
+```text
+Help me understand Upstream OIDC token trust and key rollover.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-oauth-providers,
+oauth-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/oauth/oidc-trust
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design independently signed disposable fixtures for valid identity, wrong
+issuer/client/nonce, multiple audiences, remote key change, rogue pinned-ID
+key, and malformed JWKS. Keep live consent/network tests separate and explain
+what each fixture proves about the consumer.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28access_token_audience%20OR%20jwksSnapshot%20OR%20azp%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_identity_provider_oauth.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_identity_provider_oauth.go)
+   — adapts OAuth/OIDC provider settings, scopes, endpoints, and trust options.
+3. [go-authcrunch: pkg/idp/oauth/jwt.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/jwt.go)
+   — checks upstream token signatures, issuer, audience, and transaction trust.
+4. [go-authcrunch: pkg/idp/oauth/jwks.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/jwks.go)
+   — fetches upstream signing keys and handles configured public-key material.
+5. [go-authcrunch: pkg/idp/oauth/jwks_store.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/jwks_store.go)
+   — maintains pinned and remote key snapshots and bounded refresh behavior.
+6. [go-authcrunch: pkg/idp/oauth/jwks_store_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/oauth/jwks_store_test.go)
+   — tests key snapshot replacement, pins, and refresh behavior.

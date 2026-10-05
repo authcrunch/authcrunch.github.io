@@ -206,3 +206,204 @@ plaintext loopback sample is not a production TLS configuration.
 Local fixtures can verify the released connector's bind/search/mapping behavior.
 They do not establish your AD access controls, nested-group expansion, GLAuth
 schema, production certificates, or directory availability.
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Trace bind, search, and roles</summary>
+
+```text
+Help me understand LDAP Configuration.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-identity-stores,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/ldap/ldap
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain service bind, exactly-one user lookup, password bind, group mapping,
+portal identity, and app ACL. Compare directory credentials with local Profile
+management. Ask for the actual directory schema and realm before recommending
+filters.
+```
+
+</details>
+
+<details>
+<summary>Compare membership schemas</summary>
+
+```text
+Help me understand LDAP Configuration.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-identity-stores,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/ldap/ldap
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Compare memberOf group DNs with secondary DN-valued group search and
+username-valued memberUid. Explain the posix_groups option’s actual
+substitution and returned group identity. Trace explicit, short, and full
+automatic mappings without assuming every POSIX schema works.
+```
+
+</details>
+
+<details>
+<summary>Review transport and secrets</summary>
+
+```text
+Help me understand LDAP Configuration.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-identity-stores,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/ldap/ldap
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Inspect LDAPS certificate/hostname verification, trusted CA, simple ldap://
+behavior, bind-password file trimming, and environment fallback. Explain why
+an unverified downloaded certificate or ignore_cert_errors is not production
+trust. Keep directory passwords out of logs and command arguments.
+```
+
+</details>
+
+<details>
+<summary>Diagnose fallback versus search failure</summary>
+
+```text
+Help me understand LDAP Configuration.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-identity-stores,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/ldap/ldap
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me classify failed bind, ambiguous user match, secondary-search error/no
+entries, unmapped membership, and fallback roles. Explain why fallback cannot
+rescue earlier search/authentication errors or grant app/member to every
+identified account.
+```
+
+</details>
+
+<details>
+<summary>Test directory boundaries</summary>
+
+```text
+Help me understand LDAP Configuration.
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-identity-stores,
+local-password-authentication.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/ldap/ldap
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Create mapped member, nonmember, fallback-only, escaped DN, wrong password,
+bad certificate, and ambiguous-user cases. Include fresh identity inspection
+and app 403. Explain what local fixtures cannot establish about production
+nested groups, schema, and directory ACLs.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28posix_groups%20OR%20LDAP_USER_SECRET%20OR%20uniqueMember%29&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_identity_store.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_identity_store.go)
+   — adapts local and LDAP store declarations.
+3. [go-authcrunch: pkg/ids/ldap/store.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/ids/ldap/store.go)
+   — validates LDAP store configuration and initializes directory connectivity.
+4. [go-authcrunch: pkg/ids/ldap/authenticator.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/ids/ldap/authenticator.go)
+   — binds/searches the directory and maps returned memberships into identity roles.
+5. [go-authcrunch: pkg/ids/ldap/parse_dn.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/ids/ldap/parse_dn.go)
+   — parses group DNs for short automatic role mapping.
+6. [go-authcrunch: pkg/ids/ldap/parse_dn_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/ids/ldap/parse_dn_test.go)
+   — tests escaped and compound DN parsing.
+7. [go-authcrunch: pkg/ids/ldap/store_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/ids/ldap/store_test.go)
+   — tests LDAP store setup and configuration cases.

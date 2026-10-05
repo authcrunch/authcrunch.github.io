@@ -169,3 +169,204 @@ The preserved screenshots show the original Azure application/roles, assignments
 
 <figcaption>Historical console: Office 365 - Access Application. Use the current values and flow described above; the displayed IDs, hosts and ports belong to the old example.</figcaption>
 </figure>
+
+## Agentic Prompts
+
+Copy a prompt into your LLM to explore this topic. Each prompt prioritizes
+upstream repository guidance and code over this page, and asks for version-aware
+reasoning.
+
+<div className="agentic-prompts">
+
+<details>
+<summary>Map Entra SAML identifiers</summary>
+
+```text
+Help me understand Microsoft Entra ID (SAML).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-saml-providers,
+saml-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/saml/azure
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Explain SP Entity ID, ACS/Reply URL, GET sign-on URL, Entra Login URL,
+metadata, and separately pinned signing certificate. Contrast generic SAML
+setup with the legacy azure driver’s header dependencies. Use current official
+Entra settings for console names.
+```
+
+</details>
+
+<details>
+<summary>Trace SP-initiated browser state</summary>
+
+```text
+Help me understand Microsoft Entra ID (SAML).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-saml-providers,
+saml-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/saml/azure
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Draw the portal GET, AuthnRequest, IdP login, signed cross-site POST,
+RelayState, and same-browser binding. Explain why an unsolicited
+application-tile POST or matching Referer does not establish the required
+transaction.
+```
+
+</details>
+
+<details>
+<summary>Review attributes and roles</summary>
+
+```text
+Help me understand Microsoft Entra ID (SAML).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-saml-providers,
+saml-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/saml/azure
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Map required display name/email, stable subject, and the supported custom Role
+attribute to portal identity. Separate Entra assignment from a realm-scoped
+App.Access transform. Explain reserved-role removal and why user-editable
+authorization attributes must not grant membership.
+```
+
+</details>
+
+<details>
+<summary>Diagnose a signed callback failure</summary>
+
+```text
+Help me understand Microsoft Entra ID (SAML).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-saml-providers,
+saml-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/saml/azure
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Help me classify certificate pin, issuer/destination, missing required
+attributes, lost binding cookie, wrong mount, and replay. Ask for public
+certificate metadata and redacted attribute names/status only, never a full
+real assertion or cookie.
+```
+
+</details>
+
+<details>
+<summary>Plan rollover and denial checks</summary>
+
+```text
+Help me understand Microsoft Entra ID (SAML).
+
+Primary authorities (take precedence over website documentation):
+https://github.com/greenpau/caddy-security/blob/main/AGENTS.md
+https://github.com/greenpau/caddy-security/tree/main/.codex/skills
+https://github.com/greenpau/go-authcrunch/blob/main/AGENTS.md
+https://github.com/greenpau/go-authcrunch/tree/main/.codex/skills
+Read each repository's root AGENTS.md first, then any scoped AGENTS.md that
+applies to inspected paths. Read the relevant SKILL.md files and follow their
+implementation and test references.
+
+Relevant skills to locate: configuration-saml-providers,
+saml-identity-provider.
+
+Secondary reference:
+https://docs.authcrunch.com/docs/authenticate/saml/azure
+
+If a source is inaccessible, ask me to paste its relevant text. Identify the
+versions your answer applies to; main may be newer than my release. Resolve
+disagreements using code and tests, and flag unverified claims. Use synthetic
+credentials and redacted examples; explain proposed checks before any changes.
+
+Design member, portal-only, unassigned, wrong-browser, replay, and
+certificate-rollover cases. Explain what updating metadata does not override
+about the pinned key. Check local app access independently from successful
+provider sign-in.
+```
+
+</details>
+
+</div>
+
+## Source Code References
+
+Start with the code search, then follow the parser, runtime, and tests relevant
+to this topic. These links target `main`; use GitHub's branch/tag selector to
+compare them with your installed release.
+
+1. [Search this topic in both repositories](https://github.com/search?q=%28repo%3Agreenpau%2Fgo-authcrunch%20OR%20repo%3Agreenpau%2Fcaddy-security%29%20%28azure%20OR%20AuthnRequest%20OR%20RelayState%29%20path%3Apkg%2Fidp%2Fsaml&type=code)
+   — searches topic-specific symbols and paths across both codebases.
+2. [caddy-security: caddyfile_identity_provider.go](https://github.com/greenpau/caddy-security/blob/main/caddyfile_identity_provider.go)
+   — adapts SAML identity-provider settings and certificate/metadata locations.
+3. [go-authcrunch: pkg/idp/saml/config.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/saml/config.go)
+   — validates SAML endpoints, drivers, and pinned trust settings.
+4. [go-authcrunch: pkg/idp/saml/provider.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/saml/provider.go)
+   — loads IdP metadata and constructs the service provider with pinned signing trust.
+5. [go-authcrunch: pkg/idp/saml/authenticate.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/saml/authenticate.go)
+   — validates browser-bound SAML responses and maps accepted attributes.
+6. [go-authcrunch: pkg/idp/saml/state.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/idp/saml/state.go)
+   — tracks SP-initiated SAML transactions and single-use completion.
+7. [go-authcrunch: pkg/authn/saml_state_e2e_test.go](https://github.com/greenpau/go-authcrunch/blob/main/pkg/authn/saml_state_e2e_test.go)
+   — tests signed SAML callbacks, browser state, and rejection boundaries.
