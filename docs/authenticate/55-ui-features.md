@@ -8,189 +8,144 @@ discovery:
 
 # Customizing the User Interface (UI)
 
-The user interface (UI) can be setup the use custom templates or
-the UI can be customized and altered with custom Cascading Style
-Sheets (CSS), JavaScripts and other assets.
+Customize the authentication portal through its `ui` block, independently of this
+Docusaurus documentation site. Begin with links, metadata and a local logo; use
+CSS or template replacement only when those settings cannot express the change.
+Keep the login fields, checkpoint bindings, mount paths and security headers intact.
 
 ## Templates
 
 ### Defining another theme
 
-A custom HTML theme can be defined in the **global options block** of the `Caddyfile`.
-The theme name is set in the **ui** block that is nested in the
-**authentication portal** of the **security** block as shown below.
+The released bundle registers **`basic` only**. `theme basic` selects it; an
+arbitrary directory name does not register another theme. The embedded pages
+already follow browser color preferences.
 
-```
-{
-  security {
-    authentication portal myportal {
-      ui {
-        theme basic
-      }
-    }
-  }
+```caddyfile
+ui {
+    theme basic
+    meta title "Example sign in"
+    meta description "Sign in to Example applications"
+    logo url /auth/assets/images/company.svg
+    logo description "Example"
+    static_asset assets/images/company.svg image/svg+xml /etc/authcrunch/ui/company.svg
 }
 ```
 
-Defining a theme is optional, by default the `basic` theme is used.
+This fragment belongs inside a working portal mounted at `/auth/`. Supply the
+local asset and keep its public URL aligned with that mount. The current default
+AuthCrunch logo is the blue/navy mark, not the historical green padlock.
 
 ### Creating a new theme
-Every template has its own folder in the `assets` folder. The folder name
-should equal the name of the theme. For example the basic template files
-are located in the folder `assets/templates/basic/`. For reference, see the
-[basic template files](https://github.com/greenpau/go-authcrunch/tree/main/pkg/authn/ui/page_templates/basic).
 
-Every template folder should include at least the following files:
+The built-in Go HTML templates are
+[versioned in the library](https://github.com/greenpau/go-authcrunch/tree/v1.3.8/pkg/authn/ui/page_templates/basic).
+They are compiled into the executable. A custom compiled theme is source-level
+work, rather than a Caddyfile folder convention. For a deployment-level change,
+override an existing page instead.
 
-```
-generic.template
-login.template
-portal.template
-register.template
-whoami.template
-settings.template
-sandbox.template
-```
-
-These template engine used is based on the Go library `pkg/ui/pages.go`. 
-The files template files are compiled in the portal's binary.
+Current pages include login, portal, register, sandbox, whoami, session and OIDC.
+The profile interface at `/profile/` is a separate embedded client application;
+replacing an old `settings.template` does not replace that interface.
 
 ### Overriding a specific page template
-When using the a theme you can also override one specific page template
-as well. The example for that is shown below where the usage is: 
-`template <PAGE_NAME> <FILEPATH>`.
 
-```
-{
-  security {
-    authentication portal myportal {
-      ui {
-        theme basic
-        template login {env.HOME}/.local/caddy/ui/login.template
-      }
-    }
-  }
+Copy the selected release's template and configure its file:
+
+```caddyfile
+ui {
+    template login /etc/authcrunch/ui/login.template
 }
 ```
+
+The engine uses Go `html/template`. Preserve the expected form actions, names,
+server-provided state and escaping. Files must be readable by the service;
+remote template URLs are unsupported. Test username/password, required MFA,
+provider redirects, error states and mobile layout after replacement.
 
 ## Other customization
 
 ### Portal Links
 
-The following Caddyfile directive sets links that a user would see
-upon a successful login:
+Add application and account links explicitly:
 
-```bash
-{
-  security {
-    authentication portal myportal {
-      ui {
-        links {
-          "Prometheus" /prometheus
-          "Alertmanager" /alertmanager
-          "My App" /myapp
-        }
-      }
+```caddyfile
+ui {
+    links {
+        "Example app" /app/ icon "las la-cube"
+        "My identity" /auth/whoami icon "las la-id-card"
+        "My profile" /auth/profile/ icon "las la-user"
+        "Status" https://status.example.com target_blank
+        "Future app" /future/ disabled
     }
-  }
 }
-
 ```
 
-The link can be opened in a new tab or window via `target_blank` argument:
+`target_blank` opens a new tab, `icon` supplies a Line Awesome class, and `disabled`
+omits the link. A visible link does not authorize its destination; protect each
+application with its own policy. Profile account management requires a local
+identity and an allowed portal role. Use [transforms](42-user-transforms.md#add-ui-links)
+for identity-specific links.
 
-```
-          "My App" /myapp target_blank
-```
-
-The link can be disabled with `disabled` argument:
-
-```
-          "My App" /myapp disabled
-```
-
-The link can have an icon associated with it via `icon` argument:
-
-```
-          "My App" /myapp icon "las la-cog"
-```
-
-The icon is the reference to [Line Awesome](https://icons8.com/line-awesome) by Icon8.
-
-![Portal - UI - Icons](./images/portal_ui_icons.png)
+<figure className="doc-screenshot">
+  <a href={require('./images/portal_ui_icons.png').default}><img src={require('./images/portal_ui_icons.png').default} alt="Historical portal with icons beside identity and settings links" /></a>
+  <figcaption>Historical link styling. Current account management uses `/profile/`; the links above are explicit configuration.</figcaption>
+</figure>
 
 ### Cascading Style Sheets (CSS)
 
-The following Caddyfile directive adds a custom CSS stylesheet to the
-plugin's pages. The stylesheet is available under `auth/assets/css/custom.css`
-
-```
-{
-  security {
-    authentication portal myportal {
-      ui {
-        custom css path {env.HOME}/.local/caddy/ui/custom/styles.css
-      }
-    }
-  }
+```caddyfile
+ui {
+    custom css path /etc/authcrunch/ui/styles.css
 }
 ```
+
+For `/auth/`, the ordinary template pages serve this at
+`/auth/assets/css/custom.css`. Use a file readable by the service and verify
+contrast, keyboard focus, error text and narrow layouts. Do not assume every
+selector from the older Settings UI exists in the current profile app.
 
 ### JavaScript
 
-Adding custom JavaScript can for example be useful for adding 
-Analytics tools or other JavaScript.
-
-The following Caddyfile directive adds a custom JavaScript to the
-plugin's pages. The script is available under `auth/assets/js/custom.js`
-
-```
-{
-  security {
-    authentication portal myportal {
-      ui {
-        custom js path {env.HOME}/.local/caddy/ui/custom/script.js
-      }
-    }
-  }
+```caddyfile
+ui {
+    custom js path /etc/authcrunch/ui/script.js
 }
 ```
 
-The injected code will be a part of all portal pages.
+Ordinary template pages load `/auth/assets/js/custom.js`. Code running there can
+read form contents and alter authentication interactions; keep it minimal and
+avoid third-party analytics on credential screens. A new refresh client must
+obey [rotation and concurrency rules](30-refresh-token.md), rather than assuming
+old portal JavaScript provides renewal.
 
-Please see these references for usage patterns:
-
-* Solution Brief A00002 [`Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/solutions/A00002/Caddyfile)
-  and [`custom.js`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/solutions/A00002/custom.js)
+The [A00002 script](https://github.com/authcrunch/authcrunch.github.io/blob/main/assets/solutions/A00002/custom.js)
+is a historical customization example, not a current supported DOM/API contract.
 
 ### Custom HTML Template Header
 
-The following Caddyfile directive injects the code found in `path/to/head.html`
-to `<head>` section of the portal's pages:
-
-```bash
-{
-  security {
-    authentication portal myportal {
-      ui {
-        custom html header path {env.HOME}/.local/caddy/ui/custom/head.html
-      }
-    }
-  }
+```caddyfile
+ui {
+    custom html header path /etc/authcrunch/ui/head.html
 }
 ```
 
+This file is read **during Caddyfile adaptation** and injected into embedded
+page headers. A runtime `{env.NAME}` path cannot satisfy that read; use an
+absolute path or an adaptation-time `{$NAME}` value. Keep adapted configuration
+private if the header contains private information. Verify the rendered result
+on each affected page; this is not a universal profile-app customization hook.
+
 ### Other Static Assets
 
-The following Caddyfile directive loads any other asset for 
-static file serving such as jpg, png et cetera.
-
-```bash
-      ui {
-        static_asset "assets/css/app.css" "text/css" /path/to/app/styles.css
-      }
+```caddyfile
+ui {
+    static_asset assets/css/app.css text/css /etc/authcrunch/ui/app.css
+}
 ```
 
-The above configuration would cause the plugin to read `/path/to/app/styles.css`
-and begin serving it with content type of `text/css` at
-`AUTH_PORTAL/assets/css/app.css`, e.g. `https://localhost/auth/assets/css/app.css`.
+This serves the file at `/auth/assets/css/app.css`. Static asset URIs must start
+with `assets/`; media types must describe the actual content. Static assets are
+public: never place credentials, private keys, user databases or internal
+configuration in them. Validate the complete Caddyfile, then inspect actual
+responses and the browser console.

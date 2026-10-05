@@ -10,220 +10,158 @@ discovery:
 
 # Authentication cookies
 
+A portal issues an access JWT for protected requests and temporary cookies for
+login. Enabling refresh sessions or OIDC adds **separate opaque credentials**.
+Cookie scope controls where the browser sends a credential; token verification
+and the application's policy decide whether that credential permits access.
+
 ## Intra-Domain Cookies
 
-The following `Caddyfile` settings define the scope of the cookies issued by
-the plugin. Specifically, what URLs the cookies should be sent to.
-See [MDN - Using HTTP cookies - Define where cookies are sent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies)
-for more information.
+For one HTTPS host with a portal at `/auth/` and an application at `/app/`, keep
+host-only cookies and an access-cookie path of `/`. This reaches both routes
+without sharing credentials with other subdomains. Inside the portal:
 
-* `cookie domain <domain>`: adds the **Domain** attribute to a cookie. It
-  determines which hosts are allowed to receive the cookie. By default,
-  the domain is not included. This leads to that cookies being considered a
-  host-only cookie, meaning it is NOT shared with subdomains. Do not set the
-  domain with a leading dot (like `.example.com`) as this is considered legacy
-  and is not supported by the plugin.
-* `cookie path <path>` (optional): adds the **Path** attribute to a cookie.
-  It determines the URL path that must exist in the requested URL in order
-  to send  the Cookie header. The default is `/`.
-* `cookie lifetime` (optional): sets the number of seconds until the cookie
-  expires. The directive sets "Max-Age" cookie attribute.
-* `cookie samesite <lax|strict|none>`: specifies SameSite strategy.
-* `cookie insecure <on|off>`: Allows sending cookies over HTTP. By default,
-  it is disabled.
+```caddyfile
+cookie path /
+cookie same site lax
+cookie insecure disabled
+```
 
-The `cookie guess domain` directive, when enabled, would automatically try to discover the domain
-for intra-domain cookie purposes.
+| Directive | Effect |
+| --- | --- |
+| `cookie domain example.com` | Shares the access/session cookies with that domain and its subdomains |
+| `cookie path /` | Sets the access-cookie path; temporary login cookies use the portal mount |
+| `cookie lifetime 900` | Sets access-cookie Max-Age; does **not** extend the JWT's signed expiry |
+| `cookie same site lax` | Sets the ordinary access-cookie SameSite policy; also accepts `strict` or `none` |
+| `cookie insecure disabled` | Keeps Secure and HttpOnly on ordinary portal cookies |
+| `cookie guess domain enabled` | Infers a parent domain; explicit domain selection is easier to review |
+
+Use `enabled`/`disabled`, not `on`/`off`. The released parser normalizes a leading
+dot on a domain; use `example.com` consistently. Omitting a domain keeps the
+cookie host-only. Only share a parent domain when **every receiving subdomain
+is trusted**. A path is a delivery filter, not an isolation boundary against
+scripts on the same origin.
+
+`cookie insecure enabled` is for a disposable HTTP exercise. It removes both
+Secure and HttpOnly from ordinary portal cookies. The dedicated refresh, OIDC
+and SAML credentials have their own stricter attributes and HTTPS requirements.
+See [MDN's cookie reference](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies)
+for browser delivery rules.
 
 ## Changing Default Cookie Names
 
-These are the default cookies used by the authentication portal and authorization gateway:
+The current grammar supports a common prefix and explicit role names:
 
-| Caddyfile directive | Cookie Name | Purpose |
-| :--- | :--- | :--- |
-| `set session_id cookie name <NAME>` | `AUTHP_SESSION_ID` | Session tracking |
-| `set redirect_url cookie name <NAME>` | `AUTHP_REDIRECT_URL` | Redirection logic |
-| `set sandbox_id cookie name <NAME>` | `AUTHP_SANDBOX_ID` | Sandbox identification |
-| `set id_token cookie name <NAME>` | `AUTHP_ID_TOKEN` | Original identity storage |
-| `set access_token cookie name <NAME>` | `AUTHP_ACCESS_TOKEN` | Access token storage |
-| `set refresh_token cookie name <NAME>` | `AUTHP_REFRESH_TOKEN` | Refresh token storage |
-
-For example, to change the default session ID cookie name, configure the following:
-
-```Caddyfile
-		authentication portal myportal {
-			set session_id cookie name CONTOSO_SESSION_ID
-		}
+```caddyfile
+cookie prefix CONTOSO
+cookie access token name CONTOSO_APP_ACCESS
 ```
 
-The syntax:
+An explicit name wins regardless of statement order. Duplicate settings or
+colliding names are rejected. Older `set cookie name prefix CONTOSO` and
+`set access_token cookie name CONTOSO_APP_ACCESS` statements remain compatibility
+forms; use one form for each setting.
 
-```text
-set <session_id|redirect_url|sandbox_id|id_token|access_token|refresh_token> cookie name <name>
+| Role in `cookie <role> name NAME` | Default name |
+| --- | --- |
+| `session id` | `AUTHP_SESSION_ID` |
+| `referer` (also `redirect url`) | `AUTHP_REDIRECT_URL` |
+| `sandbox id` | `AUTHP_SANDBOX_ID` |
+| `identity token` (also `id token`) | `AUTHP_ID_TOKEN` |
+| `access token` | `AUTHP_ACCESS_TOKEN` |
+| `refresh token` | `AUTHP_REFRESH_TOKEN` |
+| `oidc session id` | `AUTHP_OIDC_SESSION_ID` |
+| `oidc request id` | `AUTHP_OIDC_REQUEST_ID` |
+| `saml session id` | `AUTHP_SAML_SESSION_ID` |
+
+If authorization runs on a separate Caddy instance, give its policy the matching
+access-cookie name and verification key:
+
+```caddyfile
+authorization policy apppolicy {
+    set access_token cookie name CONTOSO_APP_ACCESS
+    crypto key verify {env.AUTHCRUNCH_SIGNING_KEY}
+    allow roles app/member
+}
 ```
 
-Additionally, you can set common prefix to all cookies:
-
-```Caddyfile
-		authentication portal myportal {
-			set cookie name prefix CONTOSO
-		}
-```
-
-Importantly, if you changed default session ID cookie name, then you must also update you authorization policy
-to match the changed value.
-
-```Caddyfile
-		authorization policy mypolicy {
-			set session_id cookie name CONTOSO_SESSION_ID
-		}
-```
-
-If you changed default access_token cookie name, then you must also update you authorization policy
-to match the changed value.
-
-```Caddyfile
-		authorization policy mypolicy {
-			set access_token cookie name CONTOSO_ACCESS_TOKEN
-		}
-```
-
-> It is not necessary to add `set access_token cookie` if authorization policy and authentication portal
-> are on the same Caddy instance. It is being auto-discovered.
->
-> It applies to the use case where `authenticate` and `authorize` are on separate Caddy instances.
-
-You can provide more than one cookie name.
-
-```Caddyfile
-		authorization policy mypolicy {
-			set access_token cookie name CONTOSO_ACCESS_TOKEN CONTOSO_JWT_TOKEN CONTOSO_JWT_ACCESS_TOKEN
-		}
-```
+Same-instance portal/policy provisioning discovers portal cookie names. Check
+[discovery order](../authorize/token-discovery.md) when accepting several token
+sources or custom names. Changing a session tracking cookie alone does not
+replace the access JWT used by the application's policy.
 
 ## Scope
 
-The following table outlines the default scope and path for the cookies used by the authentication
-portal and authorization gateway.
+For a portal mounted at `/auth/`, the default prefix produces:
 
-The `BASE_URL` is the default path of the portal. Typically, it is `/auth`, `/`, or `/xauth`
+| Cookie | Delivery scope and purpose |
+| --- | --- |
+| `AUTHP_ACCESS_TOKEN` | Host-only unless configured otherwise; path `/` by default; signed application credential |
+| `AUTHP_SESSION_ID` | Host/domain tracking identifier at `/`; not an access-token substitute |
+| `AUTHP_REDIRECT_URL` | Host-only, `/auth/`; trusted return destination |
+| `AUTHP_SANDBOX_ID` | Host-only, `/auth/`; temporary login interaction |
+| `AUTHP_ID_TOKEN` | Host-only, `/auth/whoami`; provider identity display when issued |
+| `AUTHP_REFRESH_TOKEN` | With refresh enabled: host-only, `/auth/`, Secure/HttpOnly/SameSite=Lax; rotating opaque credential |
+| `AUTHP_OIDC_SESSION_ID`, `AUTHP_OIDC_REQUEST_ID` | Dedicated host-only OIDC browser state under its configured mount |
+| `AUTHP_SAML_SESSION_ID` | Short-lived host-only browser binding at `/`, Secure/HttpOnly/SameSite=None for cross-site SAML POSTs |
 
-| Cookie Name | Default Scope | Default Path | Comments |
-| :--- | :--- | :--- | :--- |
-| `AUTHP_SESSION_ID` | Domain/Host | `/` | Essential for maintaining the user's authenticated state. It is used to track user session across authentication postal and authorized services |
-| `AUTHP_ACCESS_TOKEN` | Domain/Host | `/` | Used by the gateway to authorize requests against protected upstream services. Also used by the portal itself |
-| `AUTHP_REDIRECT_URL` | Host | `BASE_URL/` | Used to return the user to their original destination after login. |
-| `AUTHP_SANDBOX_ID` | Host | `BASE_URL/` | Holds temporary state during login "challenges", e.g. TOTP, U2F, or WebAuthn authentication prompts |
-| `AUTHP_ID_TOKEN` | Host | `BASE_URL/` + `whoami` | Stores the raw identity provider data, e.g. claims from Google or GitHub |
-| `AUTHP_REFRESH_TOKEN` | Host | `BASE_URL/` + `api/refresh_token` | Allows users to get new access tokens without re-login. |
+The historical `/auth/api/refresh_token` cookie path is a legacy cleanup path,
+**not** the active refresh-session scope. Refresh credentials are issued only
+when [refresh sessions](30-refresh-token.md) are enabled for the local realm.
+Use the matching guide for refresh lifetime and name overrides.
+
+A `__Host-` cookie requires Secure, no Domain, and path `/`. It therefore cannot
+name a credential whose portal mount is `/auth/`. Separate portals on one host
+need noncolliding names and mounts; changing a prefix also changes dedicated
+OIDC/SAML names.
 
 ## JWT Tokens
 
-The plugin issues JWT tokens to authenticated users. The tokens
-contains user attributes, e.g. name, email, avatar, etc. They also
-contains roles. The roles are used to authorize user access with
-`authorize` plugin.
+The portal's access JWT contains identity and role claims. Signing protects
+integrity; it does not hide those claims. Grant application roles deliberately
+and verify them in a policy. Portal roles have distinct purposes:
 
-By default, in addition to the roles configured by an authentication provider,
-the plugin issues one of the three roles to a user.
+- `authp/admin`: portal administration permissions.
+- `authp/user`: ordinary portal access and, for local identities, account management
+  at `/profile/` with a live session.
+- `authp/guest`: restricted portal access when no user/admin role is assigned.
 
-* `authp/admin`: this is the admin user. It must be granted by authentication
-  provider or added to a user via `transform user` directive
-* `authp/user`: the user can access `/settings` endpoint. It must be granted
-  by authentication provider or added to a user via `transform user` directive
-* `authp/guest`: can access portal only. This is the default role assigned by
-  the portal to a user when neither `authp/admin` nor `authp/user` are being
-  assigned
-
-The plugin supports the issuance and verification of RSA, ECDSA, and shared keys.
-See docs [here](https://github.com/greenpau/caddy-authorize#token-verification).
+A provider's own roles must not accidentally grant portal administration or your
+application membership. See [transforms](42-user-transforms.md).
 
 ### Auto-Generated Encryption Keys
 
-By default, if there is no `crypto key` directive, the plugin auto-generated
-ECDSA key pair for signing and verification of tokens. The key pair changes
-with each restart of the plugin.
-
-In this case, there is no need to define `crypto key` directive in `authorize` plugin
-because the two plugins would know about the keypair.
-
-This is a perfect option for standalone servers.
+The historical heading refers to **signing keys**. With no explicit key, the
+portal generates an ECDSA pair and related policies on the same instance can use
+it. Without persistent state, restarting replaces that key and invalidates old
+JWTs. [Runtime state](../operations/runtime-state.md) can retain generated keys.
+For separate instances, configure shared verification material explicitly.
 
 ### Encryption Key Configuration
 
+These examples sign JWTs; they do not encrypt them. See
+[token verification](../authorize/token-verification.md) for asymmetric keys.
+
 #### Shared Key
 
-The following configuration instructs the plugin to sign/verify token
-with shared key `428f41ab-67ec-47d1-8633-bcade9dcc7ed` and add key id of
-`a2f19072b6d6` to the token's header. It uses the default token lifetime
-of 900 seconds (15 minutes). The name of the token is `access_token`.
+A complete deployment must supply a strong private value for the named variable:
 
-```
+```caddyfile
 authentication portal myportal {
-  crypto key a2f19072b6d6 sign-verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
+    enable identity store localdb
+    crypto default token lifetime 900
+    crypto key appkey sign-verify {env.AUTHCRUNCH_SIGNING_KEY}
 }
 
-authorization policy mypolicy {
-  crypto key a2f19072b6d6 verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
-}
-```
-
-The corresponding `authorize` plugin config is:
-
-```
-route {
-  authorize with mypolicy
+authorization policy apppolicy {
+    crypto key appkey verify {env.AUTHCRUNCH_SIGNING_KEY}
+    allow roles app/member
 }
 ```
 
-The following configuration instructs the plugin to sign/verify token
-with shared key `428f41ab-67ec-47d1-8633-bcade9dcc7ed` and add key id of
-`a2f19072b6d6` to the token's header. It uses the default token lifetime
-of 1800 seconds (30 minutes). The name of the token is `JWT_TOKEN`.
-
-
-```
-authentication portal myportal {
-  crypto default token name JWT_TOKEN
-  crypto default token lifetime 1800
-  crypto key a2f19072b6d6 sign-verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
-}
-
-authorization policy mypolicy {
-  crypto key a2f19072b6d6 verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
-}
-```
-
-The corresponding `authorize` plugin config is:
-
-```
-route {
-  authorize with mypolicy
-}
-```
-
-The following configuration instructs the plugin to sign/verify token
-with shared key `428f41ab-67ec-47d1-8633-bcade9dcc7ed` and add key id of
-`a2f19072b6d6` to the token's header. It uses the default token lifetime
-of 1800 seconds (30 minutes). The name of the token is `JWT_TOKEN`.
-
-
-```
-authentication portal myportal {
-  crypto key sign-verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
-}
-
-authorization policy mypolicy {
-  crypto key verify 428f41ab-67ec-47d1-8633-bcade9dcc7ed
-}
-```
-
-The corresponding `authorize` plugin config is:
-
-```
-route {
-  authorize with mypolicy
-}
-```
-
-
+This is a global-security fragment; define `localdb` and route handlers as in the
+[first application](../start/first-app.md). An access-only token defaults to 900
+seconds. Refresh-enabled portals use their access lifetime instead, defaulting
+to 300 seconds. Cookie Max-Age and browser logout do not extend or necessarily
+revoke a copied stateless JWT. Inspect the actual Set-Cookie headers, JWT expiry,
+allowed request, denied request and logout after changing these settings.

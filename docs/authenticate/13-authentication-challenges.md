@@ -9,188 +9,150 @@ discovery:
 
 # Authentication Challenges
 
-Currently, when user attempts to login the users will be prompted for the password first. Then,
-if MFA (application or hardware) is configured for the user, the user will be prompted to authenticate with
-either of them.
+Challenge rules select the methods a **local user** must actually complete and
+in what order. The released bundle supports Caddyfile rules, stored user rules
+and API updates. A policy selects checkpoints; only successful verification
+completes them.
 
-If Caddyfile contains `require mfa` in `transform user` and the MFA is not configured, then
-as part of user login, the user will be required to onboard MFA token. It could be Authenticator
-application token, hardware token, e.g. Yubico, or device-associated token, e.g. passkey.
-
-To summarize, there are two pathways to get authentication:
-
-1. password only
-2. password, then MFA (either app or hardware)
-
-Authentication challenge rules allow to change this default by specifying
-which challenge types a user must pass and in what order, with conditional
-fallbacks based on what the user has registered.
+Without explicit rules, a local account uses a password followed by its available
+MFA. `require mfa` adds an enrollment requirement when needed. Explicit rules
+that cannot match the user's registered methods **deny login**; they do not
+silently fall back to the default.
 
 ## Challenge Types
 
-| Type | Description |
-|------|------------|
-| `password` | Authenticate with a password |
-| `totp` | Authenticate with an authenticator app passcode |
-| `u2f` | Authenticate with a hardware token (e.g. Yubico) or passkey |
-| `mfa` | Authenticate with any available MFA method (totp, u2f, or email) |
-| `email` | Authenticate with an email-based verification code * |
+| Type | Released portal behavior |
+| --- | --- |
+| `password` | Password verification; considered available for rule selection |
+| `totp` | Registered authenticator application's time-based code |
+| `u2f` | Registered WebAuthn hardware token or passkey assertion |
+| `mfa` | An available supported MFA method |
+| `email` | Recognized by the shared rule grammar, but no implemented portal email checkpoint |
 
-\* Email challenge support is being added.
-
-**The `password` type is always considered available.** The other types
-require the user to have a matching token registered in the identity
-store.
+Do not configure `email` as a functioning login method. An email address on an
+account does not constitute an enrolled authentication factor.
 
 ## Rule Syntax
 
-Each rule specifies one or more challenge types with an optional
-condition:
-
-```
+```text
 <type> [<type>...] [if <type> [and <type>...] not available]
+<type> or <type> [or <type>...] [if <type> [and <type>...] not available]
 ```
 
-Rules are evaluated in order. The first rule whose challenge types are
-available and whose conditions are met determines the checkpoint sequence.
+Rules are ordered. The first satisfiable rule selects a sequence. Without `or`,
+all named methods must be available and all become checkpoints. With `or`, the
+**first available alternative in the written order** is the sole selected
+checkpoint. It does not require enrollment or verification of every alternative.
 
-When multiple challenge types appear in a rule, the user must pass
-all of them. The `or` keyword relaxes the availability check: the rule
-matches if the user has at least one of the listed types registered,
-rather than requiring all of them.
-
-The `if ... not available` clause makes a rule apply only when the
-specified types are not registered for the user. If the user has any of
-the condition types registered, the rule is skipped.
-
-If no rules match, the default behavior applies (password, plus any
-detected MFA).
+The `if ... not available` condition requires every condition method to be absent.
+Password is always considered available for selection; this does not bypass
+password verification. Repeated/conflicting types and malformed rules are rejected.
 
 ## Configuring via authdbctl
 
-The `authdbctl` tool can set authentication challenge rules for a user:
+Use an installed, compatible `authdbctl` against the intended running server and
+local realm. The CLI supports repeated overwrite flags:
 
-```bash
+```sh
 authdbctl update user \
-  --username jsmith \
-  --email jsmith@localhost.localdomain \
+  --username alice \
+  --email alice@example.com \
   --realm local \
-  --overwrite-auth-challenges "u2f" \
-  --overwrite-auth-challenges "password totp if u2f not available" \
-  --overwrite-auth-challenges "password if u2f and totp not available"
+  --overwrite-auth-challenges "password totp"
 ```
 
-A successful response follows:
+Configure its server credentials and transport as described in
+[static users](local/50-static-users.md#password-generation) and
+[Server API](api/40-server-api.md). The example requires a previously enrolled
+TOTP token; without it login is denied.
+
+The [Profile API](api/30-profile-api.md) uses `kind: overwrite_user_auth_challenges`
+and this body for a permitted local account's live session:
 
 ```json
-{"auth_challenge_rules":["u2f","password totp if u2f not available","password if u2f and totp not available"],"status":"success","timestamp":"2026-03-25T10:30:00.000Z"}
+{"challenges": ["password totp"]}
 ```
-
-The same operation is available via the Profile API. The request payload
-uses the `challenges` key:
-
-```json
-{
-  "challenges": [
-    "u2f",
-    "password totp if u2f not available",
-    "password if u2f and totp not available"
-  ]
-}
-```
-
-For details on installing `authdbctl`, see
-[Static Users](./local/50-static-users.md#password-generation).
 
 ## Caddyfile Configuration
 
-Caddyfile support for authentication challenges is tracked in
-[#470](https://github.com/greenpau/caddy-security/issues/470).
+These fragments are supported in caddy-security v1.3.0 / go-authcrunch v1.3.8.
+Adapt the full deployment with the executable you will run.
 
 ### Via Transform User Directive
 
-The following directive forces a particular authentication challenges via `transform user` directive.
-Here, the user should authenticate with `u2f` (Yubico or passkey only). If this method is not configured
-for the user, i.e. not tokens in user database, then it should fallback to `totp` (authenticator app passcode).
-If authenticator app is not configured, then default to password only.
+For a strict password-plus-TOTP policy on a provisioned local realm:
 
-```Caddyfile
+```caddyfile
 transform user {
-  match origin local
-  require auth challenges u2f
-  require auth challenges password totp if u2f not available
-  require auth challenges password if u2f and totp not available
+    match realm local
+    require auth challenges password totp
 }
 ```
+
+A transform-selected policy overrides the account's selected sequence; additive
+requirements such as `require mfa` still apply. The first applicable transform
+policy that can resolve a sequence wins. If applicable policies resolve none,
+login is denied. Use realm matchers so local challenge requirements are not
+accidentally applied to federated identities.
 
 ### Via Identity Store User Configuration
 
-The same would apply when you add these requirements via user configuration
-in the local identity store.
+Within the local store definition, an administrator can set the account policy:
 
-```Caddyfile
+```caddyfile
 local identity store localdb {
-  user jsmith {
-    name John Smith
-    email jsmith@localhost.localdomain
-    auth challenges u2f
-    auth challenges password totp if u2f not available
-    auth challenges password if u2f and totp not available
-  }
+    realm local
+    path /var/lib/authcrunch/users.json
+    user alice {
+        email alice@example.com
+        roles authp/user app/member
+        auth challenges password totp
+    }
 }
 ```
+
+This fragment assumes an existing account with credentials; it supplies no usable
+password or enrolled TOTP secret for a new account. See [static users](local/50-static-users.md)
+for provisioning and overwrite semantics.
 
 ## Evaluation Examples
 
-The following table shows the checkpoint sequence for different users
-when the U2F-first ruleset is configured:
+A hardware-first policy with an **intentional password-only fallback** can use:
 
-| User has registered | Matching rule | Checkpoint sequence |
-|---------------------|--------------|---------------------|
-| Hardware token + authenticator app | `u2f` | u2f |
-| Hardware token only | `u2f` | u2f |
-| Authenticator app only | `password totp if u2f not available` | password, totp |
-| No MFA tokens | `password if u2f and totp not available` | password |
-
-When the user has both a hardware token and an authenticator app, the
-first rule matches because u2f is available. The authenticator app is
-not used.
-
-The following ruleset uses `or` to require any MFA method when at least
-one is registered:
-
-```
-u2f or totp
+```text
+u2f
+password totp if u2f not available
 password if u2f and totp not available
 ```
 
-| User has registered | Matching rule | Checkpoint sequence |
-|---------------------|--------------|---------------------|
-| Hardware token + authenticator app | `u2f or totp` | u2f, totp |
-| Hardware token only | `u2f or totp` | u2f, totp |
-| Authenticator app only | `u2f or totp` | u2f, totp |
-| No MFA tokens | `password if u2f and totp not available` | password |
+| Registered methods | Selected checkpoints |
+| --- | --- |
+| Hardware token and TOTP | `u2f` |
+| Hardware token only | `u2f` |
+| TOTP only | `password`, `totp` |
+| Neither MFA method | `password` |
 
-When `or` is used, the rule matches if the user has at least one of the
-listed types registered. All listed types become checkpoints. If the
-user does not have a token for one of the types, they will be prompted
-to register one during login.
+If password-only login is unacceptable, omit that fallback and provision a usable
+factor before applying the policy.
+
+For `u2f or totp`, a user with both gets **u2f only**; a user with TOTP only gets
+**totp only**. Neither matches when no factor is registered. To require both,
+write `u2f totp`. An ordered alternative is not a user-choice screen.
 
 ## Editing the Identity Store Directly
 
-Authentication challenge rules are stored in the user record in
-`users.json`:
+Stored local records use `auth_challenge_rules`:
 
 ```json
-{
-  "username": "jsmith",
-  "auth_challenge_rules": [
-    "u2f",
-    "password totp if u2f not available",
-    "password if u2f and totp not available"
-  ]
-}
+{"username": "alice", "auth_challenge_rules": ["password totp"]}
 ```
 
-For details on the identity store file format, see
-[Identity Store](./local/20-identity-store.md).
+This is an excerpt, not a replacement database. Prefer the supported CLI/API;
+manual file edits require stopping the writer, backing up the coherent database
+and preserving its schema. Security-state changes invalidate old authentication
+evidence, so test with a fresh login rather than an existing cookie.
+
+Also test unavailable methods, wrong assertions, enrollment followed by fresh
+login, and stronger policy changes. Basic/API-key authentication cannot manufacture
+proof of missing checkpoints. Refresh and OIDC recheck local evidence against the
+current policy; selected rules alone are not successful MFA claims.

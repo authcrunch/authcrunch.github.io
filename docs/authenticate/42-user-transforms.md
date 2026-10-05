@@ -9,183 +9,131 @@ discovery:
 
 # User Transforms
 
-A user transform allows performing the following once a user has passed
-authentication:
+Transforms map a resolved identity to portal roles, application roles, custom
+claims, links and required checkpoints. For local login, they run while the
+portal assembles authentication requirements, **before all checkpoints have
+passed**. Matching a transform or adding a role is not evidence of successful MFA.
 
-* add/remove user roles
-* add link to UI portal page
-* require multi-factor authentication (MFA/2FA)
-* require accepting term and conditions
-* block/deny access (by not issuing a token)
-* injecting custom, arbitrary claims into a token
-
+A transform's matchers are combined; separate matching transforms run in order
+and can add cumulative roles. A later deny still blocks token issuance. The
+application's authorization policy remains a separate decision.
 
 ## Add Roles
 
-For GitHub account access, prefer the released driver's numeric
-[`match github id` and organization matchers](oauth/81-backend-oauth2-0007-github.md#choose-who-can-use-the-app).
-The `github.com/LOGIN` subject used in the legacy example below changes if the
-account is renamed.
+Grant a portal role and an application role deliberately. For an exact local account:
 
-The following transform matches `sub` field and grants `authp/viewer` role:
-
-```
-  transform user {
-    exact match sub github.com/greenpau
-    action add role authp/viewer
-  }
+```caddyfile
+transform user {
+    match realm local
+    match sub alice
+    action add role authp/user app/member
+}
 ```
 
-The following transform adds role `verified` to Facebook-authenticated user
-with id of `123456789`:
+Use the actual subject emitted by your store/provider; inspect a synthetic test
+identity before relying on this fragment. Provider usernames, email addresses and
+subjects have different stability guarantees. For GitHub, prefer the released
+[numeric account ID](oauth/81-backend-oauth2-0007-github.md#choose-who-can-use-the-app).
+An arbitrary role such as `authp/viewer` has no built-in portal administration meaning.
 
-```
-  transform user {
-    exact match sub 123456789
-    exact match origin facebook
-    action add role verified
-  }
-```
-
-The following transform adds the role `contoso_users` to users with an email
-address from the contoso.com domain:
-
-```
-  transform user {
-    suffix match email @contoso.com
-    add role contoso_users
-  }
-```
+An email suffix alone does not prove verified email ownership. Match the intended
+realm and use a trustworthy immutable account/group claim from that provider.
+Never rename a merely matched identity to `verified` and treat that label as proof.
 
 ## Add UI Links
 
-The following transform, in addition to the above adds a link to a user's
-portal page:
+```caddyfile
+transform user {
+    match realm local
+    match role app/member
+    ui link "Example app" /app/ icon "las la-cube"
+}
+```
 
-```
-  transform user {
-    exact match sub github.com/greenpau
-    action add role authp/viewer
-    ui link "Caddy Version" /version icon "las la-code-branch"
-  }
-```
+This changes navigation, not destination permissions. The app must still run
+`authorize` before serving or proxying protected content.
 
 ## Force Multi-Factor Authentication
 
-The following transform requires to pass multi-factor authentication when the
-authenticated user's email is `webadmin@localdomain.local`:
-
-```
-  transform user {
-    match email webadmin@localdomain.local
+```caddyfile
+transform user {
+    match realm local
     require mfa
-  }
+}
 ```
 
-For more advanced challenge configuration with conditional fallbacks,
-see [Authentication Challenges](./13-authentication-challenges.md).
+Local MFA requirements are checkpoints. For strict ordered rules and availability
+behavior, see [authentication challenges](13-authentication-challenges.md).
+An external provider's MFA policy belongs to that provider; generic upstream
+claims cannot manufacture local proof.
 
 ## Deny Access
 
-The following transform blocks a user with email `anonymous@badactor.com`
-from getting authenticated:
-
-```
-  transform user {
-    match email anonymous@badactor.com
+```caddyfile
+transform user {
+    match realm local
+    match email blocked@example.com
     block
-  }
+}
 ```
+
+A matched `block`/`deny` prevents successful portal token issuance. Keep application
+ACL restrictions in the [policy](../authorize/acl-rbac.md) too. Test a blocked
+identity with a fresh login after changing transforms.
 
 ## Inject Custom Claims
 
-The syntax:
+Configured additions can use scalar, list and nested values:
 
-```
-action add <claim_name> <claim_value> as <string|list>
-action add nested [arg1 ... argN] with [arg1 ... argN] as <string|list>
-```
-
-Here, if a user is authentication in `local` realm and has email address
-of `webadmin@localdomain.local`, then a number of custom claims will be
-added to the token issued by the portal.
-
-```
-  transform user {
+```caddyfile
+transform user {
     match realm local
-    match email webadmin@localdomain.local
-    action add foo bar as string
-    action add nested "acl" "paths" "/*/users/**" as map
-    action add nested "acl" "paths" "/*/conversations/**" as map
-    action add nested "acl" "paths" "/*/sessions/**" as map
-    action add nested "acl" "paths" "/*/devices/**" as map
-    action add nested "metadata" "language" with "english" as string
-    action add nested "metadata" "interests" with "movies" "gaming" as list
-  }
+    action add department engineering as string
+    action add nested metadata language with english as string
+    action add nested metadata interests with docs operations as list
+}
 ```
 
-The outcome follows:
+The relevant result is:
 
 ```json
 {
-  "acl": {
-    "paths": {
-      "/*/conversations/**": {},
-      "/*/devices/**": {},
-      "/*/sessions/**": {},
-      "/*/users/**": {}
-    }
-  },
-  "metadata": {
-    "interests": [
-      "movies",
-      "gaming"
-    ],
-    "language": "english"
-  },
-  "foo": "bar"
+  "department": "engineering",
+  "metadata": {"language": "english", "interests": ["docs", "operations"]}
 }
 ```
 
-Alternatively, one can add `name` and `picture` (avatar) claims:
+Existing claim text is data. Configured additions can interpolate supported
+`{claims.NAME}` values, but arbitrary input does not get recursively evaluated as
+a template. Use explicit types and avoid overwriting standard identity, expiry,
+role or challenge fields. Challenge evidence is owned by authentication, not by
+a custom claim called `auth_methods` or `challenges`.
 
-```
-  transform user {
-    match realm local
-    match email webadmin@localdomain.local
-    action add name "Paul Greenberg"
-    action add picture "https://avatars.githubusercontent.com/u/3826416?v=4" as string
-  }
-```
+The nested-map form `action add nested acl paths "/app/**" as map` creates a
+[path ACL](../authorize/path-acl.md); test its allow and deny boundaries separately.
+[Typed policy-local custom fields](../authorize/custom-fields.md) require a newer
+Caddy integration and are explicitly labeled as a preview.
 
 ## Drop Matched Roles
 
-This feature is available starting `v1.1.24`.
+Provider roles can collide with privileged portal/application roles. Clear those
+reserved values before independently granting your intended roles:
 
-The following transform removes any role with whitespaces from the
-token issued to a user.
-
-```
+```caddyfile
 transform user {
-  regex match role "\s"
-  action drop matched role
+    regex match role "^(authp/.*|app/member)$"
+    action drop matched role
 }
 ```
 
-Note: The dropping of the roles with spaces might be needed when using `inject headers with claims`
-or `inject header x-header from role`, because the delimiter in X headers is hard-coded
-as space.
+The drop operation reevaluates its matcher against **each role alone**. Do not add
+a realm or email matcher to this dropping transform: those fields are absent in
+that per-role evaluation and the role will not be removed. Apply realm/account
+conditions to separate role-granting transforms. The
+[generic OIDC example](oauth/81-backend-oauth2-0000-generic.md) demonstrates the full boundary.
 
-The following transform removes any role that does not match `authp/admin` or `authp/user`
-from the token issued to a user.
-
-```
-transform user {
-  no regex match any role "^authp/(admin|user)$"
-  action drop matched role
-}
-```
-
-References:
-
-* [Solution Brief A00001 `Caddyfile`](https://github.com/greenpau/caddy-auth-docs/blob/main/assets/solutions/A00001/Caddyfile)
+To remove roles containing whitespace, use `regex match role "\s"` and
+`action drop matched role`. Verify the resulting role list and upstream header
+serialization. A policy trusting any authenticated user, such as `allow roles
+authp/user`, has a broader boundary than one requiring independently assigned
+`app/member`.

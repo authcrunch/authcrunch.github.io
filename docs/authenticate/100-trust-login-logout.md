@@ -8,209 +8,115 @@ discovery:
 
 # Trusted Login and Logout Redirects
 
-When the `authorize` plugin denies an unauthenticated request, it redirects
-the user to the authentication portal with a `redirect_url` query parameter
-set to the originally requested URL.
+A protected application sends an unauthenticated browser to the portal with
+`redirect_url` identifying its original destination. The portal records that
+value only when a configured domain **and** path rule matches. Otherwise login
+still works, but the browser continues to the portal rather than that destination.
 
-After successful login, the portal stores the redirect target in a cookie
-and redirects the user back, but only if the target URL is trusted.
-
-Without this check, an attacker could craft a login URL that sends the user
-to a malicious site after authentication:
-
-```
-https://auth.example.com/auth/login?redirect_url=https://evil.com/phish
-```
-
-The user sees the legitimate login page, authenticates, and gets redirected
-to a site the attacker controls.
-
-The `trust login redirect uri` directive defines which domains and paths
-are allowed as post-login redirect targets. If the `redirect_url` does not
-match any trusted URI, the portal ignores the parameter and redirects to
-the default portal page instead.
+Trust rules govern navigation. They neither grant application access nor share
+cookies across hosts. A complete deployment needs matching routes, a usable
+application role, verification keys and [cookie scope](auth-cookie.md).
 
 ## Trust Login Redirect URI
 
-The directive is configured inside the `authentication portal` block.
+Inside the portal, explicitly trust the application's exact host and routes:
 
-The syntax follows:
-
-```
-authentication portal <name> {
-  trust login redirect uri domain [exact|partial|prefix|suffix|regex] <domain_name> path [exact|partial|prefix|suffix|regex] <path>
-}
+```caddyfile
+trust login redirect uri domain exact app.example.com path exact /dashboard
+trust login redirect uri domain exact app.example.com path prefix /dashboard/
 ```
 
-Both `domain` and `path` are required. When the match type is
-omitted, `exact` is used. The matching works the same way as ACL rules.
+Both conditions in one rule must match; several rules are alternatives. Omitting
+the strategy selects exact matching. The two paths above admit `/dashboard` and
+its descendants without also admitting `/dashboard-other`.
 
-Examples follow:
-
-```
-authentication portal myportal {
-  trust login redirect uri domain suffix mydomain.com path prefix /
-  trust login redirect uri domain exact app.internal path prefix /dashboard
-}
-```
-
-The first rule trusts any redirect URL ending with `mydomain.com` at any
-path. The `path prefix /` covers all paths, essentially a wildcard. This
-also covers subdomains like `app.mydomain.com` and `api.mydomain.com`.
-
-The second rule trusts only the exact host `app.internal` with paths
-starting with `/dashboard`.
-
-Multiple directives can be specified for all URLs you want to cover. A
-match against any single rule is sufficient.
+Avoid `domain suffix example.com`: it also matches `evil-example.com`. If many
+subdomains are intentionally trusted, an anchored, escaped regex can distinguish
+a label boundary, but an explicit list of application hosts is easier to audit.
+A domain rule matches URL `Host`, including a port, and a path rule matches `Path`;
+query parameters are not an additional restriction. These directives contain no
+scheme matcher. Keep generated application destinations canonical HTTPS and do
+not describe a host/path rule as enforcing HTTPS by itself.
 
 ### Full Configuration Example
 
-A typical setup with OAuth 2.0 involves both the `authorize` and
-`authentication portal` directives. Here, the `set auth url` directive in
-the authorization policy tells the `authorize` plugin where to redirect
-unauthenticated users. The `trust login redirect uri` directive in the
-portal tells the portal which redirect targets to allow after login.
+Use the tested [generic OIDC example](oauth/81-backend-oauth2-0000-generic.md) for a complete
+single-host deployment. For a cross-host portal, all these settings must agree:
 
-```
-{
-  security {
-    oauth identity provider generic {
-      realm generic
-      driver generic
-      client_id {env.OIDC_CLIENT_ID}
-      client_secret {env.OIDC_CLIENT_SECRET}
-      scopes openid email profile
-      base_auth_url https://id.mydomain.com
-      metadata_url https://id.mydomain.com/.well-known/openid-configuration
-    }
+| Setting | Example |
+| --- | --- |
+| Portal handler mount | `https://auth.example.com/auth/` |
+| Policy auth URL | `https://auth.example.com/auth/oauth2/upstream` |
+| Trusted return host/path | Exact `app.example.com`, exact `/dashboard` and prefix `/dashboard/` |
+| Access-cookie delivery | `cookie domain example.com` and `cookie path /`, only if all subdomains are trusted |
+| Application policy | Matching verifier plus an explicitly granted `app/member` role |
 
-    authentication portal myportal {
-      enable identity provider generic
-      trust login redirect uri domain suffix mydomain.com path prefix /
-    }
-
-    authorization policy mypolicy {
-      set auth url /auth/oauth2/generic
-      allow roles user
-    }
-  }
-}
-
-auth.mydomain.com {
-  authenticate with myportal
-}
-
-app.mydomain.com {
-  authorize with mypolicy
-  reverse_proxy backend:8080
-}
-```
+A relative auth URL such as `/auth/login` on the application host cannot reach a
+portal that exists only on a different host. Trusted redirects do not fix that
+routing error. Prefer a single host when broad parent-domain cookies would expose
+credentials to unrelated subdomains.
 
 ### How It Works
 
-1. User requests `https://app.mydomain.com/dashboard`
-2. The `authorize` plugin finds no valid session cookie and redirects to
-   `https://auth.mydomain.com/auth/oauth2/generic?redirect_url=https://app.mydomain.com/dashboard`
-3. User authenticates at the portal
-4. Portal checks `redirect_url` against `trust login redirect uri` rules
-5. If trusted: the portal stores the redirect target in the `AUTHP_REDIRECT_URL`
-   cookie, issues a session cookie (`access_token`), and sends the user back
-   to the original URL
-6. If not trusted: the portal issues a session cookie and redirects to the
-   portal landing page, dropping the redirect target
+1. The anonymous browser requests the protected application.
+2. Its policy redirects to the configured auth URL with an encoded `redirect_url`.
+3. The portal checks the host/path pair and records a trusted target in its
+   mount-scoped return cookie.
+4. The user completes the required login and receives an access credential.
+5. The portal consumes the return destination; the application evaluates its
+   own policy on the new request.
 
-For cookie scope configuration (which domains receive the session cookie),
-see [Authorization Cookie](./auth-cookie.md).
+A trusted return destination does not make a nonmember pass the application ACL.
+Test a member, a nonmember and an anonymous user.
 
 ### Match Types
 
 | Type | Behavior |
-|------|----------|
-| `exact` | Value must match exactly (default when omitted) |
-| `partial` | Value appears anywhere in the string |
-| `prefix` | Value starts with the specified string |
-| `suffix` | Value ends with the specified string |
-| `regex` | Value matches the regular expression |
+| --- | --- |
+| `exact` | Entire value equals the configured value |
+| `partial` | Configured text appears anywhere |
+| `prefix` | Value starts with configured text |
+| `suffix` | Value ends with configured text |
+| `regex` | Go regular expression matches; anchor it when requiring the entire value |
 
-These apply independently to `domain` (matched against the host) and `path`
-(matched against the URL path).
+Matching is case-sensitive string comparison except for the chosen regex behavior.
+Include escaped dots and intentional label/path boundaries. Use exact matching
+for sign-out landing pages and other fixed destinations.
 
 ### Troubleshooting
 
-If users are not being redirected to their originally requested page after
-login, enable debug logging:
+Enable [diagnostic logging](../operations/logging.md) locally and look for
+`provided redirect_url is not trusted` or
+`trust login redirect uri is not configured, but detected redirect_url attempt`.
+Check the actual host **including port**, path, portal mount, cookie delivery and
+policy auth URL. Avoid logging live credential cookies while investigating.
 
-```
-{
-  debug
-}
-```
-
-Look for these log messages:
-
-- `"Login redirect URI configuration not present"` (at startup): no
-  `trust login redirect uri` directive is configured. The portal will
-  work, but all `redirect_url` parameters will be silently ignored.
-
-- `"trust login redirect uri is not configured, but detected redirect_url attempt"`:
-  same as above, logged per request.
-
-- `"provided redirect_url is not trusted"`: the redirect URL does not match
-  any rule. Verify that the domain and path cover the URL being redirected to.
-
-> **Note:** If upgrading from a version before this security fix, existing
-> configurations that relied on automatic post-login redirects will need
-> the `trust login redirect uri` directive added. Without it, users will
-> still authenticate successfully but will land on the portal page instead
-> of their intended destination.
+Try the intended destination and rejection cases: a lookalike hostname,
+`app.example.com.evil.test`, an unexpected port, `/dashboard-other`, and a URL
+outside the permitted paths. Check the Location and Set-Cookie headers as well
+as the final browser destination.
 
 ## Trust Logout Redirect URI
 
-Logout redirects follow the same pattern. When a user visits the logout
-endpoint with a `redirect_uri` query parameter, the portal only honors
-the redirect if it matches a `trust logout redirect uri` rule.
+Logout uses **`redirect_uri`**, not the login parameter. For a fixed landing page:
 
-The syntax follows:
-
-```
-authentication portal <name> {
-  trust logout redirect uri domain [exact|partial|prefix|suffix|regex] <domain_name> path [exact|partial|prefix|suffix|regex] <path>
-}
+```caddyfile
+trust logout redirect uri domain exact app.example.com path exact /signed-out
 ```
 
-Examples follow:
-
-```
-authentication portal myportal {
-  trust logout redirect uri domain authcrunch.com path /foo/bar
-  trust logout redirect uri domain exact google.com path suffix /foo
-}
-```
-
-For external provider logout (OAuth 2.0, SAML), see
-[Logout](./15-logout.md#external-endpoint-logout).
-
-> **Note:** Login uses the `redirect_url` query parameter. Logout uses
-> `redirect_uri`. These are different parameters.
+The same domain/path matching applies. [Logout](15-logout.md#external-endpoint-logout)
+explains the separate upstream provider flow and refresh-session confirmation.
+A trusted landing page does not itself revoke any additional credential.
 
 ## Non-Standard Ports
 
-If you are serving the website your are redirecting to on non-default HTTP/HTTPS ports, the `domain_name` may include
-a port value, e.g. `8080`, `8443`, etc.
+List the actual port rather than accepting every port:
 
-As such, you will need to match in the following way:
-
-```
-trust login redirect uri domain regex ^site1.example.com(:[0-9]+)?$ path prefix /
-trust logout redirect uri domain regex ^site1.example.com(:[0-9]+)?$ path prefix /
+```caddyfile
+trust login redirect uri domain exact app.example.com:8443 path prefix /dashboard/
+trust logout redirect uri domain exact app.example.com:8443 path exact /signed-out
 ```
 
-The above `regex` will match:
-
-```
-site1.example.com
-site1.example.com:443
-site1.example.com:8443
-site1.example.com:18443
-```
+For a deliberately reviewed pair of ports, an anchored regex can use
+`^app[.]example[.]com:(443|8443)$`. A URL with no explicit port still has a different
+Host string from one containing `:443`; add a separate exact rule when needed.

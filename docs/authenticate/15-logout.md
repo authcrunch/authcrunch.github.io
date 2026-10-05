@@ -8,122 +8,98 @@ discovery:
 
 # Logout
 
-All authentication endpoints have a dedicated logout path, typically accessed through `/logout`.
+For a portal mounted at `/auth/`, sign out at `/auth/logout`. What is revoked
+depends on the credential model:
 
-Upon reaching this path, users are usually redirected to the login page (`/login`),
-with some exceptions as detailed below.
+| Model | Result |
+| --- | --- |
+| Ordinary portal JWT | Clears browser credentials; an independently copied JWT may remain valid until expiry |
+| Local refresh session | GET displays confirmation; the protected POST revokes the refresh family and clears its cookies |
+| AuthCrunch OIDC provider | Revokes its browser-backed OIDC state as implemented; relying parties also need their own session cleanup |
+| Direct OAuth policy | Same-origin POST to the policy's logout path revokes its opaque local session |
+| External provider SSO | Remains active unless the configured provider logout flow completes |
+
+Use the built-in sign-out action for browser refresh sessions. Custom clients
+must follow [refresh logout](30-refresh-token.md); a GET alone does not revoke
+that family. Direct policies use the separate [direct OAuth contract](../authorize/direct-oauth.md).
 
 ## Logout with Redirect URL Query Parameter
 
-If a `redirect_uri` parameter is included in the query string, the portal will redirect
-the user to the specified link, but only if the URI is trusted.
+An ordinary portal logout can accept an encoded `redirect_uri` destination only
+when it matches a configured trust rule. For example, inside the portal:
 
-Here, the `redirect_uri` is present and points to `https://google.com/`
-
-```
-https://localhost:8443/auth/logout?redirect_uri=https://google.com/
+```caddyfile
+trust logout redirect uri domain exact app.example.com path exact /signed-out
 ```
 
-The trust is being established via `trust logout redirect uri` directive.
-If there is a match of `domain` and `path`, then the redirect occurs.
-Otherwise, there is no redirect.
+The corresponding request is:
 
-The syntax follows:
-
-```
-authentication portal <name> {
-  trust logout redirect uri domain [exact|partial|prefix|suffix|regex] <domain_name> path [exact|partial|prefix|suffix|regex] <path>
-}
+```text
+https://auth.example.com/auth/logout?redirect_uri=https%3A%2F%2Fapp.example.com%2Fsigned-out
 ```
 
-Examples follow:
-
-```
-authentication portal my portal {
-  trust logout redirect uri domain authcrunch.com path /foo/bar
-  trust logout redirect uri domain exact google.com path suffix /foo
-}
-```
-
-
-If you are serving the website your are redirecting to on non-default HTTP/HTTPS ports, the `domain_name` may include
-a port value, e.g. `8080`, `8443`, etc.
-
-As such, you will need to match in the following way:
-
-```
-trust logout redirect uri domain regex ^site1.example.com(:[0-9]+)?$ path prefix /
-```
-
-The above `regex` will match:
-
-```
-site1.example.com
-site1.example.com:443
-site1.example.com:8443
-site1.example.com:18443
-```
+Untrusted destinations do not become redirects. Domain matching includes an
+explicit port when present; `app.example.com:8443` is a different value.
+Login uses `redirect_url`, whereas logout uses `redirect_uri`.
+[Trusted redirects](100-trust-login-logout.md) explains matching and tests.
+Do not assume this query replaces the protected refresh-logout POST or an OIDC
+relying party's own logout protocol.
 
 ## External Endpoint Logout
 
-The external endpoint logout applies to OAuth 2.0 and SAML authentication.
-
-When `enable logout` is set, the portal will redirect the user to the provider's
-logout endpoint upon signing out, ensuring that the user's session is fully
-invalidated at the identity provider level (not just locally).
+OAuth providers have a separate logout route, such as `/auth/oauth2/upstream/logout`.
+The portal clears local credentials and may send the browser to the upstream
+logout URL. This is a browser redirect, not proof that all upstream sessions,
+access tokens or other applications have been revoked.
 
 ### Manual Logout URL
 
-You can manually specify a logout URL using the `logout_url` parameter. When this
-parameter is set:
+Configure the **identity provider definition**, then enable its nickname in the
+portal. Do not nest a provider definition inside `enable identity provider`:
 
-1.  **Logout is auto-enabled**: There is no need to explicitly set `enable logout`.
-2.  **Override**: The portal will redirect the user to this specific URL, bypassing
-    any provider-specific discovery or parameter-appending logic.
-
-This is particularly useful for drivers with non-standard logout flows or when
-you want to use a specific landing page after logout.
-
-```
-authentication portal myportal {
-  enable identity provider google {
-    ...
-    logout_url https://accounts.google.com/logout
-  }
+```caddyfile
+security {
+    oauth identity provider upstream {
+        driver generic
+        realm upstream
+        client_id {env.OIDC_CLIENT_ID}
+        client_secret {env.OIDC_CLIENT_SECRET}
+        base_auth_url https://identity.example.com
+        metadata_url https://identity.example.com/.well-known/openid-configuration
+        scopes openid email profile
+        logout_url https://identity.example.com/logout
+    }
+    authentication portal myportal {
+        enable identity provider upstream
+    }
 }
 ```
+
+A nonempty `logout_url` enables external logout. With a driver-specific provider,
+the released handler still applies that driver's redirect-parameter behavior to
+a manually configured URL. It does **not** universally use a manual URL unchanged.
+Avoid supplying an already assembled query to a driver that appends `?`.
 
 ### OAuth Driver Support
 
-The following table summarizes how each supported OAuth 2.0 driver handles
-the logout redirect when `enable logout` is used without a manual `logout_url`:
+The released handler applies the following operations to its configured URL:
 
-| OAuth Driver Name | Redirect Parameter | Example Logout URL | Status |
-|-------------------|--------------------|--------------------|--------|
-| `google` | `?continue=<redirect_url>` | `https://accounts.google.com/logout?continue=https://auth.example.com/logout` | Implemented |
-| `azure` | `?post_logout_redirect_uri=<redirect_url>` | `https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=https://auth.example.com/logout` | Implemented |
-| `gitlab` | `?post_logout_redirect_uri=<redirect_url>` | `https://gitlab.com/oauth/logout?post_logout_redirect_uri=https://auth.example.com/logout` | Implemented |
-| `okta` | `?post_logout_redirect_uri=<redirect_url>` | `https://okta.example.com/oauth2/v1/logout?post_logout_redirect_uri=https://auth.example.com/logout` | Implemented |
-| `cognito` | `&logout_uri=<redirect_url>` | `https://auth.example.com/logout?client_id=foo&logout_uri=https://auth.example.com/logout` | Implemented |
-| `github` | *(no redirect parameter)* | `https://github.com/logout` | Implemented |
-| `generic` | *(no modification)* | The configured logout URL is used as-is without appending any redirect parameters. | Implemented |
-| `facebook` | *(no modification)* | Standard redirect parameter support planned. | TODO |
-| `discord` | *(no modification)* | Standard redirect parameter support planned. | TODO |
-| `linkedin` | *(no modification)* | Standard redirect parameter support planned. | TODO |
-| `nextcloud` | *(no modification)* | Standard redirect parameter support planned. | TODO |
+| Driver | Added parameter |
+| --- | --- |
+| `google` | `?continue=` plus the encoded portal logout URL |
+| `azure`, `gitlab`, `okta` | `?post_logout_redirect_uri=` plus that URL |
+| `cognito` | `&logout_uri=` plus that URL; the configured URL already includes the client ID |
+| `github` | None |
+| `generic`, `facebook`, `discord`, `linkedin`, `nextcloud` | No driver-specific parameter appended |
 
-All redirect URIs are automatically URL-encoded by the portal.
+These are AuthCrunch handler behaviors, not a guarantee that the provider accepts
+the resulting request. Check the provider's current logout requirements and
+registered return URLs. Some OIDC providers require an ID-token hint that this
+redirect alone does not supply.
 
-To enable external logout for a driver, use the `enable logout` directive
-in the identity provider configuration:
-
-```
-authentication portal myportal {
-  enable identity provider google {
-    ...
-    enable logout
-  }
-}
-```
-
-> Without the `enable logout` directive (and without a manual `logout_url`), the portal will only clear local session cookies and redirect to the login page. The user's session at the identity provider (e.g., Google, Azure) will remain active.
+Use `enable logout` in the provider block when relying on its driver's configured
+logout URL. Without that flag or a nonempty manual URL, logout returns locally
+to login. A matching trusted `redirect_uri` on the external logout route takes
+precedence over the upstream redirect. Test local access after sign-out and a
+new provider login separately: immediate SSO may simply mean the upstream browser
+session still exists.

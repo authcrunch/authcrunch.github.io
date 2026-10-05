@@ -138,6 +138,15 @@ Ordered challenge rules use the first available `or` alternative, and an explici
 unmatched policy denies login. Check the released selector before changing these
 claims; enrollment alone does not establish completed authentication evidence.
 
+Local account guidance must distinguish initial provisioning from reconciliation:
+bootstrap environment values create a missing administrator and current logs do
+not print its password. Registration email verification writes a separate dropbox;
+it does not implement approval or active-account provisioning. The released
+password CLI supports bcrypt and Argon2id imports and private file/stdin input.
+Use its generated Caddyfile directive rather than inventing a hash or replacing
+an entire JSON credential record. Keep current profile captures distinct from
+older Settings screens when adding captions.
+
 ## Blog workflow
 
 Follow the existing dated filename pattern. Set a stable `slug`, meaningful

@@ -9,53 +9,64 @@ discovery:
 
 # Authentication challenge internals
 
+This page explains the local portal's identity-to-proof transition. For deployment
+configuration, start with [challenge rules](13-authentication-challenges.md); for
+custom clients, use the [Portal API](api/20-portal-api.md).
+
 ## Authentication Challenges
 
-Conceptually, when a user provides username or email during an authentication
-session to authentication portal, the user provides "identity". Optionally, the
-user could provide the "realm" to further assist in identifying the user. For
-example, user `foo` may exists in multiple realms, e.g. `bar.baz` and `baz.bar`.
+The username/email and realm identify the backend account. They are not proof of
+ownership. The portal resolves registered methods from that backend, applies
+transforms, selects a challenge sequence, and creates temporary sandbox state.
+It verifies each checkpoint in order before issuing the final credential.
 
-Once the portal has the "identity" (`id` and `realm`) of the user, the
-portal determines the challenges the user must pass to get authentication.
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant Portal
+    participant Store as Local store
+    Browser->>Portal: Username and realm
+    Portal->>Store: Resolve account and registered methods
+    Store-->>Portal: Identity and security evidence
+    Portal->>Portal: Apply transforms and select checkpoints
+    Portal-->>Browser: Bound sandbox and next challenge
+    loop Required checkpoints
+        Browser->>Portal: Bound response to current challenge
+        Portal->>Store: Verify password or MFA evidence
+        Portal-->>Browser: Next checkpoint or denial
+    end
+    Portal-->>Browser: Completed login credential
+```
 
-The "challenge" or "checkpoint" could be one of these:
+Ordered policy selection and successful verification are separate. A custom claim,
+issued WebAuthn challenge or newly registered token cannot manufacture completed
+proof. Security-state changes require current evidence, including a fresh login
+after enrollment. Explicit unavailable-method policies deny rather than silently
+falling back to password.
 
-* Authenticating with a password (`password`)
-* Authenticating with application authentication or hardware token (`mfa`)
-* Accepting terms of use or consenting to conditions (`consent`)
-
-The checkpoints represent authentication scheme for a user and is being stored
-in local authentication database. Additionally, a checkpoint can be applied by
-using "User Transforms".
-
-The order of the checkpoints in the user transforms will determine the order
-in which the user will receive the challenges.
-
-The portal constructs a list of one or more challenges from the above list.
-Then, redirects the user to "sandbox" where the user solves the challenges
-to authenticate.
-
-If the user passes these challenges, the user gets authenticated and granted
-access.
-
-References:
-* `NewCheckpoint` function in [`aaasf/pkg/user/user.go`](https://github.com/greenpau/aaasf/blob/main/pkg/user/user.go)
-* `Transform` function in [`aaasf/pkg/authn/transformer/transformer.go](https://github.com/greenpau/aaasf/blob/main/pkg/authn/transformer/transformer.go)
+Built-in authentication checkpoints include password, TOTP and WebAuthn (`u2f`),
+with `mfa` selecting a usable factor. Additional consent requirements are not
+another authentication factor. Federated OAuth/SAML complete their own browser
+protocol and do not run local password verification.
 
 ## Sandbox Views
 
-When a user enters the authentication sandbox, the user gets presented one
-of the following views:
+Views describe the current interaction; they are not public evidence claims:
 
-- `error`: A user encountered an error during one of security challenges
-- `terminate`: A user have failed a number of security challenges and is required
-  to restart the authentication process
-- `mfa_app_auth`: App Authenticator authentication screen
-- `mfa_app_register`: App Authenticator registration screen
-- `mfa_mixed_auth`: TODO
-- `mfa_mixed_register`: TODO
-- `mfa_u2f_auth`: TODO
-- `mfa_u2f_register`: TODO
-- `password_auth`: TODO
-- `password_recovery`: TODO
+| View family | Purpose |
+| --- | --- |
+| `password_auth` | Enter and verify the current password |
+| `mfa_app_auth`, `mfa_u2f_auth`, `mfa_mixed_auth` | Verify a registered TOTP/WebAuthn factor or present factor selection |
+| `mfa_app_register`, `mfa_u2f_register`, `mfa_mixed_register` | Enroll a factor when additive requirements need one |
+| `error`, `terminate` | Report failure or end the temporary interaction |
+| `password_recovery` | Legacy view name; not a complete implemented account recovery service |
+
+The [sandbox guide](local/60-sandbox.md) describes lifetime, retries and cancellation.
+Keep custom clients synchronized with the server's next challenge and rotating
+sandbox secret. Starting WebAuthn is not completing its assertion.
+
+The released sources are the
+[login handler](https://github.com/greenpau/go-authcrunch/blob/v1.3.8/pkg/authn/handle_http_login.go),
+[sandbox handler](https://github.com/greenpau/go-authcrunch/blob/v1.3.8/pkg/authn/handle_http_sandbox.go)
+and [challenge selector](https://github.com/greenpau/go-authcrunch/blob/v1.3.8/pkg/authchal/config/check.go).
+The older `aaasf` links no longer define this release's behavior.
