@@ -54,6 +54,20 @@ For account-specific access instead, match the **entire**
 application role. A Discord account or guild administrator is not automatically
 an AuthCrunch administrator.
 
+
+```mermaid
+flowchart TD
+  accTitle: An exact Discord guild-role combination becomes the app grant
+  accDescr: Guild filters operate on numeric IDs and select which memberships are queried or mapped. With the required scopes, returned member role IDs produce a guild-qualified role. The example matches one exact guild-role combination. Guild display names, administrator permission, and OAuth consent do not automatically grant portal administration or app access.
+  G["Discord guild membership API"] --> F["Exact numeric guild-ID filter"]
+  F --> M["Member-role query with required scopes"]
+  M --> R["discord.com/GUILD_ID/role/ROLE_ID"]
+  R --> T{"Matches intended guild and role?"}
+  T -->|Yes| A["Grant app/member"]
+  T -->|No or missing data| N["No application grant"]
+  A --> P["Protected app policy"]
+```
+
 ### Filtering by guild
 
 `user_group_filters` contains **regular expressions**, not a wildcard language.

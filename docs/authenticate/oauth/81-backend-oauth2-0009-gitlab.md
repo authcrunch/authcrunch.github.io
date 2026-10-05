@@ -113,6 +113,20 @@ Adaptation checks syntax, not your credentials or membership. The foreground
 process starts the portal and provisions HTTPS. This example disables the admin
 endpoint; stop it with **Ctrl+C** and restart after configuration changes.
 
+
+```mermaid
+flowchart TD
+  accTitle: GitLab group paths are filtered before hostname-prefixed roles are produced
+  accDescr: The named driver consumes the UserInfo groups array, not the ID-token groups_direct claim. The filter matches the unprefixed full path; the resulting portal role includes the GitLab hostname. Filtering selects membership claims rather than denying login, and the application policy requires the separately granted app/member role.
+  U["GitLab UserInfo groups"] --> F["Anchored regex on example-team/app-members"]
+  F -->|Included| R["Role: gitlab hostname plus full group path"]
+  F -->|Not included| N["No selected group role"]
+  R --> T["Transform matches full prefixed role and realm"]
+  T --> A["Grant app/member"]
+  A --> P["App policy evaluates membership"]
+  N --> D["Login can succeed, app policy denies"]
+```
+
 ## Understand the group filter
 
 The `gitlab` driver exchanges the authorization code, then calls the discovered

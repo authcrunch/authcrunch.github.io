@@ -1,0 +1,9 @@
+flowchart TD
+  accTitle: An Auth0 custom role claim must reach a supported parser path
+  accDescr: The example carries deliberate application membership in a supported token claim, then grants a local application role. API access-token permissions, arbitrary namespaced fields, and identity display are different inputs. Verify the ID token and normalized portal roles rather than assuming an Auth0 dashboard role appears automatically.
+  C["Auth0 action or mapper emits supported ID-token claims"] --> I["Verified and normalized provider roles"]
+  I --> T["Match exact intended membership after reserved-role cleanup"]
+  T -->|Match| R["Grant app/member deliberately"]
+  T -->|No match| N["No application grant"]
+  R --> P["Application policy requires app/member"]
+  N --> D["Portal login can succeed while app access is denied"]

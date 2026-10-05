@@ -1,0 +1,9 @@
+flowchart TD
+  accTitle: A Keycloak group mapper supplies the membership this example checks
+  accDescr: The mapper must put the intended group value in a supported ID-token claim. Realm roles are supported inputs, while resource_access client roles are not extracted by this released generic parser. A group’s full-path option changes the value the transform must match. The AuthCrunch realm label is distinct from the Keycloak realm.
+  C["Keycloak group membership and client mapper"] --> I["Verified ID-token groups with the configured path spelling"]
+  I --> T["Match the exact group and AuthCrunch realm"]
+  T -->|Match| R["Grant app/member deliberately"]
+  T -->|No match| N["No application grant"]
+  R --> P["Application policy requires app/member"]
+  N --> D["Portal login can succeed while app access is denied"]

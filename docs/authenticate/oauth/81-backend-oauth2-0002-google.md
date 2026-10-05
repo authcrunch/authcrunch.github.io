@@ -146,6 +146,19 @@ These earlier screens show the same client type and callback concepts. Use the e
 
 </details>
 
+
+```mermaid
+flowchart TD
+  accTitle: Google sign-in does not by itself grant Workspace application access
+  accDescr: The account-selection example uses an explicitly permitted identity. Workspace organization restrictions and optional Cloud Identity group queries are separate choices that require their own configuration and permissions. A domain hint or successful Google consent does not prove membership, verified email, or local portal administration.
+  C["Google login and validated provider identity"] --> I["Configured identity and any explicitly enabled group data"]
+  I --> T["Match the walkthrough’s intended account or verified membership"]
+  T -->|Match| R["Grant app/member deliberately"]
+  T -->|No match| N["No application grant"]
+  R --> P["Application policy requires app/member"]
+  N --> D["Portal login can succeed while app access is denied"]
+```
+
 ## Configure AuthCrunch
 
 Save the following as `Caddyfile`. Change `auth.example.com` in both the site

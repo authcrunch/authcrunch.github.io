@@ -191,6 +191,19 @@ These controls serve separate purposes:
 | ID-token claim filter | Which of the user's group names are included? |
 | AuthCrunch transform and policy | Does the resulting identity receive `app/member` and reach `/app`? |
 
+
+```mermaid
+flowchart TD
+  accTitle: Okta assignment, token issuance, and app membership are separate gates
+  accDescr: App assignment admits a user to the Okta client, and the custom authorization-server policy permits token issuance. The example requires the exact app-members value in the ID-token groups claim. A claim released only through UserInfo does not satisfy this named-driver walkthrough. Test an assigned nonmember to isolate AuthCrunch denial.
+  C["Okta app assignment and authorization-server policy"] --> I["Verified ID token includes groups: app-members"]
+  I --> T["Portal transform matches realm okta and exact group"]
+  T -->|Match| R["Grant app/member deliberately"]
+  T -->|No match| N["No application grant"]
+  R --> P["Application policy requires app/member"]
+  N --> D["Portal login can succeed while app access is denied"]
+```
+
 ## Configure AuthCrunch
 
 Save this as `Caddyfile`. The source is the

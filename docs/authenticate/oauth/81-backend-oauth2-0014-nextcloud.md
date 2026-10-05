@@ -13,6 +13,18 @@ The released configuration recognizes `driver nextcloud` and derives `/apps/oaut
 
 Nextcloud's [native OAuth2 documentation](https://docs.nextcloud.com/server/35/admin_manual/configuration_server/oauth2.html) describes confidential clients and bearer access to the account. It does not establish an OIDC ID-token/discovery contract. Its account access tokens are not a restricted identity-only grant; do not treat an `email` scope in AuthCrunch configuration as proof of limited Nextcloud permissions.
 
+
+## Locate the incomplete native login boundary
+
+Native OAuth account access and OIDC identity processing are different contracts.
+
+| What happens | What it proves | What is missing in this driver |
+| --- | --- | --- |
+| Nextcloud driver name adapts | Endpoint configuration exists | A complete account identity consumer |
+| Authorization code produces an opaque account token | OAuth access can be issued | A required OIDC ID-token contract |
+| Required-token settings are changed | The field requirement changes | Verified identity claims from the opaque token |
+| A separate real OIDC issuer is configured | The generic OIDC model can be evaluated | Automatic conversion of native Nextcloud OAuth into OIDC |
+
 ## The released gap
 
 In Caddy Security v1.3.0 / go-authcrunch v1.3.8:

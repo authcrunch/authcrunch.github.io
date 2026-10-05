@@ -11,6 +11,21 @@ discovery:
 
 These controls validate tokens **received from an upstream OAuth/OIDC provider** in Caddy Security v1.3.0 / go-authcrunch v1.3.8. They are separate from [the portal's own JWT signing/verification](../../authorize/token-verification.md) and [AuthCrunch serving as an OIDC issuer](../../apps/oidc-provider.md). Begin with [generic OIDC setup](81-backend-oauth2-0000-generic.md) for a complete portal and app example.
 
+
+```mermaid
+flowchart TD
+  accTitle: A key is trusted only inside the configured token contract
+  accDescr: The identity token must pass signature, issuer, audience, and transaction checks. Static pins and configured remote JWKS are distinct sources with bounded refresh behavior; a token key ID is not permission to fetch an arbitrary URL. Supplemental access-token handling has its own audience and failure behavior.
+  T["Upstream token"] --> C["Expected issuer, audience, and token purpose"]
+  P["Configured static public-key pins"] --> K["Trusted key snapshot"]
+  J["Configured remote JWKS and bounded refresh"] --> K
+  K --> V["Signature verification"]
+  C --> V
+  V --> X["Identity-token nonce and transaction checks"]
+  X -->|Accepted| I["Identity claims for portal mapping"]
+  X -->|Rejected| N["No accepted login identity"]
+```
+
 ## Keep token purposes distinct
 
 | Token | Released trust decision |

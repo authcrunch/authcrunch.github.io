@@ -1,0 +1,12 @@
+sequenceDiagram
+  accTitle: A browser route guard cannot protect a server API
+  accDescr: The browser can request identity for navigation and display. The server still runs an authorization policy before the protected API or app handler. Cross-origin credential delivery and CORS are separate transport choices; hiding a menu or modifying client state does not change server permission.
+  participant B as Angular browser app
+  participant P as Portal
+  participant G as Protected API
+  B->>P: Credentialed identity request with JSON selected
+  P-->>B: Validated identity or denial
+  B->>B: Render navigation and UI state
+  B->>G: Request application resource
+  G->>G: Verify credential and application ACL
+  G-->>B: Allowed data or denial regardless of UI state

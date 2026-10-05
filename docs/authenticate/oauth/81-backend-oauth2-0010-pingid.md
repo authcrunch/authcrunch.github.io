@@ -150,6 +150,18 @@ The issuer/discovery values expand before Caddyfile parsing.
 </figure>
 
 </details>
+
+## Align the issuer before troubleshooting membership
+
+Ping-branded products and endpoints are not interchangeable. Use the exact discovery and issuer values for the selected service.
+
+| Boundary | Compare | Keep separate |
+| --- | --- | --- |
+| Browser callback | Public HTTPS origin, portal mount, and AuthCrunch realm | Provider environment or tenant identifier |
+| Server discovery and exchange | Reachable discovery/token/key endpoints and client authentication | A browser-only network path |
+| Token trust | Exact issuer, client audience, signature, and transaction checks | A configured product/driver name |
+| Application grant | Supported claims and deliberate role transform | Successful provider login alone |
+
 ## Configure AuthCrunch
 
 <CodeBlock language="caddyfile" title="assets/conf/oauth/pingid/Caddyfile">{example}</CodeBlock>

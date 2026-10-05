@@ -14,6 +14,24 @@ import canonicalCaddyfile from '@site/assets/conf/saml/azure/Caddyfile?raw';
 
 Use Entra as the upstream SAML IdP for an AuthCrunch portal. This guide uses the released **generic** SAML driver with an explicit Entra Login URL. Read the [SAML transaction and claim contract](10-saml.md) first. For OIDC instead, use [Microsoft Entra OAuth](../oauth/81-backend-oauth2-0006-microsoft.md).
 
+
+```mermaid
+sequenceDiagram
+  accTitle: Entra ID SAML returns a signed response to the bound browser
+  accDescr: The portal acts as the service provider. A fresh SP-initiated transaction binds the browser to the callback; pinned IdP signing trust and assertion checks establish the identity. The portal then maps attributes and issues its own credential. This is upstream SAML login, separate from the partial downstream AWS SSO app feature.
+  participant B as Browser
+  participant P as Portal SP
+  participant I as Entra ID IdP
+  B->>P: Start SAML login
+  P-->>B: Bound AuthnRequest redirect
+  B->>I: Authenticate under IdP policy
+  I-->>B: Signed SAML response form
+  B->>P: POST to registered portal callback
+  P->>P: Check browser transaction and pinned signing trust
+  P->>P: Validate assertion and map attributes
+  P-->>B: Portal credential for independent app-policy checks
+```
+
 ## Azure AD SAML Configuration
 
 The complete [canonical example](https://github.com/authcrunch/authcrunch.github.io/blob/main/assets/conf/saml/azure/Caddyfile) serves `/auth/` and protects `/app` on `auth.example.com`. Replace that hostname consistently in Caddy and Entra.

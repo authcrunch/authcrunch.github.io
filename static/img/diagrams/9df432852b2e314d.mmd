@@ -1,0 +1,9 @@
+flowchart TD
+  accTitle: The LinkedIn example grants access by the whole observed subject
+  accDescr: The named driver validates a state-bound OIDC callback and fetches profile data, but its released PKCE and nonce defaults differ from the generic driver. The example clears provider roles and matches one full subject in the LinkedIn realm. Email and a company profile are not substitutes for that grant.
+  C["LinkedIn OIDC token and profile data"] --> I["Observed complete subject in realm linkedin"]
+  I --> T["Reset provider roles and compare the full allowed subject"]
+  T -->|Match| R["Grant app/member deliberately"]
+  T -->|No match| N["No application grant"]
+  R --> P["Application policy requires app/member"]
+  N --> D["Portal login can succeed while app access is denied"]

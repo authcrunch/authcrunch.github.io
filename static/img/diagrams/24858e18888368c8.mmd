@@ -1,0 +1,9 @@
+flowchart TD
+  accTitle: Provider readiness depends on server connectivity, not only syntax
+  accDescr: This follows a discovery-based OIDC provider. Adaptation accepts supported settings. Provisioning then contacts discovery and key endpoints, with configured delay/retry limits. A ready provider still needs a valid browser callback and token exchange. Disabling startup delay, adding retries, or accepting an endpoint flag cannot repair an incorrect issuer or missing identity contract.
+  A["Adapt supported provider settings"] --> D["Configured startup delay, if any"]
+  D --> P["Fetch discovery and signing keys"]
+  P -->|Transient failure within retry budget| P
+  P -->|Cannot configure| N["Provider not ready"]
+  P -->|Configured| R["Ready to start browser transaction"]
+  R --> C["Verify callback, code exchange, and identity"]

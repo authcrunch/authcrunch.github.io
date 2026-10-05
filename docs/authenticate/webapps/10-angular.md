@@ -11,6 +11,22 @@ discovery:
 
 Protect the application and its API at the server, then use portal identity data for the signed-in UI. Begin with [your first protected app](../../start/first-app.md) and the [portal API](../api/20-portal-api.md). A client-side route guard, hidden menu item or avatar does not enforce API permissions.
 
+
+```mermaid
+sequenceDiagram
+  accTitle: A browser route guard cannot protect a server API
+  accDescr: The browser can request identity for navigation and display. The server still runs an authorization policy before the protected API or app handler. Cross-origin credential delivery and CORS are separate transport choices; hiding a menu or modifying client state does not change server permission.
+  participant B as Angular browser app
+  participant P as Portal
+  participant G as Protected API
+  B->>P: Credentialed identity request with JSON selected
+  P-->>B: Validated identity or denial
+  B->>B: Render navigation and UI state
+  B->>G: Request application resource
+  G->>G: Verify credential and application ACL
+  G-->>B: Allowed data or denial regardless of UI state
+```
+
 ## Prefer a clear browser boundary
 
 For a same-origin application served alongside a portal under `/auth/`, the browser can send its scoped cookie to `/auth/whoami?format=json`. Request JSON explicitly and handle a denied/expired session without treating it as an empty authorized identity:

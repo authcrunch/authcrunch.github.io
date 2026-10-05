@@ -1,4 +1,40 @@
 {
+  "018ed80d564ec70f": {
+    "sourceHash": "018ed80d564ec70f2dd3ef9ddc51beb4f734d48a660117ad1bb6666d1d5856c2",
+    "title": "Cognito group claims authorize the app; IAM role names do not assume a role",
+    "description": "The example maps the administrator-managed app-members Cognito group into app/member. The parser also accepts documented Cognito custom-role fields, but an IAM ARN or user-writable attribute must not bypass this group rule. Cognito managed login, portal tokens, and AWS role assumption remain separate behaviors.",
+    "pages": [
+      "docs/authenticate/oauth/81-backend-oauth2-0012-cognito.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 673,
+      "hash": "01c9846fe74194cf6c5adf4503b5a6206eeb92df95c3a5af1cb6cb66f6953a8d"
+    },
+    "dark": {
+      "width": 360,
+      "height": 673,
+      "hash": "a79b030a02100f04e29a1f346164efc293554dacedb0cc4ec7dc1daeaea53598"
+    }
+  },
+  "0b6527a50b35abbc": {
+    "sourceHash": "0b6527a50b35abbccad1932b2541fed6abd08ed844b6909efc36eedfd21874a5",
+    "title": "A Keycloak group mapper supplies the membership this example checks",
+    "description": "The mapper must put the intended group value in a supported ID-token claim. Realm roles are supported inputs, while resource_access client roles are not extracted by this released generic parser. A group’s full-path option changes the value the transform must match. The AuthCrunch realm label is distinct from the Keycloak realm.",
+    "pages": [
+      "docs/authenticate/oauth/81-backend-oauth2-0011-keycloak.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 672,
+      "hash": "4aa9970d84f4d8acdde2eb660589be5a224e160606b26c1b57861d3925fd1499"
+    },
+    "dark": {
+      "width": 360,
+      "height": 672,
+      "hash": "1e6b192d19d6f090e67add72a56c34f9ac0ddf8618db9bb220d73c57f0332ef3"
+    }
+  },
   "0f97ba7fed02fc1d": {
     "sourceHash": "0f97ba7fed02fc1da13737429e8e38349ff532e8b919ba8474d3b73992628205",
     "title": "Method availability selects a sequence; verification completes it",
@@ -15,6 +51,24 @@
       "width": 394,
       "height": 1208,
       "hash": "9bf08e5a10968430db99c5cca7dd9f733114f075aa69b14e4f634067bb8a35b4"
+    }
+  },
+  "24858e18888368c8": {
+    "sourceHash": "24858e18888368c88f6efd5edb3e5e041c8a2a17d4ccf57e6592db6ef5fa2c82",
+    "title": "Provider readiness depends on server connectivity, not only syntax",
+    "description": "This follows a discovery-based OIDC provider. Adaptation accepts supported settings. Provisioning then contacts discovery and key endpoints, with configured delay/retry limits. A ready provider still needs a valid browser callback and token exchange. Disabling startup delay, adding retries, or accepting an endpoint flag cannot repair an incorrect issuer or missing identity contract.",
+    "pages": [
+      "docs/authenticate/oauth/82-backend-oauth2-endpoint.md"
+    ],
+    "light": {
+      "width": 488,
+      "height": 585,
+      "hash": "d733d9d2a346d867d4c01c4081f805c529a4572f6a0fc0e173ea4d2b91e58972"
+    },
+    "dark": {
+      "width": 488,
+      "height": 585,
+      "hash": "d1bf9dcc95166e2a95f8e448cb5fb38e128424f44df9cd4740b3388dbf650cb6"
     }
   },
   "2706eaeeea99c202": {
@@ -35,6 +89,24 @@
       "hash": "5bad89ed0897e8a01a34b371bb1b8b893908537fad85c32862e54db0166bd8ba"
     }
   },
+  "2ab33c4d71e133c7": {
+    "sourceHash": "2ab33c4d71e133c71b647d6d6d1566ca179d50c46f6d54dcec9a6db44a748d89",
+    "title": "Discovery and browser login cross different network boundaries",
+    "description": "The browser must reach the authorization endpoint, while the portal server must reach discovery, token, and key endpoints. The generic example verifies issuer, audience, signature, nonce, and its S256 transaction before mapping supported ID-token claims. Its own portal token, not the upstream token, authenticates the protected application.",
+    "pages": [
+      "docs/authenticate/oauth/81-backend-oauth2-0000-generic.md"
+    ],
+    "light": {
+      "width": 534,
+      "height": 835,
+      "hash": "b0efa1b61d30edd950e842611a7f6e4a9ba72c746a8a175ca5295f1a1e1bb604"
+    },
+    "dark": {
+      "width": 534,
+      "height": 835,
+      "hash": "44a2faf8b525d3df311901699519a10067309473b54b0594fe8bc1b04f5f26ba"
+    }
+  },
   "2c294bbea84e8b11": {
     "sourceHash": "2c294bbea84e8b11e8623ee789a7a08217e47b1d6d662113f8aa09a4eabd2254",
     "title": "Trusted identity enters the backend only after authorization",
@@ -53,6 +125,24 @@
       "hash": "ac0a6663d2a1a5c8501bd0e577fc393e5204a7c4f96c823008984825a622d641"
     }
   },
+  "3aa7567b6cf36886": {
+    "sourceHash": "3aa7567b6cf368864a5d8eaee6fca1a66c927454637f0676eceabcb54ad0ca59",
+    "title": "Okta assignment, token issuance, and app membership are separate gates",
+    "description": "App assignment admits a user to the Okta client, and the custom authorization-server policy permits token issuance. The example requires the exact app-members value in the ID-token groups claim. A claim released only through UserInfo does not satisfy this named-driver walkthrough. Test an assigned nonmember to isolate AuthCrunch denial.",
+    "pages": [
+      "docs/authenticate/oauth/81-backend-oauth2-0001-okta.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 673,
+      "hash": "ab88c1e01603c2d5651239bcf5788371b8083f66384c9f048a9faf2d0f50121f"
+    },
+    "dark": {
+      "width": 360,
+      "height": 673,
+      "hash": "b279f7692d32cd68dc469b9939ee6fc8235e268d54cb26ea49f861dd411db706"
+    }
+  },
   "3bba41cdf8072ad4": {
     "sourceHash": "3bba41cdf8072ad4a9c2f3313e86a434dedad49496d86db8ca4a592eec238fc3",
     "title": "A login redirect is different from an authenticated denial",
@@ -69,6 +159,24 @@
       "width": 921,
       "height": 934,
       "hash": "7c916b124006da0e848a98d03f76b9ba54d83bfa229bc1778daccd5f2e8e8538"
+    }
+  },
+  "3c2d51f4a4597011": {
+    "sourceHash": "3c2d51f4a4597011003d76b1a236ac76978f09721ec73e9a89cba7dc381c5e89",
+    "title": "Entra app-role assignment becomes an explicit AuthCrunch app grant",
+    "description": "This example uses application roles assigned for the registered client and carried in its ID token. It keeps application roles separate from tenant administration and group-directory membership. The full issuer, client audience, subject, and role spelling must match; email may be absent without granting broader access.",
+    "pages": [
+      "docs/authenticate/oauth/81-backend-oauth2-0006-microsoft.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 672,
+      "hash": "72812c1ea69f1d2463107d5bf594264ef86a0077ac6f4eff6708cd494cbc3d64"
+    },
+    "dark": {
+      "width": 360,
+      "height": 672,
+      "hash": "efa3c3c6debf9075178f719327cd04efceabd026483dd08fde19f7dc36d45a27"
     }
   },
   "4802a2bea3796607": {
@@ -117,12 +225,12 @@
     "light": {
       "width": 708,
       "height": 845,
-      "hash": "daedb55613be97c5da054eeab9b84831179906aa8fd1120814cfda0785788d92"
+      "hash": "b01c225633e06a6a67267221e8c291675d6e89a63196d019a02a0ef78f232e1a"
     },
     "dark": {
       "width": 708,
       "height": 845,
-      "hash": "1044a6adb93917b187bbf529cc14d19c5a184ed4461a186f798d6936f11269b6"
+      "hash": "6b9486e13ab87b5fd7f8845079144caa757d7319c30c8965ef21757c642fda68"
     }
   },
   "522b237e0d8b17c8": {
@@ -135,12 +243,48 @@
     "light": {
       "width": 531,
       "height": 843,
-      "hash": "e140c8d5bd079d704f961f257d36b5991d8a011e88c3c3d96eddc11fc35a12df"
+      "hash": "c41ab369da3a953c4c257a611737896cafa9071d209ede83d3a06b925c39eb32"
     },
     "dark": {
       "width": 531,
       "height": 843,
-      "hash": "77d371477ed7f8f38eedada700f414ef33cc33216f4c4b6469db2051fe775385"
+      "hash": "82e0c25f1a5ed25a81139e4d067961598105dbe23eec2b2eee215ace9f7cc664"
+    }
+  },
+  "5913f2c3a506fa63": {
+    "sourceHash": "5913f2c3a506fa63c96223ad8f3552d154d5d2007a6619ae3af7bd0d48108ab1",
+    "title": "A browser route guard cannot protect a server API",
+    "description": "The browser can request identity for navigation and display. The server still runs an authorization policy before the protected API or app handler. Cross-origin credential delivery and CORS are separate transport choices; hiding a menu or modifying client state does not change server permission.",
+    "pages": [
+      "docs/authenticate/webapps/10-angular.md"
+    ],
+    "light": {
+      "width": 532,
+      "height": 655,
+      "hash": "432996f3400386038a823e589c086eebbfd3ae13c2e085cda99e363a10b0f32b"
+    },
+    "dark": {
+      "width": 532,
+      "height": 655,
+      "hash": "2dbc3b48fc3eeb181cfb5fc8341b56b29af83c05c1c732492bb1d73ff2264114"
+    }
+  },
+  "597935bc2e61eb9c": {
+    "sourceHash": "597935bc2e61eb9c105bec08866bd2284ae8d883eb1603146382f267b9a993e7",
+    "title": "GitHub identity comes from profile APIs, not an OIDC ID token",
+    "description": "The dedicated GitHub driver exchanges the code and uses the access token to retrieve account/profile data. The example prefers a stable numeric account ID for the grant; optional public organization data is a different choice. A changed username or email does not replace the account-ID check.",
+    "pages": [
+      "docs/authenticate/oauth/81-backend-oauth2-0007-github.md"
+    ],
+    "light": {
+      "width": 531,
+      "height": 896,
+      "hash": "184969f8c10738e4ce9e4eb917b7c007f0a57f2e1f3e9a659e76b57a9d121d66"
+    },
+    "dark": {
+      "width": 531,
+      "height": 896,
+      "hash": "de96e405d8bf386a55a35a285ed3eba0b36b080d0d93de5996c36a7cd4f41778"
     }
   },
   "5d95a5a423d2bcf6": {
@@ -287,6 +431,24 @@
       "hash": "6dc16324e156766ae51faf56cb107798cbd64ff4df2e659ec7fd7d38fdb863ae"
     }
   },
+  "750314409c8953f6": {
+    "sourceHash": "750314409c8953f6c062f11215ac900e353dba3a49a37bb1f0a56e854ba5b4b7",
+    "title": "JumpCloud SAML returns a signed response to the bound browser",
+    "description": "The portal acts as the service provider. A fresh SP-initiated transaction binds the browser to the callback; pinned IdP signing trust and assertion checks establish the identity. The portal then maps attributes and issues its own credential. This is upstream SAML login, separate from the partial downstream AWS SSO app feature.",
+    "pages": [
+      "docs/authenticate/saml/30-jumpcloud.md"
+    ],
+    "light": {
+      "width": 533,
+      "height": 760,
+      "hash": "5f83df93af4d758b2d2d2cac064d0f88cb7c2ff02ab5e57e8390831daae78f14"
+    },
+    "dark": {
+      "width": 533,
+      "height": 760,
+      "hash": "adf28b09fe2d2092323745646dad5d0470d8895de5c99b5787e2495760b63218"
+    }
+  },
   "750b6bc1aab037b1": {
     "sourceHash": "750b6bc1aab037b1a45c6a967f3353894f51e9c06dcb1af70aaec18c0e2aeafe",
     "title": "A signed credential alone is insufficient for local Profile management",
@@ -369,12 +531,12 @@
     "light": {
       "width": 532,
       "height": 723,
-      "hash": "7aa1b2a075b2b9c11deffc730f84bfd994ef8486e04e636d2cd3368db1e951dc"
+      "hash": "ef149e5024b31ec717c598d373610d29f8816c96bab50036db9ed72f475961b8"
     },
     "dark": {
       "width": 532,
       "height": 723,
-      "hash": "579d7850a98d2c9d829a73e52c3d85e2a20a2cf0317e948d67b58899586905c7"
+      "hash": "6202d62e4481d9110a87e5f9aeaef3e66f288b61403a9fc5e406e0aaa8f8ea97"
     }
   },
   "931d656b8aa6637e": {
@@ -423,12 +585,30 @@
     "light": {
       "width": 710,
       "height": 1240,
-      "hash": "f71b9e9d4be816d43091f0ad13dc98de8b06cf0d415477f2777dc35d9f0d3cee"
+      "hash": "7783fdeb93ba9ca07b1595a835496eb29bf075031f341a82713f5da0ab30d50b"
     },
     "dark": {
       "width": 710,
       "height": 1240,
-      "hash": "8f127ee754c52d208a978d1f80985f337b68e8b8037d0f384f6b21baf5830f15"
+      "hash": "1476c8d7838b3178055d9f91dae9c30b47581c4bf6dcd037dbe3d5eb6e67c35f"
+    }
+  },
+  "9df432852b2e314d": {
+    "sourceHash": "9df432852b2e314d9d8858773639c2a59d66d52e2badaa2f946a9dfc73eda817",
+    "title": "The LinkedIn example grants access by the whole observed subject",
+    "description": "The named driver validates a state-bound OIDC callback and fetches profile data, but its released PKCE and nonce defaults differ from the generic driver. The example clears provider roles and matches one full subject in the LinkedIn realm. Email and a company profile are not substitutes for that grant.",
+    "pages": [
+      "docs/authenticate/oauth/81-backend-oauth2-0003-linkedin.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 672,
+      "hash": "4f66e8d9136503db7c383295106694de6f72c99ea4a8bb5ad37a0f3f770b96a9"
+    },
+    "dark": {
+      "width": 360,
+      "height": 672,
+      "hash": "f13eda3de1aa14933afc410da3331f1d563dda20249fa2e10af449e6ec7fef3e"
     }
   },
   "a14a7aeb25ca3936": {
@@ -449,6 +629,42 @@
       "hash": "c83a8b0d1843ac69f68409bd28a1c83ea49e1d43fff9130ded728f86ecf10f0f"
     }
   },
+  "a29f90900eb74443": {
+    "sourceHash": "a29f90900eb744430a28b8f66a4aaa4b1d2de63671134c161a0ea6df96fdd554",
+    "title": "A key is trusted only inside the configured token contract",
+    "description": "The identity token must pass signature, issuer, audience, and transaction checks. Static pins and configured remote JWKS are distinct sources with bounded refresh behavior; a token key ID is not permission to fetch an arbitrary URL. Supplemental access-token handling has its own audience and failure behavior.",
+    "pages": [
+      "docs/authenticate/oauth/83-oidc-trust.md"
+    ],
+    "light": {
+      "width": 552,
+      "height": 637,
+      "hash": "faec0202d2421dd6cc0d20d76ca5546ccd2e215725a499d76069c19117c1aba8"
+    },
+    "dark": {
+      "width": 552,
+      "height": 637,
+      "hash": "9c4ee1d561ab9a8cdb4fc85799999e6e3657f2f8e9a0ecd2f549d58750126ae2"
+    }
+  },
+  "aa21e82774eea360": {
+    "sourceHash": "aa21e82774eea360ce30afc160c48c8df4cf60ce8c41bc5f02ac0ef5a9641af6",
+    "title": "Entra ID SAML returns a signed response to the bound browser",
+    "description": "The portal acts as the service provider. A fresh SP-initiated transaction binds the browser to the callback; pinned IdP signing trust and assertion checks establish the identity. The portal then maps attributes and issues its own credential. This is upstream SAML login, separate from the partial downstream AWS SSO app feature.",
+    "pages": [
+      "docs/authenticate/saml/20-azure.md"
+    ],
+    "light": {
+      "width": 533,
+      "height": 760,
+      "hash": "3ed89f76f5504e9e0209ddba7d51fb6bc7e34b04e6f53d0faff4ce5049f30dfb"
+    },
+    "dark": {
+      "width": 533,
+      "height": 760,
+      "hash": "d95c04ec148e62aa1e86052a66dc296ff5ef08b7562da8e7d8da7e813ac9d221"
+    }
+  },
   "adb88315f567fd06": {
     "sourceHash": "adb88315f567fd067376310cf221e602ca59df5810946af956740e76579d3b1a",
     "title": "JSON login advances one bound checkpoint at a time",
@@ -459,12 +675,30 @@
     "light": {
       "width": 368,
       "height": 927,
-      "hash": "4d80a2e556e11d2e89026b26da96820cd2478a1188dbbf5e2364696cb3ac2ec9"
+      "hash": "11abaa3294bbbf2e0bfe08bd4ad3980131c3e7907137778b4a356b9e6eb45d32"
     },
     "dark": {
       "width": 368,
       "height": 927,
-      "hash": "747fda10b9e4e22eac191c1415e79a681c831c4512cbf1a1f7af48eac89d17cd"
+      "hash": "a9dff923770195f27e95226d66f912a9c99e9cbff1fd00fae3ced42429ba9fce"
+    }
+  },
+  "ae2a7dfe7900d24a": {
+    "sourceHash": "ae2a7dfe7900d24a6017e60ff4295d968f5d15d78b596e6346eebeee9ccc5c3d",
+    "title": "GitLab group paths are filtered before hostname-prefixed roles are produced",
+    "description": "The named driver consumes the UserInfo groups array, not the ID-token groups_direct claim. The filter matches the unprefixed full path; the resulting portal role includes the GitLab hostname. Filtering selects membership claims rather than denying login, and the application policy requires the separately granted app/member role.",
+    "pages": [
+      "docs/authenticate/oauth/81-backend-oauth2-0009-gitlab.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 736,
+      "hash": "871fbfacad1045bdc606e4009c8466e6784eef1fea23585afb8eecd4f11e9901"
+    },
+    "dark": {
+      "width": 360,
+      "height": 736,
+      "hash": "2cf2ad27fdebdcb48e9a4c53591fb2c07d7a4fab2d2a61167afc1c13081bd6ca"
     }
   },
   "b03108d9121c89fc": {
@@ -503,6 +737,24 @@
       "hash": "28b535db43a8decac86ee9f6ef24b86fb6531280aa11872299e6653c43d139ff"
     }
   },
+  "d213044de76ef980": {
+    "sourceHash": "d213044de76ef9809598d96a36afba13536f7af09a93d70896b0a81f561480ae",
+    "title": "OneLogin user roles must be emitted as the ID-token groups array",
+    "description": "OneLogin app assignment controls sign-in. The example additionally requests groups and maps User Roles to a multi-value groups parameter. The portal matches the exact emitted value before adding app/member. A user assigned to the client can therefore log in yet fail the application policy.",
+    "pages": [
+      "docs/authenticate/oauth/81-backend-oauth2-0005-onelogin.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 672,
+      "hash": "7e9ddb0e50b7639f66e88979a0870eb56c605b8db379803ec56b5ed5f52c4e3b"
+    },
+    "dark": {
+      "width": 360,
+      "height": 672,
+      "hash": "ecbe0a92672c6135798fe1a7f9a6577d8e60df1b17fc15474702cd4e2b2bd4fe"
+    }
+  },
   "d8af48e1c9005d29": {
     "sourceHash": "d8af48e1c9005d29034d546e3e9cc6f11a0eb1bce30fe09756618e0f96e9bedb",
     "title": "A typed alias projects a literal authenticated claim into one policy",
@@ -537,6 +789,24 @@
       "width": 360,
       "height": 576,
       "hash": "55b9a04827651acdce86ba965c40139aed33aa871e15c08753661c80c2384309"
+    }
+  },
+  "dcf806ac42b56fcb": {
+    "sourceHash": "dcf806ac42b56fcb00f278ddc046e9a71db85f1bded9fb10e14888ecb9bacfa9",
+    "title": "A certificate’s purpose determines what it proves",
+    "description": "A server TLS certificate identifies the HTTPS endpoint. A client certificate can be checked at Caddy’s TLS layer, and a SAML certificate pins the IdP’s signing key. None of those alone implements an AuthCrunch X.509 login provider or grants application roles.",
+    "pages": [
+      "docs/authenticate/x509/x509.md"
+    ],
+    "light": {
+      "width": 552,
+      "height": 513,
+      "hash": "808369b43542490a95f7c481ff708e2de094757c9ac49257f10e00236fbc2057"
+    },
+    "dark": {
+      "width": 552,
+      "height": 513,
+      "hash": "1877e5a4186faaff0874db217aecb17fabb9b3d14d7c18665a86cea4567b3c56"
     }
   },
   "e259a8545c6208a3": {
@@ -585,12 +855,12 @@
     "light": {
       "width": 533,
       "height": 998,
-      "hash": "6b8f90c2b39907799cca9bfd035134650d90ad4a50e4494eff94b7d8a4ab55f7"
+      "hash": "552b6359311db332105e37b9a42ed3c27675733f48cd0e6d79603a8da00b4bd4"
     },
     "dark": {
       "width": 533,
       "height": 998,
-      "hash": "89127ea1fdff88ad501cea1ce05e52198a687819a1a7f818f981d4d9062ebf3d"
+      "hash": "7907ba79c146d64d4884a1f3c2b1ff430384ce92ccd0ea4e53738edab59156d0"
     }
   },
   "eeb073afea56a0d9": {
@@ -609,6 +879,78 @@
       "width": 360,
       "height": 566,
       "hash": "1051efa1c9bb58e30e13ee94552232a1e2178f8b8b3dc893d8c4957eb7b26c19"
+    }
+  },
+  "f07bda129a1b4196": {
+    "sourceHash": "f07bda129a1b4196a3ec40c8eb4986056c6937568f5264c8cb9aaaa9f4308849",
+    "title": "Google sign-in does not by itself grant Workspace application access",
+    "description": "The account-selection example uses an explicitly permitted identity. Workspace organization restrictions and optional Cloud Identity group queries are separate choices that require their own configuration and permissions. A domain hint or successful Google consent does not prove membership, verified email, or local portal administration.",
+    "pages": [
+      "docs/authenticate/oauth/81-backend-oauth2-0002-google.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 725,
+      "hash": "ec4ef9d29765188e3bd3c85e7b3280d96a275422ddf89cd2cd75b4876b2cdff2"
+    },
+    "dark": {
+      "width": 360,
+      "height": 725,
+      "hash": "e92df0b1961954b287f9416845326422c1e8071fe774a2e12993d75385103e64"
+    }
+  },
+  "f8308aa86e582fff": {
+    "sourceHash": "f8308aa86e582fff7f0a86f2f3caf09959453eb65028cf3f305eb5d221b1b6a7",
+    "title": "An exact Discord guild-role combination becomes the app grant",
+    "description": "Guild filters operate on numeric IDs and select which memberships are queried or mapped. With the required scopes, returned member role IDs produce a guild-qualified role. The example matches one exact guild-role combination. Guild display names, administrator permission, and OAuth consent do not automatically grant portal administration or app access.",
+    "pages": [
+      "docs/authenticate/oauth/81-backend-oauth2-0013-discord.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 909,
+      "hash": "7d5b97ebf23abfa1d4f939adf1377e86d819e0583b14ef051f18cdb55b0d69e0"
+    },
+    "dark": {
+      "width": 360,
+      "height": 909,
+      "hash": "fd0e073fd8ce0d30b58c4da5282996d5d0e83ed09bffc6e47ed04632d6899958"
+    }
+  },
+  "f87b80691a93277d": {
+    "sourceHash": "f87b80691a93277df2c163e0229239dcd20b64a7fcfbe30409fa78d6d5bef9bf",
+    "title": "Directory authentication and group-to-role mapping are separate steps",
+    "description": "The store uses its configured directory connection and search/bind settings to resolve and authenticate the account. Returned memberships can map into explicit or automatic roles, but the application still requires its own grant. A group search or fallback role must not turn a missing membership into administrator authority.",
+    "pages": [
+      "docs/authenticate/ldap/10-ldap.md"
+    ],
+    "light": {
+      "width": 357,
+      "height": 737,
+      "hash": "8e28d23c5f75aed5bf77a695ccc9f852dcccbd30f19f289505d5c0f0df2b1c25"
+    },
+    "dark": {
+      "width": 357,
+      "height": 737,
+      "hash": "2610b5c39a000e0b8aa87ccfe31fa54c120b160f752fd0b00796249f33233309"
+    }
+  },
+  "fbe6e0180c7ec1d7": {
+    "sourceHash": "fbe6e0180c7ec1d7280f217c27072f49bfea701616d9b743cc2da77a45d42307",
+    "title": "An Auth0 custom role claim must reach a supported parser path",
+    "description": "The example carries deliberate application membership in a supported token claim, then grants a local application role. API access-token permissions, arbitrary namespaced fields, and identity display are different inputs. Verify the ID token and normalized portal roles rather than assuming an Auth0 dashboard role appears automatically.",
+    "pages": [
+      "docs/authenticate/oauth/81-backend-oauth2-0004-auth0.md"
+    ],
+    "light": {
+      "width": 360,
+      "height": 707,
+      "hash": "b43bdd5cb851acd3cd4871752b13326d973c318aa22a3f902ba2fac884758605"
+    },
+    "dark": {
+      "width": 360,
+      "height": 707,
+      "hash": "83cdb805bc81fc5cdebc35ae26d01fcea29bbebdbe3cb0e89e6e8da3a3669cd5"
     }
   },
   "fc458a3a9070c918": {

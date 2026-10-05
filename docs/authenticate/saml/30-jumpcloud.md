@@ -45,6 +45,24 @@ Download the connector metadata XML and signing certificate. Set `SAML_METADATA_
 
 Start with the canonical example after replacing its hostname. Its transforms clear reserved roles, grant `authp/user` to the JumpCloud realm and grant `app/member` only when the same realm supplies `App.Access`. A valid SAML login alone does not grant the protected app.
 
+
+```mermaid
+sequenceDiagram
+  accTitle: JumpCloud SAML returns a signed response to the bound browser
+  accDescr: The portal acts as the service provider. A fresh SP-initiated transaction binds the browser to the callback; pinned IdP signing trust and assertion checks establish the identity. The portal then maps attributes and issues its own credential. This is upstream SAML login, separate from the partial downstream AWS SSO app feature.
+  participant B as Browser
+  participant P as Portal SP
+  participant I as JumpCloud IdP
+  B->>P: Start SAML login
+  P-->>B: Bound AuthnRequest redirect
+  B->>I: Authenticate under IdP policy
+  I-->>B: Signed SAML response form
+  B->>P: POST to registered portal callback
+  P->>P: Check browser transaction and pinned signing trust
+  P->>P: Validate assertion and map attributes
+  P-->>B: Portal credential for independent app-policy checks
+```
+
 ## Verify the browser flow
 
 Open `/app`, follow the portal login and select JumpCloud. The browser must first GET `/auth/saml/jumpcloud` so AuthCrunch can create state before the IdP's POST callback. An unsolicited POST from the JumpCloud user-portal tile is rejected; a bookmark tile can point to that GET entry URL.

@@ -1,0 +1,14 @@
+sequenceDiagram
+  accTitle: JumpCloud SAML returns a signed response to the bound browser
+  accDescr: The portal acts as the service provider. A fresh SP-initiated transaction binds the browser to the callback; pinned IdP signing trust and assertion checks establish the identity. The portal then maps attributes and issues its own credential. This is upstream SAML login, separate from the partial downstream AWS SSO app feature.
+  participant B as Browser
+  participant P as Portal SP
+  participant I as JumpCloud IdP
+  B->>P: Start SAML login
+  P-->>B: Bound AuthnRequest redirect
+  B->>I: Authenticate under IdP policy
+  I-->>B: Signed SAML response form
+  B->>P: POST to registered portal callback
+  P->>P: Check browser transaction and pinned signing trust
+  P->>P: Validate assertion and map attributes
+  P-->>B: Portal credential for independent app-policy checks

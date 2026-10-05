@@ -1,0 +1,9 @@
+flowchart TD
+  accTitle: Cognito group claims authorize the app; IAM role names do not assume a role
+  accDescr: The example maps the administrator-managed app-members Cognito group into app/member. The parser also accepts documented Cognito custom-role fields, but an IAM ARN or user-writable attribute must not bypass this group rule. Cognito managed login, portal tokens, and AWS role assumption remain separate behaviors.
+  C["Cognito ID token includes cognito:groups"] --> I["Normalized group roles after reserved-role cleanup"]
+  I --> T["Match exact app-members group in the Cognito realm"]
+  T -->|Match| R["Grant app/member deliberately"]
+  T -->|No match| N["No application grant"]
+  R --> P["Application policy requires app/member"]
+  N --> D["Portal login can succeed while app access is denied"]

@@ -1,0 +1,8 @@
+flowchart TD
+  accTitle: A certificate’s purpose determines what it proves
+  accDescr: A server TLS certificate identifies the HTTPS endpoint. A client certificate can be checked at Caddy’s TLS layer, and a SAML certificate pins the IdP’s signing key. None of those alone implements an AuthCrunch X.509 login provider or grants application roles.
+  A{"Certificate used where?"} -->|HTTPS server| S["Browser verifies server endpoint"]
+  A -->|TLS client authentication| C["Caddy verifies configured client trust"]
+  A -->|SAML signing trust| I["Portal pins IdP assertion-signing material"]
+  C --> P["Separately configured application authorization"]
+  I --> L["Separately completed SAML login"]

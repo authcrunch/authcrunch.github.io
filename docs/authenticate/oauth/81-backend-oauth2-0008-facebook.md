@@ -114,6 +114,18 @@ and nonce are disabled for this named driver. Email can be absent even when
 requested, so decide explicitly whether the application's subject-based identity
 permits disabling the default email claim check.
 
+
+## Treat each compatibility stage as separate evidence
+
+The preserved Facebook setup and accepted driver configuration do not prove a completed login against today’s platform.
+
+| Stage | Evidence to collect | What remains unproven |
+| --- | --- | --- |
+| Caddyfile adaptation | Installed parser accepts the declaration | Current Facebook app/product support |
+| Authorization redirect | Correct client, public callback, and requested scopes | An accepted token response |
+| Token and identity processing | Required fields and driver identity consumer match the response | Application membership |
+| Portal and protected app | Fresh login plus allowed and denied users | Compatibility of another app or driver version |
+
 ## Compatibility verification
 
 Before deployment, test code exchange, Graph profile retrieval, application

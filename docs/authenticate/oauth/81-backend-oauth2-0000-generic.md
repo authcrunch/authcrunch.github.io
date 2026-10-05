@@ -21,6 +21,26 @@ For a provider setup walkthrough, follow [Keycloak](81-backend-oauth2-0011-keycl
 For the relationship between the provider, portal, and policy, read the
 [OAuth/OIDC overview](10-oauth2.md).
 
+
+```mermaid
+sequenceDiagram
+  accTitle: Discovery and browser login cross different network boundaries
+  accDescr: The browser must reach the authorization endpoint, while the portal server must reach discovery, token, and key endpoints. The generic example verifies issuer, audience, signature, nonce, and its S256 transaction before mapping supported ID-token claims. Its own portal token, not the upstream token, authenticates the protected application.
+  participant B as Browser
+  participant P as AuthCrunch portal
+  participant I as OIDC issuer
+  P->>I: Discover endpoints and trusted signing keys
+  B->>P: Begin provider login
+  P-->>B: Bound authorization URL with state, nonce, S256
+  B->>I: Sign in and consent
+  I-->>B: Code callback
+  B->>P: Registered portal callback
+  P->>I: Server-side code exchange
+  I-->>P: Identity and access tokens
+  P->>P: Verify identity token, map claims, apply transforms
+  P-->>B: Portal credential for separate app-policy checks
+```
+
 ## What the provider must supply
 
 Register a confidential, server-side client that supports the authorization

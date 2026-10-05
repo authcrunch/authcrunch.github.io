@@ -1,0 +1,9 @@
+flowchart TD
+  accTitle: Entra app-role assignment becomes an explicit AuthCrunch app grant
+  accDescr: This example uses application roles assigned for the registered client and carried in its ID token. It keeps application roles separate from tenant administration and group-directory membership. The full issuer, client audience, subject, and role spelling must match; email may be absent without granting broader access.
+  C["Entra app-role definition and assignment"] --> I["Verified client ID token contains intended roles"]
+  I --> T["Match the exact app-role value after reserved-role cleanup"]
+  T -->|Match| R["Grant app/member deliberately"]
+  T -->|No match| N["No application grant"]
+  R --> P["Application policy requires app/member"]
+  N --> D["Portal login can succeed while app access is denied"]

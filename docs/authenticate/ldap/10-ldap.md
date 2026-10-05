@@ -136,6 +136,23 @@ This is not complete DN canonicalization: changing escaping, spacing, or the
 order of a multi-valued RDN can still matter. It does not make every attribute
 name, user filter, role, or policy case-insensitive.
 
+
+```mermaid
+sequenceDiagram
+  accTitle: Directory authentication and group-to-role mapping are separate steps
+  accDescr: The store uses its configured directory connection and search/bind settings to resolve and authenticate the account. Returned memberships can map into explicit or automatic roles, but the application still requires its own grant. A group search or fallback role must not turn a missing membership into administrator authority.
+  participant P as Portal LDAP store
+  participant D as Directory
+  P->>D: Configured service bind and user search
+  D-->>P: Selected account DN and attributes
+  P->>D: Verify user credential through configured bind
+  D-->>P: Authentication result
+  P->>D: Retrieve configured membership data
+  D-->>P: Groups and attributes
+  P->>P: Map deliberate roles, then portal transforms
+  Note over P,D: Application ACL is a later, independent decision
+```
+
 ## Dynamic Role Mapping from LDAP Groups
 
 Automatic mapping applies to group entries returned by the **secondary search**,

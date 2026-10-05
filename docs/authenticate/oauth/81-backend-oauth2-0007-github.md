@@ -179,6 +179,27 @@ Use a fresh login when testing a changed transform. Roles are recorded in the
 issued AuthCrunch token; changing a rule does not rewrite a token already in
 use. This example gives those tokens a 900-second lifetime.
 
+
+```mermaid
+sequenceDiagram
+  accTitle: GitHub identity comes from profile APIs, not an OIDC ID token
+  accDescr: The dedicated GitHub driver exchanges the code and uses the access token to retrieve account/profile data. The example prefers a stable numeric account ID for the grant; optional public organization data is a different choice. A changed username or email does not replace the account-ID check.
+  participant B as Browser
+  participant P as Portal
+  participant G as GitHub
+  B->>P: Begin GitHub login
+  P-->>B: Bound authorization redirect
+  B->>G: Sign in and authorize OAuth app
+  G-->>B: Code callback
+  B->>P: Portal callback
+  P->>G: Exchange code for access token
+  G-->>P: OAuth access token, not an OIDC ID token
+  P->>G: Retrieve account/profile and configured email data
+  G-->>P: Numeric account ID and profile
+  P->>P: Map exact account or deliberate organization membership
+  P-->>B: Portal token, still subject to app policy
+```
+
 ## Choose who can use the app
 
 ### Match a numeric account ID

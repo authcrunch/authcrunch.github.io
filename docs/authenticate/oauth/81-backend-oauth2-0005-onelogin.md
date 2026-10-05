@@ -75,6 +75,19 @@ Use your tenant's values consistently. The older regional
 `openid-connect.onelogin.com/oidc` examples describe a different endpoint
 layout. See [OneLogin's v2 discovery reference](https://developers.onelogin.com/docs/openid-connect/api/provider-config/).
 
+
+```mermaid
+flowchart TD
+  accTitle: OneLogin user roles must be emitted as the ID-token groups array
+  accDescr: OneLogin app assignment controls sign-in. The example additionally requests groups and maps User Roles to a multi-value groups parameter. The portal matches the exact emitted value before adding app/member. A user assigned to the client can therefore log in yet fail the application policy.
+  C["Assigned OneLogin user and configured User Roles"] --> I["Verified ID token with multi-value groups"]
+  I --> T["Match realm onelogin and the intended role value"]
+  T -->|Match| R["Grant app/member deliberately"]
+  T -->|No match| N["No application grant"]
+  R --> P["Application policy requires app/member"]
+  N --> D["Portal login can succeed while app access is denied"]
+```
+
 ## Map OneLogin roles to groups
 
 The Caddyfile requests `openid email profile groups`. Configure the app's
