@@ -27,6 +27,18 @@ an authorized user and a signed-in nonmember. Optional modules, TLS/DNS setup
 and application-specific APIs require their own verification. Keep private
 keys and account data outside the file-server root.
 
+
+## Choose the evidence before copying an example
+
+A useful topology idea is separate from proof that its syntax and runtime behavior match your deployment.
+
+| Starting point | Useful for | Required follow-up |
+| --- | --- | --- |
+| Canonical example in this site | A complete configuration with stated version and environment | Replace demo values; adapt with your executable; test allow and deny |
+| Upstream fixture or example | Inspect parser, host integration, and expected behavior | Check its source revision and actual fixture coverage |
+| Community write-up | Understand another deployment’s topology and choices | Verify date, versions, grammar, keys, callbacks, and backend boundary |
+| Provider console screenshot | Locate a corresponding setup concept | Follow current official field names and your exact public callback |
+
 ## Agentic Prompts
 
 Copy a prompt into your LLM to explore this topic. Each prompt prioritizes

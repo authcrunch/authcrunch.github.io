@@ -12,6 +12,16 @@ const destination = path.join(root, "static/img/diagrams");
 const manifestPath = path.join(root, "assets/diagrams/manifest.json");
 const digest = (value) =>
   crypto.createHash("sha256").update(value).digest("hex");
+const packageJson = JSON.parse(
+  await fs.readFile(path.join(root, "package.json"), "utf8"),
+);
+const rendererHash = digest(
+  (await fs.readFile(fileURLToPath(import.meta.url), "utf8")) +
+    JSON.stringify({
+      mermaid: packageJson.devDependencies.mermaid,
+      playwright: packageJson.devDependencies["playwright-core"],
+    }),
+);
 const check = process.argv.includes("--check");
 const diagrams = new Map();
 async function collect(directory) {
@@ -56,7 +66,13 @@ if (check) {
     throw new Error("Mermaid inventory changed; run npm run diagrams:render");
   for (const [id, diagram] of diagrams) {
     const record = previous[id];
+    if (record.rendererHash !== rendererHash)
+      throw new Error(
+        `${id}: renderer settings changed; run npm run diagrams:render`,
+      );
     if (
+      JSON.stringify([...record.pages].sort()) !==
+        JSON.stringify([...diagram.pages].sort()) ||
       record.sourceHash !== digest(diagram.source) ||
       record.title !== diagram.title ||
       record.description !== diagram.description
@@ -72,6 +88,17 @@ if (check) {
         path.join(destination, `${id}-${theme}.svg`),
         "utf8",
       );
+      const viewBox = svg
+        .match(/<svg\b[^>]*\bviewBox="([^"]+)"/)?.[1]
+        .trim()
+        .split(/[,\s]+/)
+        .map(Number);
+      if (
+        !viewBox ||
+        Math.ceil(viewBox[2]) !== record[theme].width ||
+        Math.ceil(viewBox[3]) !== record[theme].height
+      )
+        throw new Error(`${id}: stale ${theme} dimensions`);
       if (digest(svg) !== record[theme].hash)
         throw new Error(`${id}: changed ${theme} SVG; regenerate`);
     }
@@ -105,6 +132,7 @@ try {
     a.localeCompare(b),
   )) {
     const record = {
+      rendererHash,
       sourceHash: digest(diagram.source),
       title: diagram.title,
       description: diagram.description,
@@ -124,6 +152,7 @@ try {
             securityLevel: "strict",
             theme: "base",
             htmlLabels: false,
+            themeCSS: ".edgeLabel rect { opacity: 1; }",
             deterministicIds: true,
             deterministicIDSeed: id + "-" + theme,
             fontFamily: "Arial, sans-serif",
@@ -155,6 +184,7 @@ try {
             },
             flowchart: {
               htmlLabels: false,
+              wrappingWidth: 180,
               curve: "linear",
               nodeSpacing: 28,
               rankSpacing: 36,

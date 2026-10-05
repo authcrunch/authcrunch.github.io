@@ -7,6 +7,8 @@ type Props = {
   description: string;
   width: string;
   height: string;
+  lightHash: string;
+  darkHash: string;
 };
 
 export default function DocDiagram({
@@ -15,10 +17,17 @@ export default function DocDiagram({
   description,
   width,
   height,
+  lightHash,
+  darkHash,
 }: Props): React.ReactNode {
-  const light = useBaseUrl(`/img/diagrams/${id}-light.svg`);
-  const dark = useBaseUrl(`/img/diagrams/${id}-dark.svg`);
+  const light = useBaseUrl(`/img/diagrams/${id}-light.svg?v=${lightHash}`);
+  const dark = useBaseUrl(`/img/diagrams/${id}-dark.svg?v=${darkHash}`);
   const source = useBaseUrl(`/img/diagrams/${id}.mmd`);
+  // Keep SVG labels at least 14px when a wide diagram needs horizontal scrolling.
+  const minimumWidth = Math.min(
+    Number(width),
+    Math.max(760, Math.round(Number(width) * 0.875)),
+  );
   return (
     <figure className="doc-diagram">
       <div
@@ -31,7 +40,7 @@ export default function DocDiagram({
           className="doc-diagram__image doc-diagram__light"
           href={light}
           style={{
-            minWidth: Math.min(Number(width), 760),
+            minWidth: minimumWidth,
             maxWidth: Number(width),
             marginInline: "auto",
           }}
@@ -48,7 +57,7 @@ export default function DocDiagram({
           className="doc-diagram__image doc-diagram__dark"
           href={dark}
           style={{
-            minWidth: Math.min(Number(width), 760),
+            minWidth: minimumWidth,
             maxWidth: Number(width),
             marginInline: "auto",
           }}
@@ -63,15 +72,17 @@ export default function DocDiagram({
         </a>
       </div>
       <figcaption>
-        <strong>{title}.</strong> {description}
+        <p>
+          <strong>{title}.</strong> {description}
+        </p>
       </figcaption>
-      <p className="doc-diagram__help">
-        Scroll the diagram on narrow screens, or open it for a larger view.{" "}
+      <div className="doc-diagram__help">
+        Scroll horizontally when needed, or open the diagram for a larger view.{" "}
         <a href={source} download>
           Download Mermaid source
         </a>
         .
-      </p>
+      </div>
     </figure>
   );
 }

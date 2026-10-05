@@ -1,0 +1,8 @@
+flowchart TD
+  accTitle: AWS menu and metadata stop before a completed assertion flow
+  accDescr: The released SSO app parses configured provider/key material, serves metadata to an authenticated portal session, and displays AWS role choices. Its assume-role handler returns a placeholder rather than a signed SAML assertion. The dashed boundary below identifies missing behavior, not a configuration step that completes federation.
+  C["Configured AWS SSO provider and key material"] --> M["Generated IdP metadata"]
+  U["Authenticated portal identity with AWS-shaped roles"] --> R["AWS role menu"]
+  R --> H["Assume-role route returns placeholder"]
+  H -.->|Not implemented in the documented release| A["Signed assertion and AWS federation"]
+  M -.->|Metadata alone does not complete| A

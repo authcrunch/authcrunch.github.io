@@ -13,6 +13,18 @@ discovery:
 Use these pages when you know which setting or interface you need. For a complete
 working example, start with [Protect your first app](start/first-app.md).
 
+
+```mermaid
+flowchart LR
+  accTitle: Navigate by the behavior you need to understand
+  accDescr: These are documentation choices rather than a runtime sequence. Start with the task, then follow the linked references on this page. Login sources, application permission, credential lifecycle, management callers, and executable evidence have different owners even when they share one security configuration.
+  Q{"What are you investigating?"} -->|Who can sign in?| I["Stores, providers, portals, challenges"]
+  Q -->|Who can enter this app?| A["Authorization syntax, claims, ACLs, paths"]
+  Q -->|Which credential is sent or renewed?| T["Cookies, token discovery, refresh, runtime state"]
+  Q -->|Which caller can manage what?| P["Portal, Profile, Server, System, and client APIs"]
+  Q -->|Which implementation is running?| V["Executable, versions, compiled modules, logging"]
+```
+
 ## Caddyfile configuration
 
 AuthCrunch's named stores, portals, and policies belong inside the global

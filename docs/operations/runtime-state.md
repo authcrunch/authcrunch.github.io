@@ -35,6 +35,20 @@ filesystems, sharing between active replicas, and Windows persistence are not
 supported. File-backed local user databases remain separate from runtime state;
 an in-memory local database is incompatible with persistence.
 
+
+```mermaid
+flowchart TD
+  accTitle: Only completed authority crosses a controlled restart
+  accDescr: One runtime owns the private state directory and commits completed state synchronously. A full stop/start releases ownership before restoration. Restored credentials keep original expiry and replay history. Pending login, enrollment, consent interactions, and cross-device work remain volatile, while the local identity database is a separate artifact.
+  C["Completed sessions, grants, generated keys, replay history"] --> S["Private encrypted state under one owner"]
+  S --> O["Stop admission, drain, stop, release ownership"]
+  O --> R["Replacement opens same coherent state"]
+  R --> V["Restore eligible completed authority with original deadlines"]
+  P["Pending interactions: volatile process memory"] --> X["Discard at restart"]
+  D["Separate private identity database"] --> E["Check current account evidence"]
+  E --> V
+```
+
 ## What survives a restart
 
 | State | Retained with the same storage and compatible configuration |

@@ -1,0 +1,9 @@
+flowchart TD
+  accTitle: Secret resolution supplies a named credential to a specific consumer
+  accDescr: A reusable credentials block is not itself a secret manager. Runtime environment or supported secret references are resolved in a private configuration copy before credential validation. An external manager also requires a compiled module. The messaging consumer must independently authenticate to its service; retrieval does not prove acceptance.
+  E["Runtime environment value"] --> R["Private configuration resolution"]
+  S["Compiled secret manager and lookup reference"] --> R
+  C["Named credentials block"] --> R
+  R --> V["Validate resolved name, username, password"]
+  V --> M["Messaging references the matching credential name"]
+  M --> A["Service-specific TLS and authentication"]

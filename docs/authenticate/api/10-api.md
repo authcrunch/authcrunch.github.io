@@ -37,7 +37,7 @@ implement a separate protocol and credential lifecycle.
 
 
 ```mermaid
-flowchart TD
+flowchart LR
   accTitle: Choose the API by the caller’s authority
   accDescr: The API families have different credential and permission boundaries, even when they share a portal mount. A successful application request or identity probe does not establish Profile, administrative, or System authority. Refresh and downstream OIDC endpoints implement separate protocols.
   A{"What must the caller do?"} -->|Login or inspect identity| P["Portal API: login checkpoints or valid access credential"]

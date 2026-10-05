@@ -28,8 +28,7 @@ flowchart TD
   accTitle: Portal access, account management, and app membership are distinct
   accDescr: Completing login establishes a portal identity. Local Profile management also requires an allowed portal role and a live local session. Application routes require their own role/claim policy. External-provider users manage provider credentials at that provider rather than through the local Profile API.
   L["Complete configured login"] --> I["Portal identity and credential"]
-  I --> P["Portal landing page and permitted links"]
-  I --> W["Identity display: whoami"]
+  I --> P["Portal links and identity display: whoami"]
   I --> A{"Application ACL allows?"}
   A -->|Yes| APP["Protected application"]
   A -->|No| DENY["Forbidden"]

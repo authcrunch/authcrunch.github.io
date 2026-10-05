@@ -124,6 +124,7 @@ a { text-underline-offset: 3px; }
 [data-theme="dark"] .doc-diagram__light { display: none; }
 [data-theme="dark"] .doc-diagram__dark { display: block; }
 .doc-diagram figcaption { margin-top: 1rem; font-size: .9rem; line-height: 1.7; }
+.doc-diagram figcaption p { margin-bottom: 0; }
 .doc-diagram__help { margin: .5rem 0 0; color: var(--ac-muted); font-size: .8rem; line-height: 1.6; }
 .doc-screen-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; align-items: start; }
 .doc-screen-pair .doc-screenshot { margin-top: .5rem; }

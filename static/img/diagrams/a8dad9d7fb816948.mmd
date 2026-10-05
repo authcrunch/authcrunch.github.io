@@ -1,0 +1,20 @@
+sequenceDiagram
+  accTitle: The Go client acquires credentials; the caller owns prompting and lifecycle
+  accDescr: The SDK advances JSON checkpoints using an application-owned prompt callback and context. Transport must be selected explicitly and supported by both sides. Returned credentials may be stored through the configured private token store, but structural validation and Authenticate do not implement JWT verification or automatic refresh rotation.
+  participant A as Calling application
+  participant C as Go authclient
+  participant P as Portal
+  A->>C: Authenticate with context and explicit options
+  C->>P: JSON identity or separate API-key exchange
+  loop Password or TOTP checkpoints when selected
+    P-->>C: Bound current challenge
+    C->>A: Invoke caller's prompt callback
+    A-->>C: Response or cancellation
+    break Caller cancels
+      C-->>A: Error without another portal request
+    end
+    C->>P: Current sandbox fields and selected transport
+  end
+  P-->>C: Completed credentials or failure
+  C-->>A: Completed credentials for caller-owned use, or error
+  Note over A,C: Renewal, admin operations, and browser Profile sessions are separate

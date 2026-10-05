@@ -32,6 +32,19 @@ Keep them private and remove tokens, passwords, cookies and provider secrets
 before sharing a relevant excerpt. Disable verbose diagnostics when finished.
 Caddy access logs are configured separately from AuthCrunch component logs.
 
+
+```mermaid
+flowchart TD
+  accTitle: Filtering a component diagnostic leaves the access decision intact
+  accDescr: The configured filter wraps AuthCrunch component logging and can suppress matching messages or supported field values. It does not change the returned error or HTTP outcome. Caddy’s independent handler diagnostics and access logs retain their own owners, so a denied request can still appear there.
+  R["Request produces authentication or policy result"] --> H["HTTP response and access decision"]
+  R --> D["AuthCrunch component diagnostic"]
+  D --> F{"Configured skip selector matches?"}
+  F -->|Yes| S["Suppress that component log entry"]
+  F -->|No| E["Emit component log entry"]
+  R --> C["Independent Caddy handler and access logs"]
+```
+
 ## Filter expected messages
 
 The optional block below is available in **caddy-security v1.3.0 /

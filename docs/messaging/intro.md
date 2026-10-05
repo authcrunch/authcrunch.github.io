@@ -14,6 +14,21 @@ Messaging providers deliver account-registration notifications. Define a provide
 
 The released workflow sends a registrant's confirmation and attempts an administrator notification after the verified request is stored in the dropbox. This does not implement account approval, automatic active-store provisioning, password-reset emails or email-based MFA. See [challenge support](../authenticate/13-authentication-challenges.md) before enabling a factor.
 
+
+```mermaid
+flowchart TD
+  accTitle: Rendered content, transport acceptance, and mailbox delivery are different outcomes
+  accDescr: Registration uses the release’s embedded message renderer and the named provider. SMTP/SMTPS sends an envelope and message; a file provider writes a private outbox for an external sender. Accepted template settings, visible Bcc headers, or an SMTP success response do not by themselves prove recipient delivery or a completed account approval workflow.
+  R["Registration notification renderer"] --> M["Rendered subject and body"]
+  M --> P{"Selected provider"}
+  P -->|Email| S["Configured SMTP or implicit-TLS SMTPS"]
+  S --> E{"Service accepts envelope and message?"}
+  E -->|No| N["Transport failure; delivery not proven"]
+  E -->|Yes| D["Mailbox delivery requires separate evidence"]
+  P -->|File| F["Private .eml outbox"]
+  F --> X["External sender owns subsequent delivery"]
+```
+
 ## Email Messaging Provider
 
 The email provider supports `smtp` and `smtps`. Authentication uses SASL PLAIN with a named username/password credential. The release does not implement STARTTLS upgrade or OAuth mail authentication.

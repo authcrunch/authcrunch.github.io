@@ -12,6 +12,10 @@ sequenceDiagram
     loop Required checkpoints
         Browser->>Portal: Bound response to current challenge
         Portal->>Store: Verify password or MFA evidence
-        Portal-->>Browser: Next checkpoint or denial
+        Store-->>Portal: Checkpoint result
+        break Verification fails or sandbox expires
+            Portal-->>Browser: Deny without completed credentials
+        end
+        Portal-->>Browser: Next checkpoint if still required
     end
     Portal-->>Browser: Completed login credential

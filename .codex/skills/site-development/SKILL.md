@@ -64,10 +64,16 @@ verify both production rendering and development compilation when changing it.
 The Mermaid remark plugin replaces authored `mermaid` fences with DocDiagram.
 SVGs are rendered during authoring, not in the reader's browser. The caption and
 alternate theme images render on the server; CSS selects the visible theme.
+Keep the caption in a paragraph so the maintained crawler indexes its meaning;
+leave generic diagram controls outside paragraphs. Preserve label size by
+scrolling wide SVGs rather than shrinking their text below the readable minimum.
 Keep image dimensions, descriptive alternatives, full-size links, downloadable
 source, and keyboard scrolling usable without JavaScript. Preserve the original
-MDX component mapping when extending it. The checked source-to-render manifest
-and regeneration command belong to [diagram assets](../../../assets/diagrams/README.md).
+MDX component mapping when extending it. Use the per-theme render hash in SVG
+URLs so regenerated styling also invalidates cached images. The checked
+source-to-render manifest also detects changed rendering settings/tool versions.
+The regeneration command belongs to
+[diagram assets](../../../assets/diagrams/README.md).
 
 The discovery plugin reads the current docs version through Docusaurus's
 `allContentLoaded` lifecycle and publishes a catalog with resolved permalinks.

@@ -8,7 +8,8 @@ type Node = { type: string; lang?: string; value?: string; children?: Node[] };
 type Diagram = {
   title: string;
   description: string;
-  light: { width: number; height: number };
+  light: { width: number; height: number; hash: string };
+  dark: { hash: string };
 };
 
 /** Render authored Mermaid fences as static, theme-aware figures in MDX. */
@@ -41,6 +42,8 @@ export default function remarkMermaidDiagrams(): Transformer<Root> {
               description: diagram.description,
               width: String(diagram.light.width),
               height: String(diagram.light.height),
+              lightHash: diagram.light.hash.slice(0, 16),
+              darkHash: diagram.dark.hash.slice(0, 16),
             }).map(([name, value]) => ({
               type: "mdxJsxAttribute",
               name,

@@ -20,6 +20,19 @@ pins **go-authcrunch v1.3.8**. The standalone library has separately released
 [v1.3.11](https://github.com/greenpau/go-authcrunch/releases/tag/v1.3.11).
 These guides use the published Caddy bundle unless they state another boundary.
 
+
+```mermaid
+flowchart TD
+  accTitle: Feature support needs matching library, adapter, and executable evidence
+  accDescr: A library release can contain behavior that an older Caddy adapter cannot configure. A source tag can exist without a downloadable binary. Inspect the executable actually run, its selected modules, and the feature’s parser/runtime boundary. Main-branch documentation alone does not prove a deployed release supports the feature.
+  F["Wanted feature"] --> L["Library release contains the runtime"]
+  F --> A["Integration revision exposes required grammar"]
+  L --> B["Downloaded artifact or reproducible source build"]
+  A --> B
+  B --> V["Inspect the actual executable and modules"]
+  V --> T["Adapt configuration and test the feature's real boundary"]
+```
+
 ## Check the executable you run
 
 ```sh

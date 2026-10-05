@@ -14,6 +14,18 @@ discovery:
 
 For a working application integration, use [portal JWT authorization](../authorize/getting-started.md), [direct OAuth policies](../authorize/direct-oauth.md) or the released [OIDC provider](oidc-provider.md). For users signing into AuthCrunch through Entra/JumpCloud, use [upstream SAML identity providers](../authenticate/saml/10-saml.md); that is a separate, implemented flow.
 
+
+```mermaid
+flowchart TD
+  accTitle: AWS menu and metadata stop before a completed assertion flow
+  accDescr: The released SSO app parses configured provider/key material, serves metadata to an authenticated portal session, and displays AWS role choices. Its assume-role handler returns a placeholder rather than a signed SAML assertion. The dashed boundary below identifies missing behavior, not a configuration step that completes federation.
+  C["Configured AWS SSO provider and key material"] --> M["Generated IdP metadata"]
+  U["Authenticated portal identity with AWS-shaped roles"] --> R["AWS role menu"]
+  R --> H["Assume-role route returns placeholder"]
+  H -.->|Not implemented in the documented release| A["Signed assertion and AWS federation"]
+  M -.->|Metadata alone does not complete| A
+```
+
 ## AWS SSO
 
 AWS accepts SAML assertions from a configured identity provider, including permitted IAM role/provider ARN pairs. Its [console federation procedure](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_enable-console-saml.html) describes that AWS-side protocol. Configuring an AuthCrunch metadata document does not implement the missing assertion issuance or grant an AWS console session.

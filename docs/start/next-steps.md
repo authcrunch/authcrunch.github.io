@@ -36,6 +36,20 @@ An upstream application that trusts identity headers must only accept them from
 the trusted proxy; users must not be able to bypass that proxy or supply trusted
 headers themselves.
 
+
+```mermaid
+flowchart TD
+  accTitle: Carry the demo’s allowed and denied checks into every deployment change
+  accDescr: Replace local-demo assumptions with real HTTPS, private accounts/keys/storage, and the intended identity source. Then inspect mapped claims and factor evidence before refining the policy. Place the backend behind the authorized route, and explicitly choose renewal, persistence, management, and operational behavior rather than assuming the demo supplies them.
+  D["Working local demo with allowed and denied users"] --> H["Real HTTPS, private accounts, keys, and storage"]
+  H --> I["Chosen identity source and consistent callback/mount"]
+  I --> C["Inspect claims, map membership, require appropriate factors"]
+  C --> A["Authorization before application handler"]
+  A --> B["Prevent direct backend bypass"]
+  B --> O["Choose renewal, restart continuity, logs, updates, management"]
+  O --> T["Repeat allowed, denied, expiry, logout, and restart checks"]
+```
+
 ## Prepare a deployment
 
 The learning Caddyfile is deliberately local. Before turning it into a service,

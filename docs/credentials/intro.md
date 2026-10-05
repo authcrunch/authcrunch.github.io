@@ -12,6 +12,19 @@ discovery:
 
 Separate service credentials, portal signing keys and user password hashes. A named `credentials` entry supplies a username/password to a consumer such as a messaging provider; it is not an encrypted vault or an end-user login account. Secret-manager references require a separately compiled module.
 
+
+```mermaid
+flowchart TD
+  accTitle: Secret resolution supplies a named credential to a specific consumer
+  accDescr: A reusable credentials block is not itself a secret manager. Runtime environment or supported secret references are resolved in a private configuration copy before credential validation. An external manager also requires a compiled module. The messaging consumer must independently authenticate to its service; retrieval does not prove acceptance.
+  E["Runtime environment value"] --> R["Private configuration resolution"]
+  S["Compiled secret manager and lookup reference"] --> R
+  C["Named credentials block"] --> R
+  R --> V["Validate resolved name, username, password"]
+  V --> M["Messaging references the matching credential name"]
+  M --> A["Service-specific TLS and authentication"]
+```
+
 ## Credentials Directive
 
 Define a credential label in the global `security` block and reference that label from its consumer:

@@ -55,6 +55,21 @@ supply `password` or supported TOTP settings for automation, but it then holds
 those secrets. The YAML loader does not expand Caddyfile environment placeholders.
 WebAuthn/U2F interactive challenges are not supported by this client.
 
+
+```mermaid
+flowchart TD
+  accTitle: The management CLI logs in as one identity and targets a separate realm
+  accDescr: The private client configuration selects the portal and login realm. The command’s target realm identifies the store to administer. Missing cache can trigger authentication; rejected or expired cached credentials require an explicit connect. An uncertain mutation response must be inspected before retrying because the server may already have committed the change.
+  C["Private YAML: portal URL, login realm, CA, cache"] --> A{"Cached credentials present?"}
+  A -->|Cache missing| L["Authenticate as configured operator"]
+  A -->|Cache present| S["Send authenticated Server API request"]
+  L --> S
+  T["Command target realm and account"] --> S
+  S -->|Authentication rejected| R["Explicit connect; no automatic mutation retry"]
+  S -->|Mutation succeeds| Y["Validated result"]
+  S -->|Outcome uncertain| I["Inspect server state before another mutation"]
+```
+
 ## Connect and inspect
 
 ```bash

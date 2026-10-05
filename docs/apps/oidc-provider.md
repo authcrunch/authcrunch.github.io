@@ -84,6 +84,27 @@ Use the relying party's own OIDC integration library to generate state, nonce,
 and PKCE, redeem the code, and verify the ID token's signature, issuer, audience,
 expiry and nonce. The resulting application session belongs to that application.
 
+
+```mermaid
+sequenceDiagram
+  accTitle: The relying app owns a session after an OIDC code exchange
+  accDescr: Here AuthCrunch is the OpenID Provider for selected local accounts, rather than an external login consumer. The relying party binds state, nonce, and PKCE, validates the ID token, and creates its own app session. Provider browser state, opaque UserInfo access, OIDC refresh grants, and the relying-party session have separate lifecycles.
+  participant B as Browser
+  participant R as Relying application
+  participant P as AuthCrunch OP
+  B->>R: Start application sign-in
+  R-->>B: Bound authorization request with state, nonce, PKCE
+  B->>P: Login and consent as configured
+  P-->>B: Registered callback with authorization code
+  B->>R: Callback with code and state
+  R->>P: Token exchange with client auth and PKCE verifier
+  P-->>R: ID token and opaque access credential
+  R->>R: Verify signature, issuer, audience, nonce, time
+  R->>P: UserInfo with opaque access credential if needed
+  P-->>R: Permitted user claims
+  R-->>B: Application-owned session
+```
+
 ## Discovery and token boundaries
 
 | Purpose | Path relative to the issuer |
