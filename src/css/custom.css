@@ -101,7 +101,13 @@ a { text-underline-offset: 3px; }
 .theme-doc-sidebar-menu { font-size: .86rem; }
 .menu__link { line-height: 1.5; padding: .55rem .8rem; border-radius: 5px; }
 .menu__list .menu__list { padding-left: .7rem; }
-.theme-doc-markdown { max-width: 48rem; }
+.theme-doc-markdown { max-width: none; }
+/* Match the theme layer: its collapsed container uses a layered !important cap. */
+@layer docusaurus.theme-classic {
+  @media (min-width: 997px) {
+    .theme-doc-sidebar-container + main > .container { max-width: none !important; }
+  }
+}
 .markdown > h1 { font-size: clamp(2rem, 3.2vw, 2.75rem); margin-bottom: 1.4rem; }
 .markdown > h2 { font-size: 1.6rem; margin-top: 2.75rem; }
 .markdown > h3 { font-size: 1.2rem; }
@@ -151,7 +157,6 @@ a { text-underline-offset: 3px; }
   .navbar { padding-inline: 1rem; }
   .navbar__brand { margin-right: auto; }
   .navbar-sidebar__brand { min-height: var(--ifm-navbar-height); }
-  .theme-doc-markdown { max-width: none; }
 }
 @media (max-width: 650px) {
   .container { padding-inline: 1.25rem; }

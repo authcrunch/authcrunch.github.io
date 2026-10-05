@@ -19,6 +19,7 @@ or stylesheet, then change the narrowest owner.
 | Interactive portal/direct-OAuth comparison | [AccessFlow](../../../src/components/AccessFlow/index.tsx) |
 | Static external-login sequence in the OAuth overview | [OAuthFlow](../../../src/components/OAuthFlow/index.tsx) |
 | Static Mermaid figures and narrow-screen scrolling | [DocDiagram](../../../src/components/DocDiagram/index.tsx), [MDX mapping](../../../src/theme/MDXComponents/index.tsx), and [remark plugin](../../../src/plugins/mermaid-diagrams.ts) |
+| Documentation article width and desktop sidebar controls | [custom.css](../../../src/css/custom.css), [theme configuration](../../../docusaurus.config.ts), and [expand-button wrapper](../../../src/theme/DocRoot/Layout/Sidebar/ExpandButton/index.tsx) |
 | Global Infima colors, typography, Tailwind imports | [custom.css](../../../src/css/custom.css) |
 | PostCSS integration | [tailwind plugin](../../../src/plugins/tailwind-config.ts) |
 | Caddyfile text imports for MDX | [configuration-source plugin](../../../src/plugins/configuration-source.ts) |
@@ -50,6 +51,19 @@ entrances sharing the broader sidebar therefore use ordinary path links with
 explicit `activeBaseRegex` values so they do not all appear selected together.
 Start here uses a doc item and follows its whole learning sidebar. Verify active
 states as well as link destinations.
+
+Documentation articles fill their allocated column; do not impose a second prose
+width cap that leaves a large gap before the table of contents. The docs-only
+container override also removes the theme's width cap when the sidebar is hidden.
+Keep that important override in `docusaurus.theme-classic`: layered important
+rules outrank unlayered important rules, including a more specific selector.
+Keep the homepage and blog container sizes independent. Enable desktop sidebar
+collapse through `themeConfig.docs.sidebar.hideable`; the existing mobile drawer
+remains controlled by the navbar button. The expand-button wrapper preserves the
+theme markup/styles while restricting keyboard activation to Enter and Space.
+Tab and arrow keys must not unexpectedly restore the sidebar. Check article,
+code, diagram and TOC alignment in both sidebar states, keyboard focus, client
+navigation, the desktop/mobile breakpoint, and no-JavaScript reading.
 
 The homepage and AccessFlow use imported CSS modules; shared documentation and
 theme rules live in `custom.css`. AccessFlow's model buttons expose their state

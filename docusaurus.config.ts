@@ -80,6 +80,11 @@ const config: Config = {
 
   themeConfig: {
     image: "img/brand/social-card.png",
+    docs: {
+      sidebar: {
+        hideable: true,
+      },
+    },
     colorMode: {
       respectPrefersColorScheme: true,
     },
