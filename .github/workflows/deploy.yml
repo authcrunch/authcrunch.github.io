@@ -29,6 +29,14 @@ jobs:
           node-version: 24
           cache: npm
 
+      - name: Test release automation
+        run: npm run test:release
+
+      - name: Check release metadata
+        env:
+          RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+        run: make check-release-version
+
       - name: Cache Docusaurus
         uses: actions/cache@v4
         with:

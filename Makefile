@@ -12,7 +12,6 @@ all: info build
 
 .PHONY: info
 info:
-	@versioned --sync package.json
 	@echo "DEBUG: $(PROJECT_NAME) Version: $(PROJECT_VERSION), Branch: $(GIT_BRANCH), Revision: $(GIT_COMMIT)"
 	@echo "DEBUG: Build on $(BUILD_DATE) by $(BUILD_USER)"
 
@@ -31,21 +30,14 @@ test: clean
 	@echo "$@: started"
 	@echo "$@: complete"
 
+.PHONY: sync-release-version
+sync-release-version:
+	@node assets/scripts/release-version.mjs sync
+
+.PHONY: check-release-version
+check-release-version:
+	@node assets/scripts/release-version.mjs check
+
 .PHONY: release
 release:
-	@echo "$@: started"
-	@versioned --sync package.json
-	@if [ $(GIT_BRANCH) != "main" ]; then echo "cannot release to non-main branch $(GIT_BRANCH)" && false; fi
-	@git diff-index --quiet HEAD -- || ( echo "git directory is dirty, commit changes first" && false )
-	@versioned -patch
-	@versioned --sync package.json
-	@echo "Patched version"
-	@git add VERSION package.json
-	@git commit -m "released v`cat VERSION | head -1`"
-	@git tag -a v`cat VERSION | head -1` -m "v`cat VERSION | head -1`"
-	@git push
-	@git push --tags
-	@@echo "If necessary, run the following commands:"
-	@echo "  git push --delete origin v$(PROJECT_VERSION)"
-	@echo "  git tag --delete v$(PROJECT_VERSION)"
-	@echo "$@: complete"
+	@node assets/scripts/release-version.mjs release

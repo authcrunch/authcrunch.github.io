@@ -43,6 +43,7 @@ into the public output.
 | --- | --- | --- |
 | Install reproducibly | `npm ci` | Uses the committed dependency graph; replaces `node_modules/` |
 | Check typed source | `npm run typecheck` | Runs `tsc`; separate from the site build |
+| Test release automation | `npm run test:release` | Offline Node tests with disposable local Git remotes; no installed npm dependencies or publication |
 | Check hosted search | `npm run check:search` | Read-only Algolia queries; fails on stale destinations, missing metadata/facets, or failed relevance checks |
 | Build static output | `npm run build` | Compiles MDX and site code and checks configured links |
 | Check diagram assets | `npm run diagrams:check` | Verifies authored Mermaid inventory, source assets, and committed SVG hashes without a browser |
@@ -57,9 +58,10 @@ repository's installed MDX check. Use an additional checker only when it helps
 diagnose a specific issue, and distinguish it from committed CI coverage.
 
 The Makefile's `build`, `clean`, and `test` targets only echo progress (`test`
-depends on that no-op `clean`). Plain `make` also runs `info`, which invokes
-`versioned --sync package.json` and can change tracked metadata. None of these
-is a substitute for the npm build or typecheck.
+depends on that no-op `clean`). Plain `make` also runs the read-only `info` target.
+None of these is a substitute for the npm build or typecheck. The Node release
+helper owns caddy-security-aligned metadata synchronization and publication;
+use the routed release workflow for those targets.
 
 `npm run upgrade` executes `ncu --upgrade`, removes `node_modules/`,
 `package-lock.json`, `build`, and `coverage`, then installs again. It is a broad
@@ -128,8 +130,9 @@ testing it. Mixed state can load production-only analytics lifecycle code into
 the dev client without its initialization, causing `window.ga` errors on route
 or query changes even when the first page renders correctly.
 
-There is no npm `test` or lint script and the current deployment workflow does
-not run typecheck, Caddy validation, or browser tests. Report checks actually
+There is no general npm `test` or lint script. The focused `test:release` script
+checks release automation. The deployment workflow does not run typecheck, Caddy
+validation, or browser tests. Report checks actually
 performed. Skill-only changes use skill validators and route/link checks;
 public content needs a site build; typed source or dependencies need typecheck
 and build; visible changes also need rendered inspection when available.
@@ -177,10 +180,12 @@ missing-content queries distinct from indexing failures.
 ## GitHub Pages pipeline
 
 `deploy.yml` runs on pushed `v*` tags or `workflow_dispatch`, not ordinary branch
-pushes or pull requests. Its build job checks out the selected revision, installs
-with `npm ci`, builds with `GENERATE_SOURCEMAP=false`, and uploads `build/` using
-the Pages artifact action. The deploy job depends on that build and publishes
-through `actions/deploy-pages` in the `github-pages` environment.
+pushes or pull requests. Its build job checks out the selected revision, sets up
+Node, runs offline release tests, and verifies VERSION/package/lockfile agreement.
+A tag ref must also match that version; a branch dispatch checks only metadata.
+It then installs with `npm ci`, builds with `GENERATE_SOURCEMAP=false`, and uploads
+`build/` using the Pages artifact action. The deploy job depends on that build
+and publishes through `actions/deploy-pages` in the `github-pages` environment.
 
 Preserve the Pages/OIDC permissions and the `pages` concurrency group unless
 the task changes them intentionally. `cancel-in-progress` is false. The workflow

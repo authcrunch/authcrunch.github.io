@@ -1,90 +1,104 @@
 ---
 name: release-and-versioning
-description: "Prepare or perform AuthCrunch documentation version bumps and GitHub Pages releases, and diagnose partial release failures. Covers the versioned tool, Makefile commit/tag/push behavior, and publication boundaries."
+description: "Prepare or publish AuthCrunch documentation releases aligned with caddy-security, validate version metadata, and recover partial release failures. Preparation does not authorize publication."
 ---
 
 # Release And Versioning
 
-## Release scope and prerequisites
+## Version authority and scope
 
-Own version metadata and the transition from reviewed content to a tagged,
-published site. Source authority is [Makefile](../../../Makefile),
-[VERSION](../../../VERSION), [package.json](../../../package.json), and
-[deploy.yml](../../../.github/workflows/deploy.yml). The versions here identify
-the documentation site, not a Caddy or go-authcrunch runtime release.
+Own release metadata and the transition from reviewed content to a tagged,
+published site. Sources are [Makefile](../../../Makefile),
+[the release helper](../../../assets/scripts/release-version.mjs),
+[VERSION](../../../VERSION), [package.json](../../../package.json),
+[package-lock.json](../../../package-lock.json), and
+[deploy.yml](../../../.github/workflows/deploy.yml). Regression coverage is in
+[release-version.test.mjs](../../../assets/scripts/tests/release-version.test.mjs).
 
-Distinguish preparing a release from publishing it. Build, inspect metadata,
-and prepare requested changes within the user's scope; push tags or dispatch
-deployment only when publication is authorized. Existing explicit authorization
-is sufficient and does not require repeated confirmation. A request for a
-commit message or local verification alone does not authorize release actions.
+Documentation releases use caddy-security's highest stable `vX.Y.Z` Git tag at
+release invocation. The helper queries `greenpau/caddy-security` over HTTPS and
+compares numeric components, excluding prereleases and malformed tags. A trusted
+mirror can be selected with `CADDY_SECURITY_REPOSITORY`; tests use local remotes.
+Do not substitute the sibling checkout's VERSION, go-authcrunch's version, or an
+independent documentation patch counter. An aligned site tag does not establish
+that every feature is documented or available in a downloadable runtime bundle;
+retain the public guides' implementation and artifact boundaries.
 
-Check the current branch, staged/unstaged changes, untracked files, target
-version, local tags, configured remote, and the `versioned` executable. The
-Makefile expects `main` and a clean tracked diff. Release preparation should
-include the relevant site build/typecheck evidence before any publication.
+Distinguish preparing a release from publishing it. Metadata synchronization,
+checks, builds, and local commits stay within preparation scope. Running
+`make release`, pushing tags, or dispatching deployment requires publication
+authorization. Existing explicit authorization is sufficient. A future release
+workflow change or local validation task does not itself authorize publishing.
 
-## Actual Makefile lifecycle
+## Preparation and checks
 
-`make release` currently performs these operations in order:
+- `make sync-release-version` resolves the upstream tag and updates VERSION,
+  package version, and both npm lockfile root version fields. It preserves the
+  dependency graph and performs no staging, commit, tag, or push.
+- `make check-release-version` checks local version metadata without network
+  access or writes. `RELEASE_TAG=vX.Y.Z` also verifies the proposed tag.
+- `npm run test:release` exercises selection, synchronization, preconditions,
+  duplicate guards, and publication/recovery in disposable local Git repositories.
+  It requires Node and Git, uses no npm dependencies, and never contacts GitHub.
+- `npm run typecheck` and `npm run build` supply relevant site validation.
 
-1. Runs `versioned --sync package.json` before checking branch or cleanliness.
-2. Rejects a branch other than `main` and a tracked diff against `HEAD`.
-3. Runs `versioned -patch` and synchronizes `package.json` again.
-4. Stages `VERSION` and `package.json`, then commits with `released v<VERSION>`.
-5. Creates annotated tag `v<VERSION>` with the same version as its message.
-6. Runs `git push`, then `git push --tags`.
-7. Prints tag deletion commands as recovery hints; it does not execute them.
+The release helper uses built-in Node modules; `versioned` is no longer used.
+`make info` is read-only. Earlier synchronization does not freeze the next release
+version: `make release` resolves it afresh.
 
-This is not a build target, dry run, or atomic transaction. The initial sync can
-change files even if a later precondition fails. `git diff-index` does not reject
-untracked files. `git push --tags` can publish unrelated local tags, and `git push`
-uses the configured upstream/default behavior. Inspect these effects before
-running the target. Do not execute its printed deletion commands automatically.
+## Actual release lifecycle
 
-The target does not synchronize or stage `package-lock.json`; its root version
-metadata can therefore lag `VERSION` and `package.json`. Compare all three when
-handling version work. If lockfile synchronization is in scope, perform it
-deliberately and review the dependency graph for unintended changes. Do not
-claim the existing target maintains lockfile metadata automatically.
+`make release` performs these steps in order:
 
-Hand-written commit conventions are defined by
-[source-code-management](../source-code-management/SKILL.md). The automated
-release subject is an existing exception, not evidence that all messages may
-omit the adopted format.
+1. Requires `main`, a clean staged/unstaged/untracked worktree, one origin push
+   URL, tracked metadata files, and parseable npm root metadata. Ignored tmp
+   artifacts are allowed.
+2. Resolves the latest stable caddy-security tag and checks for that tag locally
+   and at origin's actual push URL. Lookup failures or duplicates stop before
+   metadata changes; there is no local-version fallback.
+3. Synchronizes all version fields. When files change, stages only the three
+   metadata files and creates `released vX.Y.Z`. Otherwise it uses the existing
+   commit without an empty release commit.
+4. Creates the matching annotated tag.
+5. Atomically pushes `HEAD:refs/heads/main` and that release tag to origin with
+   `push.followTags=false`. Unrelated tags are excluded, including when the user's
+   Git configuration enables follow-tags.
+
+Only one documentation release tag exists per caddy-security version. Further
+documentation updates under that version can use the existing manual Pages
+workflow dispatch after committing changes and obtaining publication scope.
+Do not invent suffixes, rewrite tags, or increment the documentation version to
+bypass the duplicate guard.
 
 ## Publication and failure recovery
 
-A pushed `v*` tag triggers the Pages pipeline; a manual workflow dispatch also
-publishes the selected revision. `npm run deploy` invokes the generic
-Docusaurus deploy command, but this repository's configured publication path
-is the GitHub Pages artifact workflow. Do not substitute one path for the other
-without reviewing its behavior and the requested scope.
+A pushed `v*` tag or manual dispatch triggers Pages. After Node setup, CI runs the
+offline release tests and checks metadata/tag agreement before installation and
+build. It does not compare an old tag with a newer upstream release appearing
+after publication. `npm run deploy` remains the generic Docusaurus deployment
+command; the configured publication path is the GitHub Pages artifact workflow.
+Preserve site URL and CNAME alignment.
 
-Preserve alignment of the configured site URL, root
-[CNAME](../../../CNAME), and [static/CNAME](../../../static/CNAME) when changing
-the custom domain. `static/CNAME` is part of the built output.
+On failure, inspect metadata, staging, commit, local tag, remote refs, workflow,
+and deployment state. Local writes are not an atomic transaction. A failed atomic
+push retains the local commit/tag and prints the exact push retry command. Fix
+the failure and retry that push within publication scope; rerunning release would
+hit the existing local tag or select a newer upstream version. Do not discard
+local state automatically. Tag deletion, rewriting a published release, and
+force-pushing require explicit scope.
 
-If a release fails, inspect which state transitions already happened: version
-change, staged files, commit, local tag, remote commit/tag, workflow run, or Pages
-deployment. Do not rerun the whole target blindly; another run may bump again
-or conflict with an existing tag. Recover from the observed state within the
-authorized scope. Tag deletion, rewriting a published release, or force-pushing
-requires its own explicit scope, not an assumption from the printed hints.
-
-After authorized publication, verify the intended remote tag/revision and Pages
-workflow result. If remote access or credentials are unavailable, identify the
-last verified state without claiming deployment success. Automation changes can
-be exercised in a disposable repository with a local bare remote and controlled
-version-tool inputs; do not test them against the live publication remote.
+After authorized publication, verify the intended remote revision/tag and Pages
+result. State the last verified transition if access is unavailable. Validate
+automation against disposable local remotes; live publication is not a smoke test.
 
 ## Acceptance scenarios
 
-- A preparation-only request yields reviewed metadata and validation evidence,
-  with the publication step still pending.
-- An authorized release uses the intended version and revision, avoids exposing
-  unrelated local tags, and has a confirmed deployment result or explicit limit.
-- A non-main or dirty checkout is caught before invoking a target whose first
-  step mutates metadata; failures do not silently discard user changes.
-- A push failure after local commit/tag creation is recovered from that state
-  without accidentally creating another patch release.
+- Preparation aligns all four stored version values with the selected upstream
+  version without changing dependency versions or publishing.
+- Newer upstream stable tags are selected at release time; prereleases are ignored.
+- Non-main, detached, dirty, invalid metadata, failed lookup, and existing tag
+  conditions fail before release writes.
+- A successful release publishes one annotated tag and the intended main revision;
+  an atomic push rejection publishes neither ref and preserves retryable local state.
+- A tagged deployment with mismatched metadata fails CI; manual deployment checks
+  metadata without treating the branch name as a release tag.

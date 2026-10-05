@@ -17,8 +17,9 @@ Keep public documentation in `docs/` and `blog/`; store agent workflows in
 `node_modules/` as source. Use ignored `tmp/` for working artifacts.
 
 Use the npm scripts in `package.json` for site work. `make build` and `make test`
-are placeholders; `make release` commits, tags, and pushes changes that trigger
-publication. A local validation task does not authorize publication.
+are placeholders; `make release` aligns metadata with the current stable
+caddy-security tag, commits changed metadata, and pushes an annotated tag that
+triggers publication. A local validation task does not authorize publication.
 
 Update affected skill guidance when a change alters the workflow or behavior it
 describes. Keep instructions grounded in the current files and actual validation.
