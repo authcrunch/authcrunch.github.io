@@ -1,77 +1,49 @@
 ---
 sidebar_position: 1
-title: "AWS console SSO with SAML"
-description: "Configure AuthCrunch as a SAML identity provider for access to the AWS console."
+title: "SAML application SSO: released status"
+description: "Understand the implemented AWS SSO metadata and menu, and the unimplemented assertion-issuance boundary."
 discovery:
   topic: applications-and-sso
-  kind: guide
-  aliases: ["AWS federation", "SSO", "service provider"]
+  kind: reference
+  aliases: ["AWS federation", "AWS console", "SAML IdP", "assume role", "SSO"]
 ---
 
 # AWS console SSO with SAML
 
+**AWS console federation is not a complete supported flow in the released Caddy Security v1.3.0 / go-authcrunch v1.3.8 runtime.** The `sso provider` configuration, metadata generation and role menu exist, but the assume-role handler returns the literal body `ASSUME ROLE`. It does not create, sign or submit the SAML assertion required by AWS. The same handler remains incomplete in standalone go-authcrunch v1.3.11.
+
+For a working application integration, use [portal JWT authorization](../authorize/getting-started.md), [direct OAuth policies](../authorize/direct-oauth.md) or the released [OIDC provider](oidc-provider.md). For users signing into AuthCrunch through Entra/JumpCloud, use [upstream SAML identity providers](../authenticate/saml/10-saml.md); that is a separate, implemented flow.
+
 ## AWS SSO
 
-The [Identity Federation with SAML 2.0](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_common-scenarios_federated-users.html)
-allows creating trust between authentication portal as an Identity Provider (IdP)
-and AWS as the service provider.
+AWS accepts SAML assertions from a configured identity provider, including permitted IAM role/provider ARN pairs. Its [console federation procedure](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_enable-console-saml.html) describes that AWS-side protocol. Configuring an AuthCrunch metadata document does not implement the missing assertion issuance or grant an AWS console session.
 
-The authentication portal generates a SAML authentication response that includes assertions
-that identify the user and include attributes about the user. You can also configure the portal
-to include a SAML assertion attribute called `SessionDuration` that specifies how long
-the console session is valid. You can also configure the portal to pass attributes as
-session tags. The portal sends this response via the client browser to AWS SAML
-endpoint.
+The released AuthCrunch routes under a portal mounted at `/auth/` are:
 
-The [Configuring SAML assertions for the authentication response](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_saml_assertions.html)
-describes how the authentication portal crafts the XML request to AWS SAML endpoint, i.e. `https://region-code.signin.aws.amazon.com/saml`.
+| Route | Implemented behavior |
+| --- | --- |
+| `/auth/apps/sso/aws` | Role-selection menu for an authenticated, cached portal session |
+| `/auth/apps/sso/aws/metadata.xml` | XML metadata with the configured entity ID, signing certificate and locations |
+| `/auth/apps/sso/aws/assume/<account>/<role>` | Placeholder response; no AWS SAML assertion |
 
-For example, the `Attributes/Role`:
-
-```xml
-<Attribute Name="https://aws.amazon.com/SAML/Attributes/Role">
-  <AttributeValue>arn:aws:iam::account-number:role/role-name1,arn:aws:iam::account-number:saml-provider/provider-name</AttributeValue>
-  <AttributeValue>arn:aws:iam::account-number:role/role-name2,arn:aws:iam::account-number:saml-provider/provider-name</AttributeValue>
-  <AttributeValue>arn:aws:iam::account-number:role/role-name3,arn:aws:iam::account-number:saml-provider/provider-name</AttributeValue>
-</Attribute>
-```
-
-The [Enabling SAML 2.0 federated users to access the AWS Management Console](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_enable-console-saml.html)
-outlines the steps necessary to enable SSO on AWS side.
-
-The [Creating a role for SAML 2.0 federation](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-idp_saml.html)
-describes how to create an IAM role for use with SAML federation.
+The menu recognizes roles shaped as `aws/<account>/<role>`. It does not turn these values into AWS permissions. The metadata route also requires a live portal session. Despite a source comment calling it admin-only, the handler does not add an admin-role check; do not treat that comment as an access-control guarantee.
 
 ### Configuration
 
-The steps necessary to enable AWS SSO in the plugin follow:
+For inspecting the implemented metadata/menu only, define and enable a provider:
 
-1. Generate a self-signed ceritficate (for `metadata.xml`) and private key (for creating assertions)
-2. Add Caddyfile directives enabling AWS SSO
-3. Add Caddyfile user transforms with AWS SSO roles
-4. Download metadata file
-
-First, generate self-signed certificate:
-
-```bash
-openssl req -x509 -nodes -sha256 -days 1095 -newkey rsa:4096 \
-  -keyout authp_saml.key -out authp_saml.crt \
-  -subj "/C=US/ST=New York/L=New York/O=AuthPortal/OU=AuthPortalSAMLIdP/CN=AuthPortalSAMLUser"
-```
-
-Second, create `Caddyfile` config. Please see an example [here](https://github.com/authcrunch/authcrunch.github.io/blob/main/assets/conf/apps/sso/aws/Caddyfile).
-
-The name of the SSO provider is significant. Access SSO console via `/apps/sso/<provider_name>` endpoint, e.g. `/apps/sso/aws`.
-If you want to fetch `metadata.xml`, then the URL is `/apps/sso/aws/metadata.xml`.
-
-```
+```caddyfile
 sso provider aws {
-  entity_id caddy-authp-idp
+  entity_id urn:authcrunch:aws
   driver aws
-  private key {$HOME}/tmp/authp/awssso/authp_saml.key
-  cert {$HOME} ${HOME}/tmp/authp/awssso/authp_saml.crt
-  location https://auth.myfiosgateway.com:8443/apps/sso/aws
+  private key /etc/authcrunch/sso/signing-key.pem
+  cert /etc/authcrunch/sso/signing-cert.pem
+  location https://auth.example.com/auth/apps/sso/aws
 }
 ```
 
-TBC.
+Add `enable sso provider aws` inside the portal. The only released driver is `aws`. The private key must use a PKCS#8 PEM `PRIVATE KEY` block; the certificate uses a PEM `CERTIFICATE` block. A generated key or downloadable XML does not make the assume-role endpoint functional.
+
+Keep private key material outside published assets and restrict access to the service account. Do not deploy this partial flow as your AWS login solution or promise session-duration/session-tag controls that the handler does not issue.
+
+The implementation boundary is visible in [the released handler](https://github.com/greenpau/go-authcrunch/blob/v1.3.8/pkg/authn/handle_http_apps_sso.go) and [metadata implementation](https://github.com/greenpau/go-authcrunch/blob/v1.3.8/pkg/sso/metadata.go). Track implementation and a tested signed-assertion flow before revising the support claim.

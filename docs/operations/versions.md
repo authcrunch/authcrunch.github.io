@@ -51,6 +51,13 @@ that an adapter exposes a new directive.
 | RSA, EC, and Ed25519 public signing-key JWKS | [Token verification](../authorize/token-verification.md) |
 | Header/query/Basic/API-key credential stripping | [Identity headers](../authorize/headers.md) |
 
+## Partial application SAML support
+
+[AWS application SSO](../apps/sso_saml.md) has metadata and a role menu, but its
+assume-role handler does not issue a SAML assertion in either the released
+bundle or standalone v1.3.11. Upstream SAML login is implemented separately.
+Do not infer complete AWS federation from accepted `sso provider` syntax.
+
 ## Newer library and integration work
 
 The current Caddy source checkout contains changes after v1.3.0:

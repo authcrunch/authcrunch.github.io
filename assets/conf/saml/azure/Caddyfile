@@ -3,17 +3,17 @@
 	admin off
 	persist_config off
 	security {
-		saml identity provider jumpcloud {
-			realm jumpcloud
+		saml identity provider azure {
+			realm azure
 			driver generic
-			entity_id urn:authcrunch:jumpcloud
-			acs_url https://auth.example.com/auth/saml/jumpcloud
-			idp_login_url {$JUMPCLOUD_SAML_LOGIN_URL}
+			entity_id urn:authcrunch:entra
+			acs_url https://auth.example.com/auth/saml/azure
+			idp_login_url {$ENTRA_SAML_LOGIN_URL}
 			idp_metadata_location {$SAML_METADATA_PATH}
 			idp_sign_cert_location {$SAML_CERT_PATH}
 		}
 		authentication portal myportal {
-			enable identity provider jumpcloud
+			enable identity provider azure
 			crypto default token lifetime 900
 			crypto key sign-verify {env.JWT_SHARED_KEY}
 			cookie path /
@@ -28,11 +28,11 @@
 				action drop matched role
 			}
 			transform user {
-				match realm jumpcloud
+				match realm azure
 				action add role authp/user
 			}
 			transform user {
-				match realm jumpcloud
+				match realm azure
 				match role App.Access
 				action add role app/member
 			}

@@ -321,3 +321,19 @@ checks these boundaries without proving a real directory's schema or policy.
   limitation, without rebuilding or editing a sibling repository implicitly.
 - A single-example edit leaves unrelated examples untouched and does not alter
   the contributor's persistent identity database during validation.
+
+## Upstream SAML and application SSO boundaries
+
+The Entra and JumpCloud examples under `assets/conf/saml/` use the released
+generic SAML driver, explicit provider SSO URLs, pinned local PEM certificates
+and `/auth/saml/<realm>` callbacks. Their guides embed the canonical files.
+Preserve SP Entity ID/audience, required display-name/email attribute names,
+state-bound GET initiation and original RelayState on POST. Provider roles
+must not directly grant reserved portal/application roles. Test signed responses
+with the exact library: valid, wrong browser/callback, replay and rogue signing
+key. Browser checks must exercise the dedicated SameSite=None HTTPS cookie.
+
+App-side `sso provider aws` is a separate partial implementation: metadata and
+menu exist, but the released assume handler returns `ASSUME ROLE`. Accepted
+syntax does not prove AWS assertion issuance. Keep its support warning and
+PKCS#8 key requirement; do not turn the old placeholder into a deployment recipe.
