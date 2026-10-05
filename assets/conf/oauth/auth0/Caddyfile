@@ -1,0 +1,66 @@
+# Set AUTH0_DOMAIN and AUTH0_ALLOWED_SUB before parsing; replace auth.example.com.
+{
+	admin off
+	persist_config off
+
+	security {
+		oauth identity provider auth0 {
+			driver generic
+			realm auth0
+			client_id {env.AUTH0_CLIENT_ID}
+			client_secret {env.AUTH0_CLIENT_SECRET}
+			scopes openid email profile
+			issuer https://{$AUTH0_DOMAIN}/
+			metadata_url https://{$AUTH0_DOMAIN}/.well-known/openid-configuration
+			login icon text "Auth0"
+		}
+
+		authentication portal myportal {
+			enable identity provider auth0
+			crypto default token lifetime 900
+			crypto key sign-verify {env.JWT_SHARED_KEY}
+			cookie path /
+
+			ui {
+				links {
+					"Example app" /app icon "las la-external-link-alt"
+					"My identity" /auth/whoami icon "las la-user"
+				}
+			}
+
+			transform user {
+				match realm auth0
+				# Discard provider roles; grant app/member only through the subject rule.
+				action overwrite role authp/user
+			}
+
+			transform user {
+				match realm auth0
+				match sub {$AUTH0_ALLOWED_SUB}
+				action add role app/member
+			}
+		}
+
+		authorization policy apppolicy {
+			set auth url https://auth.example.com/auth/
+			crypto key verify {env.JWT_SHARED_KEY}
+			allow roles app/member
+		}
+	}
+}
+
+auth.example.com {
+	route {
+		redir /auth /auth/ 308
+
+		authenticate /auth/* with myportal
+
+		@app path /app /app/*
+		route @app {
+			authorize with apppolicy
+			respond "You reached the Auth0-protected app." 200
+		}
+
+		respond "AuthCrunch is running. Open /app to begin." 200
+	}
+}

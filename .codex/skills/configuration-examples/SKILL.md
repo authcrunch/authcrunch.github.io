@@ -204,6 +204,40 @@ The released client sends credentials in the form body (`client_secret_post`).
 App assignment, authorization-server policy, and AuthCrunch policy are separate
 checks. Local fixtures cannot establish live Okta entitlement or console setup.
 
+## Auth0 and OneLogin examples
+
+The [Auth0](../../../assets/conf/oauth/auth0/Caddyfile) and
+[OneLogin](../../../assets/conf/oauth/onelogin/Caddyfile) examples use the
+generic driver with provider-specific realms and callbacks. Both target the
+caddy-security v1.3.0 / go-authcrunch v1.3.8 bundle, require confidential web
+clients with `client_secret_post`, and separate portal access from `app/member`.
+
+`AUTH0_DOMAIN`, `AUTH0_ALLOWED_SUB`, and `ONELOGIN_DOMAIN` expand at parse time;
+credentials and signing keys retain runtime placeholders. Auth0's issuer ends
+in `/`; OneLogin's v2 issuer ends in `/oidc/2` without a final slash. Match the
+actual discovery issuer literally. Test slash mismatches as well as other
+issuer, audience, nonce, signature, and email failures.
+
+Auth0 resets provider-derived roles to `authp/user`, then grants access by the
+entire exact subject, including any connection prefix and pipe. A matching
+email, similar subject, or provider-issued `app/member` must not grant access.
+Auth0's namespaced custom roles are not mapped by the bundled generic parser;
+do not imply that adding an Action or an API audience makes them usable roles.
+Review the returned subject after account linking or connection changes.
+
+OneLogin requests `groups` and maps the connector's Groups parameter to User
+Roles with multi-value output. Clear provider-derived `authp/*` and `app/member`
+before adding portal roles and translating `app-members` into app access.
+The role-dropping transform matches only roles: dropping evaluates each role
+without other identity fields, so adding a realm matcher prevents removal.
+The example does not fetch UserInfo. Test absent, malformed, differently cased,
+and similarly named groups, including a group present only in UserInfo.
+Application assignment and the AuthCrunch policy remain separate boundaries.
+
+Local fixtures verify the released executable, not live provider registration,
+group mapping, tenant policy, consent, or production TLS. Preserve that boundary
+in public guidance and verify those settings with the real organization.
+
 ## Acceptance scenarios
 
 - A provider change updates both its documented snippet and linked Caddyfile;

@@ -62,8 +62,9 @@ in ignored working notes; do not remove a useful image merely because its page
 is being rewritten.
 
 Complete examples for the beginner sequence, GitHub, generic OIDC, Keycloak,
-Google, Microsoft Entra ID, GitLab, and Okta are imported from canonical Caddyfiles under
-[assets/conf](../../../assets/conf/) using `?raw` and rendered by `CodeBlock`.
+Google, Microsoft Entra ID, GitLab, Okta, Auth0, and OneLogin are imported from
+canonical Caddyfiles under [assets/conf](../../../assets/conf/) using `?raw`
+and rendered by `CodeBlock`.
 Edit those files instead of adding duplicate complete fenced configurations.
 The site plugin resolves them at build time; imports do not create download URLs.
 
