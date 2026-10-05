@@ -77,8 +77,8 @@ and rendered by `CodeBlock`.
 Edit those files instead of adding duplicate complete fenced configurations.
 The site plugin resolves them at build time; imports do not create download URLs.
 
-Some pages still link to `greenpau/caddy-auth-docs`. When updating one, verify
-the corresponding file here and use the current
+When updating a historical `greenpau/caddy-auth-docs` link, verify the
+corresponding file here and use the current
 `authcrunch/authcrunch.github.io` repository URL. Avoid unrelated link rewrites.
 
 ## MDX and factual guidance
@@ -105,6 +105,10 @@ Caddy placeholders, JSON braces, template syntax, and angle-bracket placeholders
 in inline code or fenced blocks. Use `[text](url)` for links instead of `<url>`
 autolinks, which MDX parses as JSX. Use `{/* comment */}` for comments instead
 of HTML comments; `future.v4` disables the MDX 1 compatibility transforms.
+Standalone MDX pages under `src/pages/` need the `markdown` class around their
+prose when their layout does not supply it. This applies the shared typography
+and visible link underlines; verify light/dark accessibility rather than
+assuming the docs article wrapper exists there.
 Raw JSX/HTML must be valid MDX. Preserve
 admonitions, tables, and code-fence boundaries when editing examples.
 Use the current titled-admonition syntax, such as `:::warning[Local example]`,
@@ -125,7 +129,11 @@ New walkthroughs should identify prerequisites, exact configuration placement,
 expected outcomes, and material failure cases. Use synthetic credentials and
 explain demo-only settings. A documentation build proves rendering and link
 checks, not successful authentication or an external provider integration.
-Pin the executable bundle and its library version separately. A newer sibling
+When a new integration tag appears during an audit, check the GitHub release
+record and platform assets/checksums before changing installation commands.
+A tagged source build and an available downloadable bundle can differ; record
+that dated boundary in the version reference and avoid premature availability
+claims. Pin the executable bundle and its library version separately. A newer sibling
 checkout or local tag is not proof that behavior is included in a published
 bundle. Distinguish portal token policies, direct OAuth sessions, and AuthCrunch
 acting as an OIDC provider when describing login or token lifecycle settings.
@@ -134,7 +142,8 @@ The released bundle also has canonical examples for local refresh sessions,
 direct OAuth authorization, and AuthCrunch acting as an OIDC provider. Keep their
 guides aligned with `assets/conf/local/refresh/`, `assets/conf/oauth/direct/`, and
 `assets/conf/apps/oidc/`. The version reference distinguishes released library
-features from unreleased Caddy adapter support; preserve explicit preview labels.
+features from downloaded bundle and tagged-source adapter availability; keep
+those labels explicit.
 Ordered challenge rules use the first available `or` alternative, and an explicit
 unmatched policy denies login. Check the released selector before changing these
 claims; enrollment alone does not establish completed authentication evidence.

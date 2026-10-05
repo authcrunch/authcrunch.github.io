@@ -364,3 +364,17 @@ role boundary and serves only `/srv/public` after authorization. Its host/tenant
 expand at adaptation. Validate the image/entrypoint, Azure mounts and TLS
 separately; local grammar acceptance is not a cloud deployment result. Keep
 private configuration, identity and TLS data outside every file-server root.
+
+The v1.4.0 source tag includes typed policy fields, the unconditional ACL fix
+and cross-device login with library v1.3.11. Verify release assets separately
+from tag presence; the last observed downloadable bundle remains v1.3.0. The
+cross-device browser binding has fixed security/path/lifetime; only its name
+can be overridden with `cookie cross-device session id name <name>`.
+
+`assets/conf/oauth/authproxy/` now uses the current GitHub canonical role boundary
+at the historical `/authzproxy/` mount and sends app login directly to the
+provider entrance. This is still portal-issued JWT login, not direct OAuth
+or an external auth-request handler. Preserve hostname/mount/callback agreement.
+`assets/solutions/` is explicitly historical: its README records old UI paths,
+machine-specific prerequisites and the client-side dashboard redirect's lack
+of server-side path isolation. Do not promote those scenarios as current recipes.

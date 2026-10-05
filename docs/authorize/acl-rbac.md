@@ -108,7 +108,8 @@ assume `match userinfo|tenant VALUE` works in the released bundle.
 identity. **Version boundary:** go-authcrunch v1.3.8, bundled in Caddy Security
 v1.3.0, evaluates it through the presence of normalized `exp`; signed-token
 identity data can omit that field. The rule can therefore be skipped. Library
-v1.3.11 fixes this, but the released Caddy bundle has not adopted that fix.
+v1.3.11 and the Caddy v1.4.0 source tag fix this; the downloadable v1.3.0
+bundle retains the limitation. Check [availability](../operations/versions.md).
 Do not depend on `match any` or a catch-all default action to close a sensitive
 allow rule in v1.3.0. Use explicit `allow stop` rules and implicit denial for
 unmatched requests; verify the installed version and behavior.

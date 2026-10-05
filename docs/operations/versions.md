@@ -13,7 +13,7 @@ A Caddy integration release and a go-authcrunch library release are different
 artifacts. Installing a newer standalone library does not update the dependency
 inside a previously built Caddy executable.
 
-As checked on **October 5, 2026**, the latest published Caddy integration is
+As checked on **October 5, 2026**, the latest downloadable Caddy bundle is
 [caddy-security v1.3.0](https://github.com/greenpau/caddy-security/releases/tag/v1.3.0),
 whose [go.mod](https://github.com/greenpau/caddy-security/blob/v1.3.0/go.mod)
 pins **go-authcrunch v1.3.8**. The standalone library has separately released
@@ -60,17 +60,23 @@ Do not infer complete AWS federation from accepted `sso provider` syntax.
 
 ## Newer library and integration work
 
-The current Caddy source checkout contains changes after v1.3.0:
+The [v1.4.0 source tag](https://github.com/greenpau/caddy-security/tree/v1.4.0)
+now pins library v1.3.11 and Caddy v2.11.7. At this check, GitHub's release API
+still lists v1.3.0 as the latest downloadable bundle; v1.4.0 binary/checksum
+assets are not published. A source tag and a verified downloadable executable
+are separate availability checks.
 
-| Feature | Library availability | Released Caddy bundle |
+These features require that newer integration source:
+
+| Feature | Library availability | Downloadable bundle / newer source |
 | --- | --- | --- |
-| [Typed policy-local custom ACL fields](../authorize/custom-fields.md) | go-authcrunch v1.3.9 and later | Not in v1.3.0; Caddy integration is unreleased |
-| Correct unconditional/default ACL evaluation | go-authcrunch v1.3.11 | Not in v1.3.0; see the [released limitation](../authorize/acl-rbac.md#match-any-condition) |
-| [Optional cross-device browser login](../authenticate/cross-device.md) | go-authcrunch v1.3.11 | Not in v1.3.0; Caddy integration is unreleased |
+| [Typed policy-local custom ACL fields](../authorize/custom-fields.md) | go-authcrunch v1.3.9 and later | Not in v1.3.0; available in v1.4.0 source |
+| Correct unconditional/default ACL evaluation | go-authcrunch v1.3.11 | Fixed in v1.4.0 source; see the [v1.3.0 limitation](../authorize/acl-rbac.md#match-any-condition) |
+| [Optional cross-device browser login](../authenticate/cross-device.md) | go-authcrunch v1.3.11 | Not in v1.3.0; available in v1.4.0 source |
 
-Treat configuration for those features as a preview for a matching custom
-integration build. Do not paste it into v1.3.0 and expect parser support. Verify
-the next release's dependency and adapter before adopting it.
+Use configuration for those features with a matching v1.4.0 source build.
+Do not paste it into v1.3.0 and expect parser support. Check the
+v1.4.0 release assets and embedded versions before switching a binary install.
 
 ## Upgrade deliberately
 

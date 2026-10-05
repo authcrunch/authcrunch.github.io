@@ -88,6 +88,9 @@ Use `--ifm-*` tokens for theme integration and `--ac-*` tokens for shared muted,
 surface, selection, and border colors. Typography uses a system font stack.
 The light palette follows the portal's blue `#245bca` and navy `#172b4d`; dark
 mode uses lighter text and accent values for contrast. Check both themes.
+Standalone MDX prose needs the `markdown` wrapper for visible link underlines.
+Include the blog archive/tag banners when changing global heading colors;
+primary heroes use their own foreground token for heading contrast.
 The light Prism palette in site configuration also uses contrast-checked colors;
 include a syntax-highlighted reference page in visual/accessibility checks.
 The DocSearch overlay maps highlight and muted colors to the site's theme

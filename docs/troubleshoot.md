@@ -90,6 +90,45 @@ Do not assume that the two configured demo accounts are the only store records.
 Review [local identity store configuration](authenticate/local/20-identity-store.md)
 before using local accounts in a deployment.
 
+## An external provider redirects back but login fails
+
+Check the callback for the configured **realm**, not merely the provider's
+configuration name. The public origin and portal mount must agree with the
+registered callback. Inspect the specific failed trust check before changing
+scopes or retries.
+
+| Observation | Follow-up |
+| --- | --- |
+| Discovery fails or the provider is not ready | Verify DNS, certificate trust and copied discovery URL; [startup/retry settings](authenticate/oauth/82-backend-oauth2-endpoint.md) are separate from code-exchange retry |
+| OIDC issuer, audience, nonce or signing key fails | Compare the actual issuer/client and [upstream token trust](authenticate/oauth/83-oidc-trust.md); the accepted metadata-disable flag does not suppress a configured fetch |
+| Login succeeds but a group grants unexpected app access | Clear reserved internal roles before controlled [transforms](authenticate/42-user-transforms.md); inspect the driver's actual claim source |
+| A SAML POST lacks usable state | Start from the portal GET entrance, preserve RelayState and use HTTPS; check the [bound SAML flow](authenticate/saml/10-saml.md), callback and dedicated cookie |
+| Nextcloud redirects but no identity is created | The [native Nextcloud driver boundary](authenticate/oauth/81-backend-oauth2-0014-nextcloud.md) is incomplete; an opaque access token is not a portal identity |
+
+Do not disable signature/nonce checks or add app permissions to conceal a
+provider setup failure. Test a fresh valid login and a signed-in nonmember.
+
+## Registration or email behaves differently from the template
+
+Email acknowledgement writes a separate registration dropbox; it does not
+create an active account. Check [registration](authenticate/local/40-user-registration.md)
+for confirmation failure, replay and administrative delivery behavior.
+
+The released [messaging transport](messaging/intro.md) uses embedded registration
+templates even when a custom path is configured. SMTP requires the correct
+plaintext/implicit-TLS mode; it does not upgrade with STARTTLS. A BCC header
+does not add a delivery recipient in this implementation. Verify actual delivery
+with private test recipients instead of assuming parser acceptance proves it.
+
+## A feature is visible in source but missing from my binary
+
+Compare the integration revision, bundled library and compiled modules with
+[Feature availability](operations/versions.md). New library APIs, accepted
+configuration names and partial handlers do not all establish a working Caddy
+integration. For example, [AWS SSO](apps/sso_saml.md) has metadata/menu support
+without an implemented assume-role assertion, while [certificate login](authenticate/x509/x509.md)
+is separate from Caddy's transport-level mutual TLS.
+
 ## Ask for help with a reproducible case
 
 For renewable local sessions, check the status table in

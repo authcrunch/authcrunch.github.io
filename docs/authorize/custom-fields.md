@@ -1,19 +1,21 @@
 ---
-title: "Custom ACL fields preview"
-description: "Bind typed, literal top-level token claims to policy-local ACL aliases in a compatible newer integration build."
+title: "Typed custom ACL fields"
+description: "Bind typed, literal top-level token claims to policy-local ACL aliases in Caddy Security v1.4.0 source."
 discovery:
   topic: authorization
   kind: reference
-  aliases: ["acl field", "namespaced claims", "typed claims", "unreleased"]
+  aliases: ["acl field", "namespaced claims", "typed claims", "v1.4.0 source"]
 ---
 
-# Custom ACL fields preview
+# Typed custom ACL fields
 
 :::info[Version boundary]
 
-Typed fields are released in **go-authcrunch v1.3.9 and later**. The Caddy adapter
-was added after caddy-security v1.3.0 at `fe9a179` and is **unreleased for Caddy**
-as of October 5, 2026. The published bundle does not support `acl field`.
+Typed fields are released in **go-authcrunch v1.3.9 and later**. The adapter is
+in the **caddy-security v1.4.0 source tag**, which pins library v1.3.11. The
+published downloadable v1.3.0 bundle does not support `acl field`. At the
+October 5 check, v1.4.0 binary assets are not yet published; use a matching
+source build and check [availability](../operations/versions.md).
 
 :::
 
@@ -24,7 +26,8 @@ another policy's field definitions.
 
 ## Declare and match a field
 
-In a matching custom Caddy build, add the declaration and rule inside the policy:
+In a Caddy Security v1.4.0 source build, add the declaration and rule inside
+the policy:
 
 ```caddyfile
 authorization policy apppolicy {

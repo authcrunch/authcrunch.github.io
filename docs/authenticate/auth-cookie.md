@@ -105,6 +105,14 @@ For a portal mounted at `/auth/`, the default prefix produces:
 | `AUTHP_OIDC_SESSION_ID`, `AUTHP_OIDC_REQUEST_ID` | Dedicated host-only OIDC browser state under its configured mount |
 | `AUTHP_SAML_SESSION_ID` | Short-lived host-only browser binding at `/`, Secure/HttpOnly/SameSite=None for cross-site SAML POSTs |
 
+The v1.4.0 integration source adds `AUTHP_CROSS_DEVICE_SESSION_ID` for the
+[cross-device approval flow](cross-device.md). It is host-only, portal-mount
+scoped, Secure/HttpOnly/SameSite=None and limited to 300 seconds independently
+of ordinary cookie attributes. In that source build, override only its name
+with `cookie cross-device session id name MY_APPROVAL_BINDING`; ordinary domain,
+path, insecure and lifetime settings do not weaken its fixed binding contract.
+The v1.3.0 downloadable bundle does not support this feature.
+
 The historical `/auth/api/refresh_token` cookie path is a legacy cleanup path,
 **not** the active refresh-session scope. Refresh credentials are issued only
 when [refresh sessions](30-refresh-token.md) are enabled for the local realm.

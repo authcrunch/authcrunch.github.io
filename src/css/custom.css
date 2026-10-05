@@ -74,6 +74,7 @@
 
 :focus-visible { outline: 3px solid var(--ifm-color-primary); outline-offset: 3px; }
 h1, h2, h3 { letter-spacing: -.03em; }
+.hero--primary { --ifm-heading-color: var(--ifm-hero-text-color); }
 a { text-underline-offset: 3px; }
 .navbar { min-height: var(--ifm-navbar-height); padding: .625rem 2rem; border-bottom: 1px solid var(--ac-border); }
 .navbar::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: url('../../static/img/brand/banner.svg') center / 100% 100%; }

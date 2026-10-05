@@ -64,6 +64,13 @@ AuthCrunch sessions. Replacement loses cached portal sessions; a still-valid
 access JWT can remain accepted by an app policy with unchanged signing trust.
 Plan those outcomes separately.
 
+<figure className="doc-screenshot">
+
+![Historical Azure file-share selection.](./images/azure-aci/447d6cef-d50e-4c2b-85be-676970a2712a.png)
+
+<figcaption>Historical Azure file-share selection.</figcaption>
+</figure>
+
 ### Copy Files to Azure File Share
 
 Upload only the intended public files to the content mount and place the
@@ -138,58 +145,58 @@ For a locally verified starting point, use [the learning path](/docs/intro).
 
 ## Historical ACI walkthrough
 
-<figure>
+<details className="screenshot-gallery">
+<summary>Open the remaining seven historical Azure screenshots</summary>
 
-![Historical Azure file-share selection.](./images/azure-aci/447d6cef-d50e-4c2b-85be-676970a2712a.png)
 
-<figcaption>Historical Azure file-share selection.</figcaption>
-</figure>
 
-<figure>
+<figure className="doc-screenshot">
 
 ![Historical directory creation; private configuration must stay outside the public root.](./images/azure-aci/ee9c2d02-e9a7-4790-a34b-7c959b5c1d8e.png)
 
 <figcaption>Historical directory creation; private configuration must stay outside the public root.</figcaption>
 </figure>
 
-<figure>
+<figure className="doc-screenshot">
 
 ![Historical Caddyfile upload; replace the old configuration rather than reusing its secrets.](./images/azure-aci/a58883fc-3d13-40e9-aae0-1ed037f6cd0a.png)
 
 <figcaption>Historical Caddyfile upload; replace the old configuration rather than reusing its secrets.</figcaption>
 </figure>
 
-<figure>
+<figure className="doc-screenshot">
 
 ![Historical startup timeout; diagnose container status and listeners.](./images/azure-aci/b243c468-9399-4676-a848-be961c6e5d2f.png)
 
 <figcaption>Historical startup timeout; diagnose container status and listeners.</figcaption>
 </figure>
 
-<figure>
+<figure className="doc-screenshot">
 
 ![Historical untrusted internal certificate; do not bypass this for public deployment.](./images/azure-aci/2a0337f9-8090-4712-a6f0-dd8b7b920888.png)
 
 <figcaption>Historical untrusted internal certificate; do not bypass this for public deployment.</figcaption>
 </figure>
 
-<figure>
+<figure className="doc-screenshot">
 
 ![Historical local-user login; public demo accounts must not become production credentials.](./images/azure-aci/a7b70a8b-fc4c-4c90-90c3-0bccd751c0e1.png)
 
 <figcaption>Historical local-user login; public demo accounts must not become production credentials.</figcaption>
 </figure>
 
-<figure>
+<figure className="doc-screenshot">
 
 ![Historical Applications menu; a link is not an app permission.](./images/azure-aci/c525674d-c54d-457f-a5d6-bef5c96f9d99.png)
 
 <figcaption>Historical Applications menu; a link is not an app permission.</figcaption>
 </figure>
 
-<figure>
+<figure className="doc-screenshot">
 
 ![Historical broad storage browsing; the current reference serves only the deliberate public directory.](./images/azure-aci/b9cf61c7-ca34-419e-a058-0c619339b9aa.png)
 
 <figcaption>Historical broad storage browsing; the current reference serves only the deliberate public directory.</figcaption>
 </figure>
+
+</details>

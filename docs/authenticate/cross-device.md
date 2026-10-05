@@ -1,20 +1,21 @@
 ---
-title: "Cross-device login preview"
-description: "Preview the opt-in browser approval flow that signs another device in, with explicit consent and independent sessions."
+title: "Cross-device browser login"
+description: "Use the opt-in browser approval flow that signs another device in, with explicit consent and independent sessions."
 discovery:
   topic: login-and-mfa
   kind: guide
-  aliases: ["cross-device", "QR login", "device approval", "unreleased"]
+  aliases: ["cross-device", "QR login", "device approval", "v1.4.0 source"]
 ---
 
-# Cross-device login preview
+# Cross-device browser login
 
 :::info[Version boundary]
 
-The library feature is released in **go-authcrunch v1.3.11**. Its Caddy integration
-is present in the source checkout at `a8f81c7` and is **unreleased for Caddy** as
-of October 5, 2026. The published caddy-security v1.3.0 bundle does not accept
-these directives. Use a matching custom integration build for this preview.
+The library feature is released in **go-authcrunch v1.3.11** and included in
+the **caddy-security v1.4.0 source tag**. The downloadable v1.3.0 bundle does
+not accept these directives. At the October 5 check, v1.4.0 binary assets are
+not yet published; use a matching source build and check
+[availability](../operations/versions.md).
 
 :::
 
@@ -23,7 +24,16 @@ useful when entering credentials on the requesting device is inconvenient. The
 approving browser completes ordinary login and explicitly approves the displayed
 account and matching code. The requesting browser receives its own session.
 
-## Enable the preview
+<figure className="doc-screenshot">
+
+[![Sequence diagram of two browsers requesting and explicitly approving an independent portal session.](./images/cross-device-flow.svg)](./images/cross-device-flow.svg)
+
+<figcaption>Two browser bindings, one explicit approval, and a separate requester session. Open the diagram for a larger view.</figcaption>
+</figure>
+
+<span id="enable-the-preview" />
+
+## Enable cross-device login
 
 Add this directive to an otherwise working portal in a compatible build:
 
@@ -92,7 +102,7 @@ Pending requests remain in memory even with [persistent state](../operations/run
 Restart discards them. Fixed limits are 1024 active requests total and eight
 per trusted source address. Confirm trusted proxy normalization, both browser
 paths, denial/cancellation, logout invalidation, and narrow mobile layout before
-offering the preview to users.
+offering cross-device login to users.
 
 Implementation references: [library v1.3.11](https://github.com/greenpau/go-authcrunch/tree/v1.3.11/pkg/authn),
 [Caddy integration commit](https://github.com/greenpau/caddy-security/commit/a8f81c7).
