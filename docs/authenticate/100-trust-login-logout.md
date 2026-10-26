@@ -76,7 +76,7 @@ credentials to unrelated subdomains.
 1. The anonymous browser requests the protected application.
 2. Its policy redirects to the configured auth URL with an encoded `redirect_url`.
 3. The portal checks the host/path pair and records a trusted target in its
-   mount-scoped return cookie.
+   transaction-bound destination (with a mount-scoped compatibility cookie).
 4. The user completes the required login and receives an access credential.
 5. The portal consumes the return destination; the application evaluates its
    own policy on the new request.
@@ -135,6 +135,21 @@ trust logout redirect uri domain exact app.example.com:8443 path exact /signed-o
 For a deliberately reviewed pair of ports, an anchored regex can use
 `^app[.]example[.]com:(443|8443)$`. A URL with no explicit port still has a different
 Host string from one containing `:443`; add a separate exact rule when needed.
+
+## Independent login destinations in v1.5.0
+
+Each pending browser login keeps its own validated destination. Two tabs signing
+in for different applications no longer overwrite each other's sandbox-bound
+return target through a shared cookie. Registration, provider callbacks, MFA
+and fresh-login continuation retain that transaction's destination and check
+trust again when releasing it. Incoming callback parameters or later cookies
+cannot replace the captured target. The return cookie remains compatibility
+input; it is not authority to redirect to an untrusted destination.
+
+Test concurrent tabs, a rejected target and a fresh-login request. An existing
+session from another tab cannot satisfy a specifically requested fresh ceremony.
+These isolation fixes do not remove login/logout trust rules or fix mismatched
+cookie domains, public origins or callback routes.
 
 ## Agentic Prompts
 

@@ -12,7 +12,7 @@ discovery:
 
 Messaging providers deliver account-registration notifications. Define a provider in `security`, then attach it to a [local registration](../authenticate/local/40-user-registration.md) through `email provider <name>`. That registration setting can select an email **or file** provider.
 
-The released workflow sends a registrant's confirmation and attempts an administrator notification after the verified request is stored in the dropbox. This does not implement account approval, automatic active-store provisioning, password-reset emails or email-based MFA. See [challenge support](../authenticate/13-authentication-challenges.md) before enabling a factor.
+The legacy dropbox workflow sends a registrant's confirmation and attempts an administrator notification after the verified request is stored in the dropbox. This does not implement account approval, automatic active-store provisioning, password-reset emails or email-based MFA. See [challenge support](../authenticate/13-authentication-challenges.md) before enabling a factor.
 
 
 ```mermaid
@@ -120,6 +120,40 @@ The provider parsers recognize these names:
 The syntax `template <name> <path>` is accepted, but the released registration notification method renders **embedded English templates** and does not read the provider's configured template paths. A custom file, accepted configuration or visible reset/approval wording is therefore not evidence that the workflow or override runs.
 
 Embedded registration bodies use context-aware HTML escaping and quoted-printable delivery. Keep confirmation credentials private. To change this behavior, verify a future implementation and its consuming workflow before treating template settings as effective customization.
+
+## SQLite outbox
+
+The v1.5.0 `messaging-sqlite` companion adds durable local acceptance and an
+optional bounded SMTP worker. Inside `security`, after declaring the existing
+email provider `outbound-mail`, add:
+
+```caddyfile
+messaging sqlite provider notifications {
+    path /var/lib/authcrunch/private/outbox.db
+    timeout 1s
+    delivery outbound-mail
+}
+```
+
+Use an existing private `0700` parent and distinct absolute database path; the
+runtime can create its `0600` file. Backend fields are literal. The queue stores
+bodies, recipients and confirmation codes in plaintext. Omit `delivery` only when
+an external consumer owns delivery; no worker then runs. The selected delivery
+must be an email provider, not another queue or a file provider.
+
+`Send` success means durable acceptance, not mailbox delivery. Capacity is 1000
+outstanding messages across the file. Workers use one-minute leases, cap SMTP
+attempts at 15 seconds and poll at one-second intervals. Failed or uncertain
+delivery stays leased until expiry; there is no immediate retry, lease renewal
+or dead-letter queue. A crash after SMTP acceptance but before acknowledgement
+can duplicate mail. Inspect uncertain acceptance before submitting again.
+
+Select this outbox with `email_provider notifications` in the
+[SQLite signup workflow](../authenticate/local/sqlite.md#email-confirmed-signup).
+That workflow directly creates an enabled `authp/user` account after confirmation;
+the legacy dropbox's separate approval boundary does not apply. The queue itself
+does not add password recovery or email MFA, STARTTLS, or an approval service.
+Test SMTP delivery and restart with the chosen transport, then stop the fixture.
 
 ## Agentic Prompts
 

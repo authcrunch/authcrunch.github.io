@@ -1,5 +1,5 @@
 ---
-description: "Choose the portal, local profile, administrator, or encrypted System API and understand its authentication boundary."
+description: "Choose Portal, Profile, Server, Documents or System APIs by their caller authority, version and transport."
 discovery:
   topic: operations
   kind: reference
@@ -8,7 +8,7 @@ discovery:
 
 # API Overview
 
-AuthCrunch has four API families. Choose one by the task and caller; a token
+AuthCrunch exposes several API families. Choose one by the task and caller; a token
 that can enter an application does not automatically grant account management
 or server administration.
 
@@ -17,6 +17,7 @@ or server administration.
 | [Portal](20-portal-api.md) | Login challenges, identity claims, expiry checks | Login challenge credentials; a valid access token for identity checks |
 | [Profile](30-profile-api.md) | Manage the signed-in local user's password, authenticators, and keys | A live local portal session with `authp/user` or `authp/admin` |
 | [Server](40-server-api.md) | Inspect stores and administer users | Explicitly enabled admin API and `authp/admin` |
+| [Documents](documents.md) | Encrypted file storage and sharing, explicitly enabled in v1.5.0 | Current local browser session, allowed realm/role and exact origin; admin does not bypass ownership |
 | [System](50-system-api.md) | Authenticate Basic credentials or API keys from another gatekeeper | An encrypted message using a shared System key and matching key ID |
 
 All paths are relative to the configured portal mount. If the portal is mounted
@@ -30,7 +31,9 @@ clients may omit browser-origin headers; this does not waive authentication.
 Configure an upstream proxy to normalize forwarded host and scheme information
 rather than trusting arbitrary client headers.
 
-The references target [Caddy Security v1.3.0 and its bundled library](../../operations/versions.md).
+The original Portal/Profile/Server/System examples retain their
+[v1.3.0 / v1.3.8 baseline](../../operations/versions.md); Documents and the new
+API-contract guidance target v1.5.0 / v1.4.1.
 The [refresh-session endpoints](../30-refresh-token.md) have their own transport,
 rotation, and logout requirements. [OIDC provider endpoints](../../apps/oidc-provider.md)
 implement a separate protocol and credential lifecycle.
@@ -39,12 +42,21 @@ implement a separate protocol and credential lifecycle.
 ```mermaid
 flowchart LR
   accTitle: Choose the API by the caller’s authority
-  accDescr: The API families have different credential and permission boundaries, even when they share a portal mount. A successful application request or identity probe does not establish Profile, administrative, or System authority. Refresh and downstream OIDC endpoints implement separate protocols.
+  accDescr: The API families have different credential and permission boundaries, even when they share a portal mount. A successful application request or identity probe does not establish Profile, administrative, Documents or System authority. Documents requires current local browser evidence and preserves file ownership. Refresh and downstream OIDC endpoints implement separate protocols.
   A{"What must the caller do?"} -->|Login or inspect identity| P["Portal API: login checkpoints or valid access credential"]
   A -->|Manage own local account| U["Profile API: allowed role and live local portal session"]
   A -->|Administer users or inspect stores| S["Server API: enabled admin API and admin role"]
+  A -->|Store encrypted files| D["Documents API: enabled, current local browser session, exact origin"]
   A -->|Validate remote Basic or API key| Y["System API: encrypted message and shared System key"]
 ```
+
+## Authored OpenAPI contracts
+
+The library now maintains [versioned OpenAPI YAML and a Scalar reference](https://github.com/greenpau/go-authcrunch/tree/v1.4.1/assets/openapi).
+Use the selected version's contracts alongside method, mount, authentication,
+role and failure behavior in the handlers. They are not an automatically exposed
+Swagger endpoint on every Caddy portal. Documents uses its own JSON error
+envelope and browser authority; it is not interchangeable with Profile or Server.
 
 ## Agentic Prompts
 

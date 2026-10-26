@@ -16,6 +16,10 @@ or stylesheet, then change the narrowest owner.
 | Surface | Source |
 | --- | --- |
 | Homepage composition, learning sequence, and topic cards | [index.tsx](../../../src/pages/index.tsx) and [index.module.css](../../../src/pages/index.module.css) |
+| Selected Glass gateway artwork, source, and native WebP export | [artwork source and export notes](../../../assets/images/glass-gateway/README.md) and [published WebP](../../../static/img/home/) |
+| Guided artwork pan, stage selection, and playback controls | [GatewayIllustration](../../../src/components/GatewayIllustration/index.tsx) and its CSS module |
+| Homepage request illustration and access-rule controls | [RequestExplorer](../../../src/components/RequestExplorer/index.tsx) and its CSS module |
+| Selectable topic map and contextual guide links | [TopicExplorer](../../../src/components/TopicExplorer/index.tsx) and its CSS module |
 | Interactive portal/direct-OAuth comparison | [AccessFlow](../../../src/components/AccessFlow/index.tsx) |
 | Static external-login sequence in the OAuth overview | [OAuthFlow](../../../src/components/OAuthFlow/index.tsx) |
 | Static Mermaid figures and narrow-screen scrolling | [DocDiagram](../../../src/components/DocDiagram/index.tsx), [MDX mapping](../../../src/theme/MDXComponents/index.tsx), and [remark plugin](../../../src/plugins/mermaid-diagrams.ts) |
@@ -25,7 +29,9 @@ or stylesheet, then change the narrowest owner.
 | Caddyfile text imports for MDX | [configuration-source plugin](../../../src/plugins/configuration-source.ts) |
 | Topic vocabulary and build-time document catalog | [catalog](../../../src/discovery/catalog.ts) and [discovery plugin](../../../src/plugins/discovery.ts) |
 | Filterable, server-rendered guide directory | [GuideDirectory](../../../src/components/GuideDirectory/index.tsx) |
-| Static document search metadata | [DocItem metadata wrapper](../../../src/theme/DocItem/Metadata/index.tsx) |
+| Navbar search, native modal, and keyboard interaction | [SearchBar](../../../src/theme/SearchBar/index.tsx) and its CSS module |
+| Global RapidKT/community announcement and weekly dismissal | [CommunityBanner](../../../src/components/CommunityBanner/index.tsx), [expiry/bootstrap policy](../../../src/components/CommunityBanner/dismissal.mjs), and [AnnouncementBar override](../../../src/theme/AnnouncementBar/index.tsx) |
+| Local search asset and full-text ranking | [search plugin](../../../src/plugins/local-search.ts), [extractor](../../../assets/search/extract.mjs), and [engine](../../../src/search/engine.mjs) |
 | Additional Tailwind configuration | [tailwind.config.ts](../../../tailwind.config.ts) |
 | Site metadata, navbar/footer, search, themes, plugins | [docusaurus.config.ts](../../../docusaurus.config.ts) |
 | Published images, fonts, domain and verification files | [static](../../../static/) |
@@ -52,6 +58,42 @@ explicit `activeBaseRegex` values so they do not all appear selected together.
 Start here uses a doc item and follows its whole learning sidebar. Verify active
 states as well as link destinations.
 
+The CommunityBanner replaces the theme's AnnouncementBar above the navbar on
+all layouts. It occupies half the dynamic viewport in normal document flow;
+short/narrow layouts scroll its contents within that area so text and controls
+stay reachable. Keep it responsive in both themes with working links without
+JavaScript. The banner presents RapidKT as the maintainer's
+startup, with readable headline/body type and a prominent company-LinkedIn follow
+action. RapidKT's website and Paul Greenberg's LinkedIn offer project details
+and contact about AI skills/harness engineering; adoption PRs belong in
+`authcrunch/authcrunch`. All four links open new tabs with
+`noopener noreferrer` and an accessible new-tab hint.
+
+Embed the maintainer's RapidKT artwork into the banner background at every
+breakpoint, with intrinsic dimensions, uniform image fitting, and dark shading
+that keeps text readable. Treat it as decorative with empty alternative text;
+do not present a separate image card. Preserve its
+[source provenance](../../../assets/images/rapidkt/README.md).
+
+Dismissal requires opening the RapidKT company page and checking “I followed
+the company on LinkedIn.” Before the company link is activated, the checkbox
+is disabled; opening the link alone does not unlock either close control.
+Unchecking the confirmation locks them again. The visible dismissal label is
+“Hide”; the weekly expiry remains a persistence rule. This is visitor self-confirmation,
+not verification through LinkedIn or an automatic follow action. Only explicit
+unlocked dismissal writes its timestamp; follow/checkbox state resets when
+dismissed, including a dismissal received from another tab.
+
+Dismissal uses its own namespaced local-storage timestamp and expires exactly
+seven days after the click, without extending on reads, reloads, or navigation.
+The shared expiry policy also generates the configured head bootstrap so a
+remembered dismissal is hidden before first paint without changing SSR markup.
+Expired, malformed, and future timestamps show the banner. Timers and foreground
+checks restore it in a long-lived tab; storage events synchronize other tabs.
+Blocked storage must not break reading or dismissal in the current page. Clean
+up timers/listeners on unmount. Keep this independent of the theme's permanent
+dismissal keys; see the [policy tests](../../../assets/scripts/tests/community-banner.test.mjs).
+
 Documentation articles fill their allocated column; do not impose a second prose
 width cap that leaves a large gap before the table of contents. The docs-only
 container override also removes the theme's width cap when the sidebar is hidden.
@@ -65,10 +107,56 @@ Tab and arrow keys must not unexpectedly restore the sidebar. Check article,
 code, diagram and TOC alignment in both sidebar states, keyboard focus, client
 navigation, the desktop/mobile breakpoint, and no-JavaScript reading.
 
-The homepage and AccessFlow use imported CSS modules; shared documentation and
-theme rules live in `custom.css`. AccessFlow's model buttons expose their state
+The homepage and its interactive components use imported CSS modules; shared
+documentation and theme rules live in `custom.css`. AccessFlow's model buttons expose their state
 with `aria-pressed` and update a polite live region. The initial portal flow must
 render on the server, and both choices must work with the keyboard.
+
+The homepage introduction pairs its copy with the selected Glass gateway art on
+desktop and stacks copy before the art on narrow screens. GatewayIllustration
+guides the view through sign-in, access policy, and allowed applications, then
+repeats. Each stage lasts 4.6 seconds, including a 1.3-second camera transition.
+Use a uniform image scale with translation constrained to image bounds; keep the
+login fields/button, policy check, and allowed outcomes readable in their own
+stages. The frame adapts to screen size and the camera recalculates on resize.
+Use the native-size WebP for close-up detail, intrinsic dimensions, descriptive
+alternative text, and an eager/high-priority request. Preserve the selected PNG
+and export provenance. The light artwork canvas stays intact in both themes.
+
+Manual stage choices pause playback; pause/play and a whole-image control remain
+keyboard usable. Reduced motion defaults to the whole image with no autoplay or
+camera transition; JavaScript-disabled reading retains the full image and flow
+labels. Automatic stage updates stop while the illustration is off screen and
+skip hidden-tab ticks. Disconnect observers/listeners and clear timers on
+unmount. Autoplay belongs only to this explicitly requested artwork tour; the
+topic selector and login-model comparison do not advance automatically.
+The primary guide link and “Follow a request” jump remain usable without
+JavaScript. Keep that jump clear of the sticky navbar. RequestExplorer follows
+the introductory artwork as a separate lesson, before the four learning cards.
+Register its custom heading target with Docusaurus's broken-link collector so
+the build verifies the jump without suppressing anchor diagnostics.
+
+RequestExplorer illustrates the walkthrough's request decisions. Visitor buttons
+choose Alice, Bob, or a signed-out visitor; a second button group switches
+between the default `authp/admin authp/user` rule and the narrower `app/member`
+exercise. Both signed-in users pass the default rule; only Alice passes the
+member rule; a signed-out visitor redirects to login under either rule. Keep
+roles, displayed policy, status, explanation, and walkthrough destination
+consistent. The decision updates in a polite live region; controls work with
+the keyboard. Alice and the default policy render on the server. The no-script
+explanation and exercise link remain useful without JavaScript. This is an
+illustration, so it must not imply a live runtime or replace browser validation
+of the actual Caddyfile. Real portal screenshots belong in the walkthrough and
+retain the [capture manifest](../../../assets/conf/getting-started/screenshots.json).
+
+TopicExplorer's six native pressed-state buttons select a topic, description,
+and contextual guide links in a polite live region. Identity is the server
+default. Its map becomes a two-column selector on small screens; labels and
+focus rings must remain visible at 320px. Keep guide destinations and directory
+anchors current. Without JavaScript, native topic links provide all six routes.
+The homepage preserves the installation-to-verification learning sequence and
+the separate portal/direct-OAuth comparison. Topic and model selections do not
+advance automatically; respect reduced motion for decorative hover transitions.
 
 The configuration-source plugin treats `Caddyfile?raw` imports as source text.
 It lets MDX display a canonical example from `assets/conf/` without maintaining
@@ -78,8 +166,8 @@ verify both production rendering and development compilation when changing it.
 The Mermaid remark plugin replaces authored `mermaid` fences with DocDiagram.
 SVGs are rendered during authoring, not in the reader's browser. The caption and
 alternate theme images render on the server; CSS selects the visible theme.
-Keep the caption in a paragraph so the maintained crawler indexes its meaning;
-leave generic diagram controls outside paragraphs. Preserve label size by
+Keep the caption in a paragraph and the authored accessible description meaningful
+so local search can index it; leave generic diagram controls outside paragraphs. Preserve label size by
 scrolling wide SVGs rather than shrinking their text below the readable minimum.
 Keep image dimensions, descriptive alternatives, full-size links, downloadable
 source, and keyboard scrolling usable without JavaScript. Preserve the original
@@ -104,7 +192,42 @@ history entry; explicit filter choices push entries. Unknown topic/type values
 fall back to all. Preserve the six topic heading IDs for incoming hash links.
 Controls use native inputs and pressed-state buttons, with a live result count
 and a clearable empty state. Without JavaScript, all document links remain usable.
-Directory filtering does not replace the navbar's hosted full-text search.
+Directory filtering does not replace the navbar's browser-local full-text search.
+
+The local search plugin uses Docusaurus's current loaded content and resolved
+permalinks, preserving discovery exclusions, aliases, and searchable-but-unlisted
+directory entries. It emits a content-hashed static asset in production and
+development; the client fetches it only when the dialog opens and caches it
+across reopening and client navigation. Content/Caddyfile changes invalidate the
+development index. MDX is parsed without execution; raw Caddyfile imports supply
+their actual text, and diagram descriptions replace Mermaid implementation
+syntax. Follow [the search guide](../../../assets/search/README.md) for extraction
+boundaries and validation commands.
+
+Keep index selection, source fingerprints, and development watch paths aligned
+when adding a content source or imported example format. Current inputs are
+Markdown/MDX in `docs/`, `blog/`, and `src/pages/`, plus canonical Caddyfiles under
+`assets/conf/`. Raw `Caddyfile?raw` imports contribute their contents; arbitrary
+imports, JSX expressions, and component-generated text do not. The React homepage
+contributes only site title/tagline metadata; other React pages need explicit
+index support. A new source location or content plugin is not automatically
+covered by the existing watcher and loaded-content selection.
+
+For extraction or coverage changes, extend the focused
+[search tests](../../../assets/search/search.test.mjs) for the changed behavior,
+then use the [index freshness checks](../site-operations/SKILL.md#local-search).
+Verify actual source additions/edits and removal or exclusion, including raw
+imports when affected, rather than inspecting only generated JSON. Preserve
+canonical deduplication and prove development refresh as well as a fresh build.
+
+Search requires every term and ranks title matches before headings/aliases,
+descriptions, and body text, with case/accent normalization and word prefixes.
+Render highlights as text and `mark` elements. Preserve native modal focus
+containment, explicit Tab/Shift+Tab wrapping, initial field focus, Cmd/Ctrl+K,
+single-press Escape with a nonempty query, close and focus restoration,
+Arrow/Enter result navigation, more-results behavior, and HTTP/invalid-index
+retry. Reject external/noncanonical result URLs. Without JavaScript the guide
+directory link stays available. Search queries remain in the browser.
 
 ## Styling contract
 
@@ -122,9 +245,9 @@ Include the blog archive/tag banners when changing global heading colors;
 primary heroes use their own foreground token for heading contrast.
 The light Prism palette in site configuration also uses contrast-checked colors;
 include a syntax-highlighted reference page in visual/accessibility checks.
-The DocSearch overlay maps highlight and muted colors to the site's theme
-tokens. Check actual search results, highlights, and the results-footer link in
-both themes; navbar-button checks do not cover the lazily loaded modal styles.
+The local search modal maps highlight, surface, and muted colors to the site's
+theme tokens. Check actual results, highlights, close/retry controls, focus rings,
+and mobile scrolling in both themes; navbar-button checks do not cover the dialog.
 There is no explicit `@config` declaration in the current CSS. Do not assume
 editing `tailwind.config.ts` alone changes the compiled output; verify that the
 configuration or new utility is actually consumed by the installed toolchain.
@@ -168,13 +291,35 @@ work.
 
 - A hero or topic-card change renders during the production build and keeps
   navigation and reading order usable at mobile widths.
+- Inspect the opening as a viewport screenshot, including short desktop heights
+  such as 1366 × 768 and 1280 × 720. Check the heading, primary actions, and whole
+  desktop hero artwork together; horizontal overflow and full-page screenshots
+  alone do not reveal a visually cut-off opening. The separate request explorer
+  may follow below the fold. Constrain artwork independently of shared
+  containers, whose Tailwind breakpoints can increase width and therefore image
+  height. Mobile content should flow naturally without a fixed-height crop.
+- Check all camera stages at phone and desktop widths: readable focus, no image
+  stretching or blank exposed edges, synchronized pressed states, and the
+  sign-in → policy → allowed → sign-in loop. Verify pause, manual selection,
+  whole-image restoration, resize, reduced motion, and the static no-JavaScript
+  view. Decode the native-size asset and do not filter it to adapt site themes.
+- Request illustration changes cover all six visitor/rule combinations, pressed
+  states and keyboard selection, the static default, and the explanatory link.
 - A new Tailwind utility appears in compiled CSS and changes the intended
   element; neighboring documentation typography remains readable.
 - A navbar change resolves its doc ID, and footer links and search still use
-  the intended site paths. A rendered search button does not prove the hosted
-  index is current: verify query destinations separately when changing search.
+  the intended site paths. A rendered search button does not prove the local
+  index is current: run search tests and built-index checks, then verify lazy
+  loading, caching, result navigation, and failure recovery in the browser.
 - Client interaction does not cause a server-rendering failure or hydration
   mismatch, and keyboard users can reach actionable controls.
+- A banner change passes `npm run test:banner` and browser checks for the follow
+  link/checkbox gate, unchecking, half-screen sizing, inner scrolling, image load,
+  dismissal,
+  reload/client-navigation persistence, seven-day expiry (including an open tab),
+  cross-tab updates, blocked storage, and no-JavaScript links. Check both themes
+  at phone/desktop widths, new-tab behavior, and first-paint hiding; the banner
+  must not cover navigation, article content, or anchor destinations.
 - A directory change preserves alias matching, combined filters, empty-state
   recovery, shared URLs, Back/Forward, topic anchors, and static links without
   JavaScript. Check both themes and narrow layouts; assert the actual theme

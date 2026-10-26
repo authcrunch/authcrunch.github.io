@@ -30,19 +30,15 @@ on both services. It is no longer a future feature.
 ```mermaid
 sequenceDiagram
   accTitle: A Basic-authenticated request still needs an ACL grant
-  accDescr: The client supplies a password and an allowed realm over HTTPS. A valid cached identity may be reused; otherwise the portal checks the credential and applicable direct-authentication requirements. The gatekeeper then evaluates access rules. This flow does not perform interactive MFA or create a browser login session.
+  accDescr: The client supplies a password and an allowed realm over HTTPS. In v1.5.0 the portal rechecks the credential and current direct-authentication requirements on every portal-backed credential request. The gatekeeper then evaluates access rules. This flow does not perform interactive MFA or create a browser login session.
   participant C as API client
   participant G as Gatekeeper
   participant P as Portal
   participant A as Application
   C->>G: HTTPS request with Basic credential and realm
   G->>G: Select configured realm and credential authenticator
-  alt Valid cached credential identity
-    G->>G: Reuse within its validity interval
-  else No usable cached identity
-    G->>P: Check account credential and required evidence
-    P-->>G: Authenticated identity or credential failure
-  end
+  G->>P: Recheck current account credential and required evidence
+  P-->>G: Authenticated identity or credential failure
   alt Recognized credential is invalid
     G-->>C: 401
   else Identity authenticated
@@ -124,10 +120,13 @@ header selects an allowed backend; it is not an authorization grant. Keep
 passwords out of access logs and use [credential stripping](headers.md) when
 the backend should receive identity rather than the Basic credential.
 
-Successful credential identities may be cached for their validity interval.
-Do not assume each request rechecks a password or that changing an account
-instantly invalidates every cached result. Plan credential changes and token
-lifetimes as part of the application's access policy.
+In v1.5.0, portal-backed Basic authentication rechecks the current backend
+credential and local policy on every request, including reuse of the same
+username/password. Password replacement, disablement and changed factor policy
+therefore affect the next credential request. Older releases could reuse cached
+credential identities. This does not revoke independently issued access JWTs;
+they retain their own expiry and verification rules. Test remote authentication
+and any custom backend at its own boundary.
 
 ## Agentic Prompts
 

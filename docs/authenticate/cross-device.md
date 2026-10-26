@@ -4,18 +4,17 @@ description: "Use the opt-in browser approval flow that signs another device in,
 discovery:
   topic: login-and-mfa
   kind: guide
-  aliases: ["cross-device", "QR login", "device approval", "v1.4.0 source"]
+  aliases: ["cross-device", "QR login", "device approval"]
 ---
 
 # Cross-device browser login
 
 :::info[Version boundary]
 
-The library feature is released in **go-authcrunch v1.3.11** and included in
-the **caddy-security v1.4.0 source tag**. The downloadable v1.3.0 bundle does
-not accept these directives. At the October 5 check, v1.4.0 binary assets are
-not yet published; use a matching source build and check
-[availability](../operations/versions.md).
+Cross-device login is included in the downloadable **caddy-security v1.4.1 and
+v1.5.0** bundles and the AuthCrunch v1.5.0 distribution. It remains opt-in and
+requires HTTPS. The library feature dates from v1.3.11; the older v1.3.0 bundle
+does not accept its directives. Check [availability](../operations/versions.md).
 
 :::
 
@@ -23,6 +22,10 @@ Cross-device login lets a browser request approval from another browser. It is
 useful when entering credentials on the requesting device is inconvenient. The
 approving browser completes ordinary login and explicitly approves the displayed
 account and matching code. The requesting browser receives its own session.
+
+The v1.5.0 portal improves narrow-screen layout, keyboard access and approval
+presentation. The v1.4.0 captures below remain historical workflow references;
+always compare the account and matching code in your own current interaction.
 
 <figure className="doc-screenshot">
 

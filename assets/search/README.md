@@ -1,120 +1,75 @@
-# DocSearch maintenance
+# Local documentation search
 
-The public search client in `assets/search/client.json` is imported by
-`docusaurus.config.ts` and the verification script. Its search-only
-key reads the `authcrunch-docs` index in application `S074F3F45X`. Crawler
-configuration and index settings live separately in the Algolia dashboard.
-A site build does not update that hosted index.
+The navbar search runs in the browser. Opening it downloads a static JSON index
+from the same site, then caches the prepared index in memory. Queries are never
+sent to a search service. No API key, crawler, external index, or account is
+needed. The classic preset may still install its optional search theme as a
+transitive package; it is not configured or included in this site's client.
 
-`docsearch.crawler.js` is the maintained extraction configuration for
-`https://docs.authcrunch.com`, targeting the `authcrunch-docs` index. It follows the
-[Docusaurus template](https://docsearch.algolia.com/docs/templates/#docusaurus-v2-and-later-template),
-with topic grouping, aliases, code/table content, and explicit exclusions.
-The placeholder API key must be replaced **in the dashboard only** with the
-private crawler key. The site's public search key cannot write records.
-If a private key has been exposed, revoke or rotate it in Algolia; never paste
-its replacement into chat or repository files.
+The implementation adapts RapidKnot's `src/search.ts`,
+`src/components/app/SiteSearch.tsx`, and `scripts/site_search.mjs`: a static
+canonical-route index, lazy loading, weighted browser ranking, literal
+highlighting, context excerpts, keyboard navigation, pagination, and retry.
+Docusaurus supplies its own routes and MDX sources; the modal uses native
+`dialog` focus containment and theme-aware CSS rather than RapidKnot's UI library.
 
-The crawler's display name does not set the index name. An `indexPrefix` is
-prepended to each action's `indexName`: prefix `authcrunch` plus name
-`authcrunch-docs` produces `authcrunchauthcrunch-docs`. The maintained configuration
-sets an empty prefix so the target is exactly `authcrunch-docs`.
-It preserves the supplied monthly schedule and 30% record-loss safety check,
-and raises the initial 100-URL limit to Algolia's default of 1,000 URLs.
-See [indexPrefix](https://www.algolia.com/doc/tools/crawler/apis/configuration/index-prefix/)
-and [maxUrls](https://www.algolia.com/doc/tools/crawler/apis/configuration/max-urls/).
+## Index ownership
 
-## Apply a crawler change
+- `src/plugins/local-search.ts` reads the current documentation, blog posts, and
+  Markdown pages from Docusaurus's loaded content. It uses their resolved
+  permalinks, without guessing routes from filenames or crawling generated caches.
+- `assets/search/extract.mjs` parses authored MDX without running its JavaScript.
+  It indexes headings, prose, code, image alternatives, and diagram descriptions.
+  Imports, expressions, scripts, navigation, hidden text, and search-ignored
+  subtrees are omitted. Raw canonical Caddyfile imports contribute their actual
+  configuration text. Inline markup preserves words such as `Share<span>Point</span>`.
+- Document `discovery.aliases` contribute to heading-weight matches and its
+  `topic` supplies the result category. `listed: false` remains searchable.
+  Draft, unlisted, and `discovery: {exclude: true}` documents are omitted.
+  Blog archives, tags, author lists, and the not-found page are not indexed.
+  The React homepage contributes its site title and tagline.
+- `src/search/engine.mjs` normalizes case/accents, requires every query term,
+  matches word prefixes of at least two characters, and ranks titles above
+  headings/aliases, descriptions, and body matches. Highlights are rendered as
+  text and `mark` elements, never injected HTML.
+- `src/theme/SearchBar/` owns the trigger and dialog. Cmd/Ctrl+K opens it;
+  Arrow keys move between the field and results; Enter opens a result; Escape
+  closes and restores focus. The dialog fits phones and uses native focus
+  containment. Failed requests and invalid records can be retried. Without
+  JavaScript, the navbar offers the guide directory.
 
-1. Save a copy of the existing dashboard configuration and index settings outside
-   the repository. Retain the crawler's private credentials, schedule, and any
-   account-specific settings. Review the maintained configuration against those
-   settings; it cannot reconstruct settings that exist only in the dashboard.
-2. Deploy the site revision containing the metadata and verify its HTML. A
-   searchable document such as `/docs/start/first-app` must contain
-   `docsearch:exclude=false`, a topic, aliases, and Docusaurus's language/version
-   tags. Merge alone does not deploy this repository.
-3. Update the crawler's URLs, extraction action, and index settings from
-   `docsearch.crawler.js` in the **Editor**. Paste the JavaScript directly,
-   starting with `new Crawler({` on the first line, without Markdown fences or
-   leading comments. Leading `//` comments caused the editor to report
-   `Unexpected token '/' ... is not valid JSON`; remove those comments rather
-   than converting the function-bearing configuration to JSON. Keep the private
-   key in the dashboard. Confirm an empty Index Prefix and target name
-   `authcrunch-docs`; remove obsolete `authp.github.io` URLs and actions. During
-   an index migration, keep the currently deployed client's index available
-   until the replacement client has been deployed and verified.
-4. `initialIndexSettings` applies when `authcrunch-docs` is first created.
-   If that index already exists, update its Searchable Attributes and Facets
-   in the dashboard as well. Preserve any additional required attributes.
-   Include `aliases` in
-   searchable attributes and keep `language`, `version`, and `docusaurus_tag`
-   as facets so Docusaurus contextual search continues to work. Topic and kind
-   facets are prepared for index inspection; the website's directory filters
-   operate locally and do not depend on those facets.
-5. Use the crawler's URL Tester on the first-app tutorial, Microsoft OAuth guide,
-   token-verification reference, a blog article, and the refresh-token placeholder.
-   Inspect generated records: current-domain URLs, working heading anchors,
-   topic grouping, aliases, and complete directive text. The placeholder and
-   `/docs/guides` should emit no records. Blog archives should emit no records.
-6. Save and run a complete crawl. Inspect errors and record changes before
-   accepting an index replacement. In particular, exclusions must remove old
-   placeholder hits and obsolete-domain records must not remain. Do not delete
-   the index to test the configuration.
-7. Run `npm run check:search -- --index authcrunch-docs` before switching the
-   website. This reads the new index without changing the live client.
-8. Once the index passes, confirm `client.json` uses `authcrunch-docs`. A change
-   to the client requires a build and deployment. Run `npm run check:search` and
-   test the search dialog (keyboard open, query, result navigation, heading
-   destination, Escape).
+The build emits `build/assets/search/search-index-<content-hash>.json`. The
+client contains only its URL until search opens. Deploy the complete build so
+the application and its index stay in sync. New content changes the hash.
 
-Algolia documents the [URL Tester](https://docsearch.algolia.com/docs/templates/#update-a-template)
-and [initial index settings](https://www.algolia.com/doc/tools/crawler/apis/configuration/initial-index-settings/).
-Local selector checks cannot reproduce the hosted `helpers.docsearch` service;
-the URL Tester and completed crawl are required to validate generated records.
-Likewise, `node --check assets/search/docsearch.crawler.js` verifies JavaScript
-syntax but does not validate the dashboard editor's input handling.
+`npm run dev` uses the same emitted asset and extractor. Changes to documentation,
+blog/Markdown pages, or canonical Caddyfiles invalidate the index; reopen search
+after the development reload. There is no separately maintained public JSON file
+and no hosted crawl after deployment. `data-search-ignore` on a JSX element
+excludes its subtree from search without removing it from the page.
 
-Do not delete the default crawler as part of an index migration. If it was
-already deleted, ask Algolia to confirm or restore its DocSearch program
-association; a replacement's successful test crawl does not establish that
-association. See [Algolia's crawler guidance](https://docsearch.algolia.com/docs/crawler/#can-i-delete-my-crawler).
+## Validation
 
-## Document metadata
-
-Every current document must have `discovery` frontmatter. The build validates it
-and creates the guide directory using Docusaurus's resolved URLs.
-
-```yaml
-description: Configure the domain and browser attributes of authentication cookies.
-discovery:
-  topic: sessions-and-cookies
-  kind: reference
-  aliases: [cookie domain, SameSite, subdomain]
+```sh
+npm run test:search
+npm run typecheck
+npm run build
+npm run check:search
 ```
 
-The accepted topics and kinds are defined in `src/discovery/catalog.ts`. Use
-`listed: false` for a useful page that should remain searchable but not appear in
-the directory. Use `discovery: {exclude: true}` for unfinished placeholders or
-duplicate directories. Drafts and unlisted documents are excluded automatically.
-These flags do not remove a published URL or promise access control.
+`test:search` checks extraction, ranking, prefixes, all-term matching, excerpts,
+literal highlighting, and record/path validation using Node's test runner.
+`check:search` validates the completed local build: unique canonical pages,
+existing result destinations, imported configuration, representative queries,
+and archive/exclusion boundaries. It does not contact an external service.
+An optional `-- --output tmp/search-check.json` saves its report; `--build` selects
+another completed build directory. Run it again after a content change and build.
 
-The metadata wrapper emits `docsearch:*` tags into static HTML. DocSearch
-[extracts these tags into records](https://docsearch.algolia.com/docs/record-extractor/).
-Aliases describe names readers use for existing content; they must not imply
-coverage that the page does not have. Classification is not runtime validation
-of an older configuration example.
-
-## Read-only hosted verification
-
-`npm run check:search` queries the hosted index with the public client key and
-checks expected destinations, current-domain URLs, facets, and excluded routes
-in returned records (including an unfiltered sample of up to 1,000 records).
-It performs no writes. An optional `-- --output tmp/search-check.json` saves the
-observed responses. To inspect another index before changing the client, use
-`npm run check:search -- --index authcrunch-docs --output tmp/search-check.json`.
-The report identifies the queried index. Checks fail if the index is missing or
-stale; a passing local build does not make this check pass.
-
-Queries cover only content that exists. Refresh-token lifecycle, JWKS, and Argon2id
-guides remain content gaps; adding an alias is not a substitute for writing them.
+For UI changes, preview the production build and check both themes and mobile:
+no index request before opening, one cached request across reopening/navigation,
+search input focus, Cmd/Ctrl+K, single-press Escape with a nonempty query/focus
+restoration, Tab/Shift+Tab wrapping, arrow
+navigation, Enter/result navigation, highlighted excerpts, no matches, more
+results, and recovery after HTTP failure or invalid JSON records. Verify queries
+use no external search requests. Check development content invalidation when
+changing the index plugin.

@@ -30,6 +30,13 @@ Trace global directives through `caddyfile*.go`, route directives through
 parser/consumer. Existing adaptation fixtures can support grammar claims.
 If matching source or a suitable binary is unavailable, report that limit.
 
+For v1.5.0 optional backends, use the `authcrunch/authcrunch` distribution or a
+custom build importing each required companion at the core integration version.
+The core caddy-security release executable omits all 17 companions. Check
+`list-modules --versions`, not only `security version`, before diagnosing a
+missing module. `docs/operations/backends.md` owns the public module inventory.
+Keep existing older examples' stated test baselines unless actually requalified.
+
 ## Example contract
 
 - Keep store/provider, portal, and policy names consistent across definitions
@@ -59,6 +66,13 @@ If matching source or a suitable binary is unavailable, report that limit.
   documentation site's TypeScript check does not validate portal JavaScript.
 
 ## Validation levels and side effects
+
+An example imported by public MDX as `Caddyfile?raw` also supplies searchable
+configuration text. After changing an embedded file, follow the
+[local search rebuild/check workflow](../site-operations/SKILL.md#local-search)
+and confirm the consuming page can be found with the changed directive or
+example term. A file merely stored in `assets/` is not automatically indexed.
+This check complements the parser and runtime validation below.
 
 The [existing validator](../../../assets/scripts/validate_config.sh) hard-codes
 `$HOME/dev/go/src/github.com/greenpau/caddy-security/bin/caddy`, iterates all
@@ -125,23 +139,53 @@ must stop one owner before starting the replacement and retain the same config.
 
 [assets/conf/getting-started/Caddyfile](../../../assets/conf/getting-started/Caddyfile)
 is the canonical configuration embedded by `docs/start/first-app.md`. It targets
-the published caddy-security v1.3.0 bundle and go-authcrunch v1.3.8. Keep its
+the published AuthCrunch v1.5.0 distribution, caddy-security v1.5.0 and
+go-authcrunch v1.4.1. Keep its
 public walkthrough and executable behavior consistent when updating versions.
 
-Run it in a fresh disposable directory with `data/` and an exported
-`AUTHCRUNCH_DEMO_SECRET`. It binds HTTP to `127.0.0.1:9080`, uses the `localhost`
-hostname, and permits insecure cookies only for this local exercise. Both the
-user database and Caddy storage live under that directory. The disabled admin
-endpoint requires stopping the foreground process and starting it again; reload
-is not available. Provisioning a new local store may add a bootstrap admin in
-addition to its explicit demo users.
+The example adapts `authcrunch/authcrunch/assets/e2e-login/Caddyfile` with literal
+public demo credentials/signing material and no environment variables. Run it
+in a fresh disposable directory with `data/`. It serves HTTPS on loopback
+`localhost:8443` with Secure cookies and in-memory accounts. Local on-demand TLS
+uses an HTTP approval endpoint on loopback port 5555 accepting `domain=localhost`
+and rejecting other/missing domains. `skip_install_trust` leaves host trust
+unchanged; the browser needs a local certificate exception, while curl checks
+can use the generated `data/caddy/pki/authorities/local/root.crt`. Caddy's TLS
+storage persists there; identities do not. The disabled admin endpoint requires
+stopping the foreground process and starting it again; reload is unavailable.
+Provisioning a new local store may add a bootstrap admin in addition to its
+explicit demo users. Public literal keys/passwords are specific to this local
+exercise and must be replaced for deployment.
 
-The matched `/app` and `/app/*` route must authorize before responding. An
-anonymous request redirects, Alice's `app/member` role permits access, and Bob's
-portal-only role receives 403. After login, the tested flow reaches the portal's
-Applications page; the user selects Example app. Check browser logout with a
-fresh app request, without claiming that it revokes an independently copied
-token. Scope runtime results to the tested executable and environment.
+Separate `/healthz`, `/auth*`, and `/*` route blocks serve the public health
+response, portal, and root application. Keep the bare `/auth` redirect inside
+the portal route and authorization before the app response. The more specific
+routes must remain reachable ahead of the catch-all app. Trusted return rules
+for `localhost:8443` permit `/` and its descendants; the Applications link points
+to `/`.
+
+The portal enables cookie-domain guessing and uses prefix `AUTHTEST`, without an
+explicit cookie path. The policy must read matching `AUTHTEST_SESSION_ID` and
+`AUTHTEST_ACCESS_TOKEN` cookies. Its default `authp/admin` or `authp/user` rule
+admits both demo users. The verification guide temporarily narrows the policy
+to `app/member` to demonstrate Alice 200 / Bob 403, then restores the default.
+Keep this exercise separate from the default configuration's expected results.
+Check root and nested app paths, public health and portal routes, certificate
+approval, wrong password, cookie names/flags, both policy outcomes, and browser
+logout with a fresh app request. Do not claim browser logout revokes an
+independently copied token. Scope results to the tested executable/environment.
+
+Use `npm run test:first-app -- --binary /path/to/authcrunch` to exercise this exact
+canonical file with real desktop/mobile Chromium forms. The runner's default
+policy admits both users; the separate narrower-policy exercise is not part of
+that command. It records screenshots and assertions in a unique ignored output
+directory and removes its private runtime storage after stopping the server.
+Review the site-operations contract for prerequisites, failure behavior, and
+cleanup. Publish only reviewed captures from a fully passing run. The
+[screenshot manifest](../../../assets/conf/getting-started/screenshots.json)
+records the config/binary hashes, versions, image hashes/dimensions, and capture
+steps. When configuration or portal appearance changes, recapture the affected
+steps, check the config hash, and update the manifest and public captions together.
 
 ## GitHub example
 

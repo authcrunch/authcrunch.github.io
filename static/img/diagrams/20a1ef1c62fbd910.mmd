@@ -1,0 +1,10 @@
+flowchart TD
+  accTitle: Only completed authority crosses a controlled restart
+  accDescr: This diagram shows root snapshot storage. One runtime owns the private directory and commits completed state synchronously. A full stop/start releases ownership before restoration, preserving original expiry and replay history. Unselected pending workflows remain volatile. Optional named OAuth, signup, ticket and refresh backends own separate records; identity databases are also separate artifacts.
+  C["Completed sessions, grants, generated keys, replay history"] --> S["Private encrypted state under one owner"]
+  S --> O["Stop admission, drain, stop, release ownership"]
+  O --> R["Replacement opens same coherent state"]
+  R --> V["Restore eligible completed authority with original deadlines"]
+  P["Pending interactions without selected durable storage"] --> X["Discard at restart"]
+  D["Separate private identity database"] --> E["Check current account evidence"]
+  E --> V

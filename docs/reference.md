@@ -109,6 +109,16 @@ See [Feature availability and versions](operations/versions.md) for the
 distinction between the released integration and newer library features, and
 [Authentication logging](operations/logging.md) for diagnostic controls.
 
+## V1.5.0 plugin and API references
+
+- [Distribution, optional modules and deployment choices](operations/backends.md)
+- [SQLite accounts and signup](authenticate/local/sqlite.md)
+- [Connected external accounts](authenticate/connected-accounts.md) and [trusted application tickets](authenticate/ticket-login.md)
+- [Shared pending OAuth login storage](authenticate/oauth/login-storage.md)
+- [Claims enrichment](authorize/claims-enrichment.md), [external authorization](authorize/external-authorization.md) and [access-token profiles](authorize/access-token-profiles.md)
+- [Encrypted Documents API](authenticate/api/documents.md)
+- [Standalone login client](operations/caddy-authenticator.md)
+
 ## Agentic Prompts
 
 Copy a prompt into your LLM to explore this topic. Each prompt prioritizes

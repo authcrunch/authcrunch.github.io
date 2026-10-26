@@ -39,12 +39,12 @@ an in-memory local database is incompatible with persistence.
 ```mermaid
 flowchart TD
   accTitle: Only completed authority crosses a controlled restart
-  accDescr: One runtime owns the private state directory and commits completed state synchronously. A full stop/start releases ownership before restoration. Restored credentials keep original expiry and replay history. Pending login, enrollment, consent interactions, and cross-device work remain volatile, while the local identity database is a separate artifact.
+  accDescr: This diagram shows root snapshot storage. One runtime owns the private directory and commits completed state synchronously. A full stop/start releases ownership before restoration, preserving original expiry and replay history. Unselected pending workflows remain volatile. Optional named OAuth, signup, ticket and refresh backends own separate records; identity databases are also separate artifacts.
   C["Completed sessions, grants, generated keys, replay history"] --> S["Private encrypted state under one owner"]
   S --> O["Stop admission, drain, stop, release ownership"]
   O --> R["Replacement opens same coherent state"]
   R --> V["Restore eligible completed authority with original deadlines"]
-  P["Pending interactions: volatile process memory"] --> X["Discard at restart"]
+  P["Pending interactions without selected durable storage"] --> X["Discard at restart"]
   D["Separate private identity database"] --> E["Check current account evidence"]
   E --> V
 ```
@@ -113,6 +113,31 @@ and a new installation.
 Snapshots are synchronous local files. Measure write latency and storage size
 under your intended session population before raising capacity. This feature
 provides restart continuity, not a distributed session database.
+
+## Selected backends in v1.5.0
+
+The snapshot behavior above describes root-owned state. New optional backends
+have separate storage and are not made durable just by this directory:
+
+| State | Current storage choice |
+| --- | --- |
+| Pending upstream OAuth transactions | Named SQLite or Consul [login store](../authenticate/oauth/login-storage.md) |
+| Refresh families and replay history | Named SQLite or Consul [refresh store](../authenticate/30-refresh-token.md#named-refresh-storage), still requiring this root state |
+| Pending signup and notification delivery | Selected [SQLite workflow/outbox](../authenticate/local/sqlite.md#email-confirmed-signup) |
+| Pending trusted-application tickets | Selected [SQLite or Consul provider](../authenticate/ticket-login.md) |
+| Encrypted documents | Portal-bound [Documents database](../authenticate/api/documents.md); reauthenticate and unlock after session loss |
+
+The earlier pending-state warning applies to the legacy in-memory owners.
+Explicit backends can preserve their own pending records until original expiry.
+They do not preserve unfinished sandbox/MFA, connection or cross-device flows.
+Consul does not remove root exclusivity or permit independent roots to exchange
+refresh authority. See the [state/affinity matrix](backends.md#match-storage-to-the-state-you-need).
+
+Persistent configuration binding now includes selected backend descriptors and
+actual loaded access-signing trust. Changed configuration/trust retires prior
+authority, including when an earlier configuration is later restored. Back up
+all selected databases coherently while their owners are stopped; never mix
+root snapshots with unrelated database generations.
 
 ## Agentic Prompts
 

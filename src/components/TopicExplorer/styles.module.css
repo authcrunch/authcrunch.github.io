@@ -1,0 +1,29 @@
+.explorer { display: grid; grid-template-columns: 1.2fr 1fr; align-items: center; gap: 4rem; }
+.map { display: grid; grid-template-columns: 1fr .9fr 1fr; grid-template-rows: repeat(3,110px); gap: 2.1rem 1.25rem; position: relative; align-items: center; min-width: 0; }
+.map::before { content: ''; position: absolute; inset: -1rem; pointer-events: none; background: radial-gradient(ellipse, var(--ac-selected), transparent 70%); }
+.connections { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.connections path { fill: none; stroke: var(--ac-border); stroke-width: 1.5; transition: stroke 180ms ease; }
+.connections path.activePath { stroke: var(--ifm-color-primary); stroke-width: 2.5; }
+.node { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: .5rem; width: 100%; min-width: 0; padding: .95rem; background: var(--ac-surface); border: 1px solid var(--ac-border); border-radius: 12px; text-align: left; color: var(--ifm-font-color-base); font: 600 .81rem/1.4 var(--ifm-font-family-base); min-height: 105px; cursor: pointer; transition: border-color 180ms ease,transform 180ms ease; }
+.node:hover { transform: translateY(-3px); border-color: var(--ifm-color-primary); }
+.node[aria-pressed='true'] { border-color: var(--ifm-color-primary); background: var(--ac-selected); color: var(--ifm-color-primary); box-shadow: 0 7px 22px #245bca0d; }
+.node > svg { width: 25px; height: 25px; color: var(--ifm-color-primary); }
+.nodeNumber { position: absolute; right: .7rem; top: .7rem; color: var(--ac-muted); font: .6rem var(--ifm-font-family-monospace); }
+.node0 { grid-area: 1/1; }.node1 { grid-area: 1/3; }.node2 { grid-area: 2/1; }.node3 { grid-area: 2/3; }.node4 { grid-area: 3/1; }.node5 { grid-area: 3/3; }
+.core { position: relative; grid-area: 2/2; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; }
+.core img { background: #edf3fc; border-radius: 16px; padding: 9px; box-shadow: 0 8px 28px #245bca16; margin-bottom: .7rem; }
+.core > span { font-size: .78rem; font-weight: 700; }.core small { font-size: .6rem; color: var(--ac-muted); margin-top: .2rem; }
+.detail { border-left: 1px solid var(--ac-border); padding: 1rem 0 1rem 2.25rem; min-height: 400px; }
+.eyebrow { color: var(--ifm-color-primary); font: 600 .7rem/1.5 var(--ifm-font-family-monospace); margin: 0 0 1rem; }
+.detail h3 { font-size: clamp(1.6rem,2.4vw,2rem); line-height: 1.2; letter-spacing: -.04em; margin: 0 0 1rem; }
+.detail > p:not(.eyebrow) { color: var(--ac-muted); font-size: .9rem; line-height: 1.8; margin-bottom: 1.1rem; }
+.detail ul { list-style: none; padding: 0; margin: 0 0 1.25rem; }
+.detail li { border-bottom: 1px solid var(--ac-border); }
+.detail li a { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .7rem 0; color: var(--ifm-font-color-base); font-size: .84rem; font-weight: 550; }
+.detail li a:hover { color: var(--ifm-color-primary); }.detail svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--ifm-color-primary); }
+.more { display: inline-flex; align-items: center; gap: .65rem; font-size: .8rem; font-weight: 650; }
+.fallback { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .85rem; }
+@media (max-width: 1000px) { .explorer { gap: 2rem; }.detail { padding-left: 1.5rem; }.map { column-gap: .7rem; }.node { padding: .8rem; font-size: .74rem; }.core > span { font-size: .65rem; }.core small { font-size: .55rem; } }
+@media (max-width: 700px) { .explorer { grid-template-columns: 1fr; gap: 2rem; }.map { max-width: 540px; width: 100%; margin: auto; grid-template-rows: repeat(3,100px); row-gap: 1.2rem; }.node { min-height: 95px; font-size: .75rem; }.detail { min-height: 0; border-left: 0; padding: 1.5rem 0 0; border-top: 1px solid var(--ac-border); }.detail h3 { font-size: 1.7rem; } }
+@media (max-width: 450px) { .map { grid-template-columns: repeat(2,minmax(0,1fr)); grid-template-rows: auto repeat(3,88px); gap: .7rem; }.connections { display: none; }.core { grid-area: 1/1/2/3; padding: .5rem 0 1rem; }.core img { width: 48px; height: 48px; margin-bottom: .4rem; }.node { min-height: 88px; font-size: .77rem; }.node0 { grid-area: 2/1; }.node1 { grid-area: 2/2; }.node2 { grid-area: 3/1; }.node3 { grid-area: 3/2; }.node4 { grid-area: 4/1; }.node5 { grid-area: 4/2; } }
+@media (prefers-reduced-motion: reduce) { .node, .connections path { transition: none; }.node:hover { transform: none; } }

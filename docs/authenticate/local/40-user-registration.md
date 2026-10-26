@@ -11,6 +11,11 @@ import example from '@site/assets/conf/local/registration/Caddyfile?raw';
 
 # User Registration
 
+This page covers the **legacy JSON-file/dropbox** workflow. V1.5.0 also offers
+[SQLite email-confirmed signup](sqlite.md#email-confirmed-signup), which durably
+creates an active account after confirmation and requires different backends
+and explicit portal selection. Do not mix the two configuration grammars.
+
 Registration collects a local account request and verifies its email before
 saving a password-hashed record in a **separate registration dropbox**. It does
 not automatically approve an account in the active login database or grant an

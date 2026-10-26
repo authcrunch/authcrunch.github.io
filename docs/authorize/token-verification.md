@@ -127,6 +127,14 @@ implement immediate distributed revocation of all already issued JWTs. Use
 short appropriate lifetimes and the [refresh session](../authenticate/30-refresh-token.md)
 workflow when renewable local sessions fit your application.
 
+## Strict selected access-token profiles
+
+V1.5.0 adds [PS256 access-token profiles](access-token-profiles.md) for a named
+signer and its consumers. These enforce a dedicated token purpose, exact issuer,
+sole audience, trusted key IDs, times and maximum lifetime. Configuring an
+ordinary RSA verifier alone does not enable those checks. OIDC ID-token signing
+and public portal access-key discovery remain separate contracts.
+
 ## Agentic Prompts
 
 Copy a prompt into your LLM to explore this topic. Each prompt prioritizes

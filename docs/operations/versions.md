@@ -1,25 +1,32 @@
 ---
 title: "Feature availability and versions"
-description: "Distinguish the released Caddy bundle, its bundled AuthCrunch library, and newer features visible in source checkouts."
+description: "Match AuthCrunch distribution, Caddy integration and library releases to their compiled plugins, current features and upgrade requirements."
 discovery:
   topic: operations
   kind: reference
-  aliases: ["release", "version", "unreleased", "compatibility"]
+  aliases: ["release", "version", "compatibility", "v1.5.0", "upgrade"]
 ---
 
 # Feature availability and versions
 
-A Caddy integration release and a go-authcrunch library release are different
-artifacts. Installing a newer standalone library does not update the dependency
-inside a previously built Caddy executable.
+As checked on **October 26, 2026**, current published releases are
+**AuthCrunch v1.5.0**, **caddy-security v1.5.0** and **go-authcrunch v1.4.1**.
+Both Caddy executables use Caddy v2.11.7 and library v1.4.1. Installing a newer
+standalone library does not update an already built executable.
 
-As checked on **October 5, 2026**, the latest downloadable Caddy bundle is
-[caddy-security v1.3.0](https://github.com/greenpau/caddy-security/releases/tag/v1.3.0),
-whose [go.mod](https://github.com/greenpau/caddy-security/blob/v1.3.0/go.mod)
-pins **go-authcrunch v1.3.8**. The standalone library has separately released
-[v1.3.11](https://github.com/greenpau/go-authcrunch/releases/tag/v1.3.11).
-These guides use the published Caddy bundle unless they state another boundary.
+## Choose the artifact
 
+| Artifact | Contents and evidence |
+| --- | --- |
+| [AuthCrunch v1.5.0 distribution](https://github.com/authcrunch/authcrunch/releases/tag/v1.5.0) | Ready-to-run `authcrunch`; all 17 backend companions, Consul storage, AWS secrets and tracing. [Pinned dependencies](https://github.com/authcrunch/authcrunch/blob/v1.5.0/go.mod) and [compiled imports](https://github.com/authcrunch/authcrunch/blob/v1.5.0/main.go). |
+| [caddy-security v1.5.0](https://github.com/greenpau/caddy-security/releases/tag/v1.5.0) | Core `authcrunch` executable and separate `caddy-authenticator` archives; backend companions require explicit imports/custom-build selection. [Dependency declaration](https://github.com/greenpau/caddy-security/blob/v1.5.0/go.mod). |
+| [go-authcrunch v1.4.1](https://github.com/greenpau/go-authcrunch/releases/tag/v1.4.1) | Reusable runtime library; its version alone does not prove a Caddy directive or plugin is compiled. |
+
+All three have published release assets. The two server releases use the same
+archive filenames; verify the checksum from the **same repository** as the
+download. Follow [installation](../start/install.md) and the
+[companion inventory](backends.md). Older provider examples retain their stated
+v1.3.0/v1.3.8 test baseline where no new provider-specific runtime check was made.
 
 ```mermaid
 flowchart TD
@@ -38,66 +45,69 @@ flowchart TD
 ```sh
 authcrunch version
 authcrunch security version
-authcrunch list-modules
+authcrunch list-modules --versions
 ```
 
-The first reports Caddy, the second the AuthCrunch library, and the third the
-compiled modules. For a custom build named `caddy`, use that executable instead.
-Keep its integration revision too: the library version alone does not prove
-that an adapter exposes a new directive.
+These report Caddy, the linked AuthCrunch library, and compiled modules. Also
+retain the integration version/build provenance. For custom `caddy` builds use
+that executable's name. The v1.5.0 distribution's macOS arm64 archive was
+checksum-verified and these commands reported the versions and companions above.
 
-## Features in the released bundle
+## Current feature map
 
-| Capability | Documentation |
+| Capability | Availability and documentation |
 | --- | --- |
-| Local, LDAP, OAuth/OIDC and SAML login | [Authentication overview](../authenticate/intro.md) |
-| Local MFA and ordered challenge policies | [MFA](../authenticate/11-mfa.md) and [challenges](../authenticate/13-authentication-challenges.md) |
-| Rotating local refresh sessions | [Refresh sessions](../authenticate/30-refresh-token.md) |
-| Completed-session and generated-key persistence | [Runtime state](runtime-state.md) |
-| Provider login directly in an app policy | [Direct OAuth](../authorize/direct-oauth.md) |
-| AuthCrunch serving relying parties as an OIDC provider | [OIDC provider](../apps/oidc-provider.md) |
-| Bundled local management CLI and reusable Go login client | [CLI](local-client.md) and [Go client](authclient.md) |
-| Argon2id and bcrypt local passwords | [Password management](../authenticate/local/30-password-management.md) |
-| Numeric GitHub IDs and organization transforms | [GitHub](../authenticate/oauth/81-backend-oauth2-0007-github.md) |
-| Diagnostic message filtering | [Logging](logging.md) |
-| Explicit administrative API permissions and private-key export | [Server API](../authenticate/api/40-server-api.md) |
-| RSA, EC, and Ed25519 public signing-key JWKS | [Token verification](../authorize/token-verification.md) |
-| Header/query/Basic/API-key credential stripping | [Identity headers](../authorize/headers.md) |
+| Local/LDAP/OAuth/SAML login, local MFA, direct OAuth, downstream OIDC | Core; existing guides retain their specified version/test boundaries |
+| Typed policy-local ACL fields and corrected unconditional rules | Present in released v1.4.1 and v1.5.0; older v1.3.0 has the [unconditional-rule limitation](../authorize/acl-rbac.md#match-any-condition) |
+| Cross-device login | Released, HTTPS and explicit opt-in; [approval flow](../authenticate/cross-device.md) |
+| SQLite password accounts and email-confirmed signup | Selected companions; [provisioning and signup](../authenticate/local/sqlite.md) |
+| Trusted application tickets | SQLite/Consul companions; [ticket protocol](../authenticate/ticket-login.md) |
+| Durable notification outbox and secret snapshots | Selected companions; [messaging](../messaging/intro.md#sqlite-outbox), [secrets](../credentials/intro.md#sqlite-and-consul-secrets) |
+| Fresh standalone API-key backends | SQLite/Consul companions; [API-key authentication](../authorize/api_key_auth.md#sqlite-api-keys) |
+| Required request-time ACL attributes and HTTP decisions | Selected companions; [enrichment](../authorize/claims-enrichment.md), [external authorization](../authorize/external-authorization.md) |
+| Selected PS256 signer and strict access-token profiles | Companion plus explicit consumer profiles; [signing and rotation](../authorize/access-token-profiles.md) |
+| Shared pending upstream OAuth transactions | SQLite/Consul companions plus provider namespace; [login storage](../authenticate/oauth/login-storage.md) |
+| Managed refresh storage and provider snapshot renewal | Named SQLite/Consul storage requires root state; OAuth renewal is explicit snapshot mode; [refresh guide](../authenticate/30-refresh-token.md) |
+| Durable local attachments and user-confirmed account connection | Core plus explicit built-in-local-store target; [connected accounts](../authenticate/connected-accounts.md) |
+| Encrypted Documents API | Core, explicitly enabled, current local browser session; [Documents](../authenticate/api/documents.md) |
+| Explicit mounts, independent tab destinations and portal/OIDC localization | Core; [mounts](../authenticate/auth-portal.md#explicit-portal-mounts), [redirects](../authenticate/100-trust-login-logout.md), [language](../authenticate/12-i18n-internationalization.md) |
+| Standalone native login client | Separate caddy-security release asset; [caddy-authenticator](caddy-authenticator.md) |
 
-## Partial application SAML support
+## Upgrade from the previous guides
 
-[AWS application SSO](../apps/sso_saml.md) has metadata and a role menu, but its
-assume-role handler does not issue a SAML assertion in either the released
-bundle or standalone v1.3.11. Upstream SAML login is implemented separately.
-Do not infer complete AWS federation from accepted `sso provider` syntax.
+1. Download the intended artifact and inspect its modules; custom builds select
+   every needed companion at v1.5.0. Importing the root alone no longer suffices.
+2. Read the [integration changes](https://github.com/greenpau/caddy-security/compare/v1.4.1...v1.5.0)
+   and [library changes](https://github.com/greenpau/go-authcrunch/compare/v1.3.11...v1.4.1).
+   V1.5.0 includes both library v1.4.0 and v1.4.1 changes.
+3. Back up coherent identities, keys and state. Persistent roots and overlapping
+   local identity files require a drained stop/start, not an overlapping reload.
+4. Adapt the actual configuration with the replacement executable, then test
+   login, required factors, allowed/denied requests, logout, renewal and restart.
+   Use explicit mounts for new portal integrations. Unknown UI languages now fail.
+5. Check current credential changes: portal-backed Basic/API-key authentication
+   rechecks the account on every request. Signed JWTs retain their own expiry.
+   Authentication diagnostics add portal/realm attribution and redact raw
+   provider identities; separately configure host-log credential redaction.
 
-## Newer library and integration work
+The release also fixes authorization reload hangs involving downstream streams
+such as WebSockets, and SQLite ticket/refresh locking under contention. These
+fixes do not make persistent overlapping reload supported. Upstream build
+qualification uses Go 1.26.10 and `golang.org/x/net` v0.60.0; Caddy remains
+v2.11.7. Source builds should retain those dependency/toolchain fixes rather
+than inferring patch status from Caddy's version alone.
 
-The [v1.4.0 source tag](https://github.com/greenpau/caddy-security/tree/v1.4.0)
-now pins library v1.3.11 and Caddy v2.11.7. At this check, GitHub's release API
-still lists v1.3.0 as the latest downloadable bundle; v1.4.0 binary/checksum
-assets are not published. A source tag and a verified downloadable executable
-are separate availability checks.
+## Remaining boundaries
 
-These features require that newer integration source:
+[AWS application SAML](../apps/sso_saml.md) still has an incomplete assertion
+handler. [Native Nextcloud login](../authenticate/oauth/81-backend-oauth2-0014-nextcloud.md)
+still lacks its profile integration. These are distinct from supported upstream
+SAML and generic OIDC login.
 
-| Feature | Library availability | Downloadable bundle / newer source |
-| --- | --- | --- |
-| [Typed policy-local custom ACL fields](../authorize/custom-fields.md) | go-authcrunch v1.3.9 and later | Not in v1.3.0; available in v1.4.0 source |
-| Correct unconditional/default ACL evaluation | go-authcrunch v1.3.11 | Fixed in v1.4.0 source; see the [v1.3.0 limitation](../authorize/acl-rbac.md#match-any-condition) |
-| [Optional cross-device browser login](../authenticate/cross-device.md) | go-authcrunch v1.3.11 | Not in v1.3.0; available in v1.4.0 source |
-
-Use configuration for those features with a matching v1.4.0 source build.
-Do not paste it into v1.3.0 and expect parser support. Check the
-v1.4.0 release assets and embedded versions before switching a binary install.
-
-## Upgrade deliberately
-
-Read the relevant release notes, validate the configuration with the replacement
-binary, and test login, allowed access, denied access, logout and session behavior.
-Persistent-state deployments require a stop/start handover. Regenerate adapted
-JSON from the Caddyfile when adopting direct OAuth, rather than carrying forward
-an old authorization-handler representation.
+Consul distributes selected backend records, not all portal authority. Managed
+refresh still requires exclusive root state; independent roots cannot share
+refresh authority. Sandbox/MFA, cross-device, downstream OIDC and direct-policy
+session state retain their owners. See [deployment boundaries](backends.md).
 
 ## Agentic Prompts
 

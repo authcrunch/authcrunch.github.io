@@ -154,6 +154,24 @@ a request by itself.
 For application code that needs portal login without administrative commands,
 use the [Go authentication client](authclient.md).
 
+## Other current command interfaces
+
+Use [caddy-authenticator](caddy-authenticator.md) for standalone password/TOTP/API-key
+login and managed native credential caching. It is a separate downloadable
+client with its own profile format and renewal behavior.
+
+V1.5.0 also supplies offline `security identity`, `security api-key` and
+`security secrets` commands for the selected SQLite backends. These consume
+private JSON files and do not use the administrative client's YAML or HTTP API.
+See [SQLite accounts](../authenticate/local/sqlite.md),
+[API keys](../authorize/api_key_auth.md#sqlite-api-keys) and
+[secret snapshots](../credentials/intro.md#sqlite-and-consul-secrets).
+
+Automatically attached external account shells can have empty email. Current
+`security local` operations accept that selector only for eligible attached
+accounts, with the exact stored username; provider display aliases are not
+account selectors. Keep this separate from [user-confirmed connection](../authenticate/connected-accounts.md).
+
 ## Agentic Prompts
 
 Copy a prompt into your LLM to explore this topic. Each prompt prioritizes

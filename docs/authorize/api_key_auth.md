@@ -17,11 +17,9 @@ refresh tokens. Give the account a narrow application role and use HTTPS.
 ```mermaid
 flowchart TD
   accTitle: An account API key authenticates a request, not an MFA ceremony
-  accDescr: The key identifies an account in an explicitly selected realm. Credential authentication, required evidence, and application authorization remain separate checks. A valid cached credential identity can avoid a new backend lookup. This request flow does not issue portal refresh credentials or establish a browser Profile session.
+  accDescr: The key identifies an account in an explicitly selected realm. Credential authentication, required evidence, and application authorization remain separate checks. In v1.5.0 portal-backed credentials are rechecked against current account policy on every request. This request flow does not issue portal refresh credentials or establish a browser Profile session.
   A["HTTPS request: API key plus realm"] --> B["Configured key header and permitted realm"]
-  B --> C{"Usable cached credential identity?"}
-  C -->|Yes| E["Authenticated account identity"]
-  C -->|No| D["Portal checks key and direct-authentication requirements"]
+  B --> D["Portal rechecks current key and direct-authentication requirements"]
   D -->|Accepted| E
   D -->|Rejected| F["Authentication denied"]
   E --> G{"Application ACL allows this request?"}
@@ -97,9 +95,68 @@ an example key. Profile enrollment accepts a unique 64–72-character
 alphanumeric key and stores it through the account-management workflow.
 
 Treat deletion, replacement, account disabling, and role changes as lifecycle
-operations. Successful credential identities can be cached until their validity
-interval expires, so deletion is not a promise of immediate distributed
-revocation. Test key rotation and the denial path in the deployed architecture.
+operations. In v1.5.0 portal-backed API-key requests recheck current keys
+and local policy rather than relying on a cached credential identity. Older
+releases could reuse cached results. Independently issued JWTs retain their own
+expiry. Test key rotation and denial in the deployed architecture.
+
+## SQLite API keys
+
+V1.5.0 also provides standalone credential backends that need no portal. Install
+`credential-authenticators-sqlite` and declare this inside `security`:
+
+```caddyfile
+credential authenticator sqlite service-keys {
+    path /var/lib/authcrunch/private/api-keys.db
+    realm service
+    timeout 1s
+}
+authorization policy api-policy {
+    with api key auth portal service-keys realm service
+    allow roles app/member
+    disable auth redirect
+    enable strip token
+}
+```
+
+Mount `authorize with api-policy` before the application. Provision the database
+first with `security api-key issue --config PRIVATE_JSON --output PRIVATE_KEY_FILE`;
+use `security api-key revoke --config PRIVATE_JSON` for revocation. Private inputs
+must be regular `0600` files in private directories. Issue JSON has `config`
+(`name`, `path`, `realm`), `subject`, `email`, `roles`, and an RFC3339 `expires`
+within 30 days. Revoke JSON has only `config` and `key_file`. See the
+[versioned provisioning schema](https://github.com/greenpau/caddy-security/blob/v1.5.0/.codex/skills/configuration-authorization/references/sqlite-api-keys.md).
+
+Issuance writes a new private file containing one random 43-character base64url
+key; it never prints the raw credential or overwrites an existing output file.
+This format is separate from local-account API keys and their static directives.
+Clients send `X-Api-Key` and `X-Auth-Realm: service`. Each lookup reads current
+storage; revocation affects the next lookup without reload. No browser/refresh
+session is created. Wrong/expired/revoked keys and unavailable storage deny access.
+
+Every declaration must be used by at least one matching API-key-only policy;
+names cannot collide with portals and realms must match exactly. Backend fields
+are literal. For shared Consul verification, select `credential authenticator
+consul NAME` and its companion with Caddy's Consul storage; trusted application
+provisioning uses that backend's Go API, not the SQLite CLI.
+
+## Redact credential headers in host logs
+
+`enable strip token` protects the downstream request, not Caddy's earlier log
+copy. In both global diagnostic and site access `log` blocks, configure:
+
+```caddyfile
+format filter {
+    wrap json
+    fields {
+        request>headers>X-Api-Key delete
+    }
+}
+```
+
+Add any custom API-key header using its canonical HTTP spelling. Default
+credential redaction does not cover arbitrary API-key headers. Verify failed
+requests and debug diagnostics too; component skip rules do not redact them.
 
 ## Agentic Prompts
 

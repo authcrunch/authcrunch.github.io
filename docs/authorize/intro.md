@@ -42,3 +42,12 @@ A missing credential normally redirects a browser to the configured portal.
 A valid identity that fails an ACL receives `403`. APIs can disable redirects
 and return `401` when authentication is required. Public paths need an explicit
 [bypass](bypass.md), and bypassed requests have no authenticated identity.
+
+## Current policy extensions
+
+V1.5.0 can require [static request-time attributes](claims-enrichment.md) for
+local ACLs and a fresh [external HTTP authorization decision](external-authorization.md)
+after local checks. [PS256 profiles](access-token-profiles.md) constrain access
+JWT purpose and trust. These optional companions are included in the
+[AuthCrunch distribution](../operations/backends.md); custom builds select them
+explicitly. None replaces the application's ordinary allow/deny boundary.

@@ -6,7 +6,7 @@
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "dev": "npx docusaurus start --port 4200 --host 0.0.0.0",
-    "build": "node assets/diagrams/render.mjs --check && docusaurus build",
+    "build": "npm run check:mdx && node assets/diagrams/render.mjs --check && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
@@ -14,11 +14,15 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
+    "test:banner": "node --test assets/scripts/tests/community-banner.test.mjs",
     "test:release": "node --test assets/scripts/tests/release-version.test.mjs",
+    "test:first-app": "node assets/scripts/first-app-e2e.mjs",
+    "check:mdx": "node assets/scripts/check-mdx.mjs",
     "check:search": "node assets/search/check-index.mjs",
     "upgrade": "ncu --upgrade; rm -rf node_modules/ package-lock.json build coverage; npm i",
     "diagrams:render": "node assets/diagrams/render.mjs",
-    "diagrams:check": "node assets/diagrams/render.mjs --check"
+    "diagrams:check": "node assets/diagrams/render.mjs --check",
+    "test:search": "node --test assets/search/search.test.mjs"
   },
   "dependencies": {
     "@docusaurus/core": "3.10.2",
@@ -28,22 +32,30 @@
     "@mdx-js/react": "^3.1.1",
     "clsx": "^2.1.1",
     "prism-react-renderer": "^2.4.1",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.10.2",
     "@docusaurus/tsconfig": "^3.10.2",
     "@docusaurus/types": "^3.10.2",
     "@tailwindcss/postcss": "^4.3.3",
-    "mermaid": "12.1.0",
-    "npm-check-updates": "^23.1.0",
-    "playwright-core": "1.63.0",
-    "postcss": "^8.5.28",
+    "docusaurus-mdx-checker": "3.0.0",
+    "mermaid": "12.2.0",
+    "npm-check-updates": "^23.1.1",
+    "playwright-core": "1.64.1",
+    "postcss": "^8.5.31",
+    "remark-frontmatter": "5.0.0",
+    "remark-mdx": "3.1.1",
+    "remark-parse": "11.0.0",
     "tailwindcss": "^4.3.3",
-    "typescript": "~7.0.2"
+    "typescript": "~7.0.2",
+    "unified": "11.0.5"
   },
   "overrides": {
+    "micromark-extension-math": {
+      "katex": "^0.18.10"
+    },
     "serialize-javascript": "^7.1.2",
     "sockjs": {
       "uuid": "^11.1.1"

@@ -1,21 +1,20 @@
 ---
 title: "Typed custom ACL fields"
-description: "Bind typed, literal top-level token claims to policy-local ACL aliases in Caddy Security v1.4.0 source."
+description: "Bind typed, literal top-level token claims to policy-local ACL aliases in released Caddy Security builds."
 discovery:
   topic: authorization
   kind: reference
-  aliases: ["acl field", "namespaced claims", "typed claims", "v1.4.0 source"]
+  aliases: ["acl field", "namespaced claims", "typed claims"]
 ---
 
 # Typed custom ACL fields
 
 :::info[Version boundary]
 
-Typed fields are released in **go-authcrunch v1.3.9 and later**. The adapter is
-in the **caddy-security v1.4.0 source tag**, which pins library v1.3.11. The
-published downloadable v1.3.0 bundle does not support `acl field`. At the
-October 5 check, v1.4.0 binary assets are not yet published; use a matching
-source build and check [availability](../operations/versions.md).
+Typed fields are included in **caddy-security v1.4.1 and v1.5.0** downloadable
+bundles and the AuthCrunch v1.5.0 distribution. The library supports them from
+v1.3.9. The older v1.3.0 bundle does not accept `acl field`.
+Check [availability](../operations/versions.md) for the executable you run.
 
 :::
 
@@ -40,7 +39,7 @@ flowchart TD
 
 ## Declare and match a field
 
-In a Caddy Security v1.4.0 source build, add the declaration and rule inside
+In a current Caddy Security build, add the declaration and rule inside
 the policy:
 
 ```caddyfile

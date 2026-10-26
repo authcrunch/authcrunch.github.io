@@ -10,8 +10,9 @@ discovery:
 
 # Next steps
 
-You now have a portal that authenticates users and a policy that admits one user
-while rejecting another. Choose the next task based on your application.
+You now have a portal that authenticates users and a policy that admits both demo
+users. The narrower-policy exercise shows how to allow Alice while rejecting Bob.
+Choose the next task based on your application.
 
 ## Connect your identity source
 
@@ -57,10 +58,10 @@ make these deployment choices:
 
 | Area | What must change |
 | --- | --- |
-| HTTPS and addresses | Use your real HTTPS hostnames and matching login/callback URLs. Remove `cookie insecure enabled`. Revisit the loopback binding and cookie scope for your topology. |
+| HTTPS and addresses | Replace the loopback hosts and local CA with your real HTTPS hostnames and trusted certificates. Replace or remove the demo certificate-approval endpoint. Revisit callback URLs, bindings and cookie scope for your topology. |
 | Users | Remove the public demo accounts and passwords. Review every account and role in the store, including any bootstrap administrator. |
-| Signing keys | Supply protected, durable key material. The shell-generated demo secret is temporary; changing it prevents existing tokens from verifying against the new key. |
-| Storage | Give the service durable, access-controlled storage and a backup plan. Relative paths resolve from its working directory. Keeping a user database is distinct from preserving sessions across restarts. |
+| Signing keys | Replace the public literal demo key with protected, durable key material. Keep signing and verification settings aligned. |
+| Storage | Replace the in-memory demo accounts with durable, access-controlled identity storage and a backup plan. Caddy's TLS storage alone preserves neither accounts nor sessions. Relative paths resolve from the working directory. |
 | Application | Replace the demo response with your application handler, such as `reverse_proxy`, after the authorization handler in the matched route. |
 | Operations | Choose a service manager, logging, updates, and an explicit administration/reload strategy. The tutorial disables Caddy's admin endpoint. |
 
@@ -76,6 +77,19 @@ an OIDC client, use the [OIDC provider](../apps/oidc-provider.md).
 
 For a specific task, continue with the [topic directory](../guides.md). For
 configuration details, use the [reference](../reference.md).
+
+## Explore v1.5.0 integrations
+
+- [SQLite password accounts and confirmed signup](../authenticate/local/sqlite.md)
+- [Connected external accounts](../authenticate/connected-accounts.md)
+- [Shared upstream OAuth login transactions](../authenticate/oauth/login-storage.md)
+- [Required external authorization](../authorize/external-authorization.md) and [ACL enrichment](../authorize/claims-enrichment.md)
+- [Encrypted Documents API](../authenticate/api/documents.md)
+- [Standalone native login client](../operations/caddy-authenticator.md)
+
+Check the [plugin and state matrix](../operations/backends.md) before choosing
+storage for multiple processes. Durable accounts, pending OAuth callbacks and
+completed sessions have different sharing requirements.
 
 ## Agentic Prompts
 

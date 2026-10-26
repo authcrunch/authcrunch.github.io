@@ -25,14 +25,15 @@ have tested a successful login, allowed access, denied access, and logout.
 
 1. **[Install and verify](start/install.md).** Get a Caddy build that includes AuthCrunch.
 2. **[Protect your first app](start/first-app.md).** Run a local portal and connect it to an access policy.
-3. **[Verify access](start/verify-access.md).** Check what happens for each user, including a user who must be denied.
+3. **[Verify access](start/verify-access.md).** Check both users, then narrow the policy to test denied access.
 4. **[Choose your next step](start/next-steps.md).** Connect a provider or prepare a deployment.
 
-The walkthrough is tested with the published **caddy-security v1.3.0** bundle,
-which includes **go-authcrunch v1.3.8**. These are different version numbers:
-the first identifies the Caddy integration; the second identifies its AuthCrunch
-library. See the [release](https://github.com/greenpau/caddy-security/releases/tag/v1.3.0)
-and [dependency declaration](https://github.com/greenpau/caddy-security/blob/v1.3.0/go.mod).
+The walkthrough uses the published **AuthCrunch v1.5.0 distribution**, containing
+**caddy-security v1.5.0** and **go-authcrunch v1.4.1**. The distribution combines
+the Caddy security app and associated plugins into a ready-to-run executable.
+The library and integration have separate versions. See the
+[distribution release](https://github.com/authcrunch/authcrunch/releases/tag/v1.5.0)
+and [backend/module choices](operations/backends.md).
 
 ## Understand the moving parts
 
@@ -42,7 +43,7 @@ and [dependency declaration](https://github.com/greenpau/caddy-security/blob/v1.
 | Identity store | Holds users and checks their credentials | `localdb` |
 | Authentication portal | Provides login pages and issues an access token | `myportal` at `/auth/` |
 | Authorization policy | Verifies the token and evaluates access rules | `apppolicy` |
-| Protected route | Runs the policy before serving the application | `/app` |
+| Protected route | Runs the policy before serving the application | `/` and its application paths |
 
 An external identity provider can replace the local login source. The application
 still needs an authorization decision before its response reaches the user.

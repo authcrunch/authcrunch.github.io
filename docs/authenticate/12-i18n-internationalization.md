@@ -18,9 +18,15 @@ ui {
 
 The released library recognizes `en`, `de`, `fr`, `ja`, `zh`, `he`, `ar` and `ru`
 (English, German, French, Japanese, Chinese, Hebrew, Arabic and Russian).
-Language names are normalized too; use the short code consistently. Unknown
-language input normalizes to English in the library, so check the actual rendered
-result rather than treating successful adaptation as proof of your intended language.
+English language names are accepted case-insensitively too. In v1.5.0, omitted
+or exactly empty input defaults to English, but unknown values, whitespace-only
+input and regional codes such as `fr-FR` fail portal construction. Supply exactly
+one value per directive line. Adaptation alone does not establish runtime support.
+
+Language is fixed per portal; `Accept-Language` does not override it. Current
+portal and OIDC consent/error pages use that language, with RTL direction for
+Arabic and Hebrew. Operator branding, provider copy and the separate Profile
+application retain their own translation boundaries.
 
 <figure className="doc-screenshot">
   <a href={require('./images/i18n_french_login.png').default}><img src={require('./images/i18n_french_login.png').default} alt="French portal login with translated username prompt and Continue action" /></a>
@@ -28,7 +34,7 @@ result rather than treating successful adaptation as proof of your intended lang
 </figure>
 
 Translations are compiled from the
-[released message catalog](https://github.com/greenpau/go-authcrunch/blob/v1.3.8/pkg/translate/data/messages.json).
+[released message catalog](https://github.com/greenpau/go-authcrunch/blob/v1.4.1/pkg/translate/data/messages.json).
 The presence of a language in the catalog does not promise that every profile,
 OIDC, error or custom-template string has been translated. There is no Caddyfile
 setting that imports a replacement message JSON file at runtime.
@@ -49,7 +55,7 @@ A selected language affects compiled portal messages; it does not replace every 
 | Portal `ui` language | Login and password/MFA messages in the running portal | The documentation website language |
 | A custom template | Literal labels, wrapping, and right-to-left layout | Compiled translation coverage |
 | An upstream message catalog | The matching rebuilt/released library | No runtime message-JSON import directive |
-| An unrecognized language value | Actual English fallback | Successful adaptation alone |
+| An unrecognized language value | Rejected portal construction in v1.5.0 | Successful adaptation alone |
 
 ## Agentic Prompts
 

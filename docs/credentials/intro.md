@@ -78,11 +78,48 @@ secrets aws_secrets_manager access_token {
 
 A consumer can then reference a field such as `secrets:access_token:value`. Match the field to the secret's actual structure. Configure the module's AWS identity/permissions privately and limit access to the intended secrets. Do not paste AWS access keys or resolved signing secrets into documentation.
 
-`security.secrets.aws_secrets_manager` is also absent from the audited published binary. Check the module's current setup and dependencies, build it explicitly, then test retrieval and the actual consumer. Core placeholder substitution supports credential instructions and selected store/provider/key fields; it is not a promise that every arbitrary field accepts secret references or refreshes them continuously.
+The AuthCrunch v1.5.0 distribution includes `security.secrets.aws_secrets_manager` v1.0.1. The core caddy-security bundle does not. Confirm the module in the executable you run, then test AWS retrieval and the actual consumer separately. Core placeholder substitution supports credential instructions and selected store/provider/key fields; it is not a promise that every arbitrary field accepts secret references or refreshes them continuously.
 
 ## Verify the boundary
 
 Inspect the executable's modules, adapt with synthetic values, then provision in an isolated environment using the intended secret source. Check a missing credential/reference fails and the intended service operation succeeds. Record separately whether you verified grammar, secret retrieval, SMTP delivery or user login; those are different checks.
+
+## SQLite and Consul secrets
+
+The v1.5.0 [distribution](../operations/backends.md) includes both companion
+managers. Inside `security`, select an existing SQLite record:
+
+```caddyfile
+secrets sqlite signing {
+    path /var/lib/authcrunch/private/secrets.db
+    record access
+    timeout 1s
+}
+```
+
+Portal and policy keys can both consume `secrets:signing:secret.key`. The dotted
+key is literal, not nested JSON traversal. Secret consumers require nonempty
+strings; numbers/objects are not coerced into credentials. The manager's backend
+fields are literal and cannot resolve their own secret references.
+
+Provision SQLite with `security secrets put --config PRIVATE_JSON`. Input has
+`config` (`name`, `path`, `record`, optional `timeout`) and a `values` object such
+as `{"secret.key":"PRIVATELY_GENERATED_VALUE"}`. This replaces the whole record.
+Use regular `0600` input files under private `0700` parents. Ordinary startup
+requires an existing database and record. SQLite is plaintext at rest.
+`security secrets delete` takes only `config` and does not mutate a live snapshot.
+
+For Consul, select `secrets consul signing { record access }` using a normal
+multiline block and [Caddy Consul storage](../operations/backends.md#consul-prerequisites).
+Trusted Go provisioning supplies the encrypted shared record; the SQLite CLI
+does not provision Consul. Keep storage bootstrap credentials independent.
+
+Both managers load a coherent **provisioning snapshot**. Updating storage does
+not change live consumers. Explicitly reload to adopt it, using `reload --force`
+when declarative JSON is unchanged, or stop/start for a persistent root.
+A failed candidate preserves the active configuration. Plan signing-key overlap
+and verify new login/access before retiring old keys; record deletion alone is
+not immediate revocation. Reconcile uncertain writes before retrying.
 
 ## Agentic Prompts
 

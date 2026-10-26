@@ -338,6 +338,29 @@ or revoke every copy of an access token; see [Logout](15-logout.md).
 | Profile data cannot load | Confirm local login, profile permission, and a live session; consult the [Profile API](api/30-profile-api.md) |
 | Login ends on Applications instead of the requested page | Check [trusted redirects](100-trust-login-logout.md) |
 
+## Explicit portal mounts
+
+V1.5.0 supports `authenticate with myportal at /auth` inside a non-stripping
+handler matching `/auth` and `/auth/*`. For example, in the site block:
+
+```caddyfile
+@portal path /auth /auth/*
+handle @portal {
+    authenticate with myportal at /auth
+}
+```
+
+Keep other application routes outside that handler and run their authorization
+before the application. For a root mount use `at /`. Mounts must be clean paths;
+reserved protocol namespaces cannot be used as mount segments. Declared Documents,
+refresh, OIDC, ticket and signup paths must agree with their actual portal routes.
+Do not use `handle_path` to strip the prefix before delegation. Existing inferred
+mount syntax remains supported, but explicit mounts make route ownership clear.
+
+Current portals also offer [connected accounts](connected-accounts.md) and the
+opt-in [Documents API](api/documents.md), each with its own browser-session and
+local-account requirements. They are not enabled by an ordinary JWT alone.
+
 ## Agentic Prompts
 
 Copy a prompt into your LLM to explore this topic. Each prompt prioritizes

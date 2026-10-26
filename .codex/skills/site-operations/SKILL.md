@@ -27,10 +27,13 @@ Keep `@docusaurus/faster` aligned with the core version. TypeScript 7 removes
 `baseUrl`; the local `tsconfig.json` overrides the inherited value with `null`
 and resolves `@site/*` through an explicit project-relative `paths` mapping.
 
-The manifest overrides `serialize-javascript` and SockJS's `uuid` to patched
-versions until upstream dependency ranges catch up. Keep UUID on the compatible
-CommonJS-capable 11.x line for SockJS. Review these overrides during upgrades;
-validate audit results, production builds, and dev startup before removing them.
+The manifest overrides `serialize-javascript`, SockJS's `uuid`, and KaTeX used
+by the MDX checker's math extension to patched versions until upstream dependency
+ranges catch up. Keep UUID on the compatible CommonJS-capable 11.x line for
+SockJS. The math extension uses KaTeX's `renderToString` API; verify that path
+alongside the MDX check when changing its override. Review these overrides during
+upgrades; validate audit results, production builds, and dev startup before
+removing them.
 
 The build consumes docs, blog, pages, site configuration, and static assets and
 writes `build/` plus generated `.docusaurus/` state. These are ignored artifacts,
@@ -42,20 +45,37 @@ into the public output.
 | Task | Command | Meaning and limits |
 | --- | --- | --- |
 | Install reproducibly | `npm ci` | Uses the committed dependency graph; replaces `node_modules/` |
+| Check published MDX sources | `npm run check:mdx` | Checks all Markdown/MDX in `docs/`, `blog/`, and `src/pages/` with the pinned checker; omits scratch and agent files |
 | Check typed source | `npm run typecheck` | Runs `tsc`; separate from the site build |
 | Test release automation | `npm run test:release` | Offline Node tests with disposable local Git remotes; no installed npm dependencies or publication |
-| Check hosted search | `npm run check:search` | Read-only Algolia queries; fails on stale destinations, missing metadata/facets, or failed relevance checks |
-| Build static output | `npm run build` | Compiles MDX and site code and checks configured links |
+| Validate the first-app browser flow | `npm run test:first-app -- --binary /path/to/authcrunch` | Runs the canonical example through installed Chromium; writes an offline screenshot report under `tmp/` |
+| Test local search | `npm run test:search` | Offline extraction, ranking, excerpt, highlighting, and URL validation tests |
+| Test announcement expiry | `npm run test:banner` | Offline seven-day dismissal boundaries, invalid timestamps, and first-paint bootstrap behavior; browser interaction remains a separate check |
+| Check built search | `npm run check:search` | Validates the generated local index, canonical destinations, exclusions, imported configuration, and representative query rankings |
+| Build static output | `npm run build` | Runs the scoped MDX check, verifies diagram assets, then compiles the site and checks configured links |
 | Check diagram assets | `npm run diagrams:check` | Verifies authored Mermaid inventory, source assets, and committed SVG hashes without a browser |
 | Regenerate diagrams | `npm run diagrams:render` | Uses one local Chrome instance to generate light/dark SVGs; closes it on completion or failure |
 | Preview source | `npm run dev` | Starts the development server on port 4200, bound to `0.0.0.0` |
 | Preview generated output | `npm run serve -- --port 4200` | Serves an existing `build/` |
 | Clear stale generated state | `npm run clear` | Docusaurus cache cleanup; rebuild afterward |
 
-The README also suggests `npx docusaurus-mdx-checker`, but it is not a declared
-dependency or npm script. It may fetch a tool; the production build is the
-repository's installed MDX check. Use an additional checker only when it helps
-diagnose a specific issue, and distinguish it from committed CI coverage.
+Use [check-mdx.mjs](../../../assets/scripts/check-mdx.mjs), exposed by
+`npm run check:mdx`, for the maintained MDX preflight. It uses the locked
+`docusaurus-mdx-checker` dependency and explicit site-content globs. The build
+invokes the same check, so the Pages build also gates on it. Keep these globs
+aligned when adding a content root or versioned documentation.
+
+The upstream bare `npx docusaurus-mdx-checker` CLI does not honor `.gitignore`
+and has no CLI include/exclude configuration. Its default repository-wide scan
+can report errors in ignored `tmp/` snapshots and nested dependencies. Classify
+the reported paths first; run the scoped npm command rather than deleting
+working evidence, modifying third-party Markdown, suppressing diagnostics, or
+weakening MDX parsing. A malformed file in an included content root must still
+fail the check with its source path and location. The checker uses upstream
+compatibility transforms and does not load this site's complete plugin/config
+pipeline; retain the production build and rendered checks as separate evidence.
+Report the exact command validated. A passing `npm run check:mdx` does not make
+a separate bare `npx docusaurus-mdx-checker` invocation scoped or successful.
 
 The Makefile's `build`, `clean`, and `test` targets only echo progress (`test`
 depends on that no-op `clean`). Plain `make` also runs the read-only `info` target.
@@ -70,6 +90,25 @@ make the requested update, review manifest/lockfile changes together, and run
 typecheck plus build. Avoid changing unrelated versions.
 
 ## Local server lifecycle
+
+The [first-app browser runner](../../../assets/scripts/first-app-e2e.mjs) needs
+the selected AuthCrunch binary, installed Chrome (or `--browser` with a Chromium
+executable), curl, and free loopback ports 8443 and 5555. It neither builds the
+sibling repository nor installs a browser. It starts the unmodified canonical
+Caddyfile in disposable storage, verifies its local CA with curl, and accepts
+the browser's local trust error without installing that CA. A conflicting port
+fails setup and leaves its owner alone. There are no automatic test retries.
+
+Both desktop and mobile run username/password login, session/reload/second-tab
+access, logout, incorrect-password rejection, altered-token rejection, and Bob's
+default allowed access. The runner records the config/binary hashes, versions,
+checks, reviewed cookie attributes without values, and full/focused screenshots.
+Its unique output contains an offline HTML report, JSON summary, and runtime log.
+A failed or incomplete case fails the run; a screenshot alone is not a pass.
+Cleanup stops the owned runtime/browser, removes private TLS storage, and checks
+the ports. SIGINT/SIGTERM request cleanup; an uncatchable process kill cannot
+guarantee it. Reports stay in `tmp/`; review selected images before publishing
+them. This command is separate from the site build and Pages CI.
 
 Before ending a turn, shut down all development, preview, prototype, and
 test-fixture servers started or used for this repository, including leftovers
@@ -112,8 +151,11 @@ checkpoint in `tmp/` before a restart that could disconnect the session.
 
 Read the first substantive error and map it to the responsible input:
 
-- For MDX errors, check fences, unescaped braces/angle brackets, and JSX in
-  the reported page. For missing images, resolve the path from that document.
+- For MDX errors, confirm the path belongs to a site-content root, then check
+  fences, unescaped braces/angle brackets, and JSX in the reported page. Re-run
+  `npm run check:mdx` and the build after a fix. Errors confined to ignored
+  upstream/tool snapshots indicate an incorrectly scoped checker invocation.
+  For missing images, resolve the path from that document.
 - For navigation errors, compare document IDs, frontmatter, sidebar generation,
   and configured navbar/footer targets. Broken site links throw; broken Markdown
   links warn according to `docusaurus.config.ts`. Do not weaken checks to hide
@@ -134,48 +176,71 @@ There is no general npm `test` or lint script. The focused `test:release` script
 checks release automation. The deployment workflow does not run typecheck, Caddy
 validation, or browser tests. Report checks actually
 performed. Skill-only changes use skill validators and route/link checks;
-public content needs a site build; typed source or dependencies need typecheck
-and build; visible changes also need rendered inspection when available.
+public content needs the scoped MDX check and a site build; typed source or
+dependencies need typecheck and build; visible changes also need rendered
+inspection when available. An MDX-checker scope/tooling change must demonstrate
+both rejection of malformed included content and exclusion of scratch artifacts,
+then remove its temporary fixtures before the real site build. Cleanup must
+cover synthetic malformed fixtures in both included roots and ignored scratch
+directories, using `finally` on success or failure. Preserve logs as evidence;
+do not leave deliberately invalid `.md` or `.mdx` probes behind. This cleanup
+applies to generated test fixtures, not downloaded upstream/tool evidence.
 
-## Hosted search
+## Local search
 
-The site and `check:search` script share the public search client in
-[client.json](../../../assets/search/client.json). It contains a search-only key,
-not the private crawler credential. The maintained
-[crawler configuration and procedure](../../../assets/search/README.md) own
-extraction, current-domain URLs, document exclusions, and existing-index settings.
-Private crawler credentials stay in Algolia; do not put them in the repository.
-Keep the dashboard template's first line `new Crawler({`, without leading
-comments or Markdown fences. The editor has reported a JSON parsing error when
-the JavaScript template began with `//` comments. Node syntax checks alone do
-not establish dashboard compatibility; verify the pasted configuration in the
-Editor and URL Tester.
-The crawler's display name, its index prefix, and its action's index name are
-separate values. The prefix is concatenated with the action name. Confirm the
-actual index returned by Algolia before changing the site's client. During a
-migration, `npm run check:search -- --index <name>` checks a candidate index with
-the public key while leaving the configured client unchanged. Missing indices
-fail the check. Switch the client only after the candidate's results pass.
-Preserve the maintainer's crawl schedule and publishing safety checks when
-adapting configuration. Do not replace the default crawler to rename an index;
-if it has already been deleted, follow Algolia's DocSearch recovery guidance.
+[The local search guide](../../../assets/search/README.md) owns the index,
+extractor, ranking, modal, and acceptance workflow. The browser fetches a
+same-origin static index only when search opens and keeps queries local. A build
+emits a content-hashed JSON asset; deploy the complete build with its matching
+client. No API key, external index, crawler, or post-deployment crawl is needed.
+The classic preset may retain an optional search dependency in the lockfile;
+removing its configuration prevents that theme from entering the client build.
 
-A successful build does not refresh Algolia. Deploy the metadata-bearing site,
-test its generated records in the crawler's URL Tester, then run a full crawl
-and check its results. `initialIndexSettings` does not update an existing index;
-maintainers must apply the corresponding searchable attributes and facets there.
-Preserve Docusaurus language/version/tag facets when changing search settings.
-Missing discovery tags indicate a site/crawler deployment mismatch; do not
-remove that guard to crawl old output. Publication still follows the release
-workflow and requires authorization.
+After changes to indexed content, discovery metadata, imported Caddyfiles,
+canonical routes, or indexing code, regenerate and validate in this order:
 
-`npm run check:search -- --output tmp/search-check.json` saves observed query
-results and an unfiltered sample of up to 1,000 records. It verifies the first
-five distinct destinations for representative queries and detects obsolete
-URLs and missing title/topic/type metadata in returned records. A larger index
-also needs review in the dashboard. The script cannot prove the hosted extractor
-works, all URLs are clean, or an authentication configuration is valid. Keep
-missing-content queries distinct from indexing failures.
+```sh
+npm run build
+npm run check:search
+```
+
+The build regenerates the index automatically. `check:search` reads an existing
+build; it neither rebuilds nor compares it with current sources. A passing check
+against an older build does not prove freshness. Run `npm run test:search` for
+extraction, ranking, or validation changes, plus typecheck for typed source changes.
+An optional
+`npm run check:search -- --output tmp/search-check.json` saves the local report;
+`--build` selects another completed output directory. It checks unique canonical
+routes, existing built destinations, aliases/body matches through representative
+queries, archive/exclusion boundaries, and the canonical Caddyfile's imported
+text. The fixed smoke queries do not cover every changed page: inspect affected
+records in the newly emitted `build/assets/search/search-index-*.json` and query
+them through the browser or the maintained search engine. Check the intended
+title, category, permalink, alias/body matches, and absence of removed/excluded
+routes; preserve searchable `listed: false` documents. Extend representative
+queries when a lasting search use case or regression warrants it. Neither
+`npm run build` nor the current Pages workflow runs `test:search` or `check:search`
+automatically; do not describe those separate checks as CI gates.
+
+Development uses the same generated asset. Changes to indexed output change its
+content hash and client URL; edits to ignored content need not change that hash.
+When changing watchers or index inputs, verify refresh with an actual temporary
+source edit, including a raw imported Caddyfile when relevant. Restore exact
+source bytes in `finally`, including after failure, then confirm the probe has
+disappeared. Reopen search after the development reload; do not patch generated
+`.docusaurus` data.
+Verify initial lazy loading, cached reopening/client navigation, keyboard/modal
+focus, mobile layout, and retry after HTTP or malformed-record failures. Search
+must remain independent of external network services. Keep development and
+production server lifecycles separate, and stop each preview after validation.
+
+For stale results, trace the expected source/metadata through the freshly built
+JSON, the client's referenced asset URL, and the served response. Search caches
+its prepared index in memory; reload an existing tab to load a new deployed
+client rather than expecting reopening to refresh its old index. Publish the
+complete build with matching client and hashed asset, never a separately edited
+or copied index. After an authorized deployment, verify the deployed revision
+and a fresh page's index request/result before claiming the update is live.
 
 ## GitHub Pages pipeline
 

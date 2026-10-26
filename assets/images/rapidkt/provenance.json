@@ -1,0 +1,10 @@
+{
+  "sourceRepository": "https://github.com/rapidknot/rapidknot-website-src",
+  "sourceRevision": "628e065c7b343930e587740091dfdfba0d3856c0",
+  "sourcePath": "public/images/home/expertise-to-skills.webp",
+  "publishedSource": "https://rapidkt.com/images/home/expertise-to-skills.webp",
+  "destination": "static/img/rapidkt/expertise-to-skills.webp",
+  "sha256": "5b8be09f6c9b219b23c2f68a72849874722e09e7182824e38d86afab66ad7347",
+  "bytes": 95124,
+  "transformation": "Copied unchanged"
+}

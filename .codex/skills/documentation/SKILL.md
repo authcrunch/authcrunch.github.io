@@ -14,6 +14,10 @@ The output should explain the supported behavior and keep navigation, examples,
 and linked assets consistent. Site components and build tooling have separate
 owners in the root routes.
 
+For upstream catch-up work, read [the upstream review procedure](references/upstream-review.md).
+Compare the runtime library, Caddy integration and ready-to-run distribution;
+retain evidence and a report of changed resolved public URLs in ignored `tmp/`.
+
 | Topic | Existing home |
 | --- | --- |
 | Installation and first steps | `docs/intro.md`, `docs/start/`; existing authenticate/authorize getting-started pages link into this sequence |
@@ -122,7 +126,16 @@ Draft and unlisted pages are also omitted. Completing an excluded page requires
 adding its description and classification to make it discoverable again.
 Classification alone does not establish that its configuration is up to date.
 The [search maintenance guide](../../../assets/search/README.md) describes how
-this metadata reaches hosted search after deployment and crawling.
+this metadata reaches the browser-local full-text index during builds and development.
+
+Treat search discoverability as part of content maintenance. For additions,
+edits, renames, removals, or changes to descriptions, aliases, classification,
+or exclusions, rebuild and check the index using the
+[local search workflow](../site-operations/SKILL.md#local-search). Confirm the
+affected page's current title, category, canonical URL, and expected query match;
+removed or excluded destinations must disappear. Aliases must describe supported
+content, and `listed: false` must remain distinct from search exclusion. Do not
+maintain a second JSON index or edit generated records to repair a source issue.
 
 The [site config](../../../docusaurus.config.ts) compiles Markdown as MDX. Put
 Caddy placeholders, JSON braces, template syntax, and angle-bracket placeholders
@@ -174,8 +187,10 @@ claims; enrollment alone does not establish completed authentication evidence.
 
 Local account guidance must distinguish initial provisioning from reconciliation:
 bootstrap environment values create a missing administrator and current logs do
-not print its password. Registration email verification writes a separate dropbox;
-it does not implement approval or active-account provisioning. The released
+not print its password. Legacy JSON-file registration writes a separate dropbox;
+SQLite email-confirmed signup instead provisions its selected SQLite account
+store and requires explicit portal selection plus a durable outbox. Keep their
+grammars, approval boundaries and recovery requirements separate. The released
 password CLI supports bcrypt and Argon2id imports and private file/stdin input.
 Use its generated Caddyfile directive rather than inventing a hash or replacing
 an entire JSON credential record. Keep current profile captures distinct from
@@ -188,6 +203,17 @@ uncertain response. SDK credential validation checks transport syntax rather
 than JWT authenticity or expiry, and does not implement automatic renewal.
 API-key JSON login is access-only; it establishes neither a browser Profile
 session nor an OIDC session. Validate Go examples against the pinned library.
+
+Current installation uses the `authcrunch/authcrunch` distribution, which includes
+all 17 optional backend companions. The separate caddy-security executable has
+core integrations; custom builds select companions individually. The module
+inventory and state-owner matrix live in `docs/operations/backends.md`. Do not
+infer active/active portal or cross-root refresh support from Consul backends.
+Provider snapshot renewal reuses callback evidence; it does not refresh upstream
+tokens or observe upstream revocation. Explicit account attachment targets remain
+built-in local stores. Documents requires a current local browser session and
+ships an API/crypto helper, not a document-management UI. Portal-backed Basic and
+API-key requests recheck current credentials/policy in the v1.5.0 integration.
 
 ## Agentic Prompts
 
@@ -241,8 +267,16 @@ context instead of disabling them globally for a single article.
 
 ## Verification and acceptance
 
-Run `npm run build` for public content changes and inspect new warnings as well
-as failures. Broken site links throw; broken Markdown links are configured to
+Run `npm run check:mdx`, `npm run build`, and then `npm run check:search` for
+public content changes and inspect new warnings as well as failures.
+The build includes the same MDX preflight;
+the standalone command provides quick feedback before the full build.
+Use the scoped npm command, not a bare `npx docusaurus-mdx-checker` scan: ignored
+upstream snapshots and tools under `tmp/` are not site content and can contain
+Markdown that is invalid MDX. Do not edit or delete them to make validation pass.
+Fix failures in included site sources and retain both parser and production-build
+evidence; the checker alone does not establish rendering, links or behavior.
+Broken site links throw; broken Markdown links are configured to
 warn. A zero exit status does not replace review of warnings or external links.
 The operational command details are in
 [site-operations](../site-operations/SKILL.md).
@@ -258,6 +292,13 @@ including shutdown before ending the turn.
   evidence; unavailable runtime checks remain identified as unverified.
 - A blog post has a working author, stable route, and useful excerpt, with no
   new unexplained MDX or link diagnostics.
+- A content change passes the scoped MDX preflight and production build while
+  ignored working artifacts remain outside the content inventory.
+- A searchable content change appears under its canonical URL in the freshly
+  built index and matches a relevant title, alias, or body query. A rename or
+  removal leaves no obsolete search record; exclusion removes the result while
+  `listed: false` preserves it. Check affected records beyond the fixed smoke
+  queries in `check:search`.
 - The beginner sequence has usable previous/next navigation, a complete example,
   an observed login and allow/deny boundary, and a logout check. Topic entrance
   links preserve the destination pages' current published routes.

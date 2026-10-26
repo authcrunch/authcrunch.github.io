@@ -27,7 +27,8 @@ Add `debug` in Caddy's global options block when reproducing a problem:
 }
 ```
 
-Diagnostic logs can contain identity claims, addresses and bootstrap credentials.
+Diagnostic logs can contain private identity and request data. Current local
+bootstrap logs do not print the generated administrator password.
 Keep them private and remove tokens, passwords, cookies and provider secrets
 before sharing a relevant excerpt. Disable verbose diagnostics when finished.
 Caddy access logs are configured separately from AuthCrunch component logs.
@@ -70,6 +71,23 @@ middleware logger, or HTTP access logs. An empty block skips nothing.
 Prefer a narrow match for a known repetitive message. After adding it, reproduce
 both the expected event and an unrelated failure to confirm useful diagnostics
 remain visible. Logging-only changes do not invalidate persisted sessions.
+
+## Current authentication events and host redaction
+
+V1.5.0 improves failed-login and checkpoint events with canonical portal/realm
+attribution, isolates pending browser proofs by sandbox, and omits raw provider
+identity payloads from login diagnostics. Unsupported local operations no longer
+log credential-bearing request objects. These changes improve diagnosis without
+turning debug output into a public audit export.
+
+Configure host sinks separately. For API keys, delete the actual
+`request>headers>X-Api-Key` field from diagnostic and access encoders. For ticket
+and connected-account flows, redact credential-bearing URLs and Location/Referer
+headers as their [ticket](../authenticate/ticket-login.md#protect-logs-and-test-failures)
+and [connection](../authenticate/connected-accounts.md#administration-and-diagnostics)
+guides describe. Caddy keeps an earlier request copy; downstream stripping and
+AuthCrunch component filters do not redact it. Verify both successful and denied
+requests with synthetic credentials before sharing logs.
 
 ## Agentic Prompts
 

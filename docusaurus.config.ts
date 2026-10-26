@@ -1,8 +1,8 @@
 import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
-import searchClient from "./assets/search/client.json";
 import remarkMermaidDiagrams from "./src/plugins/mermaid-diagrams";
+import {bannerBootstrapScript} from "./src/components/CommunityBanner/dismissal.mjs";
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -23,6 +23,7 @@ const config: Config = {
   organizationName: "authcrunch",
   projectName: "authcrunch.github.io",
   trailingSlash: false,
+  headTags: [{tagName: "script", attributes: {id: "community-banner-state"}, innerHTML: bannerBootstrapScript()}],
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -76,7 +77,7 @@ const config: Config = {
     ],
   ],
 
-  plugins: ["./src/plugins/tailwind-config.ts", "./src/plugins/configuration-source.ts", "./src/plugins/discovery.ts"],
+  plugins: ["./src/plugins/tailwind-config.ts", "./src/plugins/configuration-source.ts", "./src/plugins/discovery.ts", "./src/plugins/local-search.ts"],
 
   themeConfig: {
     image: "img/brand/social-card.png",
@@ -149,10 +150,6 @@ const config: Config = {
         ],
       },
       darkTheme: prismThemes.dracula,
-    },
-    algolia: {
-      ...searchClient,
-      contextualSearch: true,
     },
   } satisfies Preset.ThemeConfig,
 };

@@ -41,6 +41,10 @@ workflow change or local validation task does not itself authorize publishing.
   duplicate guards, and publication/recovery in disposable local Git repositories.
   It requires Node and Git, uses no npm dependencies, and never contacts GitHub.
 - `npm run typecheck` and `npm run build` supply relevant site validation.
+- After that fresh build, run `npm run check:search` using the
+  [local search workflow](../site-operations/SKILL.md#local-search). The published
+  artifact must contain the matching client and generated index; checking an
+  older build does not qualify newly edited content.
 
 The release helper uses built-in Node modules; `versioned` is no longer used.
 `make info` is read-only. Earlier synchronization does not freeze the next release

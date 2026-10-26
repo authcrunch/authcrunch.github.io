@@ -24,11 +24,19 @@ If necessary, upgrade packages:
 npm run upgrade
 ```
 
-Check Markdown files:
+Check the site's Markdown and MDX files:
 
 ```bash
-npx docusaurus-mdx-checker
+npm run check:mdx
 ```
+
+This uses the locked checker version and checks `docs/`, `blog/`, and
+`src/pages/`. The bare `npx docusaurus-mdx-checker` command ignores `.gitignore`
+and also scans downloaded tools and upstream snapshots under `tmp/`, which can
+report errors unrelated to the site. Keep those working artifacts out of the
+content check rather than editing third-party files to satisfy it.
+The npm script's scope does not apply to a separate invocation of the upstream
+CLI; adding `tmp/` to `.gitignore` does not change that CLI's scan.
 
 Run a build:
 
@@ -36,11 +44,41 @@ Run a build:
 npm run build
 ```
 
+The build runs the scoped MDX check before diagram validation and site generation.
+
+Validate the getting-started Caddyfile through real browser login:
+
+```bash
+npm run test:first-app -- --binary /path/to/authcrunch
+```
+
+Use the AuthCrunch distribution described in the guide. This needs local Chrome,
+curl, and free loopback ports 8443 and 5555. Pass `--browser /path/to/chrome` to
+select another installed Chromium executable. The runner uses the canonical
+Caddyfile, disposable TLS storage, and desktop/mobile browser contexts. It writes
+an offline screenshot report under ignored `tmp/first-app-e2e/`, then stops its
+runtime and removes its private storage. It does not install a browser or change
+the host trust store. Review captures before copying them to public image assets;
+`assets/conf/getting-started/screenshots.json` records the published captures.
+
 Run the website locally on port 4200:
 
 ```bash
 npm run dev
 ```
+
+Navbar search uses a local full-text index generated with the site. It loads on
+first use, keeps queries in the browser, and needs no external search service.
+Open it with Cmd/Ctrl+K. Validate it with:
+
+```sh
+npm run test:search
+npm run build
+npm run check:search
+```
+
+See [local search maintenance](assets/search/README.md) for indexing rules,
+development updates, and browser acceptance checks.
 
 ## Deployment
 

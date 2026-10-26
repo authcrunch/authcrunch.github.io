@@ -1,6 +1,6 @@
 ---
 title: "Refresh sessions"
-description: "Renew short-lived local access tokens with rotating refresh credentials, browser coordination, and explicit native-client transport."
+description: "Renew local or explicitly selected OAuth snapshot sessions, coordinate browser/native rotation, and choose durable refresh storage."
 discovery:
   topic: sessions-and-cookies
   kind: guide
@@ -19,7 +19,8 @@ token without repeating its password and MFA at every expiry. Each successful
 renewal replaces the refresh credential. The session ends at its idle or absolute
 deadline, when revoked, or when the account's security state changes.
 
-This guide targets **caddy-security v1.3.0 / go-authcrunch v1.3.8**. Portal
+The local example retains its **v1.3.0 / v1.3.8** baseline. The provider
+snapshot and named-storage sections target **v1.5.0 / v1.4.1**. Portal
 refresh is separate from an upstream OAuth provider's refresh token and from
 AuthCrunch's [downstream OIDC refresh grants](../apps/oidc-provider.md).
 
@@ -180,6 +181,73 @@ Check the configured origin and mount first. Confirm that cookies reach the
 portal, the realm participates, and the client selected the right transport.
 Use an isolated test account to verify renewal, expiry and logout; never replay
 a live credential as a diagnostic experiment.
+
+## OAuth/OIDC provider snapshot renewal
+
+V1.5.0 also supports explicitly selected upstream OAuth/OIDC realms. Add the
+provider realm to `realms` and opt it into snapshot mode inside `token refresh`:
+
+```caddyfile
+realms local corporate
+provider revalidation corporate snapshot
+```
+
+Enable that provider in the portal and disable its identity-token cookie using
+`identity token cookie disabled` in the provider declaration. Omission does not
+opt an external provider into renewal. LDAP, SAML and ticket realms cannot use
+this mode; `userinfo` and `refresh_token` modes are unsupported.
+
+Renewal reuses validated callback evidence and captured upstream claims. It
+rechecks current local attachment, roles, factors and portal policy, while
+preserving original `auth_time` and family deadlines. It does not redeem an
+upstream refresh token or observe upstream logout, disablement or changed groups.
+Choose a bounded absolute lifetime and require fresh upstream login to observe
+those changes. Provider callbacks use cookie transport even when native local
+body transport is enabled.
+
+For same-root restart continuity, enable root state and an explicit file-backed
+[local attachment](connected-accounts.md); provider-private memory identities
+cannot be recovered by session snapshots alone. External renewal does not grant
+local Profile, Documents or downstream OIDC authority.
+
+## Named refresh storage
+
+V1.5.0 portals can select a named backend. For SQLite, put these declarations
+inside global `security`, alongside the existing identities and portal:
+
+```caddyfile
+state {
+    directory /var/lib/authcrunch/runtime
+}
+token refresh store sqlite sessions {
+    path /var/lib/authcrunch/private/refresh.db
+    max sessions 10000
+    max rotations 1024
+    timeout 1s
+}
+```
+
+Add `store sessions` inside the portal's enabled `token refresh` block. Its
+session and rotation limits must equal the backend's limits. Retain the root
+state, stable keys, identity database and refresh database across stop/start.
+The refresh database must be outside the root-state directory and all other
+storage categories. Its private parent must already exist.
+
+The `session-and-refresh-storage-sqlite` companion is required. For Consul,
+select `token refresh store consul sessions` with its companion and Caddy Consul
+storage; match the default 1000 sessions and 128 rotations explicitly in the
+portal. See [backend selection](../operations/backends.md).
+
+Selected storage still requires **exclusive root state**, including with Consul.
+It supports same-root restart, not refresh exchange among independent roots.
+Configuration generations atomically retire old families; reverting configuration
+does not revive retired authority. Refresh is not copied into legacy root
+snapshots when a named backend owns it.
+
+An uncertain commit withholds staged access/refresh/OIDC credentials and may
+quarantine storage. Do not replay the old credential automatically. Reconcile
+storage, reopen unhealthy handles and authenticate freshly. Test rotation,
+replay, logout, configuration changes and restart with the actual selected store.
 
 ## Agentic Prompts
 

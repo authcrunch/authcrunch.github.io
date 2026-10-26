@@ -10,7 +10,7 @@ discovery:
 # Troubleshoot
 
 Start with the failing request and the result you expected. For the local
-walkthrough, [Verify access](start/verify-access.md) lists the four expected
+walkthrough, [Verify access](start/verify-access.md) lists the expected
 outcomes and how to reproduce each one.
 
 ## Caddy does not recognize `security` or `authenticate`
@@ -29,9 +29,11 @@ Read the first startup error in the server terminal.
 
 | Observation | Check |
 | --- | --- |
-| Address already in use | Another process is listening on port 9080. Stop the earlier demo process, or choose another available port and update both the site address and policy auth URL. |
-| Signing key error | Generate and export `AUTHCRUNCH_DEMO_SECRET` in the terminal that starts the server, as shown in [the walkthrough](start/first-app.md#2-prepare-the-data-and-signing-key). |
-| Cannot open or create the store | Start from the demo directory. Check that its `data` directory exists and is writable by the process. |
+| Address already in use | Check port 8443 for HTTPS and port 5555 for certificate approval. Stop the earlier demo process, or update all matching addresses, auth/return URLs and the `ask` URL when changing ports. |
+| Signing key error | Restore the same literal demo key in both crypto directives from [the complete example](start/first-app.md#1-create-the-configuration). No environment variable is required. |
+| Cannot create TLS storage | Start from the demo directory. Check that `data` is writable. Demo identities use memory; certificates and the local CA use `data/caddy`. |
+| Certificate warning or curl trust error | The demo leaves the system trust store unchanged. Accept the local browser warning for `https://localhost:8443`, or use curl's `--cacert` with the generated CA as shown in [Verify access](start/verify-access.md). |
+| Certificate approval fails | Check that `http://localhost:5555/?domain=localhost` returns 200 and another or missing domain returns 400. Keep the approval endpoint bound to loopback. |
 | Caddyfile parse error | Copy the complete file, including the global block and site block. Run `adapt` to isolate parsing before attempting login. |
 
 The demo disables Caddy's admin endpoint. To change its configuration, use
@@ -41,14 +43,17 @@ The demo disables Caddy's admin endpoint. To change its configuration, use
 
 First distinguish a missing login from an invalid token:
 
-1. Use `http://localhost:9080` consistently for the local example. Do not switch
+1. Use `https://localhost:8443` consistently for the local example. Do not switch
    between `localhost` and `127.0.0.1`.
-2. Confirm that you completed both the username and password steps. The tested
-   flow lands on the portal's **Applications** page; choose **Example app** there.
+2. Confirm that you completed both the username and password steps. Starting at
+   `/` returns there automatically; starting at the portal offers **Example app**
+   on the Applications page.
 3. In browser developer tools, check that the login sets a cookie and that the
-   next request to `/app` sends it. Do not copy token values into public reports.
+   next request to `/` sends `AUTHTEST_ACCESS_TOKEN` and `AUTHTEST_SESSION_ID`.
+   The portal's `AUTHTEST` prefix must agree with the policy's cookie names.
+   Do not copy token values into public reports.
 4. Confirm that the portal and policy use the same signing/verification key.
-   If you regenerated the demo secret, sign in again to get a token signed with it.
+   If you changed the demo key, sign in again to get a token signed with it.
 
 For a deployed site, check the [cookie domain and path](authenticate/auth-cookie.md),
 HTTPS, the policy's auth URL, and [token discovery](authorize/token-discovery.md).
@@ -56,15 +61,17 @@ A cookie that the browser does not send cannot satisfy the policy.
 
 ## Login works, but the app returns 403
 
-For the local demo, **Bob is supposed to receive 403**. The policy requires
-`app/member`, which only Alice has. This separates a successful login from a
-successful authorization decision.
+The default local-demo policy allows `authp/admin` or `authp/user`, so both Alice
+and Bob should reach the app. Bob receives **403** only during the
+[narrower-policy exercise](start/verify-access.md#check-denied-access), where
+`app/member` is required and only Alice has it. This separates a successful login
+from a successful authorization decision.
 
 If Alice is denied, compare the active Caddyfile with the
 [complete example](start/first-app.md#1-create-the-configuration). Check her roles
 and the policy's `allow roles` entry, then test from a fresh login. If you have
-been editing an existing user database, repeat the original example in a new
-directory to separate stored state from configuration.
+changed the in-memory demo accounts, restart Caddy and repeat with a fresh
+browser context to separate old cookies from the active configuration.
 
 For your own deployment, compare the authenticated user's claims with the
 [policy rules](authorize/acl-rbac.md). Check rule order and any
@@ -74,8 +81,9 @@ For your own deployment, compare the authenticated user's claims with the
 
 Test with `curl -i` without a cookie jar, or a new private browser window.
 Confirm the request matches the protected route and that `authorize` runs before
-the application handler. In the learning example, `/app` and `/app/*` are
-protected; `/` deliberately returns a public status message.
+the application handler. In the learning example, the `/*` route protects `/`
+and its application paths. The more specific `/auth*` route serves the portal,
+and `/healthz` deliberately returns a public status message.
 
 For a reverse proxy deployment, also check that users cannot reach the upstream
 application directly through another public address or port.
