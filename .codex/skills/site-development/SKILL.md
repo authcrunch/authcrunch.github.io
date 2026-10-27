@@ -238,6 +238,14 @@ not introduce a reset that disrupts documentation typography or theme controls.
 
 Use `--ifm-*` tokens for theme integration and `--ac-*` tokens for shared muted,
 surface, selection, and border colors. Typography uses a system font stack.
+The root font size respects browser preferences (`100%`); `--ac-text-body` is
+`1.0625rem`, `--ac-text-ui` is `1rem`, and compact text uses `--ac-text-small`
+(`.875rem`) or `--ac-text-caption` (`.8125rem`). These correspond to 17px body,
+16px actions, and 13–14px supporting text at the default browser size. Keep
+reading and control sizes on phones; wrap or stack controls and cards instead
+of reducing their text. Let topic-map rows grow with their labels. Check local
+clipping as well as page overflow at 320px and 200% text sizing, including the
+navbar, search results, guide filters, and homepage interactions.
 The light palette follows the portal's blue `#245bca` and navy `#172b4d`; dark
 mode uses lighter text and accent values for contrast. Check both themes.
 Standalone MDX prose needs the `markdown` wrapper for visible link underlines.
