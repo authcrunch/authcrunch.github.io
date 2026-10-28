@@ -8,6 +8,11 @@ discovery:
 
 # Server API
 
+For a browser interface to these operations, use the
+[Security Manager walkthrough](../../apps/security-manager.md), bundled in
+caddy-security v1.6.2. Its application entry still requires this API's opt-in
+and administrator role.
+
 The Server API administers the portal's configured identity stores. Enable it
 inside the existing `authentication portal` block:
 

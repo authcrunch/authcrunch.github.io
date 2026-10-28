@@ -211,8 +211,12 @@ inventory and state-owner matrix live in `docs/operations/backends.md`. Do not
 infer active/active portal or cross-root refresh support from Consul backends.
 Provider snapshot renewal reuses callback evidence; it does not refresh upstream
 tokens or observe upstream revocation. Explicit account attachment targets remain
-built-in local stores. Documents requires a current local browser session and
-ships an API/crypto helper, not a document-management UI. Portal-backed Basic and
+built-in local stores. Documents requires a current local browser session.
+caddy-security v1.6.2 / go-authcrunch v1.5.0 embeds User Profile, Security Manager,
+and File Vault; earlier v1.5.0/v1.4.1 guidance describes the API/crypto helper
+without the File Vault UI. Keep the [application guides](../../../docs/apps/portal-apps.md)
+aligned with per-app role/API gates and preserve the distinction between UI,
+integration and library versions. Portal-backed Basic and
 API-key requests recheck current credentials/policy in the v1.5.0 integration.
 
 ## Agentic Prompts

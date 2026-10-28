@@ -1,0 +1,88 @@
+# Embedded portal apps: caddy-security v1.6.2 / go-authcrunch v1.5.0.
+# Local learning only: public demo credentials and signing key; no environment variables.
+{
+	admin off
+	persist_config off
+	auto_https disable_redirects
+	skip_install_trust
+	on_demand_tls {
+		ask http://localhost:5555/
+	}
+	storage file_system ./data/caddy
+
+	security {
+		local identity store localdb {
+			realm local
+			path ./data/users.json
+			user alice {
+				name Alice Example
+				email alice@example.test
+				password "LocalDemoPassword123!"
+				roles authp/admin authp/user app/member
+			}
+			user bob {
+				name Bob Example
+				email bob@example.test
+				password "LocalDemoPassword123!"
+				roles authp/user
+			}
+		}
+
+		authentication portal myportal {
+			enable identity store localdb
+			enable admin api
+			enable documents api
+			documents api database {env.AUTHCRUNCH_APPS_DATA_DIR}/documents.db
+			documents api public origin https://localhost:8443
+			documents api base path /auth
+			documents api realms local
+			crypto default token lifetime 300
+			crypto key sign-verify "LocalDemoSigningKey-ChangeBeforeDeployment-0123456789"
+			cookie guess domain enabled
+			cookie prefix AUTHTEST
+			trust login redirect uri domain exact localhost:8443 path prefix /
+			ui {
+				links {
+					"Example app" / icon "las la-external-link-alt"
+				}
+			}
+		}
+
+		authorization policy apppolicy {
+			set auth url https://localhost:8443/auth/login
+			crypto key verify "LocalDemoSigningKey-ChangeBeforeDeployment-0123456789"
+			allow roles authp/admin authp/user
+			set session_id cookie name AUTHTEST_SESSION_ID
+			set access_token cookie name AUTHTEST_ACCESS_TOKEN
+		}
+	}
+}
+
+http://localhost:5555 {
+	bind 127.0.0.1
+	@allowed_localhost query domain=localhost
+	respond @allowed_localhost 200
+	respond 400
+}
+
+https://localhost:8443 {
+	bind 127.0.0.1
+	tls internal {
+		on_demand
+	}
+
+	route /healthz {
+		respond "AuthCrunch demo is running." 200
+	}
+
+	@portal path /auth /auth/*
+	route @portal {
+		redir /auth /auth/ 308
+		authenticate with myportal at /auth
+	}
+
+	route /* {
+		authorize with apppolicy
+		respond "You reached the protected app." 200
+	}
+}

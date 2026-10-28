@@ -8,6 +8,10 @@ discovery:
 
 # Profile API
 
+For the browser workflow shipped in caddy-security v1.6.2, follow the
+[User Profile walkthrough](../../apps/user-profile.md). This page documents the
+underlying operations and their local browser-session authority.
+
 The [User Profile](../auth-portal.md#user-settings) calls **`POST /auth/api/profile`**
 with a JSON `kind` selecting an operation. This API manages the current local
 account. It does not accept an arbitrary target username, and it is not the

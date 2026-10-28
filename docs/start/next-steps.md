@@ -14,6 +14,14 @@ You now have a portal that authenticates users and a policy that admits both dem
 users. The narrower-policy exercise shows how to allow Alice while rejecting Bob.
 Choose the next task based on your application.
 
+## Explore the built-in apps
+
+caddy-security v1.6.2 includes User Profile, Security Manager and File Vault.
+Follow the [application setup and walkthroughs](../apps/portal-apps.md) to
+practice account self-service, administration, and encrypted file sharing.
+That separate local example enables the Admin and Documents APIs and persists
+its disposable accounts; the original learning example retains its stated baseline.
+
 ## Connect your identity source
 
 - **Use an external provider:** start with [OAuth and OIDC](../authenticate/oauth/10-oauth2.md), then select the provider guide in [Identity providers](../guides.md#identity-providers).

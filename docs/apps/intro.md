@@ -1,7 +1,7 @@
 ---
 sidebar_position: 1
 title: "Applications and SSO"
-description: "Choose portal authorization, direct OAuth, OIDC issuance or upstream SAML for your application boundary."
+description: "Use the built-in User Profile, Security Manager and File Vault apps, or choose portal authorization, OAuth, OIDC or SAML for your own application."
 discovery:
   topic: applications-and-sso
   kind: concept
@@ -9,6 +9,17 @@ discovery:
 ---
 
 # Overview
+
+## Built-in portal apps
+
+caddy-security v1.6.2 embeds **User Profile**, **Security Manager**, and
+**File Vault**. Start with the [complete local setup](portal-apps.md), then follow
+the [User Profile](user-profile.md), [Security Manager](security-manager.md), and
+[File Vault](file-vault.md) walkthroughs. They cover account self-service,
+administration, and encrypted document sharing with screenshots. Application
+links follow the portal mount, enabled APIs and the signed-in account's roles.
+
+## Integrate your own application
 
 Choose the integration by where the application accepts identity and who enforces access. Begin with [your first protected app](../start/first-app.md) if you are new to AuthCrunch.
 

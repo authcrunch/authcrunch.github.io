@@ -9,11 +9,19 @@ discovery:
 
 # Encrypted Documents API
 
-AuthCrunch v1.5.0 / go-authcrunch v1.4.1 provides an opt-in end-to-end encrypted
-Documents API. Browser clients encrypt files, metadata and document keys before
-upload. The server stores ciphertext, encrypted key vaults, public keys and
-recipient envelopes. Enabling the API does not install a document-management UI
-or serve the library's browser cryptography module automatically.
+The opt-in end-to-end encrypted Documents API was available in AuthCrunch
+v1.5.0 / go-authcrunch v1.4.1. **caddy-security v1.6.2 / go-authcrunch v1.5.0**
+also embeds the **File Vault** browser app. Once the Documents API is enabled
+and initialized, eligible users can open it at `<portal>/documents/`.
+Follow the [File Vault walkthrough](../../apps/file-vault.md) for recovery,
+uploads, downloads and verified sharing, or the
+[complete local setup](../../apps/portal-apps.md) for a runnable Caddyfile.
+
+Browser clients encrypt files, metadata and document keys before upload. The
+server stores ciphertext, encrypted key vaults, public keys and recipient
+envelopes. A custom API client can still bundle the library's portable browser
+cryptography helper; enabling the API does not publish that helper as a separate
+JavaScript module route.
 
 ## Enable storage
 

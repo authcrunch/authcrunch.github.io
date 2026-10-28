@@ -1196,6 +1196,25 @@
       "hash": "246e1f4fc584e9fa70e5ce7e7e3d1bf8d669c367707b6ce3657ed300713c0216"
     }
   },
+  "f780602887e94875": {
+    "rendererHash": "31a4f3e2ce1882beb009ab59f2516de3a7efb28da217e377ae4cebd9506663c0",
+    "sourceHash": "f780602887e94875d85c03ad6554e612ea39e8da522e3b3623a373fc06f2f58c",
+    "title": "Upload and download keep plaintext in the browser",
+    "description": "An unlocked browser encrypts metadata and chunks, reserves storage, uploads ciphertext and commits the document. For download it fetches authorized ciphertext and authenticates every chunk before offering the decrypted file. A failed authentication check produces no completed download. The server still sees identities, sizes and sharing relationships.",
+    "pages": [
+      "docs/apps/file-vault.md"
+    ],
+    "light": {
+      "width": 533,
+      "height": 865,
+      "hash": "e414031beab299cb97547e8bebb501a5ba5c346bf66115b50d5f34bebca9c174"
+    },
+    "dark": {
+      "width": 533,
+      "height": 865,
+      "hash": "c0c0249f1c93cc26534497fbcd2fa3cc94a67dcb89d0802e437df129439d37f8"
+    }
+  },
   "f87b80691a93277d": {
     "rendererHash": "31a4f3e2ce1882beb009ab59f2516de3a7efb28da217e377ae4cebd9506663c0",
     "sourceHash": "f87b80691a93277df2c163e0229239dcd20b64a7fcfbe30409fa78d6d5bef9bf",

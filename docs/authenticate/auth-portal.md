@@ -16,7 +16,13 @@ The portal is the browser interface for signing in, opening application links,
 and managing a local account. This guide follows a portal mounted at `/auth/`.
 Replace that prefix if your deployment uses another mount.
 
-The current screenshots were captured from **caddy-security v1.3.0 with
+For **caddy-security v1.6.2 / go-authcrunch v1.5.0**, see the
+[built-in applications setup](../apps/portal-apps.md) and the current
+[User Profile](../apps/user-profile.md), [Security Manager](../apps/security-manager.md),
+and [File Vault](../apps/file-vault.md) walkthroughs. The portal adds these links
+according to API availability and the user's role.
+
+The earlier screenshots below were captured from **caddy-security v1.3.0 with
 go-authcrunch v1.3.8**, using the [local learning example](../start/first-app.md)
 and disposable demo accounts. Older screenshots remain beside each task as
 historical references. Their lock logo, menus, and `/settings` URLs belong to an

@@ -109,6 +109,13 @@ See [Feature availability and versions](operations/versions.md) for the
 distinction between the released integration and newer library features, and
 [Authentication logging](operations/logging.md) for diagnostic controls.
 
+## Built-in applications in v1.6.2
+
+- [Application setup, routes and access requirements](apps/portal-apps.md)
+- [User Profile walkthrough](apps/user-profile.md)
+- [Security Manager walkthrough](apps/security-manager.md)
+- [File Vault: encryption, recovery and sharing walkthrough](apps/file-vault.md)
+
 ## V1.5.0 plugin and API references
 
 - [Distribution, optional modules and deployment choices](operations/backends.md)

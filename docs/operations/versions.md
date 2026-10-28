@@ -4,23 +4,23 @@ description: "Match AuthCrunch distribution, Caddy integration and library relea
 discovery:
   topic: operations
   kind: reference
-  aliases: ["release", "version", "compatibility", "v1.5.0", "upgrade"]
+  aliases: ["release", "version", "compatibility", "v1.5.0", "v1.6.2", "upgrade"]
 ---
 
 # Feature availability and versions
 
-As checked on **October 26, 2026**, current published releases are
-**AuthCrunch v1.5.0**, **caddy-security v1.5.0** and **go-authcrunch v1.4.1**.
-Both Caddy executables use Caddy v2.11.7 and library v1.4.1. Installing a newer
+As checked on **October 27, 2026** (America/New_York), current published releases
+are **AuthCrunch v1.6.2**, **caddy-security v1.6.2** and **go-authcrunch v1.5.0**.
+Both Caddy executables use Caddy v2.11.7 and library v1.5.0. Installing a newer
 standalone library does not update an already built executable.
 
 ## Choose the artifact
 
 | Artifact | Contents and evidence |
 | --- | --- |
-| [AuthCrunch v1.5.0 distribution](https://github.com/authcrunch/authcrunch/releases/tag/v1.5.0) | Ready-to-run `authcrunch`; all 17 backend companions, Consul storage, AWS secrets and tracing. [Pinned dependencies](https://github.com/authcrunch/authcrunch/blob/v1.5.0/go.mod) and [compiled imports](https://github.com/authcrunch/authcrunch/blob/v1.5.0/main.go). |
-| [caddy-security v1.5.0](https://github.com/greenpau/caddy-security/releases/tag/v1.5.0) | Core `authcrunch` executable and separate `caddy-authenticator` archives; backend companions require explicit imports/custom-build selection. [Dependency declaration](https://github.com/greenpau/caddy-security/blob/v1.5.0/go.mod). |
-| [go-authcrunch v1.4.1](https://github.com/greenpau/go-authcrunch/releases/tag/v1.4.1) | Reusable runtime library; its version alone does not prove a Caddy directive or plugin is compiled. |
+| [AuthCrunch v1.6.2 distribution](https://github.com/authcrunch/authcrunch/releases/tag/v1.6.2) | Ready-to-run `authcrunch`; the three embedded portal apps and all 17 backend companions. [Pinned dependencies](https://github.com/authcrunch/authcrunch/blob/v1.6.2/go.mod) and [compiled imports](https://github.com/authcrunch/authcrunch/blob/v1.6.2/main.go). |
+| [caddy-security v1.6.2](https://github.com/greenpau/caddy-security/releases/tag/v1.6.2) | Core `authcrunch` executable with the three apps and separate `caddy-authenticator` archives; backend companions require explicit imports/custom-build selection. [Dependency declaration](https://github.com/greenpau/caddy-security/blob/v1.6.2/go.mod). |
+| [go-authcrunch v1.5.0](https://github.com/greenpau/go-authcrunch/releases/tag/v1.5.0) | Reusable runtime library with embedded app assets and mount-aware routing; its version alone does not prove a Caddy directive or plugin is compiled. |
 
 All three have published release assets. The two server releases use the same
 archive filenames; verify the checksum from the **same repository** as the
@@ -50,8 +50,26 @@ authcrunch list-modules --versions
 
 These report Caddy, the linked AuthCrunch library, and compiled modules. Also
 retain the integration version/build provenance. For custom `caddy` builds use
-that executable's name. The v1.5.0 distribution's macOS arm64 archive was
-checksum-verified and these commands reported the versions and companions above.
+that executable's name. The caddy-security v1.6.2 macOS arm64 archive was
+checksum-verified for the [application setup](../apps/portal-apps.md), and
+reported Caddy v2.11.7 and go-authcrunch v1.5.0. The older v1.5.0 distribution's
+macOS arm64 archive was separately verified for the earlier companion review.
+
+## Portal apps in v1.6.2
+
+The executable embeds [User Profile](../apps/user-profile.md),
+[Security Manager](../apps/security-manager.md), and
+[File Vault](../apps/file-vault.md). The portal supplies links according to
+feature availability and role. Security Manager needs the Admin API and
+`authp/admin`; File Vault needs an initialized Documents API and a portal
+user/admin role. Profile shell access does not replace its API/session checks.
+Use the [complete setup](../apps/portal-apps.md) for configuration and role tests.
+
+App assets, fonts, translations and lazy-loaded routes follow root and nested
+portal mounts. Deep-link reloads retain the canonical app base. Missing asset
+files return 404 rather than SPA HTML; explicit escaped mounts are preserved.
+The UI's own version, such as v1.1.4 in the supplied File Vault demo, is separate
+from the integration and linked library versions.
 
 ## Current feature map
 
@@ -70,10 +88,16 @@ checksum-verified and these commands reported the versions and companions above.
 | Managed refresh storage and provider snapshot renewal | Named SQLite/Consul storage requires root state; OAuth renewal is explicit snapshot mode; [refresh guide](../authenticate/30-refresh-token.md) |
 | Durable local attachments and user-confirmed account connection | Core plus explicit built-in-local-store target; [connected accounts](../authenticate/connected-accounts.md) |
 | Encrypted Documents API | Core, explicitly enabled, current local browser session; [Documents](../authenticate/api/documents.md) |
+| Built-in User Profile, Security Manager and File Vault apps | Bundled in v1.6.2 with go-authcrunch v1.5.0; [setup and walkthroughs](../apps/portal-apps.md) |
 | Explicit mounts, independent tab destinations and portal/OIDC localization | Core; [mounts](../authenticate/auth-portal.md#explicit-portal-mounts), [redirects](../authenticate/100-trust-login-logout.md), [language](../authenticate/12-i18n-internationalization.md) |
 | Standalone native login client | Separate caddy-security release asset; [caddy-authenticator](caddy-authenticator.md) |
 
-## Upgrade from the previous guides
+## Earlier v1.5.0 upgrade baseline
+
+The following notes retain the previous review's v1.5.0 baseline. For the app
+addition, also review [v1.5.0 to v1.6.2 integration changes](https://github.com/greenpau/caddy-security/compare/v1.5.0...v1.6.2)
+and [v1.4.1 to v1.5.0 library changes](https://github.com/greenpau/go-authcrunch/compare/v1.4.1...v1.5.0).
+Select matching versions for any custom-build companions.
 
 1. Download the intended artifact and inspect its modules; custom builds select
    every needed companion at v1.5.0. Importing the root alone no longer suffices.

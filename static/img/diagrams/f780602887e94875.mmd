@@ -1,0 +1,19 @@
+sequenceDiagram
+  accTitle: Upload and download keep plaintext in the browser
+  accDescr: An unlocked browser encrypts metadata and chunks, reserves storage, uploads ciphertext and commits the document. For download it fetches authorized ciphertext and authenticates every chunk before offering the decrypted file. A failed authentication check produces no completed download. The server still sees identities, sizes and sharing relationships.
+  actor User
+  participant Browser as Unlocked browser
+  participant Portal as Documents API
+  User->>Browser: Select local file
+  Browser->>Portal: Reserve ciphertext storage
+  Browser->>Portal: Encrypted metadata and chunks
+  Browser->>Portal: Commit complete upload
+  Portal-->>Browser: Ready document
+  User->>Browser: Download document
+  Browser->>Portal: Fetch authorized ciphertext
+  Portal-->>Browser: Manifest and encrypted chunks
+  alt All integrity checks pass
+    Browser-->>User: Save decrypted file
+  else Corruption, lost authority or cancellation
+    Browser-->>User: Error, no completed download
+  end
